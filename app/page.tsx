@@ -4,12 +4,15 @@ import Image from "next/image";
 import DownloadItem from "./components/ui/DownloadItem/DownloadItem";
 import Button from "./components/ui/Button/Button";
 import Input from "./components/ui/Input/Input";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ModalContext } from "./context/ModalContext";
 
 export default function Home() {
     const [tel, setTel] = useState("");
     const [text, setText] = useState("");
     const [errorText, setErrorText] = useState("");
+
+    const { showModal } = useContext(ModalContext);
 
     return (
         <div
@@ -21,6 +24,7 @@ export default function Home() {
                 gap: "20px",
             }}
         >
+            <DownloadItem extension="pdf" name="Download" url="sad" />
             <Input
                 title="Phone"
                 type="tel"
@@ -45,6 +49,15 @@ export default function Home() {
                 }
             >
                 Click me
+            </p>
+            <p
+                onClick={() =>
+                    showModal!({
+                        content: "Hello world",
+                    })
+                }
+            >
+                And me to show modal
             </p>
         </div>
     );

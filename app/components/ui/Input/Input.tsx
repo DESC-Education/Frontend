@@ -13,6 +13,8 @@ type InputProps = {
     errorText?: string;
 };
 
+const MAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 const Input: FC<InputProps> = ({
     type,
     value,
@@ -21,6 +23,7 @@ const Input: FC<InputProps> = ({
     errorText = "",
 }) => {
     const [telError, setTelError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
 
     switch (type) {
         case "tel":
@@ -29,8 +32,7 @@ const Input: FC<InputProps> = ({
                     {title && <p className="text fz20 fw500">{title}</p>}
                     <InputMask
                         className={classNames(styles.input, {
-                            [styles.inputError]:
-                                telError,
+                            [styles.inputError]: telError,
                         })}
                         mask="+7 (___) ___-__-__"
                         replacement={{ _: /\d/ }}
@@ -63,6 +65,7 @@ const Input: FC<InputProps> = ({
                         })}
                         type={type}
                         value={value}
+                        onBlur={(e) => type === "email" && setEmailError(false)}
                         onChange={(e) => onChange(e.target.value)}
                     />
                     <p

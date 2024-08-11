@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.scss";
 
 import localFont from "next/font/local";
+import Providers from "./context/Providers";
 
 const gilroy = localFont({
     src: [
@@ -43,7 +44,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={gilroy.className}>{children}</body>
+            <body className={gilroy.className}>
+                <Providers>{children}</Providers>
+            </body>
         </html>
     );
 }
