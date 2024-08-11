@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    height: 50px;
+    position: relative;
+    gap: 7px;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+
+    p {
+        transition: .3s;
+    }
+
+    .imgBlock {
+        height: 30px;
+        width: 35px;
+        display: flex;
+        place-items: center;
+        position: relative;
+
+        img {
+            transition: .3s;
+            position: absolute;
+        }
+
+        .imgHover {
+            opacity: 0;
+        }
+
+        .img.hover {
+            opacity: 0;
+        }
+
+        .imgHover.hover {
+            opacity: 1;
+        }
+    }
+
+    &:hover {
+        p {
+            color: rgba(var(--blue), 1);
+        }
+    }
+}
