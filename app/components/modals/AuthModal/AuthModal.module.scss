@@ -1,0 +1,64 @@
+.container {
+    padding: 5px 0;
+
+    .typeOfModal {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 15px 0;
+
+        div {
+            background: rgba(var(--gray3), 1);
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 14px 20px 14px 40px;
+            cursor: pointer;
+            transition: .3s;
+
+            &:hover {
+                background: rgba(var(--black), .2);
+            }
+
+            &:first-child {
+                border-top-left-radius: 30px;
+                border-bottom-left-radius: 30px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 30px;
+                border-bottom-right-radius: 30px;
+                padding: 14px 40px 14px 20px;
+            }
+
+            &.active {
+                background: rgba(var(--black), 1);
+
+                p {
+                    color: rgba(var(--white), 1);
+                }
+            }
+        }
+    }
+
+    .inputContainer {
+        margin: 25px 0;
+        width: 500px;
+        position: relative;
+    }
+
+    .resButton {
+        width: 100%;
+    }
+
+    .tip {
+        margin: 10px 0 0;
+    }
+
+    .tipBlock {
+        margin: 10px 0 0;
+
+        p {
+            text-align: center;
+        }
+    }
+}

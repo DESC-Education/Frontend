@@ -1,24 +1,27 @@
 import classNames from "classnames";
-import { FC } from "react";
+import React, { FC } from "react";
 import styles from "./Button.module.scss";
 
 type ButtonProps = {
-    text: string;
+    children: React.ReactNode;
+    className?: string;
     type: "primary" | "secondary" | "icon";
     icon?: string;
+    onClick?: () => void;
     disabled?: boolean;
 };
 
-const Button: FC<ButtonProps> = ({ text, icon, type, disabled = false }) => {
+const Button: FC<ButtonProps> = ({ children, icon, type, className, onClick, disabled }) => {
     return (
         <button
+            onClick={onClick}
             disabled={disabled}
-            className={classNames(styles.button, styles[type], {
+            className={classNames(className, styles.button, styles[type], {
                 [styles.disabled]: disabled,
             })}
         >
             {icon && <img src={icon} alt="icon" />}
-            {text}
+            {children}
         </button>
     );
 };

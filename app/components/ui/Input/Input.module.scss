@@ -28,9 +28,56 @@
         border: 1px solid rgba(var(--red), .5);
         color: rgba(var(--red), 1);
     }
+
+    &.checkbox {
+        display: none;
+
+        +label {
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            width: calc(100% - 15px);
+
+            >p {
+                margin: -1px 0 0 20px;
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                width: 14px;
+                height: 14px;
+                transition: .3s;
+                border-radius: 3px;
+                background: rgba(var(--white), 1);
+            }
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0px;
+                display: block;
+                width: 20px;
+                height: 20px;
+                border: 1px solid rgba(var(--gray2), .7);
+                border-radius: 3px;
+                background-color: rgba(var(--white), 1);
+                transition: .3s;
+            }
+        }
+
+        &:checked+label:after {
+            background: rgba(var(--blue), .9);
+        }
+    }
 }
 
 .errorText {
+    white-space: pre-wrap;
     color: rgba(var(--red), 1);
     transition: opacity 0.3s;
 }

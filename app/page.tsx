@@ -6,6 +6,7 @@ import Button from "./components/ui/Button/Button";
 import Input from "./components/ui/Input/Input";
 import { useContext, useState } from "react";
 import { ModalContext } from "./context/ModalContext";
+import AuthModal from "./components/modals/AuthModal/AuthModal";
 
 export default function Home() {
     const [tel, setTel] = useState("");
@@ -53,7 +54,7 @@ export default function Home() {
             <p
                 onClick={() =>
                     showModal!({
-                        content: "Hello world",
+                        content: <AuthModal />,
                     })
                 }
             >

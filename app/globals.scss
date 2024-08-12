@@ -36,6 +36,22 @@ a {
     line-height: 28px;
     font-weight: 300;
 
+    &.blue {
+        color: rgba(var(--blue), 1);
+    }
+
+    &.center {
+        text-align: center;
+    }
+
+    &.pointer {
+        cursor: pointer;
+    }
+
+    &.under {
+        text-decoration: underline;
+    }
+
     &.fw300 {
         font-weight: 300;
     }
