@@ -1,4 +1,4 @@
-import { createRef, useReducer, useRef, useState } from "react";
+import { createRef, use, useEffect, useReducer, useRef, useState } from "react";
 import styles from "./AuthModal.module.scss";
 import "./AuthModal.scss";
 import classNames from "classnames";
@@ -66,8 +66,7 @@ const initState = {
 };
 
 const titles = {
-    regClient: "Регистрация",
-    regCompany: "Регистрация",
+    reg: "Регистрация",
     login: "Вход",
     regCode: "Подтверждение регистрации",
     recover: "Восстановление пароля",
@@ -77,14 +76,12 @@ const titles = {
 
 const AuthModal = () => {
     const [modalState, setModalState] = useState<
-        | "regClient"
-        | "regCompany"
-        | "login"
-        | "regCode"
-        | "recover"
-        | "recoverCode"
-        | "newPassword"
-    >("regClient");
+        "reg" | "login" | "regCode" | "recover" | "recoverCode" | "newPassword"
+    >("reg");
+
+    const [regState, setRegState] = useState<"regClient" | "regCompany">(
+        "regClient",
+    );
 
     const reducer = (state: AuthState, action: AuthAction): AuthState => {
         switch (action.type) {
@@ -158,11 +155,19 @@ const AuthModal = () => {
 
     const [state, authDispatch] = useReducer(reducer, initState);
 
+    const valPassBool = (pass: string): boolean => {
+        return PasswordSchema.safeParse(pass).success;
+    };
+
+    const valEmailBool = (email: string): boolean => {
+        return EmailSchema.safeParse(email).success;
+    };
+
     // { content: JSX.Element; ref: React.RefObject<any> }
 
     const getModalContent = (modalState: string): any => {
         switch (modalState) {
-            case "regClient":
+            case "reg":
                 return {
                     content: (
                         <div className="formContent">
@@ -179,9 +184,9 @@ const AuthModal = () => {
                                     }
                                     errorText={state.emailErr}
                                     onBlur={(val) => {
-                                        const res = EmailSchema.safeParse(val);
+                                        const res = valEmailBool(val);
 
-                                        if (res.success) {
+                                        if (res || val === "") {
                                             authDispatch({
                                                 type: "change_email_err",
                                                 err: "",
@@ -216,11 +221,9 @@ const AuthModal = () => {
                                     }
                                     errorText={state.passwordErr}
                                     onBlur={(val) => {
-                                        const res = PasswordSchema.safeParse(
-                                            val,
-                                        );
+                                        const res = valPassBool(val);
 
-                                        if (res.success) {
+                                        if (res || val === "") {
                                             authDispatch({
                                                 type: "change_password_err",
                                                 err: "",
@@ -279,139 +282,13 @@ const AuthModal = () => {
                             <Button
                                 className={styles.resButton}
                                 type="secondary"
-                            >
-                                Регистрация
-                            </Button>
-                            <div className={styles.tipBlock}>
-                                <p className="text fz20 fw500">
-                                    Уже есть аккаунт?{" "}
-                                    <span
-                                        className="text fz20 blue under pointer"
-                                        onClick={() => setModalState("login")}
-                                    >
-                                        Войти
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    ),
-                    ref: createRef(),
-                };
-            case "regCompany":
-                return {
-                    content: (
-                        <div className="formContent">
-                            <div className={styles.inputContainer}>
-                                <Input
-                                    title="Электронная почта"
-                                    type="email"
-                                    value={state.email}
-                                    onChange={(val) =>
-                                        authDispatch({
-                                            type: "change_email",
-                                            email: val,
-                                        })
-                                    }
-                                    errorText={state.emailErr}
-                                    onBlur={(val) => {
-                                        const res = EmailSchema.safeParse(val);
-
-                                        if (res.success) {
-                                            authDispatch({
-                                                type: "change_email_err",
-                                                err: "",
-                                            });
-                                            return;
-                                        }
-
-                                        const issues = EmailSchema.safeParse(
-                                            val,
-                                        ).error!.issues.map(
-                                            (issue) => issue.message,
-                                        );
-
-                                        authDispatch({
-                                            type: "change_email_err",
-                                            err: issues!.join("\n"),
-                                        });
-                                    }}
-                                />
-                            </div>
-                            <div className={styles.inputContainer}>
-                                <Input
-                                    autoComplete="new-password"
-                                    title="Пароль"
-                                    type="password"
-                                    value={state.password}
-                                    onChange={(val) =>
-                                        authDispatch({
-                                            type: "change_password",
-                                            password: val,
-                                        })
-                                    }
-                                    errorText={state.passwordErr}
-                                    onBlur={(val) => {
-                                        const res = PasswordSchema.safeParse(
-                                            val,
-                                        );
-
-                                        if (res.success) {
-                                            authDispatch({
-                                                type: "change_password_err",
-                                                err: "",
-                                            });
-                                            return;
-                                        }
-
-                                        const issues = PasswordSchema.safeParse(
-                                            val,
-                                        ).error!.issues.map(
-                                            (issue) => issue.message,
-                                        );
-
-                                        authDispatch({
-                                            type: "change_password_err",
-                                            err: issues!.join("\n"),
-                                        });
-                                    }}
-                                />
-                            </div>
-                            <div className={styles.inputContainer}>
-                                <Input
-                                    type="checkbox"
-                                    checked={state.checkPrivacy}
-                                    onCheck={(val) =>
-                                        authDispatch({
-                                            type: "change_check_privacy",
-                                            check: val,
-                                        })
-                                    }
-                                    labelContent={
-                                        <div className={styles.labelContent}>
-                                            <p className="text fz20 fw500">
-                                                Я ознакомлен(-а), понимаю и
-                                                принимаю{" "}
-                                                <Link
-                                                    className="text fz20 blue under"
-                                                    href="policy"
-                                                >
-                                                    Пользовательское соглашение
-                                                </Link>{" "}
-                                                и{" "}
-                                                <Link
-                                                    className="text fz20 blue under"
-                                                    href="policy"
-                                                >
-                                                    Политику конфиденциальности
-                                                </Link>
-                                            </p>
-                                        </div>
-                                    }
-                                />
-                            </div>
-                            <Button
-                                className={styles.resButton}
-                                type="secondary"
+                                disabled={
+                                    !state.email ||
+                                    !state.password ||
+                                    !state.checkPrivacy ||
+                                    !!state.emailErr ||
+                                    !!state.passwordErr
+                                }
                             >
                                 Регистрация
                             </Button>
@@ -447,9 +324,9 @@ const AuthModal = () => {
                                     }
                                     errorText={state.emailErr}
                                     onBlur={(val) => {
-                                        const res = EmailSchema.safeParse(val);
+                                        const res = valEmailBool(val);
 
-                                        if (res.success) {
+                                        if (res || val === "") {
                                             authDispatch({
                                                 type: "change_email_err",
                                                 err: "",
@@ -484,11 +361,9 @@ const AuthModal = () => {
                                     }
                                     errorText={state.passwordErr}
                                     onBlur={(val) => {
-                                        const res = PasswordSchema.safeParse(
-                                            val,
-                                        );
+                                        const res = valPassBool(val);
 
-                                        if (res.success) {
+                                        if (res || val === "") {
                                             authDispatch({
                                                 type: "change_password_err",
                                                 err: "",
@@ -512,8 +387,12 @@ const AuthModal = () => {
                             <Button
                                 className={styles.resButton}
                                 type="secondary"
+                                disabled={
+                                    !valEmailBool(state.email) ||
+                                    !valPassBool(state.password)
+                                }
                             >
-                                Регистрация
+                                Вход
                             </Button>
 
                             <div className={styles.tipBlock}>
@@ -535,11 +414,70 @@ const AuthModal = () => {
                                     Еще нет аккаунта?{" "}
                                     <span
                                         className="text fz20 blue under pointer"
-                                        onClick={() =>
-                                            setModalState("regClient")
-                                        }
+                                        onClick={() => setModalState("reg")}
                                     >
                                         Зарегистрироваться
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    ),
+                    ref: createRef(),
+                };
+            case "recover":
+                return {
+                    content: (
+                        <div className="formContent">
+                            <div className={styles.inputContainer}>
+                                <Input
+                                    title="Электронная почта"
+                                    type="email"
+                                    value={state.email}
+                                    onChange={(val) =>
+                                        authDispatch({
+                                            type: "change_email",
+                                            email: val,
+                                        })
+                                    }
+                                    errorText={state.emailErr}
+                                    onBlur={(val) => {
+                                        const res = valEmailBool(val);
+
+                                        if (res || val === "") {
+                                            authDispatch({
+                                                type: "change_email_err",
+                                                err: "",
+                                            });
+                                            return;
+                                        }
+
+                                        const issues = EmailSchema.safeParse(
+                                            val,
+                                        ).error!.issues.map(
+                                            (issue) => issue.message,
+                                        );
+
+                                        authDispatch({
+                                            type: "change_email_err",
+                                            err: issues!.join("\n"),
+                                        });
+                                    }}
+                                />
+                            </div>
+                            <Button
+                                className={styles.resButton}
+                                type="secondary"
+                                disabled={!valEmailBool(state.email)}
+                            >
+                                Восстановить пароль
+                            </Button>
+                            <div className={styles.tipBlock}>
+                                <p className="text fz20 fw500">
+                                    <span
+                                        className="text fz20 blue under pointer"
+                                        onClick={() => setModalState("login")}
+                                    >
+                                        Назад
                                     </span>
                                 </p>
                             </div>
@@ -550,6 +488,10 @@ const AuthModal = () => {
         }
     };
 
+    useEffect(() => {
+        authDispatch({ type: "clear" });
+    }, [modalState]);
+
     const nodeRef = getModalContent(modalState).ref;
     const typeOfModalRef = useRef<HTMLDivElement>(null);
 
@@ -559,10 +501,7 @@ const AuthModal = () => {
             <div className={styles.content}>
                 <CSSTransition
                     unmountOnExit
-                    in={
-                        modalState === "regCompany" ||
-                        modalState === "regClient"
-                    }
+                    in={modalState === "reg"}
                     nodeRef={typeOfModalRef}
                     timeout={200}
                     classNames="typeOfModal"
@@ -570,13 +509,13 @@ const AuthModal = () => {
                     <div ref={typeOfModalRef} className={styles.typeOfModal}>
                         <div
                             className={classNames({
-                                [styles.active]: modalState === "regClient",
+                                [styles.active]: regState === "regClient",
                             })}
-                            onClick={() => setModalState("regClient")}
+                            onClick={() => setRegState("regClient")}
                         >
                             <Image
                                 src={
-                                    modalState === "regClient"
+                                    regState === "regClient"
                                         ? "/icons/student_active.svg"
                                         : "/icons/student.svg"
                                 }
@@ -588,13 +527,13 @@ const AuthModal = () => {
                         </div>
                         <div
                             className={classNames({
-                                [styles.active]: modalState === "regCompany",
+                                [styles.active]: regState === "regCompany",
                             })}
-                            onClick={() => setModalState("regCompany")}
+                            onClick={() => setRegState("regCompany")}
                         >
                             <Image
                                 src={
-                                    modalState === "regCompany"
+                                    regState === "regCompany"
                                         ? "/icons/company_active.svg"
                                         : "/icons/company.svg"
                                 }

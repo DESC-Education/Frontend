@@ -7,6 +7,10 @@ import Input from "./components/ui/Input/Input";
 import { useContext, useState } from "react";
 import { ModalContext } from "./context/ModalContext";
 import AuthModal from "./components/modals/AuthModal/AuthModal";
+import Select from "./components/ui/Select/Select";
+import SelectSearch from "react-select-search";
+import SelectSkills from "./components/SelectSkills/SelectSkills";
+// import "react-select-search/style.css";
 
 export default function Home() {
     const [tel, setTel] = useState("");
@@ -14,6 +18,25 @@ export default function Home() {
     const [errorText, setErrorText] = useState("");
 
     const { showModal } = useContext(ModalContext);
+
+    const skillsList = [
+        "Javascript",
+        "React",
+        "Node",
+        "Typescript",
+        "Next.js",
+        "Tailwind",
+        "CSS",
+        "HTML",
+        "MongoDB",
+        "PostgreSQL",
+        "MySQL",
+        "Firebase",
+        "Git",
+        "Figma",
+        "Adobe XD",
+    ];
+    const [skills, setSkills] = useState<string[]>([]);
 
     return (
         <div
@@ -25,7 +48,7 @@ export default function Home() {
                 gap: "20px",
             }}
         >
-            <DownloadItem extension="pdf" name="Download" url="sad" />
+            {/* <DownloadItem extension="pdf" name="Download" url="sad" />
             <Input
                 title="Phone"
                 type="tel"
@@ -60,6 +83,22 @@ export default function Home() {
             >
                 And me to show modal
             </p>
+            <SelectSearch
+                search
+                options={Array(100)
+                    .fill(0)
+                    .map((_, i) => ({
+                        name: `Option ${i + 1}`,
+                        value: i + 1,
+                    }))}
+            /> */}
+            <SelectSkills
+                title="Навыки"
+                options={skillsList}
+                maxItems={10}
+                values={skills}
+                selectValues={setSkills}
+            />
         </div>
     );
 }

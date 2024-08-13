@@ -2,12 +2,16 @@
 
 import { InputMask } from "@react-input/mask";
 import classNames from "classnames";
-import { FC, ReactComponentElement, useState } from "react";
+import { FC, useRef, useState } from "react";
 import styles from "./Input.module.scss";
+import "./Input.scss";
+import { CSSTransition } from "react-transition-group";
 
 type InputProps = {
     type: "text" | "password" | "tel" | "email" | "checkbox";
+    containerClassName?: string;
     onChange?: (val: string) => void;
+    onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     onCheck?: (val: boolean) => void;
     onBlur?: (val: string) => void;
     value?: string;
@@ -20,7 +24,9 @@ type InputProps = {
 
 const Input: FC<InputProps> = ({
     type,
+    containerClassName = "",
     onChange = (val: string) => {},
+    onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {},
     onCheck = (val: boolean) => {},
     onBlur = (val: string) => {},
     labelContent,
@@ -31,11 +37,17 @@ const Input: FC<InputProps> = ({
     errorText = "",
 }) => {
     const uniqueId = "id" + Math.random().toString(16).slice(2);
+    const errorRef = useRef<HTMLParagraphElement>(null);
 
     switch (type) {
         case "checkbox":
             return (
-                <div className={styles.inputWrapper}>
+                <div
+                    className={classNames(
+                        styles.inputWrapper,
+                        containerClassName,
+                    )}
+                >
                     <input
                         id={uniqueId}
                         autoComplete={autoComplete}
@@ -55,9 +67,15 @@ const Input: FC<InputProps> = ({
 
         case "tel":
             return (
-                <div className={styles.inputWrapper}>
+                <div
+                    className={classNames(
+                        styles.inputWrapper,
+                        containerClassName,
+                    )}
+                >
                     {title && <p className="text fz20 fw500">{title}</p>}
                     <InputMask
+                        onKeyUp={onKeyUp}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, {
                             [styles.inputError]: errorText.length !== 0,
@@ -73,9 +91,15 @@ const Input: FC<InputProps> = ({
             );
         default:
             return (
-                <div className={styles.inputWrapper}>
+                <div
+                    className={classNames(
+                        styles.inputWrapper,
+                        containerClassName,
+                    )}
+                >
                     {title && <p className="text fz20 fw500">{title}</p>}
                     <input
+                        onKeyUp={onKeyUp}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, {
                             [styles.inputError]: errorText.length !== 0,
@@ -85,15 +109,22 @@ const Input: FC<InputProps> = ({
                         onBlur={(e) => onBlur(e.target.value)}
                         onChange={(e) => onChange(e.target.value)}
                     />
-                    <p
-                        className={classNames(
-                            "text fz16 fw500",
-                            { hide: errorText.length === 0 },
-                            styles.errorText,
-                        )}
+                    <CSSTransition
+                        in={errorText.length !== 0}
+                        nodeRef={errorRef}
+                        timeout={100}
+                        classNames="errorText"
                     >
-                        {errorText}
-                    </p>
+                        <p
+                            ref={errorRef}
+                            className={classNames(
+                                "text fz16 fw500",
+                                styles.errorText,
+                            )}
+                        >
+                            {errorText}
+                        </p>
+                    </CSSTransition>
                 </div>
             );
     }

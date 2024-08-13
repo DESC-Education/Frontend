@@ -1,0 +1,21 @@
+.errorText-enter {
+    opacity: 0;
+    transform: translateX(-5%);
+}
+
+.errorText-enter-done {
+    opacity: 1;
+    transform: translateX(0);
+    transition: .3s;
+}
+
+.errorText-exit {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.errorText-exit-active {
+    transform: translateX(5%);
+    transition: .3s;
+    opacity: .2;
+}
