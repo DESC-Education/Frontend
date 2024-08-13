@@ -44,6 +44,15 @@
         }
     }
 
+    &.tetraity {
+        background-color: transparent;
+        border: 1px solid rgba(var(--black), 1);
+  
+        &:hover {
+          background-color: rgba(var(--gray2), 1);
+        }
+    }
+
     &.icon {
         background: rgba(var(--light-gray), 1);
         color: rgba(var(--black), 1);

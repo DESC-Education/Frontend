@@ -4,7 +4,7 @@ import styles from "./Button.module.scss";
 
 type ButtonProps = {
     text: string;
-    type: "primary" | "secondary" | "icon";
+    type: "primary" | "secondary" | "tetraity" |"icon";
     icon?: string;
     disabled?: boolean;
 };
