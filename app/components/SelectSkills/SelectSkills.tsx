@@ -51,6 +51,8 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
         }
     };
 
+    const valuesListRef = useRef<any>(null);
+
     return (
         <div className={styles.container}>
             <p className="title fw32">

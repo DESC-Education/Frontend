@@ -38,6 +38,8 @@ export default function Home() {
     ];
     const [skills, setSkills] = useState<string[]>([]);
 
+    const [checked, setChecked] = useState(false);
+
     return (
         <div
             style={{
@@ -48,6 +50,12 @@ export default function Home() {
                 gap: "20px",
             }}
         >
+            <Input
+                type="checkbox"
+                labelContent="Checkbox"
+                checked={checked}
+                onCheck={setChecked}
+            />
             {/* <DownloadItem extension="pdf" name="Download" url="sad" />
             <Input
                 title="Phone"
