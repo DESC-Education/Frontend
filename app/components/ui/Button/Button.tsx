@@ -19,6 +19,7 @@ const Button: FC<ButtonProps> = ({
     onClick,
     disabled,
 }) => {
+const Button: FC<ButtonProps> = ({ children, icon, type, className, onClick, disabled }) => {
     return (
         <button
             onClick={onClick}
