@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.scss";
+import "./scss/globals.scss";
 
 import localFont from "next/font/local";
 import Providers from "./context/Providers";
