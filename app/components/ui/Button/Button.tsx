@@ -11,14 +11,6 @@ type ButtonProps = {
     disabled?: boolean;
 };
 
-const Button: FC<ButtonProps> = ({
-    children,
-    icon,
-    type,
-    className,
-    onClick,
-    disabled,
-}) => {
 const Button: FC<ButtonProps> = ({ children, icon, type, className, onClick, disabled }) => {
     return (
         <button
