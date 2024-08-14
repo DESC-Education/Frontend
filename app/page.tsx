@@ -2,11 +2,43 @@
 
 import Image from "next/image";
 import Button from "./components/ui/Button/Button";
+import ProjectCard from "./components/ProjectCard/ProjectCard";
 import { useContext, useState } from "react";
 import { ModalContext } from "./context/ModalContext";
 import styles from "./page.module.scss";
 
+
 export default function Home() {
+
+    const projects = [
+        { id: 1, imgSrc: '/icons/projectCardImage1.png', nickname: 'nickname12', userImage: "/icons/userImage1.png" },
+        { id: 2, imgSrc: '/icons/projectCardImage2.png', nickname: 'nickname12', userImage: "/icons/userImage2.png" },
+        { id: 3, imgSrc: '/icons/projectCardImage3.png', nickname: 'nickname12', userImage: "/icons/userImage3.png" },
+        { id: 4, imgSrc: '/icons/projectCardImage4.png', nickname: 'nickname12', userImage: "/icons/userImage4.png" },
+    ];
+
+
+    const partners = [
+        { id: 1, logo: '/icons/IKITlogo.svg', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
+        { id: 2, logo: '', name: 'ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
+        { id: 3, logo: 'ikit.png', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
+        { id: 4, logo: 'polytechnic.png', name: 'ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' }
+    ];
+
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const handlePrev = () => {
+        setActiveIndex((prevIndex) => (prevIndex === 0 ? partners.length - 1 : prevIndex - 1));
+    };
+
+    const handleNext = () => {
+        setActiveIndex((prevIndex) => (prevIndex === partners.length - 1 ? 0 : prevIndex + 1));
+    };
+
+
+
+
+
     return (
         <div className={styles.container}>
             {/* Header Section */}
@@ -179,67 +211,54 @@ export default function Home() {
             </section>
 
             {/* Projects Section */}
-            <section className={styles.projects}>
-                <h2>Проекты студентов</h2>
-                <div className={styles.projectList}>
-                    <div className={styles.projectItem}>
-                        <Image
-                            src="/path-to-project1.png"
-                            alt="Проект 1"
-                            width={200}
-                            height={150}
+            <section className={styles.studentProjects}>
+                <h2 className="title fz48">Проекты студентов</h2>
+                <div className={styles.projectsContainer}>
+                    {projects.map((project) => (
+                        <ProjectCard
+                            key={project.id}
+                            nickName={project.nickname}
+                            image={project.imgSrc}
+                            userIcon={project.userImage}
                         />
-                        <p>Проект 1</p>
-                    </div>
-                    <div className={styles.projectItem}>
-                        <Image
-                            src="/path-to-project2.png"
-                            alt="Проект 2"
-                            width={200}
-                            height={150}
-                        />
-                        <p>Проект 2</p>
-                    </div>
-                    <div className={styles.projectItem}>
-                        <Image
-                            src="/path-to-project3.png"
-                            alt="Проект 3"
-                            width={200}
-                            height={150}
-                        />
-                        <p>Проект 3</p>
-                    </div>
+                    ))}
+                </div>
+                <div className={styles.pagination}>
+                    {projects.map((_, index) => (
+                        <span key={index} className={`${styles.bullet} ${index === 0 ? styles.active : ''}`}></span>
+                    ))}
                 </div>
             </section>
 
             {/* Partners Section */}
             <section className={styles.partners}>
-                <h2>Партнеры</h2>
+                <h2 className="title fz48">Партнеры</h2>
+                <div className={styles.carousel}>
+                    <button onClick={handlePrev} className={styles.arrowButton}>
+                        <span>&larr;</span>
+                    </button>
+                    <div className={styles.partnerDetails}>
+                        <div className={styles.partnerLogo} >
+                            <img src={partners[activeIndex].logo} alt={partners[activeIndex].name}/>
+                        </div>
+                        <div className={styles.partnerInfo}>
+                            <h3 className="title fz48">{partners[activeIndex].name}</h3>
+                            <p className="text">{partners[activeIndex].description}</p>
+                        </div>
+                    </div>
+                    <button onClick={handleNext} className={styles.arrowButton}>
+                        <span>&rarr;</span>
+                    </button>
+                </div>
                 <div className={styles.partnerLogos}>
-                    <Image
-                        src="/path-to-logo.png"
-                        alt="ИКИТ СФУ"
-                        width={100}
-                        height={50}
-                    />
-                    <Image
-                        src="/path-to-logo.png"
-                        alt="VENIT"
-                        width={100}
-                        height={50}
-                    />
-                    <Image
-                        src="/path-to-logo.png"
-                        alt="VENIT"
-                        width={100}
-                        height={50}
-                    />
-                    <Image
-                        src="/path-to-logo.png"
-                        alt="VENIT"
-                        width={100}
-                        height={50}
-                    />
+                    {partners.map((partner, index) => (
+                        <img
+                            key={partner.id}
+                            src={partner.logo}
+                            alt={partner.name}
+                            className={`${styles.smallLogo} ${index === activeIndex ? styles.active : ''}`}
+                        />
+                    ))}
                 </div>
             </section>
 
