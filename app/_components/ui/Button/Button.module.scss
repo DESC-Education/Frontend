@@ -1,0 +1,69 @@
+.button {
+    border-radius: 30px;
+    padding: 15px 50px;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 500;
+    transition: .3s;
+    cursor: pointer;
+    border: none;
+    // font-family: '__gilroy_a5be43';
+
+    &.disabled {
+        cursor: default;
+        opacity: .6;
+    }
+
+    &.primary {
+        background-color: transparent;
+        color: rgba(var(--black), 1);
+        border: 1px solid rgba(var(--black), 1);
+
+        &:hover {
+            background-color: rgba(var(--black), 1);
+            color: rgba(var(--white), 1);
+        }
+
+        &.disabled:hover {
+            background-color: rgba(var(--white), 1);
+            color: rgba(var(--black), 1);
+            border: 1px solid rgba(var(--black), 1);
+        }
+    }
+
+    &.secondary {
+        background-color: rgba(var(--black), 1);
+        color: rgba(var(--white), 1);
+
+        &:hover {
+            background-color: rgba(var(--gray1), 1);
+        }
+
+        &.disabled:hover {
+            background-color: rgba(var(--black), 1);
+            color: rgba(var(--white), 1);
+        }
+    }
+
+    &.icon {
+        background: rgba(var(--light-gray), 1);
+        color: rgba(var(--black), 1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 50px;
+
+        img {
+            width: 30px;
+            height: 30px;
+        }
+
+        &:hover {
+            box-shadow: 0 0 2px rgba(var(--black), 1);
+        }
+
+        &.disabled:hover {
+            box-shadow: none;
+        }
+    }
+}
