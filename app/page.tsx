@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import { ModalContext } from "./_context/ModalContext";
 import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";
+import classNames from "classnames";
 
 
 export default function Home() {
@@ -100,11 +101,11 @@ export default function Home() {
                         </p>
                     </div>
                     <div className={styles.keywordsBlock}>
-                        <div className={styles.keyword}>🚀 Большие проекты</div>
-                        <div className={styles.keyword}>📈 Карьерный рост</div>
-                        <div className={styles.keyword}>🔥 Реальный опыт</div>
-                        <div className={styles.keyword}>💼 Трудоустройство</div>
-                        <div className={styles.keyword}>🏆 Команда мечты</div>
+                        <div className={classNames(styles.keyword, styles.keyword1)}>🚀 Большие проекты</div>
+                        <div className={classNames(styles.keyword, styles.keyword2)}>📈 Карьерный рост</div>
+                        <div className={classNames(styles.keyword, styles.keyword3)}>🔥 Реальный опыт</div>
+                        <div className={classNames(styles.keyword, styles.keyword4)}>💼 Трудоустройство</div>
+                        <div className={classNames(styles.keyword, styles.keyword5)}>🏆 Команда мечты</div>
                     </div>
                 </div>
             </section>

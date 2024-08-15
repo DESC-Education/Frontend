@@ -50,7 +50,75 @@
 }
 
 
+@keyframes floatingKeywords1 {
+    0% {
+        transform: rotate(5deg) translateY(0);
+    }
 
+    50% {
+        transform: rotate(5deg) translateY(-10px);
+    }
+
+    100% {
+        transform: rotate(5deg) translateY(0);
+    }
+}
+
+@keyframes floatingKeywords2 {
+    0% {
+        transform: rotate(-3deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-3deg) translateY(-10px);
+    }
+
+    100% {
+        transform: rotate(-3deg) translateY(0);
+    }
+}
+
+@keyframes floatingKeywords3 {
+    0% {
+        transform: rotate(7deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(7deg) translateY(-10px);
+    }
+
+    100% {
+        transform: rotate(7deg) translateY(0);
+    }
+}
+
+@keyframes floatingKeywords4 {
+    0% {
+        transform: rotate(-4deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-4deg) translateY(-10px);
+    }
+
+    100% {
+        transform: rotate(-4deg) translateY(0);
+    }
+}
+
+@keyframes floatingKeywords5 {
+    0% {
+        transform: rotate(-8deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-8deg) translateY(-10px);
+    }
+
+    100% {
+        transform: rotate(-8deg) translateY(0);
+    }
+}
 
 .aboutUs {
     display: flex;
@@ -84,16 +152,77 @@
     }
 
     .keywordsBlock {
+        background: url("/images/keywords_bg.png") no-repeat center;
         flex: 1;
         display: flex;
+        // align-items: center;
         flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
+        height: 100%;
         padding: 40px;
         background-color: #1e2a38;
-        border-radius: 20px;
+        border-radius: 50px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         color: #ffffff;
+        position: relative;
+
+        .keyword {
+            background-color: #ffffff;
+            position: absolute;
+            color: #333333;
+            padding: 12px 22px;
+            border-radius: 25px;
+            font-size: 20px;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            &1 {
+                transform: rotate(5deg);
+                top: 35px;
+                left: 30px;
+                animation: floatingKeywords1 4.3s infinite linear;
+            }
+
+            &2 {
+                transform: rotate(-3deg);
+                top: 135px;
+                left: 60px;
+                animation: floatingKeywords2 3.9s infinite linear;
+            }
+
+            &3 {
+                transform: rotate(7deg);
+                top: 135px;
+                left: 320px;
+                animation: floatingKeywords3 4.1s infinite linear;
+            }
+
+            &4 {
+                transform: rotate(-4deg);
+                top: 35px;
+                left: 410px;
+                animation: floatingKeywords4 3.9s infinite linear;
+            }
+
+            &5 {
+                transform: rotate(-8deg);
+                top: 95px;
+                left: 580px;
+                animation: floatingKeywords5 4.2s infinite linear;
+            }
+        }
+
+        img {
+            position: absolute;
+            top: 170px;
+            left: 5%;
+            width: 90%;
+            max-height: unset;
+            object-fit: cover;
+            z-index: 1;
+        }
     }
 
     .keyword {
@@ -128,11 +257,15 @@
         border-radius: 50px;
         padding: 40px;
 
-
         .stepHeader {
-            display: flex;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 15px;
             margin-bottom: 20px;
+
+            h3 {
+                margin: auto 0;
+            }
         }
 
         &:nth-child(1) {
@@ -167,13 +300,12 @@
     }
 }
 
-
 .opportunities {
     text-align: center;
-    padding: 60px 0;
+    padding: 40px 10px;
 
     h2 {
-        margin-bottom: 40px;
+        margin-bottom: 20px;
     }
 
     .container {
@@ -185,13 +317,13 @@
 
     .block {
         flex: 1;
-        padding: 40px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;
 
         h3 {
-            margin-bottom: 120px;
+            margin-bottom: 40px;
         }
 
         ul {
@@ -199,7 +331,7 @@
 
             li {
                 padding: 0 60px 0;
-                margin-bottom: 40px;
+                margin-bottom: 20px;
                 display: flex;
                 align-items: center;
                 text-align: left;
