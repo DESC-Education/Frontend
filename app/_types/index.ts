@@ -1,25 +1,3 @@
-export type IUser =
-    | {
-          id: string;
-          mail: string;
-          is_verified: boolean;
-          role: string;
-          is_online: boolean;
-          is_banned: boolean;
-          type: "student";
-          data: IStudent;
-      }
-    | {
-          id: string;
-          mail: string;
-          is_verified: boolean;
-          role: string;
-          is_online: boolean;
-          is_banned: boolean;
-          type: "company";
-          data: ICompany;
-      };
-
 export type IStudent =
     | {
           id: string;
@@ -103,4 +81,16 @@ export type IFile = {
     name: string;
     path: string;
     type: string;
+=======
+}
+
+export type IMessage = { 
+    id: string; 
+    chat_id: string; 
+    text: string; 
+    ticket_id?: string; 
+    user_id: string; 
+    createdAt: string; 
+    is_visible: boolean; 
+    changed_id?: string; 
 };
