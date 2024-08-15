@@ -103,4 +103,4 @@ export type IFile = {
     name: string;
     path: string;
     type: string;
-};
+}
