@@ -1,6 +1,8 @@
 import {
     createRef,
     FC,
+    ReactNode,
+    RefObject,
     use,
     useContext,
     useEffect,
@@ -17,34 +19,34 @@ import z from "zod";
 import Link from "next/link";
 import Button from "../../ui/Button/Button";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
-import { registerUser } from "@/app/_http/API/userApi";
+import { loginUser, registerUser } from "@/app/_http/API/userApi";
 import { AlertContext } from "@/app/_context/AlertContext";
 import { ModalContext } from "@/app/_context/ModalContext";
 import Timer, { TimerState } from "../../ui/Timer/Timer";
 
-export const PasswordSchema = z.string();
+// export const PasswordSchema = z.string();
 
-// export const PasswordSchema = z
-//     .string()
-//     .min(6, "Пароль должен быть содержать хотя бы шесть символов")
-//     .regex(
-//         new RegExp(".*[A-Z].*"),
-//         "В пароле должна быть хотя бы одна буква в верхнем регистре",
-//     )
-//     .regex(
-//         new RegExp(".*[a-z].*"),
-//         "В пароле должна быть хотя бы одна буква в нижнем регистре",
-//     )
-//     .regex(new RegExp(".*[0-9].*"), "В пароле должна быть хотя бы одна цифра")
-//     .regex(
-//         new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-//         "В пароле должен быть хотя бы один специальный символ",
-//     );
+export const PasswordSchema = z
+    .string()
+    .min(6, "Пароль должен быть содержать хотя бы шесть символов")
+    .regex(
+        new RegExp(".*[A-Z].*"),
+        "В пароле должна быть хотя бы одна буква в верхнем регистре",
+    )
+    .regex(
+        new RegExp(".*[a-z].*"),
+        "В пароле должна быть хотя бы одна буква в нижнем регистре",
+    )
+    .regex(new RegExp(".*[0-9].*"), "В пароле должна быть хотя бы одна цифра")
+    .regex(
+        new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
+        "В пароле должен быть хотя бы один специальный символ",
+    );
 
-// export const EmailSchema = z
-//     .string()
-//     .email("Некорректный формат электронной почты");
-export const EmailSchema = z.string();
+export const EmailSchema = z
+    .string()
+    .email("Некорректный формат электронной почты");
+// export const EmailSchema = z.string();
 
 type AuthState = {
     code: string;
@@ -96,10 +98,10 @@ type AuthModalProps = {
     initModalState: "reg" | "login";
 };
 
+type ModalState = "reg" | "login" | "regCode" | "recover" | "recoverCode";
+
 const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
-    const [modalState, setModalState] = useState<
-        "reg" | "login" | "regCode" | "recover" | "recoverCode" | "newPassword"
-    >(initModalState);
+    const [modalState, setModalState] = useState<ModalState>(initModalState);
 
     const [regState, setRegState] = useState<"regClient" | "regCompany">(
         "regClient",
@@ -196,18 +198,20 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         setModalState("regCode");
         setTimerState("running");
 
-        // const res = await registerUser({
-        //     email: state.email,
-        //     password: state.password,
-        // });
+        const res = await registerUser({
+            email: state.email,
+            password: state.password,
+        });
 
-        // if (res.status === 200) {
-        //     showAlert!("Регистрация прошла успешно!", "success");
-        //     closeModal();
-        //     setModalState("regCode");
-        // } else {
-        //     showAlert!(res.message);
-        // }
+        console.log(res);
+
+        if (res.status === 200) {
+            // showAlert!("Регистрация прошла успешно!", "success");
+            closeModal();
+            setModalState("regCode");
+        } else {
+            showAlert!(res.message);
+        }
     };
 
     const verifyCodeHandler = async () => {
@@ -215,14 +219,35 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     };
 
     const loginHandler = async () => {
+
         // setModalState("");
+
+        const res = await loginUser({
+            email: state.email,
+            password: state.password,
+        });
+
+        console.log(res);
+
+        if (res.status === 200) {
+            // showAlert!("Регистрация прошла успешно!", "success");
+            closeModal();
+            setModalState("login");
+        } else {
+            showAlert!(res.message);
+        }
     };
 
     const recoverHandler = async () => {
-        // setModalState("");
+        setModalState("recoverCode");
+        setTimerState("running");
     };
 
     const verifyRegCodeHandler = async () => {
+        // setModalState("");
+    };
+
+    const verifyRecoverCodeHandler = async () => {
         // setModalState("");
     };
 
@@ -235,7 +260,9 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     const [timeIsUp, setTimeIsUp] = useState<boolean>(false);
     const [isSentAgain, setIsSentAgain] = useState<boolean>(false);
 
-    const getModalContent = (modalState: string): any => {
+    const getModalContent = (
+        modalState: ModalState,
+    ): { content: ReactNode; ref: RefObject<HTMLDivElement> } => {
         switch (modalState) {
             case "reg":
                 return {
@@ -471,6 +498,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                 />
                             </div>
                             <Button
+                                onClick={() => loginHandler()}
                                 className={styles.resButton}
                                 type="secondary"
                                 disabled={
@@ -516,7 +544,11 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                valEmailBool(state.email) && recoverHandler();
+                                valEmailBool(state.email) &&
+                                    valPassBool(state.password) &&
+                                    valPassBool(state.newPassword) &&
+                                    state.password === state.newPassword &&
+                                    recoverHandler();
                             }}
                             className="formContent"
                         >
@@ -556,10 +588,86 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                     }}
                                 />
                             </div>
+                            <div className={styles.inputContainer}>
+                                <Input
+                                    autoComplete="password"
+                                    title="Новый пароль"
+                                    type="password"
+                                    value={state.password}
+                                    onChange={(val) =>
+                                        authDispatch({
+                                            type: "change_password",
+                                            password: val,
+                                        })
+                                    }
+                                    errorText={state.passwordErr}
+                                    onBlur={(val) => {
+                                        const res = valPassBool(val);
+
+                                        if (res || val === "") {
+                                            authDispatch({
+                                                type: "change_password_err",
+                                                err: "",
+                                            });
+                                            return;
+                                        }
+
+                                        const issues = PasswordSchema.safeParse(
+                                            val,
+                                        ).error!.issues.map(
+                                            (issue) => issue.message,
+                                        );
+
+                                        authDispatch({
+                                            type: "change_password_err",
+                                            err: issues!.join("\n"),
+                                        });
+                                    }}
+                                />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <Input
+                                    autoComplete="password"
+                                    title="Повторите пароль"
+                                    type="password"
+                                    value={state.newPassword}
+                                    onChange={(val) =>
+                                        authDispatch({
+                                            type: "change_new_password",
+                                            newPassword: val,
+                                        })
+                                    }
+                                    errorText={state.newPasswordErr}
+                                    onBlur={(val) => {
+                                        if (
+                                            val === state.password ||
+                                            val === ""
+                                        ) {
+                                            authDispatch({
+                                                type: "change_new_password_err",
+                                                err: "",
+                                            });
+                                            return;
+                                        }
+
+                                        if (val !== state.password) {
+                                            authDispatch({
+                                                type: "change_new_password_err",
+                                                err: "Пароли не совпадают",
+                                            });
+                                        }
+                                    }}
+                                />
+                            </div>
                             <Button
                                 className={styles.resButton}
                                 type="secondary"
-                                disabled={!valEmailBool(state.email)}
+                                disabled={
+                                    !valEmailBool(state.email) ||
+                                    !valPassBool(state.password) ||
+                                    !valPassBool(state.newPassword) ||
+                                    state.password !== state.newPassword
+                                }
                             >
                                 Восстановить пароль
                             </Button>
@@ -620,6 +728,98 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                 disabled={!valCodeBool(state.code)}
                             >
                                 Подтвердить регистрацию
+                            </Button>
+                            {isSentAgain ? (
+                                <div className={styles.tipBlock}>
+                                    <p className="text fz20 fw500 center">
+                                        Код отправлен!
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className={styles.tipBlock}>
+                                    <p
+                                        className={classNames(
+                                            "text fz20 fw500 center",
+                                            styles.tip,
+                                        )}
+                                    >
+                                        Не приходит код?
+                                    </p>
+                                    <div className={styles.timerContainer}>
+                                        {timeIsUp ? (
+                                            <span
+                                                className="text fz20 blue under pointer"
+                                                onClick={() =>
+                                                    sendAgainHandler()
+                                                }
+                                            >
+                                                Отправить повторно
+                                            </span>
+                                        ) : (
+                                            <>
+                                                <p className="text fz20 fw500">
+                                                    Отправить повторно через
+                                                </p>
+                                                <Timer
+                                                    handlerTimeUp={() =>
+                                                        setTimeIsUp(true)
+                                                    }
+                                                    autostart
+                                                    time={10}
+                                                    state={timerState}
+                                                />
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </form>
+                    ),
+                    ref: createRef(),
+                };
+            case "recoverCode":
+                return {
+                    content: (
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                valCodeBool(state.code) &&
+                                    verifyRecoverCodeHandler();
+                            }}
+                            className="formContent"
+                        >
+                            <p
+                                className={classNames(
+                                    "text fz20 fw500",
+                                    styles.hintText,
+                                )}
+                            >
+                                На вашу почту выслан 4-ех значный код
+                                подтверждения
+                            </p>
+                            <div className={styles.inputContainer}>
+                                <Input
+                                    containerClassName={
+                                        styles.codeInputContainer
+                                    }
+                                    title="Введите код из письма"
+                                    type="code"
+                                    value={state.code}
+                                    onChange={(val) =>
+                                        authDispatch({
+                                            type: "change_code",
+                                            code: val,
+                                        })
+                                    }
+                                />
+                            </div>
+                            <Button
+                                onClick={() => verifyRecoverCodeHandler()}
+                                className={styles.resButton}
+                                type="secondary"
+                                disabled={!valCodeBool(state.code)}
+                            >
+                                Восстановить пароль
                             </Button>
                             {isSentAgain ? (
                                 <div className={styles.tipBlock}>
@@ -735,7 +935,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                         timeout={200}
                         nodeRef={nodeRef}
                         addEndListener={(done: any) => {
-                            nodeRef.current.addEventListener(
+                            nodeRef.current!.addEventListener(
                                 "transitionend",
                                 done,
                                 false,

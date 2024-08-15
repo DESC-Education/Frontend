@@ -46,11 +46,11 @@ $authHost.interceptors.response.use(
                         return;
                     }
 
-                    const rs = await $host.post("/api/v1/token_refresh", {
+                    const { data } = await $host.post<{ access: string }>("/api/v1/token_refresh", {
                         refresh: LocalStorage.getRefreshToken(),
                     });
 
-                    const token = rs.data.access;
+                    const token = data.access;
                     LocalStorage.setAccessToken(token);
 
                     return $authHost(originalConfig);

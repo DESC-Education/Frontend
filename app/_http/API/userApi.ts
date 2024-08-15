@@ -1,14 +1,46 @@
 import axios from "axios";
-import { $authHost } from "..";
+import { $authHost, $host } from "..";
 import { IUser } from "@/app/_types";
+import { Tokens } from "../types";
 
-export const verifyEmail = async (data: {
+export const sendVerificationCode = async (dto: {
+    type: "RG" | "PW" | "EM";
+    email?: string;
+}): Promise<{ status: number; message: string }> => {
+    try {
+        let data;
+        if (dto.type === "EM") {
+            data = await $authHost.post("/api/v1/send_verifiy_code", dto);
+        } else if (dto.type === "RG") {
+            data = await $host.post("/api/v1/send_verifiy_code", dto);
+        } else {
+            data = await $authHost.post("/api/v1/send_verifiy_code", dto);
+        }
+        
+        return { status: 200, message: data.data.message };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const verifyEmail = async (dto: {
     email: string;
     code: string;
 }): Promise<{ status: number; message?: string }> => {
     try {
-        const rs = await $authHost.post("/api/v1/register/verify", data);
-        return { status: 200, message: "Email подтвержден" };
+        const { data } = await $authHost.post("/api/v1/register/verify", dto);
+
+        return { status: 200, message: data.message };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
@@ -24,21 +56,24 @@ export const verifyEmail = async (data: {
     }
 };
 
-export const registerUser = async (data: {
+export const registerUser = async (dto: {
     email: string;
     password: string;
-}): Promise<{ status: number; message?: string; user?: IUser }> => {
+}): Promise<{ status: number; message: string; user?: IUser }> => {
     try {
-        const rs = await $authHost.post("/api/v1/registration", data);
+        const { data } = await $authHost.post<{
+            status: number;
+            data: { user: IUser; tokens: Tokens };
+            message: string;
+        }>("/api/v1/registration", dto);
+
         return {
             status: 200,
-            message: "Регистрация прошла успешно",
-            user: rs.data,
+            message: data.message,
+            user: data.data.user,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log(error);
-            
             return {
                 status: error.response!.status,
                 message: error.response!.data,
@@ -52,13 +87,53 @@ export const registerUser = async (data: {
     }
 };
 
-export const loginUser = async (data: {
+export const loginUser = async (dto: {
     email: string;
     password: string;
-}) => {
+}): Promise<{ status: number; message: string; user?: IUser }> => {
     try {
-        const rs = await $authHost.post("/api/v1/login", data);
-        return rs;
+        const { data } = await $authHost.post<{
+            status: number;
+            data: { user: IUser; tokens: Tokens };
+            message: string;
+        }>("/api/v1/login", dto);
+
+        return {
+            status: data.status,
+            message: data.message,
+            user: data.data.user,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const auth = async (): Promise<{
+    status: number;
+    message: string;
+    user?: IUser;
+}> => {
+    try {
+        const { data } = await $authHost.get<{
+            data: { user: IUser };
+            message: string;
+        }>("/api/v1/auth");
+
+        return {
+            status: 200,
+            message: data.message,
+            user: data.data.user,
+        };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
