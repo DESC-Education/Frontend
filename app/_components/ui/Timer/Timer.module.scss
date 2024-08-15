@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    align-items: center;
+
+    .time {
+        font-weight: 500;
+        width: 60px;
+        margin-right: 10px;
+
+        &.red {
+            color: var(--red);
+        }
+    }
+
+    .icon {
+        width: 24px;
+        transition: 0.3s;
+        margin-left: 20px;
+        cursor: pointer;
+
+        &.blur {
+            opacity: 0.4;
+            cursor: default;
+
+            &:hover {
+                transform: none;
+            }
+        }
+
+        &.big {
+            width: 32px;
+        }
+
+        &:hover {
+            transform: scale(1.15);
+        }
+    }
+}

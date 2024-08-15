@@ -7,38 +7,76 @@ import { ModalContext } from "./_context/ModalContext";
 import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";
 import classNames from "classnames";
-
+import AuthModal from "./_components/modals/AuthModal/AuthModal";
 
 export default function Home() {
-
     const projects = [
-        { id: 1, imgSrc: '/images/projectCardImage1.png', nickname: 'nickname12', userImage: "/images/userImage1.png" },
-        { id: 2, imgSrc: '/images/projectCardImage2.png', nickname: 'nickname12', userImage: "/images/userImage2.png" },
-        { id: 3, imgSrc: '/images/projectCardImage3.png', nickname: 'nickname12', userImage: "/images/userImage3.png" },
-        { id: 4, imgSrc: '/images/projectCardImage4.png', nickname: 'nickname12', userImage: "/images/userImage4.png" },
+        {
+            id: 1,
+            imgSrc: "/images/projectCardImage1.png",
+            nickname: "nickname12",
+            userImage: "/images/userImage1.png",
+        },
+        {
+            id: 2,
+            imgSrc: "/images/projectCardImage2.png",
+            nickname: "nickname12",
+            userImage: "/images/userImage2.png",
+        },
+        {
+            id: 3,
+            imgSrc: "/images/projectCardImage3.png",
+            nickname: "nickname12",
+            userImage: "/images/userImage3.png",
+        },
+        {
+            id: 4,
+            imgSrc: "/images/projectCardImage4.png",
+            nickname: "nickname12",
+            userImage: "/images/userImage4.png",
+        },
     ];
-
 
     const partners = [
         // { id: 1, logo: '/images/IKITlogo.svg', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
-        { id: 2, logo: '/images/politechlogo.png', name: 'ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
-        { id: 3, logo: 'ikit.png', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
-        { id: 4, logo: 'polytechnic.png', name: 'ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' }
+        {
+            id: 2,
+            logo: "/images/politechlogo.png",
+            name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+            description:
+                "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+        },
+        {
+            id: 3,
+            logo: "ikit.png",
+            name: "ИКИТ",
+            description:
+                "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+        },
+        {
+            id: 4,
+            logo: "polytechnic.png",
+            name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+            description:
+                "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+        },
     ];
 
     const [activeIndex, setActiveIndex] = useState(0);
 
     const handlePrev = () => {
-        setActiveIndex((prevIndex) => (prevIndex === 0 ? partners.length - 1 : prevIndex - 1));
+        setActiveIndex((prevIndex) =>
+            prevIndex === 0 ? partners.length - 1 : prevIndex - 1,
+        );
     };
 
     const handleNext = () => {
-        setActiveIndex((prevIndex) => (prevIndex === partners.length - 1 ? 0 : prevIndex + 1));
+        setActiveIndex((prevIndex) =>
+            prevIndex === partners.length - 1 ? 0 : prevIndex + 1,
+        );
     };
 
-
-
-
+    const { showModal } = useContext(ModalContext);
 
     return (
         <div className={styles.container}>
@@ -52,8 +90,28 @@ export default function Home() {
                 />
                 <nav>
                     <div className={styles.navList}>
-                        <Button type="primary">Вход</Button>
-                        <Button type="secondary">Регистрация</Button>
+                        <Button
+                            onClick={() =>
+                                showModal({
+                                    content: (
+                                        <AuthModal initModalState="login" />
+                                    ),
+                                })
+                            }
+                            type="primary"
+                        >
+                            Вход
+                        </Button>
+                        <Button
+                            onClick={() =>
+                                showModal({
+                                    content: <AuthModal initModalState="reg" />,
+                                })
+                            }
+                            type="secondary"
+                        >
+                            Регистрация
+                        </Button>
                     </div>
                 </nav>
             </header>
@@ -101,11 +159,47 @@ export default function Home() {
                         </p>
                     </div>
                     <div className={styles.keywordsBlock}>
-                        <div className={classNames(styles.keyword, styles.keyword1)}>🚀 Большие проекты</div>
-                        <div className={classNames(styles.keyword, styles.keyword2)}>📈 Карьерный рост</div>
-                        <div className={classNames(styles.keyword, styles.keyword3)}>🔥 Реальный опыт</div>
-                        <div className={classNames(styles.keyword, styles.keyword4)}>💼 Трудоустройство</div>
-                        <div className={classNames(styles.keyword, styles.keyword5)}>🏆 Команда мечты</div>
+                        <div
+                            className={classNames(
+                                styles.keyword,
+                                styles.keyword1,
+                            )}
+                        >
+                            🚀 Большие проекты
+                        </div>
+                        <div
+                            className={classNames(
+                                styles.keyword,
+                                styles.keyword2,
+                            )}
+                        >
+                            📈 Карьерный рост
+                        </div>
+                        <div
+                            className={classNames(
+                                styles.keyword,
+                                styles.keyword3,
+                            )}
+                        >
+                            🔥 Реальный опыт
+                        </div>
+                        <div
+                            className={classNames(
+                                styles.keyword,
+                                styles.keyword4,
+                            )}
+                        >
+                            💼 Трудоустройство
+                        </div>
+                        <div
+                            className={classNames(
+                                styles.keyword,
+                                styles.keyword5,
+                            )}
+                        >
+                            🏆 Команда мечты
+                        </div>
+                        <img src="images/students.png" alt="students" />
                     </div>
                 </div>
             </section>
@@ -226,7 +320,12 @@ export default function Home() {
                 </div>
                 <div className={styles.pagination}>
                     {projects.map((_, index) => (
-                        <span key={index} className={`${styles.bullet} ${index === 0 ? styles.active : ''}`}></span>
+                        <span
+                            key={index}
+                            className={`${styles.bullet} ${
+                                index === 0 ? styles.active : ""
+                            }`}
+                        ></span>
                     ))}
                 </div>
             </section>
@@ -239,12 +338,19 @@ export default function Home() {
                         <span>&larr;</span>
                     </button>
                     <div className={styles.partnerDetails}>
-                        <div className={styles.partnerLogo} >
-                            <img src={partners[activeIndex].logo} alt={partners[activeIndex].name}/>
+                        <div className={styles.partnerLogo}>
+                            <img
+                                src={partners[activeIndex].logo}
+                                alt={partners[activeIndex].name}
+                            />
                         </div>
                         <div className={styles.partnerInfo}>
-                            <h3 className="title fz48">{partners[activeIndex].name}</h3>
-                            <p className="text">{partners[activeIndex].description}</p>
+                            <h3 className="title fz48">
+                                {partners[activeIndex].name}
+                            </h3>
+                            <p className="text">
+                                {partners[activeIndex].description}
+                            </p>
                         </div>
                     </div>
                     <button onClick={handleNext} className={styles.arrowButton}>
@@ -257,7 +363,9 @@ export default function Home() {
                             key={partner.id}
                             src={partner.logo}
                             alt={partner.name}
-                            className={`${styles.smallLogo} ${index === activeIndex ? styles.active : ''}`}
+                            className={`${styles.smallLogo} ${
+                                index === activeIndex ? styles.active : ""
+                            }`}
                         />
                     ))}
                 </div>

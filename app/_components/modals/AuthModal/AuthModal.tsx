@@ -20,6 +20,7 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { registerUser } from "@/app/_http/API/userApi";
 import { AlertContext } from "@/app/_context/AlertContext";
 import { ModalContext } from "@/app/_context/ModalContext";
+import Timer, { TimerState } from "../../ui/Timer/Timer";
 
 export const PasswordSchema = z.string();
 
@@ -40,7 +41,9 @@ export const PasswordSchema = z.string();
 //         "В пароле должен быть хотя бы один специальный символ",
 //     );
 
-// export const EmailSchema = z.string().email("Некорректный формат электронной почты");
+// export const EmailSchema = z
+//     .string()
+//     .email("Некорректный формат электронной почты");
 export const EmailSchema = z.string();
 
 type AuthState = {
@@ -73,7 +76,7 @@ const initState = {
     password: "",
     newPassword: "",
     email: "",
-    checkPrivacy: false,
+    checkPrivacy: true,
     emailErr: "",
     passwordErr: "",
     newPasswordErr: "",
@@ -185,15 +188,18 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         return EmailSchema.safeParse(email).success;
     };
 
+    const valCodeBool = (code: string): boolean => {
+        return !code.includes("_");
+    };
+
     const registerHandler = async () => {
-            setModalState("regCode");
+        setModalState("regCode");
+        setTimerState("running");
 
         // const res = await registerUser({
         //     email: state.email,
         //     password: state.password,
         // });
-
-        // console.log(res);
 
         // if (res.status === 200) {
         //     showAlert!("Регистрация прошла успешно!", "success");
@@ -204,12 +210,46 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         // }
     };
 
+    const verifyCodeHandler = async () => {
+        // setModalState("");
+    };
+
+    const loginHandler = async () => {
+        // setModalState("");
+    };
+
+    const recoverHandler = async () => {
+        // setModalState("");
+    };
+
+    const verifyRegCodeHandler = async () => {
+        // setModalState("");
+    };
+
+    const sendAgainHandler = async () => {
+        setIsSentAgain(true);
+        // setModalState("login");
+    };
+
+    const [timerState, setTimerState] = useState<TimerState>("paused");
+    const [timeIsUp, setTimeIsUp] = useState<boolean>(false);
+    const [isSentAgain, setIsSentAgain] = useState<boolean>(false);
+
     const getModalContent = (modalState: string): any => {
         switch (modalState) {
             case "reg":
                 return {
                     content: (
-                        <div className="formContent">
+                        <form
+                            className="formContent"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                valEmailBool(state.email) &&
+                                    !valPassBool(state.password) &&
+                                    state.checkPrivacy &&
+                                    registerHandler();
+                            }}
+                        >
                             <div className={styles.inputContainer}>
                                 <Input
                                     title="Электронная почта"
@@ -322,13 +362,11 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                 onClick={() => registerHandler()}
                                 className={styles.resButton}
                                 type="secondary"
-                                // disabled={
-                                //     !state.email ||
-                                //     !state.password ||
-                                //     !state.checkPrivacy ||
-                                //     !!state.emailErr ||
-                                //     !!state.passwordErr
-                                // }
+                                disabled={
+                                    !valEmailBool(state.email) ||
+                                    !valPassBool(state.password) ||
+                                    !state.checkPrivacy
+                                }
                             >
                                 Регистрация
                             </Button>
@@ -343,14 +381,22 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                     </span>
                                 </p>
                             </div>
-                        </div>
+                        </form>
                     ),
                     ref: createRef(),
                 };
             case "login":
                 return {
                     content: (
-                        <div className="formContent">
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                valEmailBool(state.email) &&
+                                    !valPassBool(state.password) &&
+                                    loginHandler();
+                            }}
+                            className="formContent"
+                        >
                             <div className={styles.inputContainer}>
                                 <Input
                                     title="Электронная почта"
@@ -460,14 +506,20 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                     </span>
                                 </p>
                             </div>
-                        </div>
+                        </form>
                     ),
                     ref: createRef(),
                 };
             case "recover":
                 return {
                     content: (
-                        <div className="formContent">
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                valEmailBool(state.email) && recoverHandler();
+                            }}
+                            className="formContent"
+                        >
                             <div className={styles.inputContainer}>
                                 <Input
                                     title="Электронная почта"
@@ -521,16 +573,35 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                     </span>
                                 </p>
                             </div>
-                        </div>
+                        </form>
                     ),
                     ref: createRef(),
                 };
             case "regCode":
                 return {
                     content: (
-                        <div className="formContent">
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                valCodeBool(state.code) &&
+                                    verifyRegCodeHandler();
+                            }}
+                            className="formContent"
+                        >
+                            <p
+                                className={classNames(
+                                    "text fz20 fw500",
+                                    styles.hintText,
+                                )}
+                            >
+                                На вашу почту выслан 4-ех значный код
+                                подтверждения
+                            </p>
                             <div className={styles.inputContainer}>
                                 <Input
+                                    containerClassName={
+                                        styles.codeInputContainer
+                                    }
                                     title="Введите код из письма"
                                     type="code"
                                     value={state.code}
@@ -540,50 +611,61 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                             code: val,
                                         })
                                     }
-                                    // errorText={state.codeErr}
-                                    // onBlur={(val) => {
-                                    //     const res = valCodeBool(val);
-
-                                    //     if (res || val === "") {
-                                    //         authDispatch({
-                                    //             type: "change_code_err",
-                                    //             err: "",
-                                    //         });
-                                    //         return;
-                                    //     }
-
-                                    //     const issues = CodeSchema.safeParse(
-                                    //         val,
-                                    //     ).error!.issues.map(
-                                    //         (issue) => issue.message,
-                                    //     );
-
-                                    //     authDispatch({
-                                    //         type: "change_code_err",
-                                    //         err: issues!.join("\n"),
-                                    //     });
-                                    // }}
                                 />
                             </div>
-                            <Button type="primary" onClick={() => setModalState("reg")}>НАЗАД (TEMP)</Button>
-                            {/* <Button
+                            <Button
                                 onClick={() => verifyCodeHandler()}
                                 className={styles.resButton}
                                 type="secondary"
-                                disabled={
-                                    !valCodeBool(state.code) || !!state.codeErr
-                                }
+                                disabled={!valCodeBool(state.code)}
                             >
                                 Подтвердить регистрацию
-                            </Button> */}
-                            {/* <div className={styles.tipBlock}>
-                                <p className="text fz20 fw500">
-                                    Если вы не получили код из письма, то можете
-                                    попробовать восстановить пароль или
-                                    зарегистрироваться снова.
-                                </p>
-                            </div> */}
-                        </div>
+                            </Button>
+                            {isSentAgain ? (
+                                <div className={styles.tipBlock}>
+                                    <p className="text fz20 fw500 center">
+                                        Код отправлен!
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className={styles.tipBlock}>
+                                    <p
+                                        className={classNames(
+                                            "text fz20 fw500 center",
+                                            styles.tip,
+                                        )}
+                                    >
+                                        Не приходит код?
+                                    </p>
+                                    <div className={styles.timerContainer}>
+                                        {timeIsUp ? (
+                                            <span
+                                                className="text fz20 blue under pointer"
+                                                onClick={() =>
+                                                    sendAgainHandler()
+                                                }
+                                            >
+                                                Отправить повторно
+                                            </span>
+                                        ) : (
+                                            <>
+                                                <p className="text fz20 fw500">
+                                                    Отправить повторно через
+                                                </p>
+                                                <Timer
+                                                    handlerTimeUp={() =>
+                                                        setTimeIsUp(true)
+                                                    }
+                                                    autostart
+                                                    time={10}
+                                                    state={timerState}
+                                                />
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </form>
                     ),
                     ref: createRef(),
                 };
