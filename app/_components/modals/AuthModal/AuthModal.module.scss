@@ -1,5 +1,6 @@
 .container {
     padding: 5px 0;
+    max-width: 500px;
 
     .typeOfModal {
         display: grid;
@@ -44,6 +45,23 @@
         margin: 25px 0;
         width: 500px;
         position: relative;
+    }
+
+    .codeInputContainer {
+        display: flex;
+        justify-content: center;
+    }
+
+    .timerContainer {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hintText {
+        margin: 15px 0 5px;
+        color: rgba(var(--gray1), 1);
     }
 
     .resButton {

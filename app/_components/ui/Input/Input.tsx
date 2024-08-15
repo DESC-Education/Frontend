@@ -43,7 +43,9 @@ const Input: FC<InputProps> = ({
     const [codeValue, setCodeValue] = useState<string>("____");
 
     useEffect(() => {
-        onChange(codeValue);
+        if (type === "code") {
+            onChange(codeValue);
+        }
     }, [codeValue]);
 
     switch (type) {
@@ -129,7 +131,7 @@ const Input: FC<InputProps> = ({
                 </div>
             );
         case "code":
-            return <CodeInput value={codeValue} setValue={setCodeValue} />;
+            return <CodeInput value={codeValue} setValue={setCodeValue} className={containerClassName} />;
         case "tel":
             return (
                 <div
