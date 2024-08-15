@@ -1,0 +1,32 @@
+.container {
+    min-width: 200px;
+    height: 40px;
+    transform: translateY(40px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    transition: transform 0.5s, color 0.3s;
+    padding: 0 30px;
+    z-index: 100;
+
+    p {
+        color: white;
+    }
+
+    &.active {
+        transform: translateY(-20px);
+    }
+
+    &.error {
+        background: rgb(237, 110, 110);
+    }
+
+    &.success {
+        background: rgb(83, 207, 83);
+    }
+
+    &.warning {
+        background: rgb(227, 177, 85);
+    }
+}

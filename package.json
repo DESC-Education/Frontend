@@ -12,6 +12,7 @@
     "@nozbe/microfuzz": "^1.0.0",
     "@react-input/mask": "^1.2.5",
     "@types/react-transition-group": "^4.4.11",
+    "axios": "^1.7.4",
     "classnames": "^2.5.1",
     "next": "^14.2.5",
     "react": "^18",
