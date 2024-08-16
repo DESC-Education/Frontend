@@ -195,8 +195,8 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     };
 
     const registerHandler = async () => {
-        setModalState("regCode");
-        setTimerState("running");
+        // setModalState("regCode");
+        // setTimerState("running");
 
         const res = await registerUser({
             email: state.email,
@@ -207,7 +207,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
 
         if (res.status === 200) {
             // showAlert!("Регистрация прошла успешно!", "success");
-            closeModal();
+            // closeModal();
             setModalState("regCode");
         } else {
             showAlert!(res.message);
@@ -230,9 +230,9 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         console.log(res);
 
         if (res.status === 200) {
-            // showAlert!("Регистрация прошла успешно!", "success");
+            showAlert!("Вы успешно вошли в аккаунт!", "success");
             closeModal();
-            setModalState("login");
+            // setModalState("login");
         } else {
             showAlert!(res.message);
         }

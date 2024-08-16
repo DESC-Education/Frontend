@@ -59,7 +59,7 @@ export const verifyEmail = async (dto: {
 export const registerUser = async (dto: {
     email: string;
     password: string;
-}): Promise<{ status: number; message: string; user?: IUser }> => {
+}): Promise<{ status: number; message: string }> => {
     try {
         const { data } = await $authHost.post<{
             status: number;
@@ -67,13 +67,16 @@ export const registerUser = async (dto: {
             message: string;
         }>("/api/v1/registration", dto);
 
+        console.log("data", data);
+
         return {
             status: 200,
             message: data.message,
-            user: data.data.user,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
+            console.log("reg error", error);
+            
             return {
                 status: error.response!.status,
                 message: error.response!.data,
@@ -90,18 +93,18 @@ export const registerUser = async (dto: {
 export const loginUser = async (dto: {
     email: string;
     password: string;
-}): Promise<{ status: number; message: string; user?: IUser }> => {
+}): Promise<{ status: number; message: string; user?: IUser; tokens?: Tokens }> => {
     try {
         const { data } = await $authHost.post<{
-            status: number;
             data: { user: IUser; tokens: Tokens };
             message: string;
         }>("/api/v1/login", dto);
 
         return {
-            status: data.status,
+            status: 200,
             message: data.message,
             user: data.data.user,
+            tokens: data.data.tokens,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
