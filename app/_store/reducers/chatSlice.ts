@@ -11,7 +11,7 @@ const initialState: ChatState = {
     activeChatId: null,
 };
 
-const chatSlice = createSlice({
+export const chatSlice = createSlice({
     name: "coach",
     initialState,
     reducers: {
