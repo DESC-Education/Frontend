@@ -57,20 +57,7 @@ const Timer: FC<TimerProps> = ({
         },
     });
 
-    console.log(time, autostart, state, seconds,
-        minutes,
-        isRunning,
-        // resume,
-        // pause,
-        // restart,
-        totalSeconds,);
-    
-
-    useEffect(() => {
-        // console.log("kek", time, state);
-        // restart(new Date(Date.now() + 1000 * time))
-        // resume();
-        
+    useEffect(() => {        
         if (state === "paused") {
             pause();
         } else if (state === "running") {
