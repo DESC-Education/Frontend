@@ -315,6 +315,15 @@ export default function Home() {
                             nickName={project.nickname}
                             image={project.imgSrc}
                             userIcon={project.userImage}
+            <section className={styles.studentProjects}>
+                <h2 className="title fz48">Проекты студентов</h2>
+                <div className={styles.projectsContainer}>
+                    {projects.map((project) => (
+                        <ProjectCard
+                            key={project.id}
+                            nickName={project.nickname}
+                            image={project.imgSrc}
+                            userIcon={project.userImage}
                         />
                     ))}
                 </div>
