@@ -33,9 +33,9 @@
                 justify-content: space-between;
                 align-items: center;
             }
-            
+
             .lastMessage {
-                max-width: 300px;
+                max-width: 200px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -49,16 +49,10 @@
 
     .chatMeta {
         display: flex;
-
+        flex-direction: column;
 
         .date {
             color: rgba(var(--gray1), 1);
-        }
-
-        .star {
-            margin-top: 5px;
-            font-size: 16px;
-            color: #ffc107;
         }
     }
 }
