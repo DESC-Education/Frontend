@@ -315,15 +315,6 @@ export default function Home() {
                             nickName={project.nickname}
                             image={project.imgSrc}
                             userIcon={project.userImage}
-            <section className={styles.studentProjects}>
-                <h2 className="title fz48">Проекты студентов</h2>
-                <div className={styles.projectsContainer}>
-                    {projects.map((project) => (
-                        <ProjectCard
-                            key={project.id}
-                            nickName={project.nickname}
-                            image={project.imgSrc}
-                            userIcon={project.userImage}
                         />
                     ))}
                 </div>
@@ -331,16 +322,15 @@ export default function Home() {
                     {projects.map((_, index) => (
                         <span
                             key={index}
-                            className={`${styles.bullet} ${
-                                index === 0 ? styles.active : ""
-                            }`}
+                            className={`${styles.bullet} ${index === 0 ? styles.active : ""
+                                }`}
                         ></span>
                     ))}
                 </div>
             </section>
 
             {/* Partners Section */}
-            <section className={styles.partners}>
+            < section className={styles.partners} >
                 <h2 className="title fz48">Партнеры</h2>
                 <div className={styles.carousel}>
                     <button onClick={handlePrev} className={styles.arrowButton}>
@@ -372,9 +362,8 @@ export default function Home() {
                             key={partner.id}
                             src={partner.logo}
                             alt={partner.name}
-                            className={`${styles.smallLogo} ${
-                                index === activeIndex ? styles.active : ""
-                            }`}
+                            className={`${styles.smallLogo} ${index === activeIndex ? styles.active : ""
+                                }`}
                         />
                     ))}
                 </div>
