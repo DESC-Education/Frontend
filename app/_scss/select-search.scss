@@ -19,6 +19,7 @@
         font-weight: 300;
         outline: none;
         transition: .3s;
+        cursor: pointer;
 
         &:focus {
             border-bottom-left-radius: 0;
@@ -27,9 +28,14 @@
     }
 
     &-select {
+        background-color: rgba(var(--white), 1);
         transition: .3s;
         max-height: 0;
-        overflow-y: scroll;
+        overflow-y: hidden;
+        position: absolute;
+        z-index: 10;
+        cursor: pointer;
+
     }
 
     &-row {

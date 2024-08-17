@@ -1,0 +1,80 @@
+.taskCard {
+
+    .isViewed {
+        visibility: hidden;
+        width: min-content;
+        padding: 0;
+        margin: 0;
+    }
+
+    .viewed {
+        visibility: visible;
+        background-color: rgba(var(--white), 1);
+        padding: 10px;
+        margin: 0 0 10px 30px;
+        border-radius: 50px;
+        border: 2px solid rgba(var(--gray2), 1);
+    }   
+
+
+    .orderContent {
+        background-color: rgba(var(--white), 1);
+        padding: 30px;
+        margin-bottom: 20px;
+        border-radius: 50px;
+        border: 2px solid rgba(var(--gray2), 1);
+        display: flex;
+
+        justify-content: space-between;
+
+        .taskContent {
+
+            .companyInfo {
+                display: flex;
+                align-items: center;
+            }
+
+
+            .companyLogo {
+                border-radius: 50%;
+                margin-right: 20px;
+            }
+
+            .taskDescription {
+                margin: 20px 0 0 0;
+
+                .taskName {
+                    margin-bottom: 20px;
+                }
+
+                .description {
+                    max-width: 900px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        .taskFooter {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            .deadlineAndTime {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+
+                .deadline {
+                    margin-bottom: 10px;
+                }
+
+                .timeLeft {
+                    color: rgba(var(--red), 1);
+                }
+            }
+        }
+    }
+}

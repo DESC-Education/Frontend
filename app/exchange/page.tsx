@@ -4,15 +4,23 @@ import { useState } from 'react';
 import styles from './page.module.scss';
 import Button from '../_components/ui/Button/Button';
 import Input from '../_components/ui/Input/Input';
-import { set } from 'zod';
 import Select from '../_components/ui/Select/Select';
 import SelectSearch from 'react-select-search';
 import OrderCard from '../_components/OrderCard/OrderCard';
+import { useTypesSelector } from '../_hooks/useTypesSelector';
+import { ICompany } from '../_types';
+import classNames from 'classnames';
 
-export default function JobExchangePage() {
+
+export default function ExchangePage() {
 
     const [selectedFilters, setSelectedFilters] = useState<string[]>(["Веб-разработка", "Мобильная разработка", "Искусственный интеллект", "Базы данных", "Безопасность информации"]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["JavaScript", "Python", "Java", "C++", "C#"]);
+    const orders = [
+        { title: "Заказ1", description: "Описание заказа на Flutter и Firebase но с примерами в обоих языках и еще технических документах", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания1", logoImg: { id: "1", name: "logo1", path: "/images/userImage1.png", type: "image/png" } } as ICompany, isViewed: false },
+        { title: "Заказ2", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания2", logoImg: { id: "2", name: "logo2", path: "/images/userImage2.png", type: "image/png" } } as ICompany, isViewed: true },
+        { title: "Заказ3", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания3", logoImg: { id: "3", name: "logo3", path: "/images/userImage3.png", type: "image/png" } } as ICompany, isViewed: false },
+    ];
 
 
 
@@ -61,28 +69,16 @@ export default function JobExchangePage() {
                         </div>
                     </div>
                     <div className={styles.taskList}>
-                        {Array.from({ length: 5 }).map((_, index) => (
-                            <div key={index} className={styles.taskCard}>
-                                <div className={styles.taskHeader}>
-                                    <div className={styles.companyInfo}>
-                                        <div className={styles.companyLogo}></div>
-                                        <h4 className={styles.taskTitle}>Скомпилировать проект на Flutter под iOS</h4>
-                                    </div>
-                                    <span className={styles.taskStatus}>Просмотрено</span>
-                                </div>
-                                <div className={styles.taskDescription}>
-                                    <p>
-                                        Добрый день! Есть исходники проекта на Flutter. Нужно просто скомпилировать
-                                        из этого приложение...{" "}
-                                        <span className={styles.showMore}>Показать полностью</span>
-                                    </p>
-                                </div>
-                                <div className={styles.taskFooter}>
-                                    <span className={styles.deadline}>Срок выполнения: 3 дня</span>
-                                    <span className={styles.timeLeft}>осталось 2 дн. 8 ч.</span>
-                                    <button className={styles.proposeButton}>Предложить решение</button>
-                                </div>
-                            </div>
+                        {orders.map((order, index) => (
+                            <OrderCard
+                                key={index}
+                                title={order.title}
+                                description={order.description}
+                                deadline={order.deadline}
+                                reminingTime={order.reminingTime}
+                                company={order.company}
+                                isViewed={order.isViewed}
+                            />
                         ))}
                     </div>
                 </main>
