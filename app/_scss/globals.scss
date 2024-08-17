@@ -69,6 +69,10 @@ a {
         color: rgba(var(--blue), 1);
     }
 
+    &.white {
+        color: rgba(var(--white), 1);
+    }
+
     &.center {
         text-align: center;
     }
