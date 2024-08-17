@@ -9,58 +9,59 @@ import Button from "./_components/ui/Button/Button";
 import classNames from "classnames";
 import AuthModal from "./_components/modals/AuthModal/AuthModal";
 
-export default function Home() {
-    const projects = [
-        {
-            id: 1,
-            imgSrc: "/images/projectCardImage1.png",
-            nickname: "nickname12",
-            userImage: "/images/userImage1.png",
-        },
-        {
-            id: 2,
-            imgSrc: "/images/projectCardImage2.png",
-            nickname: "nickname12",
-            userImage: "/images/userImage2.png",
-        },
-        {
-            id: 3,
-            imgSrc: "/images/projectCardImage3.png",
-            nickname: "nickname12",
-            userImage: "/images/userImage3.png",
-        },
-        {
-            id: 4,
-            imgSrc: "/images/projectCardImage4.png",
-            nickname: "nickname12",
-            userImage: "/images/userImage4.png",
-        },
-    ];
+const projects = [
+    {
+        id: 1,
+        imgSrc: "/images/projectCardImage1.png",
+        nickname: "nickname12",
+        userImage: "/images/userImage1.png",
+    },
+    {
+        id: 2,
+        imgSrc: "/images/projectCardImage2.png",
+        nickname: "nickname12",
+        userImage: "/images/userImage2.png",
+    },
+    {
+        id: 3,
+        imgSrc: "/images/projectCardImage3.png",
+        nickname: "nickname12",
+        userImage: "/images/userImage3.png",
+    },
+    {
+        id: 4,
+        imgSrc: "/images/projectCardImage4.png",
+        nickname: "nickname12",
+        userImage: "/images/userImage4.png",
+    },
+];
 
-    const partners = [
-        // { id: 1, logo: '/images/IKITlogo.svg', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
-        {
-            id: 2,
-            logo: "/images/politechlogo.png",
-            name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-            description:
-                "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-        },
-        {
-            id: 3,
-            logo: "ikit.png",
-            name: "ИКИТ",
-            description:
-                "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-        },
-        {
-            id: 4,
-            logo: "polytechnic.png",
-            name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-            description:
-                "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-        },
-    ];
+const partners = [
+    // { id: 1, logo: '/images/IKITlogo.svg', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
+    {
+        id: 2,
+        logo: "/images/politechlogo.png",
+        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: 3,
+        logo: "ikit.png",
+        name: "ИКИТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: 4,
+        logo: "polytechnic.png",
+        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+];
+
+export default function Home() {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
