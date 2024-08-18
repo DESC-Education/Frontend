@@ -1,0 +1,21 @@
+.tipCard {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 30px;
+    text-align: start;
+  }
+  
+  .tipImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .tipTitle {
+    margin-bottom: 20px;
+  }
+  
+  .tipDescription {
+    margin-bottom: 20px;
+  }

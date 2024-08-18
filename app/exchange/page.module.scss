@@ -1,13 +1,5 @@
-.container {
-    width: 1720px;
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-    margin-top: 40px;
-
-    h2 {
-        margin: 0 0 80px 20px;
-    }
+.exchangeTitle {
+    margin: 20px 0 80px 0;
 }
 
 .mainContainer {
@@ -67,7 +59,8 @@
 .sorting {
     display: flex;
     align-items: center;
+
     span {
         margin-right: 10px;
     }
-}   
+}

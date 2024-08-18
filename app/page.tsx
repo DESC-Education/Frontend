@@ -3,11 +3,10 @@
 import Image from "next/image";
 import ProjectCard from "./_components/ProjectCard/ProjectCard";
 import { useContext, useState } from "react";
-import { ModalContext } from "./_context/ModalContext";
 import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";
 import classNames from "classnames";
-import AuthModal from "./_components/modals/AuthModal/AuthModal";
+import Header from "./_components/Header/Header";
 
 const projects = [
     {
@@ -77,45 +76,10 @@ export default function Home() {
         );
     };
 
-    const { showModal } = useContext(ModalContext);
-
     return (
         <div className={styles.container}>
             {/* Header Section */}
-            <header className={styles.header}>
-                <Image
-                    src="/icons/headerLogo.svg"
-                    alt="Logo"
-                    width={125}
-                    height={53}
-                />
-                <nav>
-                    <div className={styles.navList}>
-                        <Button
-                            onClick={() =>
-                                showModal({
-                                    content: (
-                                        <AuthModal initModalState="login" />
-                                    ),
-                                })
-                            }
-                            type="primary"
-                        >
-                            Вход
-                        </Button>
-                        <Button
-                            onClick={() =>
-                                showModal({
-                                    content: <AuthModal initModalState="reg" />,
-                                })
-                            }
-                            type="secondary"
-                        >
-                            Регистрация
-                        </Button>
-                    </div>
-                </nav>
-            </header>
+            <Header />
 
             {/* Hero Section */}
             <section className={styles.hero}>

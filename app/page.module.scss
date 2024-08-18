@@ -6,18 +6,6 @@
 
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-
-    .navList {
-        display: flex;
-        gap: 20px;
-    }
-}
-
 .hero {
     position: relative;
     display: flex;
@@ -161,22 +149,22 @@
         gap: 10px;
         height: 100%;
         padding: 40px;
-        background-color: #1e2a38;
+        background-color: rgba(var(--black), 1);
         border-radius: 50px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(var(--black), 1);
         color: #ffffff;
         position: relative;
 
         .keyword {
-            background-color: #ffffff;
+            background-color: rgba(var(--white), 1);
             position: absolute;
-            color: #333333;
+            color: rgba(var(--black), 1);
             padding: 12px 22px;
             border-radius: 25px;
             font-size: 20px;
             display: inline-block;
             margin: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(var(--black), 1);
 
             &1 {
                 transform: rotate(5deg);
@@ -226,14 +214,14 @@
     }
 
     .keyword {
-        background-color: #ffffff;
-        color: #333333;
+        background-color: rgba(var(--white), 1);
+        color: rgba(var(--black), 1);
         padding: 10px 20px;
         border-radius: 20px;
         font-size: 14px;
         display: inline-block;
         margin: 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(var(--black), 1);
     }
 }
 
@@ -273,11 +261,11 @@
         }
 
         &:nth-child(2) {
-            background-color: #FDF5A9;
+            background-color: rgba(var(--yellow), 1);
         }
 
         &:nth-child(3) {
-            background-color: #C8E6C9;
+            background-color: rgba(var(--green), 1);
         }
 
         .stepNumber {
