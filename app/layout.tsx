@@ -3,6 +3,15 @@ import "./_scss/globals.scss";
 
 import localFont from "next/font/local";
 import Providers from "./_context/Providers";
+import { useEffect } from "react";
+import LocalStorage from "./_utils/LocalStorage";
+import { auth } from "./_http/API/userApi";
+import { useTypesSelector } from "./_hooks/useTypesSelector";
+import { useTypesDispatch } from "./_hooks/useTypesDispatch";
+import { userSlice } from "./_store/reducers/userSlice";
+import { contentSlice } from "./_store/reducers/contentSlice";
+import ClientRootLayout from "./_components/ClientRootLayout/ClientRootLayout";
+import LoadingScreen from "./_components/LoadingScreen/LoadingScreen";
 
 const gilroy = localFont({
     src: [
@@ -44,7 +53,14 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={gilroy.className}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    <ClientRootLayout>
+                        <>
+                            <LoadingScreen />
+                            {children}
+                        </>
+                    </ClientRootLayout>
+                </Providers>
             </body>
         </html>
     );

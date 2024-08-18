@@ -9,11 +9,21 @@ type ButtonProps = {
     icon?: string;
     onClick?: () => void;
     disabled?: boolean;
+    htmlType?: "button" | "submit" | "reset";
 };
 
-const Button: FC<ButtonProps> = ({ children, icon, type, className, onClick, disabled }) => {
+const Button: FC<ButtonProps> = ({
+    children,
+    icon,
+    type,
+    className,
+    onClick,
+    disabled,
+    htmlType,
+}) => {
     return (
         <button
+            type={htmlType}
             onClick={onClick}
             disabled={disabled}
             className={classNames(className, styles.button, styles[type], {

@@ -1,0 +1,22 @@
+.loading {
+    &-enter {
+        transform: translateY(0);
+    }
+
+    &-enter-active {
+        transform: translateY(-100%);
+    }
+
+    &-exit {
+        transform: translateY(-100%);
+    }
+
+    &-exit-active {
+        transform: translateY(-100%);
+        transition: transform 1s;
+    }
+
+    &-exit-done {
+        transform: translateY(-100%);
+    }
+}
