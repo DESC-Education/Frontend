@@ -5,10 +5,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="jobExchange">
-        {children}
-      </body>
-    </html>
+        children
   );
 }

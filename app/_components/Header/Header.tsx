@@ -10,7 +10,7 @@ const Header = () => {
     const { showModal } = useContext(ModalContext);
 
     return (
-        <header className={styles.header}>
+        <div className={styles.header}>
             <Image
                 src="/icons/headerLogo.svg"
                 alt="Logo"
@@ -43,7 +43,7 @@ const Header = () => {
                     </Button>
                 </div>
             </nav>
-        </header>
+        </div>
     );
 
 }
