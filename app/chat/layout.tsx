@@ -55,7 +55,7 @@ export default function RootLayout({
                         yearOfGraduation: 2024,
                         telegramLink: "https://t.me/joinchat/123456789",
                     },
-                },                
+                },
                 createdAt: "14.03.2024",
                 taskId: "1",
                 isSupport: true,
@@ -66,7 +66,7 @@ export default function RootLayout({
                         chatId: "1",
                         text: "dfdvgdv",
                         ticketId: "1",
-                        userId: "1",    
+                        userId: "1",
                         isRead: true,
                         createdat: "14.03.2024",
                         isVisible: true,
@@ -161,34 +161,32 @@ export default function RootLayout({
     }, []);
 
     return (
-        <html lang="en">
-            <body className="chat-layout">
-                <div className={styles.container}>
-                    <Header />
-                    <div className={styles.layout}>
-                        <aside className={styles.sidebar}>
-                            <div className={styles.search}>
-                                <input type="text" placeholder="Поиск" className="text" />
-                            </div>
-                            <div className={styles.chatList}>
-                                {chats.map((chat, index) => {
-                                    if (!chat.companion.data.isVerified) return null;
-                                    return <Link href={`/chat/${index}`} key={index} className={styles.chatLink}>
-                                        <ChatItem
-                                            name={chat.companion.type === "student" ? chat.companion.data.name + " " + chat.companion.data.surname : chat.companion.data.ownerName}
-                                            avatar={chat.companion.data.logoImg.path}
-                                            lastMessage={chat.messages[chats[index].messages.length - 1].text}
-                                            lastMessageDate={chat.messages[chats[index].messages.length - 1].createdat}
-                                            isRead={chat.messages[chat.messages.length - 1].isRead}
-                                        />
-                                    </Link>
-})}
-                            </div>
-                        </aside>
-                        <div className={styles.content}>{children}</div>
-                    </div>
+        <div className="chat-layout">
+            <div className={styles.container}>
+                <Header />
+                <div className={styles.layout}>
+                    <aside className={styles.sidebar}>
+                        <div className={styles.search}>
+                            <input type="text" placeholder="Поиск" className="text" />
+                        </div>
+                        <div className={styles.chatList}>
+                            {chats.map((chat, index) => {
+                                if (!chat.companion.data.isVerified) return null;
+                                return <Link href={`/chat/${index}`} key={index} className={styles.chatLink}>
+                                    <ChatItem
+                                        name={chat.companion.type === "student" ? chat.companion.data.name + " " + chat.companion.data.surname : chat.companion.data.ownerName}
+                                        avatar={chat.companion.data.logoImg.path}
+                                        lastMessage={chat.messages[chats[index].messages.length - 1].text}
+                                        lastMessageDate={chat.messages[chats[index].messages.length - 1].createdat}
+                                        isRead={chat.messages[chat.messages.length - 1].isRead}
+                                    />
+                                </Link>
+                            })}
+                        </div>
+                    </aside>
+                    <div className={styles.content}>{children}</div>
                 </div>
-            </body>
-        </html>
+            </div>
+        </div>
     );
 }

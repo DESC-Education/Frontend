@@ -36,8 +36,8 @@ export default function ExchangePage() {
                         <h3 className='title'>Фильтры</h3>
                         <div className={styles.filterGroup}>
                             <h4 className='text gray fz20'>Технологии</h4>
-                            {selectedFilters.map((filter, index) => (
-                                <label key={index} className={styles.filterLabel}>
+                            {selectedFilters.map((filter) => (
+                                <label className={styles.filterLabel}>
                                     <Input
                                         type="checkbox"
                                     />
@@ -47,8 +47,8 @@ export default function ExchangePage() {
                         </div>
                         <div className={styles.filterGroup}>
                             <h4 className='text gray fz20'>Языки программирования</h4>
-                            {selectedLanguages.map((language, index) => (
-                                <label key={index} className={styles.filterLabel}>
+                            {selectedLanguages.map((language) => (
+                                <label className={styles.filterLabel}>
                                     <Input
                                         type="checkbox"
                                     />

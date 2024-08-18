@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./Header.module.scss";
 import Button from "../ui/Button/Button";

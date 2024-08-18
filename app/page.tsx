@@ -78,11 +78,13 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            {/* Header Section */}
-            <Header />
+            {/* Header div */}
+            <div>
+                <Header />
+            </div>
 
-            {/* Hero Section */}
-            <section className={styles.hero}>
+            {/* Hero div */}
+            <div className={styles.hero}>
                 <div className={styles.heroContent}>
                     <p className="title fz36">
                         Студенты создают. Компании растут
@@ -104,10 +106,10 @@ export default function Home() {
                         className={styles.heroImage}
                     />
                 </div>
-            </section>
+            </div>
 
-            {/* About Us Section */}
-            <section className={styles.aboutUs}>
+            {/* About Us div */}
+            <div className={styles.aboutUs}>
                 <div className={styles.aboutUsContent}>
                     <div className={styles.textBlock}>
                         <p className="title fz48">Кто мы такие?</p>
@@ -167,10 +169,10 @@ export default function Home() {
                         <img src="images/students.png" alt="students" />
                     </div>
                 </div>
-            </section>
+            </div>
 
-            {/* How It Works Section */}
-            <section className={styles.howItWorks}>
+            {/* How It Works div */}
+            <div className={styles.howItWorks}>
                 <h2 className="title fz48">Как это работает</h2>
                 <div className={styles.stepsContainer}>
                     <div className={styles.step}>
@@ -224,10 +226,10 @@ export default function Home() {
                     <Button type="primary">Инструкция для студента</Button>
                     <Button type="primary">Инструкция для компании</Button>
                 </div>
-            </section>
+            </div>
 
-            {/* Opportunities Section */}
-            <section className={styles.opportunities}>
+            {/* Opportunities div */}
+            <div className={styles.opportunities}>
                 <h2 className="title fz48">Возможности</h2>
                 <div className={styles.container}>
                     <div className={`${styles.block} ${styles.studentsBlock}`}>
@@ -268,10 +270,10 @@ export default function Home() {
                         </ul>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            {/* Projects Section */}
-            <section className={styles.studentProjects}>
+            {/* Projects div */}
+            <div className={styles.studentProjects}>
                 <h2 className="title fz48">Проекты студентов</h2>
                 <div className={styles.projectsContainer}>
                     {projects.map((project) => (
@@ -292,10 +294,10 @@ export default function Home() {
                         ></span>
                     ))}
                 </div>
-            </section>
+            </div>
 
-            {/* Partners Section */}
-            < section className={styles.partners} >
+            {/* Partners div */}
+            < div className={styles.partners} >
                 <h2 className="title fz48">Партнеры</h2>
                 <div className={styles.carousel}>
                     <button onClick={handlePrev} className={styles.arrowButton}>
@@ -332,9 +334,9 @@ export default function Home() {
                         />
                     ))}
                 </div>
-            </section>
+            </div>
 
-            {/* Footer Section */}
+            {/* Footer div */}
             <footer className={styles.footer}>
                 <p>DIESC © 2024</p>
             </footer>
