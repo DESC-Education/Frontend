@@ -10,6 +10,7 @@ import { chatSlice } from "../_store/reducers/chatSlice";
 import { userSlice } from "../_store/reducers/userSlice";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { useEffect } from "react";
+import Header from "../_components/Header/Header";
 
 
 export default function RootLayout({
@@ -163,6 +164,7 @@ export default function RootLayout({
         <html lang="en">
             <body className="chat-layout">
                 <div className={styles.container}>
+                    <Header />
                     <div className={styles.layout}>
                         <aside className={styles.sidebar}>
                             <div className={styles.search}>

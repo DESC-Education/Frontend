@@ -7,6 +7,7 @@ import ProfileNavMenu from "../_components/ProfileNavMenu/ProfileNavMenu";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
 import { use, useEffect, useRef } from "react";
+import Header from "../_components/Header/Header";
 
 export default function RootLayout({
     children,
@@ -26,11 +27,12 @@ export default function RootLayout({
     }, [isLoading, isAuth]);
 
     return (
-        <>
-            <div className={classNames("container", styles.container)}>
+        <div className={classNames("container", styles.container)}>
+            <Header />
+            <div className={styles.container}>
                 <ProfileNavMenu />
                 <div className={styles.profileContent}>{children}</div>
             </div>
-        </>
+        </div>
     );
 }
