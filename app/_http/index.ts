@@ -37,7 +37,7 @@ $authHost.interceptors.response.use(
     async (err) => {
         const originalConfig = err.config;
 
-        if (originalConfig.url !== "/api/v1/login" && err.response) {
+        if (originalConfig.url !== "/api/v1/users/login" && err.response) {
             if (err.response.status === 401) {
                 try {
                     times++;
@@ -46,7 +46,7 @@ $authHost.interceptors.response.use(
                         return;
                     }
 
-                    const { data } = await $host.post<{ access: string }>("/api/v1/token_refresh", {
+                    const { data } = await $host.post<{ access: string }>("/api/v1/users/token_refresh", {
                         refresh: LocalStorage.getRefreshToken(),
                     });
 

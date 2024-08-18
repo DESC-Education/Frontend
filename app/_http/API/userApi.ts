@@ -10,19 +10,19 @@ export const sendVerificationCode = async (dto: {
     try {
         let data;
         if (dto.type === "EM") {
-            data = await $authHost.post("/api/v1/send_verifiy_code", dto);
+            data = await $authHost.post("/api/v1/users/send_verify_code", dto);
         } else if (dto.type === "RG") {
-            data = await $host.post("/api/v1/send_verifiy_code", dto);
+            data = await $host.post("/api/v1/users/send_verify_code", dto);
         } else {
-            data = await $authHost.post("/api/v1/send_verifiy_code", dto);
+            data = await $host.post("/api/v1/users/send_verify_code", dto);
         }
-        
+
         return { status: 200, message: data.data.message };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
                 status: error.response!.status,
-                message: error.response!.data,
+                message: error.response!.data.message,
             };
         } else {
             return {
@@ -36,16 +36,21 @@ export const sendVerificationCode = async (dto: {
 export const verifyEmail = async (dto: {
     email: string;
     code: string;
-}): Promise<{ status: number; message?: string }> => {
+}): Promise<{
+    status: number;
+    message?: string;
+    user?: IUser;
+    tokens?: Tokens;
+}> => {
     try {
-        const { data } = await $authHost.post("/api/v1/register/verify", dto);
+        const { data } = await $authHost.post("/api/v1/users/registration/verify", dto);
 
         return { status: 200, message: data.message };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
                 status: error.response!.status,
-                message: error.response!.data,
+                message: error.response!.data.message,
             };
         } else {
             return {
@@ -65,7 +70,7 @@ export const registerUser = async (dto: {
             status: number;
             data: { user: IUser; tokens: Tokens };
             message: string;
-        }>("/api/v1/registration", dto);
+        }>("/api/v1/users/registration", dto);
 
         console.log("data", data);
 
@@ -76,10 +81,10 @@ export const registerUser = async (dto: {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log("reg error", error);
-            
+
             return {
                 status: error.response!.status,
-                message: error.response!.data,
+                message: error.response!.data.message,
             };
         } else {
             return {
@@ -93,12 +98,19 @@ export const registerUser = async (dto: {
 export const loginUser = async (dto: {
     email: string;
     password: string;
-}): Promise<{ status: number; message: string; user?: IUser; tokens?: Tokens }> => {
+}): Promise<{
+    status: number;
+    message: string;
+    user?: IUser;
+    tokens?: Tokens;
+}> => {
     try {
-        const { data } = await $authHost.post<{
+        const { data } = await $host.post<{
             data: { user: IUser; tokens: Tokens };
             message: string;
-        }>("/api/v1/login", dto);
+        }>("/api/v1/users/login", dto);
+
+        console.log(data);
 
         return {
             status: 200,
@@ -110,7 +122,7 @@ export const loginUser = async (dto: {
         if (axios.isAxiosError(error)) {
             return {
                 status: error.response!.status,
-                message: error.response!.data,
+                message: error.response!.data.message,
             };
         } else {
             return {
@@ -130,13 +142,37 @@ export const auth = async (): Promise<{
         const { data } = await $authHost.get<{
             data: { user: IUser };
             message: string;
-        }>("/api/v1/auth");
+        }>("/api/v1/users/auth");
 
         return {
             status: 200,
             message: data.message,
             user: data.data.user,
         };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const recoverPassword = async (dto: {
+    email: string;
+    code: string;
+    new_password: string;
+}): Promise<{ status: number; message?: string }> => {
+    try {
+        const { data } = await $authHost.post("/api/v1/users/change_password", dto);
+
+        return { status: 200, message: data.message };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
