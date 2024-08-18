@@ -10,6 +10,7 @@ import OrderCard from '../_components/OrderCard/OrderCard';
 import { useTypesSelector } from '../_hooks/useTypesSelector';
 import { ICompany } from '../_types';
 import classNames from 'classnames';
+import Header from '../_components/Header/Header';
 
 
 export default function ExchangePage() {
@@ -26,8 +27,9 @@ export default function ExchangePage() {
 
 
     return (
-        <div className={styles.container}>
-            <h2 className='title fz48'>Биржа заданий</h2>
+        <div className="container">
+            <Header />
+            <h2 className={classNames(styles.exchangeTitle, "title fz48")}>Биржа заданий</h2>
             <div className={styles.mainContainer}>
                 <aside className={styles.sidebar}>
                     <div className={styles.filters}>
