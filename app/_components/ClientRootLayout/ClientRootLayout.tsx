@@ -27,7 +27,9 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                     dispatch(authUser({ user: res.user! }));
                 }
             }
-            dispatch(updateIsLoading(false));    
+            setTimeout(() => {
+                dispatch(updateIsLoading(false));    
+            }, 500);
         };
         asyncFunc();
     }, []);

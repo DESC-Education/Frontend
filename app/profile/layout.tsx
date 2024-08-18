@@ -27,7 +27,7 @@ export default function RootLayout({
     }, [isLoading, isAuth]);
 
     return (
-        <div className={classNames("container", styles.container)}>
+        <div className="container">
             <Header />
             <div className={styles.container}>
                 <ProfileNavMenu />

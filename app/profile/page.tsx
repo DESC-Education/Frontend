@@ -18,6 +18,7 @@ export default function Home() {
     ];
 
     if (!user.data.isVerified) return null;
+    
     return (
         <div className={styles.profileContainer}>
             <div className={styles.mainInfo}>
