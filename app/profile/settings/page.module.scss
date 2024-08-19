@@ -1,0 +1,69 @@
+.container {
+    .navigationButtons {
+      margin-bottom: 60px;
+  
+      .navigationButton {
+        margin-right: 60px;
+      }
+    }
+  
+    .generalSettingsBlock {
+      margin-bottom: 50px;
+  
+      .title {
+        margin-bottom: 10px;
+      }
+  
+      .checkbox {
+        margin-top: 10px;
+      }
+    }
+  
+    .themeSettings {
+      .themeTitle {
+        margin-bottom: 30px;
+      }
+    }
+  
+    .saveButton {
+      width: 100%;
+      margin-bottom: 100px;
+    }
+  
+    .textArea {
+      height: 200px;
+    }
+  
+    .content {
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: fadeIn 0.4s forwards;
+  
+      &.exit {
+        animation: fadeOut 0.4s forwards;
+      }
+    }
+  
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+    }
+  }
+  
