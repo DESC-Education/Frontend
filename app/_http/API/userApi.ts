@@ -66,7 +66,7 @@ export const registerUser = async (dto: {
     password: string;
 }): Promise<{ status: number; message: string }> => {
     try {
-        const { data } = await $authHost.post<{
+        const { data } = await $host.post<{
             status: number;
             data: { user: IUser; tokens: Tokens };
             message: string;
