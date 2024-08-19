@@ -18,13 +18,13 @@ export default function RootLayout({
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
     const router = useRouter();
 
-    useEffect(() => {
-        if (!isLoading && !isAuth) {
-            if (typeof window !== "undefined") {
-                router.replace("/");
-            }
-        }
-    }, [isLoading, isAuth]);
+    // useEffect(() => {
+    //     if (!isLoading && !isAuth) {
+    //         if (typeof window !== "undefined") {
+    //             router.replace("/");
+    //         }
+    //     }
+    // }, [isLoading, isAuth]);
 
     return (
         <div className="container">
