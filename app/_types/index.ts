@@ -21,21 +21,21 @@ type RoleCompany = { role: "company" };
 type IProfile<T> = T extends RoleStudent ? IStudentProfile : ICompanyProfile;
 
 export type IStudentProfile = {
-          id: string;
-          isVerified: boolean;
-          name: string;
-          surname: string;
-          logoImg: IFile;
-          description: string;
-          phone: string;
-          specialityId: string;
-          instituteId: string;
-          formOfEducationId: string;
-          timezone: string;
-          grade: string;
-          yearOfGraduation: number;
-          telegramLink: string;
-      }
+    id: string;
+    isVerified: boolean;
+    name: string;
+    surname: string;
+    logoImg: IFile;
+    description: string;
+    phone: string;
+    specialityId: string;
+    instituteId: string;
+    formOfEducationId: string;
+    timezone: string;
+    grade: string;
+    yearOfGraduation: number;
+    telegramLink: string;
+}
 
 export type ICompanyProfile = {
     id: string;

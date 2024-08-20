@@ -8,9 +8,9 @@ import Select from '../_components/ui/Select/Select';
 import SelectSearch from 'react-select-search';
 import OrderCard from '../_components/OrderCard/OrderCard';
 import { useTypesSelector } from '../_hooks/useTypesSelector';
-import { ICompany } from '../_types';
 import classNames from 'classnames';
 import Header from '../_components/Header/Header';
+import { ICompanyProfile } from '../_types';
 
 
 export default function ExchangePage() {
@@ -18,9 +18,9 @@ export default function ExchangePage() {
     const [selectedFilters, setSelectedFilters] = useState<string[]>(["Веб-разработка", "Мобильная разработка", "Искусственный интеллект", "Базы данных", "Безопасность информации"]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["JavaScript", "Python", "Java", "C++", "C#"]);
     const orders = [
-        { title: "Заказ1", description: "Описание заказа на Flutter и Firebase но с примерами в обоих языках и еще технических документах", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания1", logoImg: { id: "1", name: "logo1", path: "/images/userImage1.png", type: "image/png" } } as ICompany, isViewed: false },
-        { title: "Заказ2", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания2", logoImg: { id: "2", name: "logo2", path: "/images/userImage2.png", type: "image/png" } } as ICompany, isViewed: true },
-        { title: "Заказ3", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания3", logoImg: { id: "3", name: "logo3", path: "/images/userImage3.png", type: "image/png" } } as ICompany, isViewed: false },
+        { title: "Заказ1", description: "Описание заказа на Flutter и Firebase но с примерами в обоих языках и еще технических документах", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания1", logoImg: { id: "1", name: "logo1", path: "/images/userImage1.png", type: "image/png" } } as ICompanyProfile, isViewed: false },
+        { title: "Заказ2", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания2", logoImg: { id: "2", name: "logo2", path: "/images/userImage2.png", type: "image/png" } } as ICompanyProfile, isViewed: true },
+        { title: "Заказ3", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания3", logoImg: { id: "3", name: "logo3", path: "/images/userImage3.png", type: "image/png" } } as ICompanyProfile, isViewed: false },
     ];
 
 
