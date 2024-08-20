@@ -23,13 +23,14 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
             if (token) {
                 const res = await auth();
 
+                console.log(res);
+                
+
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
                 }
             }
-            setTimeout(() => {
-                dispatch(updateIsLoading(false));    
-            }, 500);
+            dispatch(updateIsLoading(false));    
         };
         asyncFunc();
     }, []);

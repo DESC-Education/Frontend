@@ -24,6 +24,8 @@ const pages = [
 const ProfileNavMenu = () => {
     const { user } = useTypesSelector((state) => state.userReducer);
 
+    console.log(user);
+
     const pathname = usePathname();
 
     return (

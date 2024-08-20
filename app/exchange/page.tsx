@@ -28,7 +28,6 @@ export default function ExchangePage() {
 
     return (
         <div className="container">
-            <Header />
             <h2 className={classNames(styles.exchangeTitle, "title fz48")}>Биржа заданий</h2>
             <div className={styles.mainContainer}>
                 <aside className={styles.sidebar}>

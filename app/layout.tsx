@@ -12,6 +12,7 @@ import { userSlice } from "./_store/reducers/userSlice";
 import { contentSlice } from "./_store/reducers/contentSlice";
 import ClientRootLayout from "./_components/ClientRootLayout/ClientRootLayout";
 import LoadingScreen from "./_components/LoadingScreen/LoadingScreen";
+import Header from "./_components/Header/Header";
 
 const gilroy = localFont({
     src: [
@@ -56,6 +57,7 @@ export default function RootLayout({
                 <Providers>
                     <ClientRootLayout>
                         <>
+                            <Header />
                             <LoadingScreen />
                             {children}
                         </>

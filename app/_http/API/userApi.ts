@@ -43,7 +43,7 @@ export const verifyEmail = async (dto: {
     tokens?: Tokens;
 }> => {
     try {
-        const { data } = await $authHost.post("/api/v1/users/registration/verify", dto);
+        const { data } = await $host.post("/api/v1/users/registration/verify", dto);
 
         return { status: 200, message: data.message };
     } catch (error) {
