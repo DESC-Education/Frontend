@@ -163,7 +163,6 @@ export default function RootLayout({
     return (
         <div className="chat-layout">
             <div className={styles.container}>
-                <Header />
                 <div className={styles.layout}>
                     <aside className={styles.sidebar}>
                         <div className={styles.search}>

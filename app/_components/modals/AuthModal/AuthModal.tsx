@@ -303,16 +303,6 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         }
     };
 
-    // const verifyRecoverCodeHandler = async () => {
-    //     const res = await verifyEmail({ email: state.email, code: state.code });
-    //     // setModalState("");
-    // };
-
-    const sendAgainHandler = async () => {
-        setIsSentAgain(true);
-        // setModalState("login");
-    };
-
     const [timerState, setTimerState] = useState<TimerState>("paused");
     const [codeSentAgain, setCodeSentAgain] = useState<boolean>(false);
     const [isSentAgain, setIsSentAgain] = useState<boolean>(false);
@@ -480,7 +470,6 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                             }}
                             className="formContent"
                         >
-                            {state.email}
                             <p
                                 className={classNames(
                                     "text fz20 fw500",

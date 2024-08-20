@@ -35,7 +35,6 @@ const LoadingScreen = () => {
 
     return (
         <CSSTransition
-            // key={String(isLoading)} 
             classNames="loading"
             timeout={1000}
             in={isLoading}

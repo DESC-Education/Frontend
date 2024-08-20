@@ -78,12 +78,6 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            {/* Header div */}
-            <div>
-                <Header />
-            </div>
-
-            {/* Hero div */}
             <div className={styles.hero}>
                 <div className={styles.heroContent}>
                     <p className="title fz36">

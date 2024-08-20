@@ -1,11 +1,76 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: fixed;
     padding: 20px 0;
+    top: 0;
+    z-index: 20;
+    background: white;
+    width: 100%;
+    margin: 0 !important;
+    padding: 15px 0 !important;
+    box-shadow: 0px 2px 7px rgba(var(--gray2), 1);
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     .navList {
         display: flex;
         gap: 20px;
+    }
+
+    .navigation {
+        display: flex;
+        margin-bottom: 8px;
+
+        .link {
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-width: 90px;
+
+            &:hover {
+                &:before {
+                    background: rgba(var(--gray2), .3);
+                }
+            }
+
+            &:before {
+                bottom: 2px;
+                content: "";
+                position: absolute;
+                width: 90px;
+                background: white;
+                height: 8px;
+                transition: .3s;
+                clip-path: polygon(0% 60%, 0% 60%, 0.064% 50.268%, 0.249% 41.035%, 0.544% 32.427%, 0.941% 24.565%, 1.429% 17.574%, 1.997% 11.577%, 2.636% 6.697%, 3.336% 3.059%, 4.087% 0.785%, 4.878% 0%, 95.122% 0%, 95.122% 0%, 95.913% 0.785%, 96.664% 3.059%, 97.364% 6.697%, 98.003% 11.577%, 98.571% 17.574%, 99.059% 24.565%, 99.456% 32.427%, 99.751% 41.035%, 99.936% 50.268%, 100% 60%, 100% 100%, 0% 100%, 0% 60%);
+            }
+
+            &.active {
+                &:before {
+                    background: rgba(var(--gray2), 1);
+                }
+            }
+        }
+    }
+
+    .icons {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        img {
+            cursor: pointer;
+            transition: .3s;
+            box-shadow: none;
+            border-radius: 50%;
+
+            &:hover {
+                box-shadow: 0px 0px 2px 4px rgba(var(--gray2), .9);
+            }
+        }
     }
 }
