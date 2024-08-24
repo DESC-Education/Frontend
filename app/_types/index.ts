@@ -5,51 +5,61 @@ export type IUser = {
     isOnline: boolean;
     isBanned: boolean;
     role: IRole;
-    profile?: IProfile<IUser>;
 };
 
-type IRole =
+export type IRole =
     | "student"
     | "company"
     | "institute_moderator"
     | "moderator"
     | "admin";
 
-type RoleStudent = { role: "student" };
-type RoleCompany = { role: "company" };
+export type RoleStudent = { role: "student" };
+export type RoleCompany = { role: "company" };
 
-type IProfile<T> = T extends RoleStudent ? IStudentProfile : ICompanyProfile;
+export type IProfile<T> = T extends RoleStudent
+    ? IStudentProfile
+    : ICompanyProfile;
 
 export type IStudentProfile = {
-          id: string;
-          isVerified: boolean;
-          name: string;
-          surname: string;
-          logoImg: IFile;
-          description: string;
-          phone: string;
-          specialityId: string;
-          instituteId: string;
-          formOfEducationId: string;
-          timezone: string;
-          grade: string;
-          yearOfGraduation: number;
-          telegramLink: string;
-      }
-
-export type ICompanyProfile = {
     id: string;
     isVerified: boolean;
-    name: string;
-    ownerName: string;
+    admissionYear: number;
+    description: string;
+    firstName: string;
+    lastName: string;
+    logoImg: string;
+    phone: string;
+    emailVisibility: boolean;
+    phoneVisibility: boolean;
+    timezone: 3;
+    university: IUniversity;
+    speciality: ISpeciality;
+    faculty: IFaculty;
+    formOfEducation: "part_time" | "full_time" | "part_full_time";
+    educationProgram: "bachelor" | "speciality" | "magister";
+    telegramLink?: string;
+    vkLink?: string;
+    city: ICity;
+    skills: ISkill[];
+};
+
+export type ICompanyProfile = {
+    linkToCompany: string;
+    companyName: string;
+    firstName: string;
+    lastName: string;
+    id: string;
+    isVerified: boolean;
     logoImg: IFile;
     description: string;
-    phone: string;
-    linkToSite: string;
     vkLink?: string;
     telegramLink?: string;
     timezone: string;
-    cityId: string;
+    city: ICity;
+    phone: string;
+    emailVisibility: boolean;
+    phoneVisibility: boolean;
 };
 
 export type IChat = {
@@ -93,4 +103,35 @@ export type IFile = {
     name: string;
     path: string;
     type: string;
+};
+
+type ISpeciality = {
+    id: string;
+    name: string;
+    type: string;
+    code: string;
+};
+
+type ISkill = {
+    id: string;
+    name: string;
+    percent: number;
+};
+
+type ICity = {
+    id: string;
+    name: string;
+    region: string;
+};
+
+type IUniversity = {
+    id: string;
+    name: string;
+    city: ICity;
+};
+
+type IFaculty = {
+    id: string;
+    name: string;
+    university: string
 };

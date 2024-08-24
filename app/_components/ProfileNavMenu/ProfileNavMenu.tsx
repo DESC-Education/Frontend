@@ -26,6 +26,8 @@ const ProfileNavMenu = () => {
 
     console.log(user);
 
+    if (!user) return null;
+
     const pathname = usePathname();
 
     return (

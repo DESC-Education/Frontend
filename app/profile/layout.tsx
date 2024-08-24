@@ -30,7 +30,7 @@ export default function RootLayout({
     useEffect(() => {
         const asyncFunc = async () => {
             if (user.isVerified) {
-                const res = await getProfile();
+                // const res = await getProfile();
             }
         };
         asyncFunc();
