@@ -7,14 +7,20 @@ type UserInterface = {
     user: IUser;
     chats: IChat[];
     isAuth: boolean;
-    profile: IStudentProfile | ICompanyProfile;
+    isProfileLoading: boolean;
+    isProfileVerified: boolean;
+    companyProfile: ICompanyProfile;
+    studentProfile: IStudentProfile;
 };
 
 const initialState: UserInterface = {
     user: {} as IUser,
     chats: [],
     isAuth: false,
-    profile: {} as IStudentProfile | ICompanyProfile,
+    isProfileLoading: true,
+    isProfileVerified: false,
+    companyProfile: {} as ICompanyProfile,
+    studentProfile: {} as IStudentProfile,
 };
 
 export const userSlice = createSlice({
@@ -34,11 +40,28 @@ export const userSlice = createSlice({
                 );
             }
         },
-        updateProfile(
+        updateProfile(state, action: PayloadAction<any>) {
+            state.isProfileLoading = false;
+            if (action.payload.isVerified) {
+                state.isProfileVerified = true;
+            }
+            if (state.user.role === "student") {
+                state.studentProfile = action.payload;
+            } else {
+                state.companyProfile = action.payload;
+            }
+        },
+        updateStudentProfile(
             state,
-            action: PayloadAction<IStudentProfile | ICompanyProfile>,
+            action: PayloadAction<IStudentProfile>,
         ) {
-            state.profile = action.payload;
+            state.studentProfile = action.payload;
+        },
+        updateCompanyProfile(
+            state,
+            action: PayloadAction<ICompanyProfile>,
+        ) {
+            state.companyProfile = action.payload;
         },
         updateUser(state, action: PayloadAction<IUser>) {
             state.user = action.payload;
