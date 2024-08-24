@@ -7,6 +7,7 @@ import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";
 import classNames from "classnames";
 import Header from "./_components/Header/Header";
+import { createProfileCompany, filesTest } from "./_http/API/profileApi";
 
 const projects = [
     {
@@ -61,7 +62,6 @@ const partners = [
 ];
 
 export default function Home() {
-
     const [activeIndex, setActiveIndex] = useState(0);
 
     const handlePrev = () => {
@@ -76,8 +76,40 @@ export default function Home() {
         );
     };
 
+    const [files, setFiles] = useState<FileList>();
+
     return (
         <div className={styles.container}>
+            <input
+                multiple
+                type="file"
+                onChange={async (e) => {
+                    if (!e.target.files) return;
+                    console.log(e.target.files);
+                    setFiles(e.target.files);
+                }}
+            />
+            <button
+                onClick={async () => {
+                    if (!files) return;
+                    const formdata = new FormData();
+                    for (let i = 0; i < files.length; i++) {
+                        console.log("helo?", files[i]);
+                        
+                        formdata.append("files", files[i]);
+                    }
+                    // files.forEach((file: File) => formdata.append("files", file));
+                    // formdata.append("files", files[0]);
+                    const res = await filesTest(formdata);
+                    for (let i of formdata.entries()) {
+                        console.log(i);
+                    }
+                    console.log(files, files.length, formdata);
+                }}
+                className={styles.arrowButton}
+            >
+                HELOW
+            </button>
             <div className={styles.hero}>
                 <div className={styles.heroContent}>
                     <p className="title fz36">
@@ -283,15 +315,16 @@ export default function Home() {
                     {projects.map((_, index) => (
                         <span
                             key={index}
-                            className={`${styles.bullet} ${index === 0 ? styles.active : ""
-                                }`}
+                            className={`${styles.bullet} ${
+                                index === 0 ? styles.active : ""
+                            }`}
                         ></span>
                     ))}
                 </div>
             </div>
 
             {/* Partners div */}
-            < div className={styles.partners} >
+            <div className={styles.partners}>
                 <h2 className="title fz48">Партнеры</h2>
                 <div className={styles.carousel}>
                     <button onClick={handlePrev} className={styles.arrowButton}>
@@ -323,8 +356,9 @@ export default function Home() {
                             key={partner.id}
                             src={partner.logo}
                             alt={partner.name}
-                            className={`${styles.smallLogo} ${index === activeIndex ? styles.active : ""
-                                }`}
+                            className={`${styles.smallLogo} ${
+                                index === activeIndex ? styles.active : ""
+                            }`}
                         />
                     ))}
                 </div>
