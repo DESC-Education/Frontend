@@ -10,7 +10,7 @@
     --blue: 110, 148, 206;
     --red: 221, 101, 101;
     --yellow: 253, 245, 169;
-}   
+}
 
 * {
     margin: 0;
@@ -28,7 +28,8 @@ body {
     z-index: -100;
 }
 
-button, input {
+button,
+input {
     font-family: inherit;
 }
 
@@ -65,6 +66,17 @@ a {
     padding: 0 20px;
 }
 
+.selectLayout {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    max-height: 900px;
+    background-color: rgba(var(--white), 1);
+    border: 2px solid rgba(var(--gray2), 1);
+    border-radius: 40px;
+}
+
+
 .text {
     font-size: 24px;
     line-height: 28px;
@@ -89,7 +101,7 @@ a {
     &.under {
         text-decoration: underline;
     }
-  
+
     &.gray {
         color: rgba(var(--gray1), 1);
     }
@@ -131,4 +143,3 @@ a {
         font-weight: 500;
     }
 }
-

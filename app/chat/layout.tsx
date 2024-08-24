@@ -11,6 +11,7 @@ import { userSlice } from "../_store/reducers/userSlice";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { useEffect } from "react";
 import Header from "../_components/Header/Header";
+import SideBar from "../_components/SideBar/SideBar";
 
 
 export default function RootLayout({
@@ -161,31 +162,28 @@ export default function RootLayout({
     }, []);
 
     return (
-        <div className="chat-layout">
-            <div className={styles.container}>
-                <div className={styles.layout}>
-                    <aside className={styles.sidebar}>
-                        <div className={styles.search}>
-                            <input type="text" placeholder="Поиск" className="text" />
-                        </div>
-                        <div className={styles.chatList}>
-                            {chats.map((chat, index) => {
-                                if (!chat.companion.data.isVerified) return null;
-                                return <Link href={`/chat/${index}`} key={index} className={styles.chatLink}>
-                                    <ChatItem
-                                        name={chat.companion.type === "student" ? chat.companion.data.name + " " + chat.companion.data.surname : chat.companion.data.ownerName}
-                                        avatar={chat.companion.data.logoImg.path}
-                                        lastMessage={chat.messages[chats[index].messages.length - 1].text}
-                                        lastMessageDate={chat.messages[chats[index].messages.length - 1].createdat}
-                                        isRead={chat.messages[chat.messages.length - 1].isRead}
-                                    />
-                                </Link>
-                            })}
-                        </div>
-                    </aside>
-                    <div className={styles.content}>{children}</div>
-                </div>
+        <div className="container">
+            <div className="selectLayout">
+                <SideBar>
+                    <div className={styles.chatList}>
+                        {chats.map((chat, index) => {
+                            if (!chat.companion.data.isVerified) return null;
+                            return <Link href={`/chat/${index}`} key={index} className={styles.chatLink}>
+                                <ChatItem
+                                    name={chat.companion.type === "student" ? chat.companion.data.name + " " + chat.companion.data.surname : chat.companion.data.ownerName}
+                                    avatar={chat.companion.data.logoImg.path}
+                                    lastMessage={chat.messages[chats[index].messages.length - 1].text}
+                                    lastMessageDate={chat.messages[chats[index].messages.length - 1].createdat}
+                                    isRead={chat.messages[chat.messages.length - 1].isRead}
+                                />
+                            </Link>
+                        })}
+                    </div>
+                </SideBar>
+                {children}
             </div>
         </div>
+
+
     );
 }

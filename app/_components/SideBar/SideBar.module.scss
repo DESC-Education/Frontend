@@ -1,0 +1,28 @@
+.sidebar {
+    width: 40%;
+    max-width: 500px;
+    max-height: 700px;
+    background-color: rgba(var(--white), 1);
+    padding: 30px;
+    margin: 10px;
+    border-right: 2px solid rgba(var(--gray2), 1);
+    overflow: auto;
+}
+
+
+.search {
+    position: sticky;
+    top: 0;
+    margin-bottom: 20px;
+
+    input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid rgba(var(--gray2), 1);
+        border-radius: 30px;
+
+        &::placeholder {
+            color: rgba(var(--gray2), 1);
+        }
+    }
+}
