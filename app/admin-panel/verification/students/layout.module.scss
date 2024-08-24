@@ -1,0 +1,22 @@
+.studentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+
+    .studentItem {
+        cursor: pointer;
+        border-radius: 40px;
+
+        &:hover {
+            background-color: rgba(var(--gray2), 1);
+        }
+        .mainInfo {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 10px;
+        }
+    }
+}
