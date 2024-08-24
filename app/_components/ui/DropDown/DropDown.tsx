@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "./Dropdown.module.scss";
+import styles from "./DropDown.module.scss";
 import classNames from "classnames";
 import Link from "next/link";
 
