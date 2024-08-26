@@ -86,6 +86,14 @@ a {
         color: rgba(var(--blue), 1);
     }
 
+    &.red {
+        color: rgba(var(--red), 1);
+    }
+
+    &.green {
+        color: rgba(var(--green), 1);
+    }
+
     &.white {
         color: rgba(var(--white), 1);
     }

@@ -4,6 +4,8 @@ import styles from './page.module.scss';
 
 export default function StudentPage() {
     return (
-        <SelectionDots title="Выберите студента" />
+        <div className={styles.selectPage}>
+            <SelectionDots title="Выберите студента" />
+        </div>
     );
 }

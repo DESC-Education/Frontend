@@ -1,5 +1,6 @@
 .sidebar {
     width: 40%;
+    height: 100%;
     max-width: 500px;
     max-height: 700px;
     background-color: rgba(var(--white), 1);
@@ -7,6 +8,9 @@
     margin: 10px;
     border-right: 2px solid rgba(var(--gray2), 1);
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 

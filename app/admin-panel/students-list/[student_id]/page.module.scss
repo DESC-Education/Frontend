@@ -1,0 +1,77 @@
+.container {
+    border: 1px solid rgba(var(--gray2), 1);
+    border-radius: 30px;
+    padding: 30px;
+
+    .studentHeader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 50px;
+
+        // Переделать, плохо
+        .backButton {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 150px;
+
+
+            &:hover {
+                .img {
+                    margin-right: 10px;
+                    transition: margin-right 0.5s inherit;  
+                }
+
+            }
+
+
+        }
+    }
+
+    .navigationButtons {
+        margin-bottom: 60px;
+        display: flex;
+        justify-content: space-evenly;
+
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: fadeIn 0.4s forwards;
+
+        &.exit {
+            animation: fadeOut 0.4s forwards;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+    }
+}

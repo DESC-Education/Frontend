@@ -66,8 +66,8 @@ const Header = () => {
         ref: RefObject<HTMLDivElement>;
     } => {
         switch (activeState) {
-            case "student":
-                // case "institute_moderator":
+            // case "student":
+            case "admin":
                 return {
                     content: (
                         <>
@@ -236,9 +236,9 @@ const Header = () => {
                         </>
                     ),
                     ref: createRef(),
-                };
-            case "institute_moderator":
-                // case "student":
+                }
+            // case "institute_moderator":
+            case "student":
                 return {
                     content: (
                         <>
@@ -321,9 +321,69 @@ const Header = () => {
                     ref: createRef(),
                 };
             // case "admin":
-            case "admin":
+            case "student":
                 return {
-                    content: <div>Admin</div>,
+                    content: (
+                        <div className={styles.navigation}>
+                            <Link
+                                className={classNames(
+                                    styles.link,
+                                    "text fz24 fw500",
+                                    {
+                                        [styles.active]:
+                                            pathname === "/admin-panel/statistics",
+                                    },
+                                )}
+                                href="/admin-panel/statistics">
+                                Статистика
+                            </Link>
+                            <Link
+                                className={classNames(
+                                    styles.link,
+                                    "text fz24 fw500",
+                                    {
+                                        [styles.active]:
+                                            pathname === "/admin-panel/students-list",
+                                    },
+                                )}
+                                href="/admin-panel/students-list">
+                                Студенты
+                            </Link>
+                            <Link
+                                className={classNames(
+                                    styles.link,
+                                    "text fz24 fw500",
+                                    {
+                                        [styles.active]:
+                                            pathname === "/admin-panel/companies-list",
+                                    },
+                                )}
+                                href="/admin-panel/companies-list">
+                                Компании
+                            </Link>
+                            <div className={classNames(styles.link, { [styles.active]: pathname.startsWith("/admin-panel/verification") })}>
+                                <Dropdown options={options} placeholder="Верификация" />
+                            </div>
+                            <div className={styles.userInfo}>
+                                <Image
+                                    width={45}
+                                    height={45}
+                                    src="/icons/profile.svg"
+                                    alt="profile"
+                                />
+                                <p className={classNames(styles.userName, "text fz24 fw500")}>Петр петров</p>
+                                {/* <p>{user?.profile?.name}</p> */}
+                            </div>
+                            <Link
+                                className={classNames(
+                                    styles.link,
+                                    "text fz24 fw500",
+                                )}
+                                href="/profile">
+                                Выйти
+                            </Link>
+                        </div>
+                    ),
                     ref: createRef(),
                 };
         }
