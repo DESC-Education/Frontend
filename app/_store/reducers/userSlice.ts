@@ -42,6 +42,7 @@ export const userSlice = createSlice({
         },
         updateProfile(state, action: PayloadAction<any>) {
             state.isProfileLoading = false;
+
             if (action.payload.isVerified) {
                 state.isProfileVerified = true;
             }

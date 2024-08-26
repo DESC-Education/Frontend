@@ -8,6 +8,7 @@ import Button from "./_components/ui/Button/Button";
 import classNames from "classnames";
 import Header from "./_components/Header/Header";
 import { createProfileCompany, filesTest } from "./_http/API/profileApi";
+import CustomSearch from "./_components/ui/CustomSearch/CustomSearch";
 
 const projects = [
     {
@@ -77,6 +78,39 @@ export default function Home() {
     };
 
     const [files, setFiles] = useState<FileList>();
+    const [tempValue, setTempValue] = useState<string>("1");
+    const getValuesTemp = (tempValue: string) => {
+        const options1 = [
+            {
+                value: 1,
+                name: "test1",
+            },
+            {
+                value: 2,
+                name: "test2",
+            },
+            {
+                value: 3,
+                name: "test3",
+            },
+        ];
+        const options2 = [
+            {
+                value: 5,
+                name: "test5",
+            },
+            {
+                value: 6,
+                name: "test6",
+            },
+            {
+                value: 7,
+                name: "test7",
+            },
+        ];
+
+        return tempValue === "1" ? options1 : options2;
+    };
 
     return (
         <div className={styles.container}>
@@ -95,7 +129,7 @@ export default function Home() {
                     const formdata = new FormData();
                     for (let i = 0; i < files.length; i++) {
                         console.log("helo?", files[i]);
-                        
+
                         formdata.append("files", files[i]);
                     }
                     // files.forEach((file: File) => formdata.append("files", file));
@@ -133,7 +167,7 @@ export default function Home() {
                     />
                 </div>
             </div>
-
+            
             {/* About Us div */}
             <div className={styles.aboutUs}>
                 <div className={styles.aboutUsContent}>

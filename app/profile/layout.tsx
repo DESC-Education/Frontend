@@ -9,6 +9,8 @@ import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
 import { use, useEffect, useRef } from "react";
 import Header from "../_components/Header/Header";
 import { getProfile } from "../_http/API/profileApi";
+import { useTypesDispatch } from "../_hooks/useTypesDispatch";
+import { userSlice } from "../_store/reducers/userSlice";
 
 export default function RootLayout({
     children,
@@ -18,23 +20,26 @@ export default function RootLayout({
     const { user, isAuth } = useTypesSelector((state) => state.userReducer);
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
     const router = useRouter();
+    const dispatch = useTypesDispatch();
+    const { updateProfile } = userSlice.actions;
 
-    useEffect(() => {
-        if (!isLoading && !isAuth) {
-            if (typeof window !== "undefined") {
-                router.replace("/");
-            }
-        }
-    }, [isLoading, isAuth]);
+    // useEffect(() => {
+    //     if (!isLoading && !isAuth) {
+    //         if (typeof window !== "undefined") {
+    //             router.replace("/");
+    //         }
+    //     }
+    // }, [isLoading, isAuth]);
 
     useEffect(() => {
         const asyncFunc = async () => {
-            if (user.isVerified) {
-                // const res = await getProfile();
-            }
+            const res = await getProfile();
+            console.log(res);
+            
+            dispatch(updateProfile(res.profile));
         };
         asyncFunc();
-    }, [user]);
+    }, []);
 
     return (
         <div className="container">

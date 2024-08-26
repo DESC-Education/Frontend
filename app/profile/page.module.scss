@@ -1,3 +1,54 @@
+.emptyProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.userContainer {
+    >div {
+        &:before {
+            content: "";
+            opacity: 0;
+            transition: .3s;
+        }
+    }
+
+    &.loading {
+        >div {
+            position: relative;
+
+            &:before {
+                opacity: 1;
+                position: absolute;
+                top: -5px;
+                left: -5px;
+                width: calc(100% + 10px);
+                height: calc(100% + 10px);
+                background: repeating-linear-gradient(45deg, rgba(var(--gray2), 1), rgba(var(--gray3), 1), rgba(var(--gray2), 1)) left/calc(4*100%/3) 100%;
+                // animation-direction: alternate-reverse;
+                z-index: 1;
+                border-radius: 30px;
+                animation: pulse 2s infinite ease-in-out;
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+    0% {
+        background-position: right;
+    }
+
+    50% {
+        background-position: left;
+    }
+
+    100% {
+        background-position: right;
+    }
+}
+
 .mainInfo {
     display: flex;
     align-items: center;
@@ -63,23 +114,23 @@
     .rubricsTitle {
         margin-bottom: 50px;
     }
-    
+
     .circles {
         display: flex;
         justify-content: space-around;
         width: 100%;
     }
-    
+
     .circleWrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
-    
+
         p {
             margin-top: 10px;
         }
     }
-    
+
     .circle {
         width: 100px;
         height: 100px;
@@ -89,7 +140,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-    
+
         &::before {
             content: "";
             position: absolute;
@@ -99,11 +150,11 @@
             border-radius: 50%;
             z-index: 1;
         }
-    
+
         .percentage {
             z-index: 2;
         }
-    
+
     }
 }
 

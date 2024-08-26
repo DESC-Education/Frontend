@@ -4,7 +4,15 @@ import Image from "next/image";
 import styles from "./Header.module.scss";
 import Button from "../ui/Button/Button";
 import AuthModal from "../modals/AuthModal/AuthModal";
-import React, { createRef, ReactNode, RefObject, use, useContext, useEffect, useState } from "react";
+import React, {
+    createRef,
+    ReactNode,
+    RefObject,
+    use,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { ModalContext } from "@/app/_context/ModalContext";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import Link from "next/link";
@@ -13,31 +21,49 @@ import { usePathname } from "next/navigation";
 import { set } from "zod";
 import SelectSearch from "react-select-search";
 import Dropdown from "../ui/DropDown/DropDown";
+import InfoIcon from "../ui/InfoIcon/InfoIcon";
 
-
-type RoleState = "student" | "company" | "institute_moderator" | "moderator" | "admin";
+type RoleState =
+    | "student"
+    | "company"
+    | "institute_moderator"
+    | "moderator"
+    | "admin";
 
 const Header = () => {
     const { showModal } = useContext(ModalContext);
     const { isAuth } = useTypesSelector((state) => state.userReducer);
-    const { user } = useTypesSelector((user) => user.userReducer);
+    const { user, isProfileLoading, isProfileVerified } = useTypesSelector(
+        (user) => user.userReducer,
+    );
 
     const pathname = usePathname();
 
     const [activeState, setActiveState] = useState<RoleState>(user?.role);
 
-    const options = [{ label: "Студентов", value: "students", href: "/admin-panel/verification/students" }, { label: "Компаний", value: "companies", href: "/admin-panel/verification/companies" }, { label: "Заданий", value: "institutes" }];
+    const options = [
+        {
+            label: "Студентов",
+            value: "students",
+            href: "/admin-panel/verification/students",
+        },
+        {
+            label: "Компаний",
+            value: "companies",
+            href: "/admin-panel/verification/companies",
+        },
+        { label: "Заданий", value: "institutes" },
+    ];
 
     useEffect(() => {
-
         setActiveState(user?.role);
     }, [user?.role]);
 
-
-
-    const getHeaderContent = (activeState: RoleState): {
+    const getHeaderContent = (
+        activeState: RoleState,
+    ): {
         content: ReactNode;
-        ref: RefObject<HTMLDivElement>
+        ref: RefObject<HTMLDivElement>;
     } => {
         switch (activeState) {
             // case "student":
@@ -46,43 +72,80 @@ const Header = () => {
                     content: (
                         <>
                             <div className={styles.navigation}>
-                                <Link
-                                    className={classNames(
-                                        styles.link,
-                                        "text fz24 fw500",
-                                        {
-                                            [styles.active]:
-                                                pathname === "/exchange",
-                                        },
+                                <div className={styles.linkContainer}>
+                                    <Link
+                                        style={{
+                                            pointerEvents: isProfileVerified
+                                                ? "all"
+                                                : "none",
+                                        }}
+                                        className={classNames(
+                                            styles.link,
+                                            "text fz24 fw500",
+                                            {
+                                                [styles.active]:
+                                                    pathname === "/exchange",
+                                            },
+                                        )}
+                                        href="/exchange"
+                                    >
+                                        Биржа
+                                    </Link>
+                                    {!isProfileVerified && (
+                                        <InfoIcon
+                                            className={styles.infoIcon}
+                                            tooltipContent={
+                                                "Для доступа к бирже необходимо подтвердить профиль"
+                                            }
+                                            action="tooltip"
+                                        />
                                     )}
-                                    href="/exchange"
-                                >
-                                    Биржа
-                                </Link>
-                                <Link
-                                    className={classNames(
-                                        styles.link,
-                                        "text fz24 fw500",
-                                        {
-                                            [styles.active]: pathname === "/chat",
-                                        },
+                                </div>
+                                <div className={styles.linkContainer}>
+                                    <Link
+                                        style={{
+                                            pointerEvents: isProfileVerified
+                                                ? "all"
+                                                : "none",
+                                        }}
+                                        className={classNames(
+                                            styles.link,
+                                            "text fz24 fw500",
+                                            {
+                                                [styles.active]:
+                                                    pathname === "/chat",
+                                                [styles.disabled]: !isProfileVerified,
+                                            },
+                                        )}
+                                        href="/chat"
+                                    >
+                                        Сообщения
+                                    </Link>
+                                    {!isProfileVerified && (
+                                        <InfoIcon
+                                            className={styles.infoIcon}
+                                            tooltipContent={
+                                                "Для доступа к сообщениям необходимо подтвердить профиль"
+                                            }
+                                            action="tooltip"
+                                        />
                                     )}
-                                    href="/chat"
-                                >
-                                    Сообщения
-                                </Link>
-                                <Link
-                                    className={classNames(
-                                        styles.link,
-                                        "text fz24 fw500",
-                                        {
-                                            [styles.active]: pathname === "/faq",
-                                        },
-                                    )}
-                                    href="/faq"
-                                >
-                                    FAQ
-                                </Link>
+                                </div>
+                                <div className={styles.linkContainer}>
+                                    <Link
+                                        className={classNames(
+                                            styles.link,
+                                            "text fz24 fw500",
+                                            {
+                                                [styles.active]:
+                                                    pathname === "/faq",
+                                            },
+                                        )}
+                                        href="/faq"
+                                    >
+                                        FAQ
+                                    </Link>
+                                </div>
                             </div>
                             <div className={styles.icons}>
                                 <Link href="/profile">
@@ -105,7 +168,7 @@ const Header = () => {
                         </>
                     ),
                     ref: createRef(),
-                }
+                };
             //case "company":
             case "company":
                 return {
@@ -130,7 +193,8 @@ const Header = () => {
                                         styles.link,
                                         "text fz24 fw500",
                                         {
-                                            [styles.active]: pathname === "/chat",
+                                            [styles.active]:
+                                                pathname === "/chat",
                                         },
                                     )}
                                     href="/chat"
@@ -142,7 +206,8 @@ const Header = () => {
                                         styles.link,
                                         "text fz24 fw500",
                                         {
-                                            [styles.active]: pathname === "/faq",
+                                            [styles.active]:
+                                                pathname === "/faq",
                                         },
                                     )}
                                     href="/faq"
@@ -173,7 +238,7 @@ const Header = () => {
                     ref: createRef(),
                 }
             // case "institute_moderator":
-            case "institute_moderator":
+            case "student":
                 return {
                     content: (
                         <>
@@ -184,10 +249,12 @@ const Header = () => {
                                         "text fz24 fw500",
                                         {
                                             [styles.active]:
-                                                pathname === "/admin-panel/chats",
+                                                pathname ===
+                                                "/admin-panel/chats",
                                         },
                                     )}
-                                    href="/admin-panel/chats">
+                                    href="/admin-panel/chats"
+                                >
                                     Чаты
                                 </Link>
                                 <Link
@@ -196,14 +263,25 @@ const Header = () => {
                                         "text fz24 fw500",
                                         {
                                             [styles.active]:
-                                                pathname === "/admin-panel/statistics",
+                                                pathname ===
+                                                "/admin-panel/statistics",
                                         },
                                     )}
-                                    href="/admin-panel/statistics">
+                                    href="/admin-panel/statistics"
+                                >
                                     Статистика
                                 </Link>
-                                <div className={classNames(styles.link, { [styles.active]: pathname.startsWith("/admin-panel/verification") })}>
-                                    <Dropdown options={options} placeholder="Верификация" />
+                                <div
+                                    className={classNames(styles.link, {
+                                        [styles.active]: pathname.startsWith(
+                                            "/admin-panel/verification",
+                                        ),
+                                    })}
+                                >
+                                    <Dropdown
+                                        options={options}
+                                        placeholder="Верификация"
+                                    />
                                 </div>
                                 <div className={styles.userInfo}>
                                     <Image
@@ -212,7 +290,14 @@ const Header = () => {
                                         src="/icons/profile.svg"
                                         alt="profile"
                                     />
-                                    <p className={classNames(styles.userName, "text fz24 fw500")}>Петр петров</p>
+                                    <p
+                                        className={classNames(
+                                            styles.userName,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Петр петров
+                                    </p>
                                     {/* <p>{user?.profile?.name}</p> */}
                                 </div>
                                 <Link
@@ -220,22 +305,21 @@ const Header = () => {
                                         styles.link,
                                         "text fz24 fw500",
                                     )}
-                                    href="/profile">
+                                    href="/profile"
+                                >
                                     Выйти
                                 </Link>
                             </div>
                         </>
                     ),
                     ref: createRef(),
-                }
+                };
             // case "moderator":
             case "moderator":
                 return {
-                    content: (
-                        <div>Moderator</div>
-                    ),
+                    content: <div>Moderator</div>,
                     ref: createRef(),
-                }
+                };
             // case "admin":
             case "student":
                 return {
@@ -301,10 +385,9 @@ const Header = () => {
                         </div>
                     ),
                     ref: createRef(),
-                }
+                };
         }
-    }
-
+    };
 
     if (!getHeaderContent(activeState)) setActiveState("student");
 

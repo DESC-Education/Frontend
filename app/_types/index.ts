@@ -1,6 +1,6 @@
 export type IUser = {
     id: string;
-    mail: string;
+    email: string;
     isVerified: boolean;
     isOnline: boolean;
     isBanned: boolean;
@@ -32,7 +32,7 @@ export type IStudentProfile = {
     phone: string;
     emailVisibility: boolean;
     phoneVisibility: boolean;
-    timezone: 3;
+    timezone: number;
     university: IUniversity;
     speciality: ISpeciality;
     faculty: IFaculty;
@@ -55,7 +55,7 @@ export type ICompanyProfile = {
     description: string;
     vkLink?: string;
     telegramLink?: string;
-    timezone: string;
+    timezone: number;
     city: ICity;
     phone: string;
     emailVisibility: boolean;
@@ -105,32 +105,32 @@ export type IFile = {
     type: string;
 };
 
-type ISpeciality = {
+export type ISpeciality = {
     id: string;
     name: string;
     type: string;
     code: string;
 };
 
-type ISkill = {
+export type ISkill = {
     id: string;
     name: string;
     percent: number;
 };
 
-type ICity = {
+export type ICity = {
     id: string;
     name: string;
     region: string;
 };
 
-type IUniversity = {
+export type IUniversity = {
     id: string;
     name: string;
     city: ICity;
 };
 
-type IFaculty = {
+export type IFaculty = {
     id: string;
     name: string;
     university: string
