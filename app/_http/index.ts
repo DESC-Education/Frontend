@@ -28,7 +28,7 @@ $authHost.interceptors.request.use(
     },
 );
 
-let times: number = 0;
+// let times: number = 0;
 
 $authHost.interceptors.response.use(
     (res) => {
@@ -40,9 +40,9 @@ $authHost.interceptors.response.use(
         if (originalConfig.url !== "/api/v1/users/login" && err.response) {
             if (err.response.status === 401) {
                 try {
-                    times++;
+                    // times++;
 
-                    if (!LocalStorage.getAccessToken() || times >= 3) {
+                    if (!LocalStorage.getAccessToken() ) { // || times >= 3
                         return;
                     }
 
