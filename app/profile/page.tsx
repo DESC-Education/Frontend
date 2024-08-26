@@ -18,6 +18,8 @@ import { getProfile } from "../_http/API/profileApi";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { userSlice } from "../_store/reducers/userSlice";
 import { yearsOfEducation } from "../_utils/constants";
+import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
+import Button from "../_components/ui/Button/Button";
 
 export default function Home() {
     const {
@@ -31,16 +33,25 @@ export default function Home() {
     const { updateProfile } = userSlice.actions;
     const dispatch = useTypesDispatch();
 
-    useEffect(() => {
-        const asyncFunc = async () => {
-            const res = await getProfile();
-            dispatch(updateProfile(res.profile));
-        };
-        asyncFunc();
-    }, []);
+    // if (isProfileLoading) return <LoadingScreen />;
+
+    if (!isProfileVerified)
+        return (
+            <div className={styles.emptyProfile}>
+                <img src="/images/questions.png" alt="questions" />
+                <p className="text fz24">Ваш профиль не заполнен!</p>
+                <Link href="/profile/settings">
+                    <Button type="secondary">Исправить!</Button>
+                </Link>
+            </div>
+        );
 
     return (
-        <div className={styles.userContainer}>
+        <div
+            className={classNames(styles.userContainer, {
+                [styles.loading]: isProfileLoading,
+            })}
+        >
             {user.role === "student" ? (
                 <>
                     <div className={styles.mainInfo}>
@@ -50,10 +61,12 @@ export default function Home() {
                                 "title fz48",
                             )}
                         >
-                            Веб дизайнер
+                            {studentProfile?.formOfEducation}
                         </div>
                         <div className={styles.level}>
-                            <p className="text fw500">Средний уровень</p>
+                            <p className="text fw500">
+                                {studentProfile?.formOfEducation}
+                            </p>
                         </div>
                     </div>
                     <div className={styles.description}>
@@ -71,9 +84,9 @@ export default function Home() {
                                 "text",
                             )}
                         >
-                            {studentProfile.description}
+                            {studentProfile?.description}
                         </p>
-                        {studentProfile.phoneVisibility && (
+                        {studentProfile?.phoneVisibility && (
                             <div className={styles.contact}>
                                 <Image
                                     src="/icons/phoneIcon.svg"
@@ -81,13 +94,14 @@ export default function Home() {
                                     width={35}
                                     height={35}
                                 />
-                                <p className="text">{studentProfile.phone}</p>
+                                <p className="text">{studentProfile?.phone}</p>
                             </div>
                         )}
                         <div className={styles.contact}>
                             <Link
                                 href={
-                                    "https:/t.me/" + studentProfile.telegramLink
+                                    "https:/t.me/" +
+                                    studentProfile?.telegramLink
                                 }
                                 className={styles.contact}
                             >
@@ -158,29 +172,32 @@ export default function Home() {
                             Навыки
                         </p>
                         <div className={styles.circles}>
-                            {studentProfile.skills.map((skill, index) => (
-                                <div
-                                    key={index}
-                                    className={styles.circleWrapper}
-                                >
+                            {studentProfile.skills &&
+                                studentProfile.skills.map((skill, index) => (
                                     <div
-                                        className={styles.circle}
-                                        style={{
-                                            background: `conic-gradient(#19282C ${skill.percent}%, #e0e0e0 0%)`,
-                                        }}
+                                        key={index}
+                                        className={styles.circleWrapper}
                                     >
-                                        <span
-                                            className={classNames(
-                                                styles.percentage,
-                                                "title",
-                                            )}
+                                        <div
+                                            className={styles.circle}
+                                            style={{
+                                                background: `conic-gradient(#19282C ${skill.percent}%, #e0e0e0 0%)`,
+                                            }}
                                         >
-                                            {skill.percent}%
-                                        </span>
+                                            <span
+                                                className={classNames(
+                                                    styles.percentage,
+                                                    "title",
+                                                )}
+                                            >
+                                                {skill.percent}%
+                                            </span>
+                                        </div>
+                                        <p className="text fw500">
+                                            {skill.name}
+                                        </p>
                                     </div>
-                                    <p className="text fw500">{skill.name}</p>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     </div>
 
@@ -315,29 +332,32 @@ export default function Home() {
                             Навыки
                         </p>
                         <div className={styles.circles}>
-                            {studentProfile.skills.map((skill, index) => (
-                                <div
-                                    key={index}
-                                    className={styles.circleWrapper}
-                                >
+                            {studentProfile.skills &&
+                                studentProfile.skills.map((skill, index) => (
                                     <div
-                                        className={styles.circle}
-                                        style={{
-                                            background: `conic-gradient(#19282C ${skill.percent}%, #e0e0e0 0%)`,
-                                        }}
+                                        key={index}
+                                        className={styles.circleWrapper}
                                     >
-                                        <span
-                                            className={classNames(
-                                                styles.percentage,
-                                                "title",
-                                            )}
+                                        <div
+                                            className={styles.circle}
+                                            style={{
+                                                background: `conic-gradient(#19282C ${skill.percent}%, #e0e0e0 0%)`,
+                                            }}
                                         >
-                                            {skill.percent}%
-                                        </span>
+                                            <span
+                                                className={classNames(
+                                                    styles.percentage,
+                                                    "title",
+                                                )}
+                                            >
+                                                {skill.percent}%
+                                            </span>
+                                        </div>
+                                        <p className="text fw500">
+                                            {skill.name}
+                                        </p>
                                     </div>
-                                    <p className="text fw500">{skill.name}</p>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     </div>
 

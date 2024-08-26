@@ -1,0 +1,31 @@
+.container {
+    position: relative;
+
+    .tooltip {
+        background: white;
+        position: absolute;
+        opacity: 1;
+        transition: 0.3s;
+        top: 80%;
+        width: 300px;
+        padding: 5px;
+        border-radius: 10px;
+        left: -140px;
+        font-size: 15px;
+        line-height: 17px;
+        z-index: 10;
+        border: 1px solid rgba(var(--gray2));
+        text-align: center;
+
+        &.hide {
+            z-index: -10;
+            opacity: 0;
+        }
+    }
+
+    img {
+        width: 18px;
+        opacity: 0.7;
+        cursor: pointer;
+    }
+}
