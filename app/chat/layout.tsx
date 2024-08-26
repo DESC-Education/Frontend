@@ -20,8 +20,9 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const { chats } = useTypesSelector((state) => state.userReducer);
+    const { user } = useTypesSelector((state) => state.userReducer);
     const dispatch = useTypesDispatch();
-    const { updateChats } = userSlice.actions;
+    const { updateChats, updateUser } = userSlice.actions;
 
     useEffect(() => {
         dispatch(updateChats([
@@ -31,31 +32,9 @@ export default function RootLayout({
                     id: "1",
                     mail: "mail@mail.com",
                     isVerified: true,
-                    role: "student",
                     isOnline: true,
                     isBanned: false,
-                    type: "student",
-                    data: {
-                        id: "1",
-                        isVerified: true,
-                        name: "Петя",
-                        surname: "Петров",
-                        logoImg: {
-                            id: "1",
-                            name: "Имя Фамилия",
-                            path: "/images/userIcon.png",
-                            type: "image/png",
-                        },
-                        description: "Описание",
-                        phone: "123456789",
-                        specialityId: "1",
-                        instituteId: "1",
-                        formOfEducationId: "1",
-                        timezone: "Europe/Moscow",
-                        grade: "1",
-                        yearOfGraduation: 2024,
-                        telegramLink: "https://t.me/joinchat/123456789",
-                    },
+                    role: "student"
                 },
                 createdAt: "14.03.2024",
                 taskId: "1",
@@ -85,81 +64,13 @@ export default function RootLayout({
                         changedId: "1",
                     },
                 ]
-            },
-            {
-                id: "2",
-                companion: {
-                    id: "2",
-                    mail: "mail@mail.com",
-                    isVerified: true,
-                    role: "student",
-                    isOnline: true,
-                    isBanned: false,
-                    type: "student",
-                    data: {
-                        id: "2",
-                        isVerified: true,
-                        name: "Вася",
-                        surname: "Васильев",
-                        logoImg: {
-                            id: "2",
-                            name: "Имя Фамилия",
-                            path: "/images/userIcon.png",
-                            type: "image/png",
-                        },
-                        description: "Описание",
-                        phone: "123456789",
-                        specialityId: "1",
-                        instituteId: "1",
-                        formOfEducationId: "1",
-                        timezone: "Europe/Moscow",
-                        grade: "1",
-                        yearOfGraduation: 2024,
-                        telegramLink: "https://t.me/joinchat/123456789",
-                    },
-                },
-                createdAt: "14.03.2024",
-                taskId: "1",
-                isSupport: true,
-                isSuspicious: false,
-                messages: [
-                    {
-                        id: "1",
-                        chatId: "1",
-                        text: "Привет, я тебя понимаю?",
-                        ticketId: "1",
-                        userId: "1",
-                        isRead: true,
-                        createdat: "14.03.2024",
-                        isVisible: true,
-                        changedId: "1",
-                    },
-                    {
-                        id: "2",
-                        chatId: "1",
-                        text: "Привет, я тебя понимаю?",
-                        ticketId: "1",
-                        userId: "1",
-                        isRead: true,
-                        createdat: "14.03.2024",
-                        isVisible: true,
-                        changedId: "1",
-                    },
-                    {
-                        id: "3",
-                        chatId: "1",
-                        text: "Привет это я твой единственный зритель",
-                        ticketId: "1",
-                        userId: "1",
-                        isRead: false,
-                        createdat: "17.03.2024",
-                        isVisible: true,
-                        changedId: "1",
-                    },
-                ],
-            },
-        ]));
+
+
+            }
+        ]))
     }, []);
+
+
 
     return (
         <div className="container">
@@ -167,11 +78,12 @@ export default function RootLayout({
                 <SideBar>
                     <div className={styles.chatList}>
                         {chats.map((chat, index) => {
-                            if (!chat.companion.data.isVerified) return null;
+                            if (!chat.companion.isVerified) return null;
                             return <Link href={`/chat/${index}`} key={index} className={styles.chatLink}>
                                 <ChatItem
-                                    name={chat.companion.type === "student" ? chat.companion.data.name + " " + chat.companion.data.surname : chat.companion.data.ownerName}
-                                    avatar={chat.companion.data.logoImg.path}
+                                    name = {chat.companion.mail}
+                                    // name={chat.companion.role === "student" ? chat.companion.mail + " " + chat.companion.mail : chat.companion.mail}
+                                    avatar={"#"}
                                     lastMessage={chat.messages[chats[index].messages.length - 1].text}
                                     lastMessageDate={chat.messages[chats[index].messages.length - 1].createdat}
                                     isRead={chat.messages[chat.messages.length - 1].isRead}
