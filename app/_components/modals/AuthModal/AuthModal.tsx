@@ -259,7 +259,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     const verifyRegCodeHandler = async () => {
         setTimerState("stopped");
         setCodeSentAgain(false);
-        const res = await verifyEmail({ email: state.email, code: state.code });
+        const res = await verifyEmail({ email: state.email, code: Number(state.code) });
 
         if (res.status === 200) {
             showAlert("Почта успешно подтверждена!", "success");
@@ -290,7 +290,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     const recoverHandler = async () => {
         const res = await recoverPassword({
             email: state.email,
-            code: state.code,
+            code: Number(state.code),
             new_password: state.password,
         });
 

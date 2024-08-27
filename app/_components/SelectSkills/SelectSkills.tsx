@@ -6,13 +6,14 @@ import Input from "../ui/Input/Input";
 import Image from "next/image";
 import classNames from "classnames";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { ISkill } from "@/app/_types";
 
 type SelectSkillsProps = {
     title: string;
-    options: string[];
+    options: ISkill[];
     maxItems: number;
-    values: string[];
-    selectValues: (values: string[]) => void;
+    values: ISkill[];
+    selectValues: (values: ISkill[]) => void;
 };
 
 const SelectSkills: React.FC<SelectSkillsProps> = ({
@@ -37,6 +38,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
 
     const filteredList = useFuzzySearchList({
         list: options,
+        getText: (item) => [item.name],
         queryText: mockQueryText === "" ? queryText : mockQueryText,
         mapResultItem: ({ item }) => ({
             item,
@@ -45,17 +47,17 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
 
     const optionsRef = useRef<HTMLDivElement>(null);
 
-    const addItem = (item: string) => {
-        if (values.length < maxItems && !values.includes(item)) {
+    const addItem = (item: ISkill) => {
+        if (values.length < maxItems && !values.some(skill => skill.name === item.name)) {
             selectValues([...values, item]);
         }
     };
 
-    const valuesListRef = useRef<any>(null);
+    // const valuesListRef = useRef<any>(null);
 
     return (
         <div className={styles.container}>
-            <p className="title fw32">
+            <p className="text fz24 fw500">
                 {title}{" "}
                 {values.length > maxItems - 1 && `(максимум ${maxItems})`}
             </p>
@@ -66,7 +68,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                     timeout={200}
                     classNames="values"
                 >
-                    <p className="text fw500 fz16">Тут пока пусто...</p>
+                    <p className="text fz20">Тут пока пусто... (начните вводить название навыка)</p>
                 </CSSTransition>
                 <CSSTransition
                     unmountOnExit
@@ -77,7 +79,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                     <TransitionGroup>
                         {values.map((value, index) => (
                             <CSSTransition
-                                key={value}
+                                key={value.id}
                                 timeout={200}
                                 classNames="item-value"
                             >
@@ -90,9 +92,8 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                                         )
                                     }
                                     className={styles.value}
-                                    key={value}
                                 >
-                                    <p className="text fw500 fz16">{value}</p>
+                                    <p className="text fw500 fz24">{value.name}</p>
                                     <img src="/icons/trash.svg" alt="trash" />
                                 </div>
                             </CSSTransition>
@@ -102,24 +103,24 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
             </div>
             <div className={styles.inputWrapper}>
                 <Input
-                    onKeyUp={(e) => e.key === "Enter" && addItem(mockQueryText)}
+                    // onKeyUp={(e) => e.key === "Enter" && addItem(mockQueryText)}
                     containerClassName={styles.input}
                     type="text"
                     value={mockQueryText}
                     onChange={(val) => setMockQueryText(val)}
                 />
-                <Image
+                {/* <Image
                     className={classNames(styles.applyIcon, {
                         [styles.disabled]:
                             values.length >= maxItems ||
-                            values.includes(mockQueryText),
+                            values.some(item => item.name === mockQueryText),
                     })}
                     width={50}
                     height={50}
                     src="/icons/apply.svg"
                     alt="apply"
-                    onClick={() => addItem(mockQueryText)}
-                />
+                    // onClick={() => addItem(mockQueryText)}
+                /> */}
             </div>
             <CSSTransition
                 unmountOnExit
@@ -134,23 +135,22 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                 >
                     <TransitionGroup>
                         {filteredList
-                            .filter(({ item }) => !values.includes(item))
+                            .filter(({ item }) => !values.some(skill => skill.name === item.name))
                             .map(({ item }) => (
                                 <CSSTransition
                                     className={styles.filteredItem}
-                                    key={item}
+                                    key={item.id}
                                     timeout={200}
                                     classNames="item"
                                 >
                                     <p
                                         onClick={() => addItem(item)}
-                                        key={item}
                                         className={classNames(
-                                            "text fw500 fz16",
                                             styles.filteredItem,
+                                            "text fw500 fz24",
                                         )}
                                     >
-                                        {item}
+                                        {item.name}
                                     </p>
                                 </CSSTransition>
                             ))}

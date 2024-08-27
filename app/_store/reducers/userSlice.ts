@@ -1,5 +1,15 @@
 import { Tokens } from "@/app/_http/types";
-import { IChat, ICompanyProfile, IStudentProfile, IUser } from "@/app/_types";
+import {
+    IChat,
+    ICity,
+    ICompanyProfile,
+    IFaculty,
+    IFile,
+    ISpeciality,
+    IStudentProfile,
+    IUniversity,
+    IUser,
+} from "@/app/_types";
 import LocalStorage from "@/app/_utils/LocalStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -13,14 +23,54 @@ type UserInterface = {
     studentProfile: IStudentProfile;
 };
 
+const initProfileStudent: IStudentProfile = {
+    id: "",
+    isVerified: false,
+    admissionYear: 0,
+    description: "",
+    firstName: "",
+    lastName: "",
+    logoImg: "",
+    phone: "",
+    emailVisibility: false,
+    phoneVisibility: false,
+    timezone: 0,
+    university: {} as IUniversity,
+    speciality: {} as ISpeciality,
+    faculty: {} as IFaculty,
+    formOfEducation: "part_time",
+    telegramLink: "",
+    vkLink: "",
+    city: {} as ICity,
+    skills: [],
+};
+
+const initProfileCompany: ICompanyProfile = {
+    id: "",
+    isVerified: false,
+    description: "",
+    logoImg: {} as IFile,
+    city: {} as ICity,
+    companyName: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    emailVisibility: false,
+    phoneVisibility: false,
+    timezone: 0,
+    linkToCompany: "",
+    telegramLink: "",
+    vkLink: "",
+};
+
 const initialState: UserInterface = {
     user: {} as IUser,
     chats: [],
     isAuth: false,
     isProfileLoading: true,
     isProfileVerified: false,
-    companyProfile: {} as ICompanyProfile,
-    studentProfile: {} as IStudentProfile,
+    companyProfile: initProfileCompany,
+    studentProfile: initProfileStudent,
 };
 
 export const userSlice = createSlice({
@@ -52,16 +102,10 @@ export const userSlice = createSlice({
                 state.companyProfile = action.payload;
             }
         },
-        updateStudentProfile(
-            state,
-            action: PayloadAction<IStudentProfile>,
-        ) {
+        updateStudentProfile(state, action: PayloadAction<IStudentProfile>) {
             state.studentProfile = action.payload;
         },
-        updateCompanyProfile(
-            state,
-            action: PayloadAction<ICompanyProfile>,
-        ) {
+        updateCompanyProfile(state, action: PayloadAction<ICompanyProfile>) {
             state.companyProfile = action.payload;
         },
         updateUser(state, action: PayloadAction<IUser>) {

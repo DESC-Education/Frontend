@@ -17,7 +17,7 @@ export const sendVerificationCode = async (dto: {
             data = await $host.post("/api/v1/users/send_verify_code", dto);
         }
 
-        return { status: 200, message: data.data.message };
+        return { status: 200, message: "Успешно" };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
@@ -35,7 +35,7 @@ export const sendVerificationCode = async (dto: {
 
 export const verifyEmail = async (dto: {
     email: string;
-    code: string;
+    code: number;
 }): Promise<{
     status: number;
     message?: string;
@@ -43,9 +43,16 @@ export const verifyEmail = async (dto: {
     tokens?: Tokens;
 }> => {
     try {
-        const { data } = await $host.post("/api/v1/users/registration/verify", dto);
+        const { data } = await $host.post(
+            "/api/v1/users/registration/verify",
+            dto,
+        );
 
-        return { status: 200, message: data.message };
+        return {
+            status: 200,
+            user: data.user,
+            tokens: data.tokens,
+        };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {
@@ -67,16 +74,12 @@ export const registerUser = async (dto: {
 }): Promise<{ status: number; message: string }> => {
     try {
         const { data } = await $host.post<{
-            status: number;
-            data: { user: IUser; tokens: Tokens };
             message: string;
         }>("/api/v1/users/registration", dto);
 
-        console.log("data", data);
-
         return {
             status: 200,
-            message: data.message,
+            message: "Успешно",
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -106,17 +109,15 @@ export const loginUser = async (dto: {
 }> => {
     try {
         const { data } = await $host.post<{
-            data: { user: IUser; tokens: Tokens };
-            message: string;
+            user: IUser;
+            tokens: Tokens;
         }>("/api/v1/users/login", dto);
-
-        console.log(data);
 
         return {
             status: 200,
-            message: data.message,
-            user: data.data.user,
-            tokens: data.data.tokens,
+            message: "Успешно",
+            user: data.user,
+            tokens: data.tokens,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -139,15 +140,12 @@ export const auth = async (): Promise<{
     user?: IUser;
 }> => {
     try {
-        const { data } = await $authHost.get<{
-            data: { user: IUser };
-            message: string;
-        }>("/api/v1/users/auth");
+        const { data } = await $authHost.get("/api/v1/users/auth");
 
         return {
             status: 200,
-            message: data.message,
-            user: data.data.user,
+            message: "Успешно",
+            user: data,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -166,13 +164,41 @@ export const auth = async (): Promise<{
 
 export const recoverPassword = async (dto: {
     email: string;
-    code: string;
+    code: number;
     new_password: string;
 }): Promise<{ status: number; message?: string }> => {
     try {
-        const { data } = await $authHost.post("/api/v1/users/change_password", dto);
+        const { data } = await $authHost.post(
+            "/api/v1/users/change_password",
+            dto,
+        );
 
-        return { status: 200, message: data.message };
+        return { status: 200, message: "Успешно" };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const changeEmail = async (dto: {
+    code: number;
+}): Promise<{ status: number; message?: string }> => {
+    try {
+        const { data } = await $authHost.post(
+            "/api/v1/users/change_email",
+            dto,
+        );
+
+        return { status: 200, message: "Успешно" };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {

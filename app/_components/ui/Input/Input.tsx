@@ -9,13 +9,23 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import CodeInput from "./CodeInput/CodeInput";
 
 type InputProps = {
-    type: "text" | "password" | "tel" | "email" | "checkbox" | "code";
+    type:
+        | "text"
+        | "password"
+        | "tel"
+        | "email"
+        | "checkbox"
+        | "code"
+        | "number"
+        | "textarea";
     containerClassName?: string;
     onChange?: (val: string) => void;
     onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     onCheck?: (val: boolean) => void;
     onBlur?: (val: string) => void;
     value?: string;
+    max?: number;
+    placeholder?: string;
     checked?: boolean;
     labelContent?: React.ReactNode;
     autoComplete?: string;
@@ -32,6 +42,8 @@ const Input: FC<InputProps> = ({
     onBlur = (val: string) => {},
     labelContent,
     title,
+    max = Infinity,
+    placeholder = "",
     value = "",
     checked = false,
     autoComplete = "off",
@@ -131,7 +143,13 @@ const Input: FC<InputProps> = ({
                 </div>
             );
         case "code":
-            return <CodeInput value={codeValue} setValue={setCodeValue} className={containerClassName} />;
+            return (
+                <CodeInput
+                    value={codeValue}
+                    setValue={setCodeValue}
+                    className={containerClassName}
+                />
+            );
         case "tel":
             return (
                 <div
@@ -156,6 +174,30 @@ const Input: FC<InputProps> = ({
                     />
                 </div>
             );
+        case "textarea":
+            return (
+                <div
+                    className={classNames(
+                        styles.inputWrapper,
+                        styles.textareaWrapper,
+                        containerClassName,
+                    )}
+                >
+                    {title && <p className="text fz20 fw500">{title}</p>}
+                    <textarea
+                        placeholder={placeholder}
+                        // onKeyUp={onKeyUp}
+                        autoComplete={autoComplete}
+                        className={classNames(styles.input, {
+                            [styles.inputError]: errorText.length !== 0,
+                        })}
+                        rows={30}
+                        value={value}
+                        onBlur={(e) => onBlur(e.target.value)}
+                        onChange={(e) => onChange(e.target.value)}
+                    />
+                </div>
+            );
         default:
             return (
                 <div
@@ -166,6 +208,8 @@ const Input: FC<InputProps> = ({
                 >
                     {title && <p className="text fz20 fw500">{title}</p>}
                     <input
+                        max={max}
+                        placeholder={placeholder}
                         onKeyUp={onKeyUp}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, {

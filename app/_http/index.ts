@@ -42,7 +42,7 @@ $authHost.interceptors.response.use(
                 try {
                     // times++;
 
-                    if (!LocalStorage.getAccessToken() ) { // || times >= 3
+                    if (!LocalStorage.getRefreshToken() || !LocalStorage.getAccessToken() ) { // || times >= 3
                         return;
                     }
 
