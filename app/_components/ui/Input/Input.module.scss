@@ -6,12 +6,20 @@
     gap: 4px;
 }
 
+.textareaWrapper {
+    textarea {
+        resize: none;
+        padding: 18px 20px;
+    }
+}
+
 .checkboxWrapper {
     flex-direction: row;
     align-items: center;
 }
 
 .input {
+    font-family: inherit;
     padding: 12px 20px;
     border: 1px solid rgba(var(--gray2), 1);
     color: rgba(var(--black), 1);

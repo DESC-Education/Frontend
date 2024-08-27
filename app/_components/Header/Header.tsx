@@ -70,8 +70,8 @@ const Header = () => {
         ref: RefObject<HTMLDivElement>;
     } => {
         switch (activeState) {
-            // case "student":
-            case "admin":
+            case "student":
+                // case "admin":
                 return {
                     content: (
                         <>
@@ -99,7 +99,14 @@ const Header = () => {
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
-                                                "Для доступа к бирже необходимо подтвердить профиль"
+                                                <>
+                                                    Для доступа к бирже
+                                                    необходимо подтвердить
+                                                    профиль
+                                                    <Button type="primary">
+                                                        Инструкция
+                                                    </Button>
+                                                </>
                                             }
                                             action="tooltip"
                                         />
@@ -129,7 +136,14 @@ const Header = () => {
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
-                                                "Для доступа к сообщениям необходимо подтвердить профиль"
+                                                <>
+                                                    Для доступа к сообщениям
+                                                    необходимо подтвердить
+                                                    профиль
+                                                    <Button type="primary">
+                                                        Инструкция
+                                                    </Button>
+                                                </>
                                             }
                                             action="tooltip"
                                         />
@@ -241,8 +255,8 @@ const Header = () => {
                     ),
                     ref: createRef(),
                 };
-            // case "institute_moderator":
             case "institute_moderator":
+         // case "student":
                 return {
                     content: (
                         <>
@@ -394,8 +408,8 @@ const Header = () => {
                         </>,
                     ref: createRef(),
                 };
-            // case "admin":
-            case "student":
+            case "admin":
+                // case "student":
                 return {
                     content: (
                         <div className={styles.navigation}>
@@ -405,10 +419,12 @@ const Header = () => {
                                     "text fz24 fw500",
                                     {
                                         [styles.active]:
-                                            pathname === "/admin-panel/statistics",
+                                            pathname ===
+                                            "/admin-panel/statistics",
                                     },
                                 )}
-                                href="/admin-panel/statistics">
+                                href="/admin-panel/statistics"
+                            >
                                 Статистика
                             </Link>
                             <Link
@@ -417,10 +433,12 @@ const Header = () => {
                                     "text fz24 fw500",
                                     {
                                         [styles.active]:
-                                            pathname === "/admin-panel/students-list",
+                                            pathname ===
+                                            "/admin-panel/students-list",
                                     },
                                 )}
-                                href="/admin-panel/students-list">
+                                href="/admin-panel/students-list"
+                            >
                                 Студенты
                             </Link>
                             <Link
@@ -429,14 +447,25 @@ const Header = () => {
                                     "text fz24 fw500",
                                     {
                                         [styles.active]:
-                                            pathname === "/admin-panel/companies-list",
+                                            pathname ===
+                                            "/admin-panel/companies-list",
                                     },
                                 )}
-                                href="/admin-panel/companies-list">
+                                href="/admin-panel/companies-list"
+                            >
                                 Компании
                             </Link>
-                            <div className={classNames(styles.link, { [styles.active]: pathname.startsWith("/admin-panel/verification") })}>
-                                <Dropdown options={options} placeholder="Верификация" />
+                            <div
+                                className={classNames(styles.link, {
+                                    [styles.active]: pathname.startsWith(
+                                        "/admin-panel/verification",
+                                    ),
+                                })}
+                            >
+                                <Dropdown
+                                    options={options}
+                                    placeholder="Верификация"
+                                />
                             </div>
                             <div className={styles.userInfo}>
                                 <Image
@@ -445,7 +474,14 @@ const Header = () => {
                                     src="/icons/profile.svg"
                                     alt="profile"
                                 />
-                                <p className={classNames(styles.userName, "text fz24 fw500")}>Петр петров</p>
+                                <p
+                                    className={classNames(
+                                        styles.userName,
+                                        "text fz24 fw500",
+                                    )}
+                                >
+                                    Петр петров
+                                </p>
                                 {/* <p>{user?.profile?.name}</p> */}
                             </div>
                             <Link
@@ -453,7 +489,8 @@ const Header = () => {
                                     styles.link,
                                     "text fz24 fw500",
                                 )}
-                                href="/profile">
+                                href="/profile"
+                            >
                                 Выйти
                             </Link>
                         </div>

@@ -1,4 +1,4 @@
-import { IFile } from "../_types";
+import { IFile, ISkill } from "../_types";
 
 export type Tokens = {
     accessToken: string;
@@ -36,4 +36,23 @@ export type CreateCompanyProfileDTO = {
     skills: string[];
     registration_files: File[];
     other_files: File[];
+};
+
+export type EditStudentDTO = {
+    description: string;
+    phoneVisibility: boolean;
+    emailVisibility: boolean;
+    telegramLink: string;
+    vkLink: string;
+    skills: ISkill[];
+};
+
+export type EditCompanyDTO = {
+    description: string;
+    phoneVisibility: boolean;
+    emailVisibility: boolean;
+    telegramLink: string;
+    vkLink: string;
+    linkToCompany: string;
+    skills: ISkill[];
 };

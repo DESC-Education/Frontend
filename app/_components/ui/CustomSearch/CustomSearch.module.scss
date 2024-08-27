@@ -24,10 +24,22 @@
         transition: .3s;
         cursor: pointer;
 
+        &.error {
+            border: 1px solid rgba(var(--red), .5);
+            color: rgba(var(--red), 1);
+        }
+
         &:focus {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
+    }
+
+
+    .errorText {
+        white-space: pre-wrap;
+        color: rgba(var(--red), 1);
+        // transition: .3s !important;
     }
 
     .select {

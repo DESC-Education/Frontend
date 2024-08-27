@@ -37,7 +37,6 @@ export type IStudentProfile = {
     speciality: ISpeciality;
     faculty: IFaculty;
     formOfEducation: "part_time" | "full_time" | "part_full_time";
-    educationProgram: "bachelor" | "speciality" | "magister";
     telegramLink?: string;
     vkLink?: string;
     city: ICity;
@@ -108,7 +107,7 @@ export type IFile = {
 export type ISpeciality = {
     id: string;
     name: string;
-    type: string;
+    type: "bachelor" | "speciality" | "magister";
     code: string;
 };
 

@@ -1,10 +1,18 @@
 import axios from "axios";
 import { $authHost, $host } from "..";
-import { CreateCompanyProfileDTO, CreateStudentProfileDTO } from "../types";
 import {
+    CreateCompanyProfileDTO,
+    CreateStudentProfileDTO,
+    EditCompanyDTO,
+    EditStudentDTO,
+} from "../types";
+import {
+    ICity,
     ICompanyProfile,
     IFaculty,
     IProfile,
+    ISkill,
+    ISpeciality,
     IStudentProfile,
     IUniversity,
     IUser,
@@ -80,11 +88,11 @@ export const createProfileCompany = async (
 };
 
 export const editStudentProfile = async (
-    dto: Partial<CreateStudentProfileDTO>,
+    dto: EditStudentDTO,
 ): Promise<{ status: number; message: string }> => {
     try {
         const { data } = await $authHost.patch(
-            "/api/v1/profiles/student_profile",
+            "/api/v1/profiles/profile/edit",
             dto,
         );
 
@@ -105,11 +113,11 @@ export const editStudentProfile = async (
 };
 
 export const editCompanyProfile = async (
-    dto: Partial<CreateCompanyProfileDTO>,
+    dto: EditCompanyDTO,
 ): Promise<{ status: number; message: string }> => {
     try {
         const { data } = await $authHost.patch(
-            "/api/v1/profiles/company_profile",
+            "/api/v1/profiles/profile/edit",
             dto,
         );
 
@@ -137,32 +145,14 @@ export const getProfile = async (dto?: {
     profile?: any;
 }> => {
     try {
-        const { data } = await $authHost.get<{
-            data: {
-                message: string;
-                studentProfile?: IStudentProfile;
-                companyProfile?: ICompanyProfile;
-            };
-        }>(`/api/v1/profiles/profile/${dto?.user_id ? "/" + dto.user_id : ""}`);
-
-        if (data.data.studentProfile) {
-            return {
-                status: 200,
-                message: data.data.message,
-                profile: data.data.studentProfile,
-            };
-        } else if (data.data.companyProfile) {
-            return {
-                status: 200,
-                message: data.data.message,
-                profile: data.data.companyProfile,
-            };
-        }
+        const { data } = await $authHost.get<any>(
+            `/api/v1/profiles/profile/${dto?.user_id ? dto.user_id : "my"}`,
+        );
 
         return {
             status: 200,
-            message: data.data.message,
-            profile: data.data.studentProfile,
+            message: "Успешно",
+            profile: data,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -184,7 +174,7 @@ export const getUniversities = async (q: string) => {
         const { data } = await $authHost.get<{
             count: string;
             results: IUniversity[];
-        }>(`/api/v1/profiles/profile/universities?search=${q}`);
+        }>(`/api/v1/profiles/universities?search=${q}`);
 
         return {
             status: 200,
@@ -210,11 +200,91 @@ export const getFaculties = async (q: string, universityId?: string) => {
         const { data } = await $authHost.get<{
             count: string;
             results: IFaculty[];
-        }>(`/api/v1/profiles/profile/faculties?university_id=${universityId}&search=${q}`);
+        }>(
+            `/api/v1/profiles/faculties?universityId=${universityId}&search=${q}`,
+        );
 
         return {
             status: 200,
             faculties: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const getSpecialities = async (q: string) => {
+    try {
+        const { data } = await $authHost.get<{
+            count: string;
+            results: ISpeciality[];
+        }>(`/api/v1/profiles/specialties?search=${q}`);
+
+        return {
+            status: 200,
+            specialities: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const getSkills = async (q: string) => {
+    try {
+        const { data } = await $authHost.get<{
+            count: string;
+            results: ISkill[];
+        }>(`/api/v1/profiles/skills?search=${q}`);
+
+        return {
+            status: 200,
+            skills: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const getCities = async (q: string) => {
+    try {
+        const { data } = await $authHost.get<{
+            count: string;
+            results: ICity[];
+        }>(`/api/v1/profiles/cities?search=${q}`);
+
+        return {
+            status: 200,
+            cities: data.results,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

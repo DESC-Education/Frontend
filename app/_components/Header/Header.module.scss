@@ -56,6 +56,22 @@
             }
         }
 
+        .linkContainer {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .infoIcon {
+                position: absolute;
+                right: 7px;
+                top: 7px;
+
+                >div {
+                    padding: 12px;
+                }
+            }
+        }
+
         .userInfo {
             display: flex;
             align-items: center;
