@@ -52,7 +52,11 @@ const Header = () => {
             value: "companies",
             href: "/admin-panel/verification/companies",
         },
-        { label: "Заданий", value: "institutes" },
+        {
+            label: "Заданий",
+            value: "tasks",
+            href: "/admin-panel/verification/tasks",
+        },
     ];
 
     useEffect(() => {
@@ -236,9 +240,9 @@ const Header = () => {
                         </>
                     ),
                     ref: createRef(),
-                }
+                };
             // case "institute_moderator":
-            case "student":
+            case "institute_moderator":
                 return {
                     content: (
                         <>
@@ -317,7 +321,77 @@ const Header = () => {
             // case "moderator":
             case "moderator":
                 return {
-                    content: <div>Moderator</div>,
+                    content:
+                        <>
+                            <div className={styles.navigation}>
+                                <Link
+                                    className={classNames(
+                                        styles.link,
+                                        "text fz24 fw500",
+                                        {
+                                            [styles.active]:
+                                                pathname ===
+                                                "/admin-panel/chats",
+                                        },
+                                    )}
+                                    href="/admin-panel/chats"
+                                >
+                                    Чаты
+                                </Link>
+                                <Link
+                                    className={classNames(
+                                        styles.link,
+                                        "text fz24 fw500",
+                                        {
+                                            [styles.active]:
+                                                pathname ===
+                                                "/admin-panel/statistics",
+                                        },
+                                    )}
+                                    href="/admin-panel/statistics"
+                                >
+                                    Статистика
+                                </Link>
+                                <div
+                                    className={classNames(styles.link, {
+                                        [styles.active]: pathname.startsWith(
+                                            "/admin-panel/verification",
+                                        ),
+                                    })}
+                                >
+                                    <Dropdown
+                                        options={options}
+                                        placeholder="Верификация"
+                                    />
+                                </div>
+                                <div className={styles.userInfo}>
+                                    <Image
+                                        width={45}
+                                        height={45}
+                                        src="/icons/profile.svg"
+                                        alt="profile"
+                                    />
+                                    <p
+                                        className={classNames(
+                                            styles.userName,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Петр петров
+                                    </p>
+                                    {/* <p>{user?.profile?.name}</p> */}
+                                </div>
+                                <Link
+                                    className={classNames(
+                                        styles.link,
+                                        "text fz24 fw500",
+                                    )}
+                                    href="/profile"
+                                >
+                                    Выйти
+                                </Link>
+                            </div>
+                        </>,
                     ref: createRef(),
                 };
             // case "admin":

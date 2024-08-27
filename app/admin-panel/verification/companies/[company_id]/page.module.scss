@@ -1,8 +1,6 @@
 .companyRequest {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
     padding: 20px;
     border-radius: 40px;
 
@@ -40,13 +38,44 @@
             }
 
         }
+
         .description {
-            .descriptionText {
-                margin-top: 20px;
+            .infoBlock {
+                margin-bottom: 20px;
+
+                .title {
+                    margin-bottom: 10px;
+                }
+
+                .info {
+                    display: flex;
+                    flex-direction: row;
+                    margin-bottom: 10px;
+                    flex-wrap: wrap;
+                }
+
+
+                .documents {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 20px;
+
+                    .documentItem {
+                        padding: 20px;
+                        border-radius: 40px;
+                        border: 1px solid rgba(var(--gray2), 1);
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
             }
+
         }
-       
-      }
+
+    }
 
     .buttons {
         display: flex;

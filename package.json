@@ -23,6 +23,7 @@
     "react-select-search": "^4.1.7",
     "react-timer-hook": "^3.0.7",
     "react-transition-group": "^4.4.5",
+    "recharts": "^2.12.7",
     "sass": "^1.77.8",
     "scss": "^0.2.4",
     "swiper": "^11.1.9",

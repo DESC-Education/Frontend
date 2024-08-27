@@ -68,12 +68,12 @@ a {
 
 .selectLayout {
     display: flex;
-    align-items: center;
     margin: 40px 0;
-    max-height: 900px;
+    max-height: 700px;
     background-color: rgba(var(--white), 1);
     border: 2px solid rgba(var(--gray2), 1);
     border-radius: 40px;
+    overflow-y: auto;
 }
 
 
