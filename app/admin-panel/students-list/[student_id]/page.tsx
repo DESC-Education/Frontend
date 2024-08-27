@@ -116,12 +116,12 @@ const StudentPage = () => {
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.studentHeader}>
-                <Link href={`/admin-panel/students-list`} className={styles.backButton}> 
+                <Link href={"/admin-panel/students-list"} className={styles.backButton}>
                 <Image src="/icons/backIcon.svg" width={15} height={15} alt="arrow-left" className={styles.img}/>
                 <p className="text green fz20">Вернуться к списку</p>
                 </Link>
                 <p className="title">
-                    {`[${student.id}]`} {student.firstName} {student.lastName}
+                    {student.firstName} {student.lastName}
                 </p>
             </div>
             <div className={styles.navigationButtons}>

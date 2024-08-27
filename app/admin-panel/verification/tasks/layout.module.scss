@@ -1,0 +1,35 @@
+.tasksList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+
+    .taskItem {
+        cursor: pointer;
+        border-radius: 40px;
+
+        &:hover {
+            background-color: rgba(var(--gray2), 1);
+        }
+
+        .mainInfo {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px;
+            padding: 10px;
+
+            .taskTitle {
+                display: flex;
+                gap: 10px;
+            }
+
+            .dates {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+    }
+}
