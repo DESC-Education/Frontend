@@ -31,6 +31,7 @@ import { ModalContext } from "@/app/_context/ModalContext";
 import Timer, { TimerState } from "../../ui/Timer/Timer";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import CustomOval from "../../ui/CustomOval/CustomOval";
 
 export const PasswordSchema = z.string();
 
@@ -109,7 +110,7 @@ type AuthModalProps = {
 
 type ModalState = "reg" | "login" | "regCode" | "recover" | "recoverCode";
 
-const TIMER_TIME = 10;
+const TIMER_TIME = 59;
 
 const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     const [modalState, setModalState] = useState<ModalState>(initModalState);
@@ -195,6 +196,8 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         }
     };
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const { authUser } = userSlice.actions;
     const dispatch = useTypesDispatch();
 
@@ -233,6 +236,8 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     }, [modalState, state.code]);
 
     const registerHandler = async () => {
+        setIsLoading(true);
+
         const res = await registerUser({
             email: state.email,
             password: state.password,
@@ -244,50 +249,69 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         } else {
             showAlert(res.message);
         }
+
+        setIsLoading(false);
     };
 
     const sendVerificationCodeHandler = async (type: "RG" | "PW" | "EM") => {
+        setIsLoading(true);
         setTimerState("running");
         const res = await sendVerificationCode({
             type,
             email: state.email,
         });
 
-        showAlert!(res.message);
+        if (res.status === 200) {
+            showAlert!("Код отправлен", "success");
+        } else {
+            showAlert!(res.message);
+        }
+
+        setIsLoading(false);
     };
 
     const verifyRegCodeHandler = async () => {
-        setTimerState("stopped");
+        setIsLoading(true);
         setCodeSentAgain(false);
-        const res = await verifyEmail({ email: state.email, code: Number(state.code) });
-
+        
+        const res = await verifyEmail({
+            email: state.email,
+            code: Number(state.code),
+        });
+        
         if (res.status === 200) {
+            setTimerState("stopped");
             showAlert("Почта успешно подтверждена!", "success");
             dispatch(authUser({ user: res.user!, tokens: res.tokens! }));
             closeModal();
         } else {
             showAlert!(res.message);
         }
+        setIsLoading(false);
     };
 
     const loginHandler = async () => {
+        setIsLoading(true);
         const res = await loginUser({
             email: state.email,
             password: state.password,
         });
 
-        console.log(res);
-        
         if (res.status === 200) {
             showAlert!("Вы успешно вошли в аккаунт!", "success");
             dispatch(authUser({ user: res.user!, tokens: res.tokens! }));
             closeModal();
+        } else if (res.status === 406) {
+            setModalState("regCode");
+            setTimerState("running");
         } else {
             showAlert!(res.message);
         }
+        setIsLoading(false);
     };
 
     const recoverHandler = async () => {
+        setIsLoading(true);
         const res = await recoverPassword({
             email: state.email,
             code: Number(state.code),
@@ -301,6 +325,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         } else {
             showAlert!(res.message);
         }
+        setIsLoading(false);
     };
 
     const [timerState, setTimerState] = useState<TimerState>("paused");
@@ -833,8 +858,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                valCodeBool(state.code) &&
-                                    recoverHandler();
+                                valCodeBool(state.code) && recoverHandler();
                             }}
                             className="formContent"
                         >
@@ -932,7 +956,14 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     const typeOfModalRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div className={styles.container}>
+        <div
+            className={classNames(styles.container, {
+                [styles.loading]: isLoading,
+            })}
+        >
+            <div className={styles.loadingScreen}>
+                <CustomOval />
+            </div>
             <p className="title">{titles[modalState]}</p>
             <div className={styles.content}>
                 <CSSTransition
