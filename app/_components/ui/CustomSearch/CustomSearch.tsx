@@ -37,39 +37,43 @@ const CustomSearch: FC<CustomSelectProps> = ({
     });
 
     return (
-        <div
-            className={classNames(styles.selectSearch, {
-                [styles.disabled]: disabled,
-            })}
-        >
-            <input
-                disabled={disabled}
-                {...valueProps}
-                onInput={(e: any) => {
-                    onInput(e.target.value);
-                }}
-                className={classNames({ [styles.error]: errorText })}
-                value={snapshot.focus ? snapshot.search : valueProps.value}
-            />
-            {errorText && (
-                <p className={styles.errorText}>{errorText}</p>
-            )}
-            {/* {snapshot.focus && ( */}
-            <ul
-                className={classNames(styles.select, {
-                    [styles.hasFocus]: snapshot.focus,
+        <>
+            <div
+                className={classNames(styles.selectSearch, {
+                    [styles.disabled]: disabled,
                 })}
             >
-                {snapshot.options.map((option: any, index: number) => (
-                    <li className={styles.row} key={index}>
-                        <button {...optionProps} value={option.value}>
-                            {option.name}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-            {/* )} */}
-        </div>
+                <input
+                    disabled={disabled}
+                    {...valueProps}
+                    onInput={(e: any) => {
+                        onInput(e.target.value);
+                    }}
+                    className={classNames({ [styles.error]: errorText })}
+                    value={snapshot.focus ? snapshot.search : valueProps.value}
+                />
+                {/* {snapshot.focus && ( */}
+                <ul
+                    className={classNames(styles.select, {
+                        [styles.hasFocus]: snapshot.focus,
+                    })}
+                >
+                    {snapshot.options.map((option: any, index: number) => (
+                        <li className={styles.row} key={index}>
+                            <button {...optionProps} value={option.value}>
+                                {option.name}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+                {/* )} */}
+            </div>
+            {errorText && (
+                <p className={classNames(styles.errorText, "text fz20 red")}>
+                    {errorText}
+                </p>
+            )}
+        </>
     );
 };
 

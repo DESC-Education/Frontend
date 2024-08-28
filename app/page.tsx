@@ -63,87 +63,8 @@ const partners = [
 ];
 
 export default function Home() {
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const handlePrev = () => {
-        setActiveIndex((prevIndex) =>
-            prevIndex === 0 ? partners.length - 1 : prevIndex - 1,
-        );
-    };
-
-    const handleNext = () => {
-        setActiveIndex((prevIndex) =>
-            prevIndex === partners.length - 1 ? 0 : prevIndex + 1,
-        );
-    };
-
-    const [files, setFiles] = useState<FileList>();
-    const [tempValue, setTempValue] = useState<string>("1");
-    const getValuesTemp = (tempValue: string) => {
-        const options1 = [
-            {
-                value: 1,
-                name: "test1",
-            },
-            {
-                value: 2,
-                name: "test2",
-            },
-            {
-                value: 3,
-                name: "test3",
-            },
-        ];
-        const options2 = [
-            {
-                value: 5,
-                name: "test5",
-            },
-            {
-                value: 6,
-                name: "test6",
-            },
-            {
-                value: 7,
-                name: "test7",
-            },
-        ];
-
-        return tempValue === "1" ? options1 : options2;
-    };
-
     return (
         <div className={styles.container}>
-            <input
-                multiple
-                type="file"
-                onChange={async (e) => {
-                    if (!e.target.files) return;
-                    console.log(e.target.files);
-                    setFiles(e.target.files);
-                }}
-            />
-            <button
-                onClick={async () => {
-                    if (!files) return;
-                    const formdata = new FormData();
-                    for (let i = 0; i < files.length; i++) {
-                        console.log("helo?", files[i]);
-
-                        formdata.append("files", files[i]);
-                    }
-                    // files.forEach((file: File) => formdata.append("files", file));
-                    // formdata.append("files", files[0]);
-                    const res = await filesTest(formdata);
-                    for (let i of formdata.entries()) {
-                        console.log(i);
-                    }
-                    console.log(files, files.length, formdata);
-                }}
-                className={styles.arrowButton}
-            >
-                HELOW
-            </button>
             <div className={styles.hero}>
                 <div className={styles.heroContent}>
                     <p className="title fz36">
@@ -358,7 +279,7 @@ export default function Home() {
             </div>
 
             {/* Partners div */}
-            <div className={styles.partners}>
+            {/* <div className={styles.partners}>
                 <h2 className="title fz48">Партнеры</h2>
                 <div className={styles.carousel}>
                     <button onClick={handlePrev} className={styles.arrowButton}>
@@ -396,7 +317,7 @@ export default function Home() {
                         />
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             {/* Footer div */}
             <footer className={styles.footer}>

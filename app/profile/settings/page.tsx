@@ -1,6 +1,16 @@
 "use client";
 
-import { createRef, ReactNode, RefObject, useEffect, useState } from "react";
+import {
+    ChangeEvent,
+    createRef,
+    Dispatch,
+    ReactNode,
+    RefObject,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import styles from "./page.module.scss";
 import Button from "@/app/_components/ui/Button/Button";
 import Input from "@/app/_components/ui/Input/Input";
@@ -26,6 +36,7 @@ import {
     IUniversity,
 } from "@/app/_types";
 import SelectSkills from "@/app/_components/SelectSkills/SelectSkills";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 type SettingsState = "general" | "profile" | "security";
 
@@ -35,6 +46,7 @@ const SettingsPage = () => {
     const { studentProfile, companyProfile } = useTypesSelector(
         (state) => state.userReducer,
     );
+    const { showAlert } = useContext(AlertContext);
 
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
     const dispatch = useTypesDispatch();
@@ -134,8 +146,6 @@ const SettingsPage = () => {
 
         const errorsTemp: any = {};
 
-        console.log("studentProfile", studentProfile);
-
         if (studentProfile.firstName?.length <= 3) {
             errorsTemp.firstName = "Введите имя";
         }
@@ -144,19 +154,19 @@ const SettingsPage = () => {
             errorsTemp.lastName = "Введите фамилию";
         }
 
-        if (!studentProfile.city.id || studentProfile.city.id === "") { 
+        if (!studentProfile.city) {
             errorsTemp.city = "Выберите город";
         }
 
-        if (!studentProfile.university.id || studentProfile.university?.id === "") {
+        if (!studentProfile.university) {
             errorsTemp.university = "Выберите университет";
         }
 
-        if (!studentProfile.speciality.id || studentProfile.speciality?.id === "") {
+        if (!studentProfile.speciality) {
             errorsTemp.speciality = "Выберите специальность";
         }
 
-        if (!studentProfile.faculty || studentProfile.faculty?.id === "") {
+        if (!studentProfile.faculty) {
             errorsTemp.faculty = "Выберите факультет";
         }
 
@@ -164,8 +174,7 @@ const SettingsPage = () => {
             errorsTemp.skills = "Выберите навыки";
         }
 
-        console.log("errorsTemp", errorsTemp);
-        
+        console.log("errorsTemp", errorsTemp, studentProfile);
 
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
@@ -175,7 +184,25 @@ const SettingsPage = () => {
         }
     };
 
-    if (!user.email) return null;
+    const [logo, setLogo] = useState<File | null>(null);
+    const [studentCard, setStudentCard] = useState<File | null>(null);
+
+    const addFileHandler = async (
+        file: File,
+        fileSetter: Dispatch<SetStateAction<File | null>>,
+    ) => {
+        if (!file) {
+            fileSetter(null);
+            return;
+        }
+
+        if (!["png", "jpg", "jpeg"].includes(file.type.split("/")[1])) {
+            showAlert("Формат файла не поддерживается");
+            return;
+        }
+
+        fileSetter(file);
+    };
 
     const getSettingsContent = (
         activeTab: SettingsState,
@@ -419,7 +446,6 @@ const SettingsPage = () => {
                                         />
                                     </div>
                                 </div>
-
                                 <div
                                     className={classNames(
                                         styles.instituteSettings,
@@ -443,13 +469,6 @@ const SettingsPage = () => {
                                         }}
                                         onChange={(e) => {
                                             {
-                                                console.log(
-                                                    e,
-                                                    cities,
-                                                    cities.find(
-                                                        (item) => item.id === e,
-                                                    ),
-                                                );
                                                 setCurrentCity(
                                                     cities.find(
                                                         (item) => item.id === e,
@@ -476,6 +495,7 @@ const SettingsPage = () => {
                                         ВУЗ
                                     </p>
                                     <CustomSearch
+                                        errorText={errors.university}
                                         useFuzzySearch={false}
                                         options={universities}
                                         onInput={(e) => {
@@ -507,6 +527,7 @@ const SettingsPage = () => {
                                         Факультет (институт)
                                     </p>
                                     <CustomSearch
+                                        errorText={errors.faculty}
                                         useFuzzySearch={false}
                                         disabled={!currentUniversity}
                                         options={faculties}
@@ -539,6 +560,7 @@ const SettingsPage = () => {
                                         Специальность
                                     </p>
                                     <CustomSearch
+                                        errorText={errors.speciality}
                                         useFuzzySearch={false}
                                         disabled={!currentFaculty}
                                         options={specialities}
@@ -555,6 +577,48 @@ const SettingsPage = () => {
                                         search
                                         value={currentSpeciality?.id}
                                     />
+                                </div>
+                                
+                                <div className={styles.generalSettingsBlock}>
+                                    <p className="text fz24 fw500">Студенческий билет</p>
+                                    <label className={styles.fileInput}>
+                                        <input
+                                            type="file"
+                                            onChange={async (e) => {
+                                                if (!e.target.files) return;
+
+                                                addFileHandler(
+                                                    e.target.files[0],
+                                                    setStudentCard,
+                                                );
+                                            }}
+                                        />
+                                        {studentCard ? (
+                                            <img
+                                                className={styles.userImage}
+                                                src={URL.createObjectURL(studentCard)}
+                                                alt="logo"
+                                            />
+                                        ) : (
+                                            <>
+                                                <img
+                                                    src="/icons/add_file.svg"
+                                                    alt="add"
+                                                />
+                                                <div>
+                                                    <p className="text fz16 gray">
+                                                        Форматы: PNG, JPG, JPEG
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальный вес: 5МБ
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Ваше имя, лицо и институт должны быть четко различимы 
+                                                    </p>
+                                                </div>
+                                            </>
+                                        )}
+                                    </label>
                                 </div>
                                 <div className={styles.rowSettings}>
                                     <div
@@ -593,7 +657,8 @@ const SettingsPage = () => {
                                                 );
                                             }}
                                             value={
-                                                studentProfile?.formOfEducation
+                                                studentProfile?.formOfEducation ??
+                                                "full_time"
                                             }
                                         />
                                     </div>
@@ -614,13 +679,13 @@ const SettingsPage = () => {
                                         <SelectSearch
                                             options={Array(
                                                 new Date().getFullYear() -
-                                                    1980 +
+                                                    1984 +
                                                     1,
                                             )
                                                 .fill(0)
                                                 .map((_, i) => ({
-                                                    name: String(i + 1980),
-                                                    value: i + 1980,
+                                                    name: String(i + 1984),
+                                                    value: i + 1984,
                                                 }))}
                                             onChange={(e) =>
                                                 dispatch(
@@ -734,7 +799,9 @@ const SettingsPage = () => {
                                         О себе (не обязательно)
                                     </p>
                                     <Input
-                                        value={studentProfile?.description}
+                                        value={
+                                            studentProfile?.description ?? ""
+                                        }
                                         onChange={(e) =>
                                             dispatch(
                                                 updateStudentProfile({
@@ -761,19 +828,21 @@ const SettingsPage = () => {
                                             setCurrentSkills(e)
                                         }
                                         values={currentSkills}
+                                        errorText={errors.skills}
                                     />
+                                    {/* <p className={classNames(styles.errorText, "text fz20 red")}>{errors.skills}</p> */}
                                 </div>
                                 <p
                                     className={classNames(
                                         styles.errorText,
-                                        "text fz20 fw500 red",
+                                        "text fz24 fw500 red",
                                     )}
                                 >
                                     {errorsExist &&
                                         "Проверьте введенные данные"}
                                 </p>
                                 <Button
-                                    disabled={errorsExist}
+                                    // disabled={errorsExist}
                                     htmlType="submit"
                                     className={styles.saveButton}
                                     type="secondary"
@@ -843,6 +912,8 @@ const SettingsPage = () => {
             setIsAnimating(false);
         }, 300);
     };
+
+    if (!user.email) return null;
 
     return (
         <div className={styles.container}>

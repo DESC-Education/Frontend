@@ -229,7 +229,7 @@ const Input: FC<InputProps> = ({
                         <p
                             ref={errorRef}
                             className={classNames(
-                                "text fz16 fw500",
+                                "text fz20",
                                 styles.errorText,
                             )}
                         >
