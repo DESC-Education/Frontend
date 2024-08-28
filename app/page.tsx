@@ -9,6 +9,8 @@ import classNames from "classnames";
 import Header from "./_components/Header/Header";
 import { createProfileCompany, filesTest } from "./_http/API/profileApi";
 import CustomSearch from "./_components/ui/CustomSearch/CustomSearch";
+import BriefModal from "./_components/modals/BriefModal/BriefModal";
+import { ModalContext } from "./_context/ModalContext";
 
 const projects = [
     {
@@ -63,6 +65,22 @@ const partners = [
 ];
 
 export default function Home() {
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const { showModal } = useContext(ModalContext);
+
+    const handlePrev = () => {
+        setActiveIndex((prevIndex) =>
+            prevIndex === 0 ? partners.length - 1 : prevIndex - 1,
+        );
+    };
+
+    const handleNext = () => {
+        setActiveIndex((prevIndex) =>
+            prevIndex === partners.length - 1 ? 0 : prevIndex + 1,
+        );
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.hero}>
@@ -88,7 +106,7 @@ export default function Home() {
                     />
                 </div>
             </div>
-            
+
             {/* About Us div */}
             <div className={styles.aboutUs}>
                 <div className={styles.aboutUsContent}>
@@ -204,8 +222,12 @@ export default function Home() {
                     </div>
                 </div>
                 <div className={styles.instructions}>
-                    <Button type="primary">Инструкция для студента</Button>
-                    <Button type="primary">Инструкция для компании</Button>
+                    <Button type="primary" onClick={() => showModal({ content: <BriefModal  initModalState="forStudent" /> })}>
+                        Инструкция для студента
+                    </Button>
+                    <Button type="primary" onClick={() => showModal({ content: <BriefModal  initModalState="forCompany" /> })}>
+                        Инструкция для компании
+                    </Button>
                 </div>
             </div>
 
@@ -270,9 +292,8 @@ export default function Home() {
                     {projects.map((_, index) => (
                         <span
                             key={index}
-                            className={`${styles.bullet} ${
-                                index === 0 ? styles.active : ""
-                            }`}
+                            className={`${styles.bullet} ${index === 0 ? styles.active : ""
+                                }`}
                         ></span>
                     ))}
                 </div>
@@ -311,9 +332,8 @@ export default function Home() {
                             key={partner.id}
                             src={partner.logo}
                             alt={partner.name}
-                            className={`${styles.smallLogo} ${
-                                index === activeIndex ? styles.active : ""
-                            }`}
+                            className={`${styles.smallLogo} ${index === activeIndex ? styles.active : ""
+                                }`}
                         />
                     ))}
                 </div>

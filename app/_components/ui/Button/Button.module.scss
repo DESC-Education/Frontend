@@ -66,4 +66,38 @@
             box-shadow: none;
         }
     }
+
+    &.ban {
+        background-color: rgba(var(--white), 1);
+        color: rgba(var(--black), 1);
+        border: 1px solid rgba(var(--black), 1);
+
+        &:hover {
+            background-color: rgba(var(--red), 1);
+            border: 1px solid rgba(var(--red), 1);
+            color: rgba(var(--white), 1);
+        }
+
+        &.disabled:hover {
+            background-color: rgba(var(--red), 1);
+            color: rgba(var(--white), 1);
+        }
+    }
+
+    &.unban {
+        background-color: rgba(var(--white), 1);
+        color: rgba(var(--black), 1);
+        border: 1px solid rgba(var(--black), 1);
+
+        &:hover {
+            background-color: rgba(var(--green), 1);
+            border: 1px solid rgba(var(--green), 1);
+            color: rgba(var(--white), 1);
+        }
+
+        &.disabled:hover {
+            background-color: rgba(var(--green), 1);
+            color: rgba(var(--white), 1);
+        }
+    }
 }

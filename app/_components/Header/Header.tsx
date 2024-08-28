@@ -70,8 +70,8 @@ const Header = () => {
         ref: RefObject<HTMLDivElement>;
     } => {
         switch (activeState) {
-            case "student":
-                // case "admin":
+            // case "student":
+            case "admin":
                 return {
                     content: (
                         <>
@@ -256,7 +256,7 @@ const Header = () => {
                     ref: createRef(),
                 };
             case "institute_moderator":
-         // case "student":
+                // case "student":
                 return {
                     content: (
                         <>
@@ -300,23 +300,6 @@ const Header = () => {
                                         options={options}
                                         placeholder="Верификация"
                                     />
-                                </div>
-                                <div className={styles.userInfo}>
-                                    <Image
-                                        width={45}
-                                        height={45}
-                                        src="/icons/profile.svg"
-                                        alt="profile"
-                                    />
-                                    <p
-                                        className={classNames(
-                                            styles.userName,
-                                            "text fz24 fw500",
-                                        )}
-                                    >
-                                        Петр петров
-                                    </p>
-                                    {/* <p>{user?.profile?.name}</p> */}
                                 </div>
                                 <Link
                                     className={classNames(
@@ -378,23 +361,6 @@ const Header = () => {
                                         placeholder="Верификация"
                                     />
                                 </div>
-                                <div className={styles.userInfo}>
-                                    <Image
-                                        width={45}
-                                        height={45}
-                                        src="/icons/profile.svg"
-                                        alt="profile"
-                                    />
-                                    <p
-                                        className={classNames(
-                                            styles.userName,
-                                            "text fz24 fw500",
-                                        )}
-                                    >
-                                        Петр петров
-                                    </p>
-                                    {/* <p>{user?.profile?.name}</p> */}
-                                </div>
                                 <Link
                                     className={classNames(
                                         styles.link,
@@ -408,8 +374,8 @@ const Header = () => {
                         </>,
                     ref: createRef(),
                 };
-            case "admin":
-                // case "student":
+            // case "admin":
+            case "student":
                 return {
                     content: (
                         <div className={styles.navigation}>
@@ -466,23 +432,6 @@ const Header = () => {
                                     options={options}
                                     placeholder="Верификация"
                                 />
-                            </div>
-                            <div className={styles.userInfo}>
-                                <Image
-                                    width={45}
-                                    height={45}
-                                    src="/icons/profile.svg"
-                                    alt="profile"
-                                />
-                                <p
-                                    className={classNames(
-                                        styles.userName,
-                                        "text fz24 fw500",
-                                    )}
-                                >
-                                    Петр петров
-                                </p>
-                                {/* <p>{user?.profile?.name}</p> */}
                             </div>
                             <Link
                                 className={classNames(

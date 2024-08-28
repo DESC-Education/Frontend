@@ -1,10 +1,9 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import styles from "./page.module.scss";
 import Button from "../_components/ui/Button/Button";
 import Input from "../_components/ui/Input/Input";
-import Select from "../_components/ui/Select/Select";
 import SelectSearch from "react-select-search";
 import OrderCard from "../_components/OrderCard/OrderCard";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
@@ -28,59 +27,10 @@ export default function ExchangePage() {
         "C#",
     ]);
     const orders = [
-        {
-            title: "Заказ1",
-            description:
-                "Описание заказа на Flutter и Firebase но с примерами в обоих языках и еще технических документах",
-            deadline: "10.03.2024",
-            reminingTime: "2 дня",
-            company: {
-                isVerified: true,
-                name: "Компания1",
-                logoImg: {
-                    id: "1",
-                    name: "logo1",
-                    path: "/images/userImage1.png",
-                    type: "image/png",
-                },
-            } as ICompanyProfile,
-            isViewed: false,
-        },
-        {
-            title: "Заказ2",
-            description: "Описание заказа",
-            deadline: "10.03.2024",
-            reminingTime: "2 дня",
-            company: {
-                isVerified: true,
-                name: "Компания2",
-                logoImg: {
-                    id: "2",
-                    name: "logo2",
-                    path: "/images/userImage2.png",
-                    type: "image/png",
-                },
-            } as ICompanyProfile,
-            isViewed: true,
-        },
-        {
-            title: "Заказ3",
-            description: "Описание заказа",
-            deadline: "10.03.2024",
-            reminingTime: "2 дня",
-            company: {
-                isVerified: true,
-                name: "Компания3",
-                logoImg: {
-                    id: "3",
-                    name: "logo3",
-                    path: "/images/userImage3.png",
-                    type: "image/png",
-                },
-            } as ICompanyProfile,
-            isViewed: false,
-        },
-    ];
+        { title: "Заказ1", description: "Описание заказа на Flutter и Firebase но с примерами в обоих языках и еще технических документах", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания1", logoImg: { id: "1", name: "logo1", path: "/images/userImage1.png", type: "image/png" } } , isViewed: false },
+        { title: "Заказ2", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания2", logoImg: { id: "2", name: "logo2", path: "/images/userImage2.png", type: "image/png" } }, isViewed: true },
+        { title: "Заказ3", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания3", logoImg: { id: "3", name: "logo3", path: "/images/userImage3.png", type: "image/png" } }, isViewed: false },
+ ];
 
     return (
         <div className="container">

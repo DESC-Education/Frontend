@@ -5,7 +5,7 @@ import styles from "./Button.module.scss";
 type ButtonProps = {
     children: React.ReactNode;
     className?: string;
-    type: "primary" | "secondary" | "icon";
+    type: "primary" | "secondary" | "icon" | "ban" | "unban";
     icon?: string;
     onClick?: () => void;
     disabled?: boolean;
