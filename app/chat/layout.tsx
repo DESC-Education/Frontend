@@ -12,6 +12,7 @@ import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { useEffect } from "react";
 import Header from "../_components/Header/Header";
 import SideBar from "../_components/SideBar/SideBar";
+import { useRouter } from "next/navigation";
 
 
 export default function RootLayout({
@@ -30,7 +31,7 @@ export default function RootLayout({
                 id: "1",
                 companion: {
                     id: "1",
-                    mail: "mail@mail.com",
+                    email: "mail@mail.com",
                     isVerified: true,
                     isOnline: true,
                     isBanned: false,
@@ -70,7 +71,24 @@ export default function RootLayout({
         ]))
     }, []);
 
+    const { isProfileVerified, isAuth } = useTypesSelector(
+        (state) => state.userReducer,
+    );
+    const { isLoading } = useTypesSelector((state) => state.contentReducer);
+    const router = useRouter();
 
+    useEffect(() => {
+        if (typeof window !== "undefined" && !isLoading) {
+            if (!isAuth) {
+                router.replace("/");
+                return;
+            }
+            if (isAuth && !isProfileVerified) {
+                router.replace("/profile");
+                return;
+            }
+        }
+    }, [isLoading, isAuth, isProfileVerified]);
 
     return (
         <div className="container">
@@ -81,7 +99,7 @@ export default function RootLayout({
                             if (!chat.companion.isVerified) return null;
                             return <Link href={`/chat/${index}`} key={index} className={styles.chatLink}>
                                 <ChatItem
-                                    name = {chat.companion.mail}
+                                    name = {chat.companion.email}
                                     // name={chat.companion.role === "student" ? chat.companion.mail + " " + chat.companion.mail : chat.companion.mail}
                                     avatar={"#"}
                                     lastMessage={chat.messages[chats[index].messages.length - 1].text}

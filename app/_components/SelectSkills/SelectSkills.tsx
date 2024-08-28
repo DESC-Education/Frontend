@@ -14,6 +14,7 @@ type SelectSkillsProps = {
     maxItems: number;
     values: ISkill[];
     selectValues: (values: ISkill[]) => void;
+    errorText?: string;
 };
 
 const SelectSkills: React.FC<SelectSkillsProps> = ({
@@ -22,6 +23,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
     maxItems,
     values,
     selectValues,
+    errorText,
 }) => {
     const [queryText, setQueryText] = useState("");
     const [mockQueryText, setMockQueryText] = useState("");
@@ -48,15 +50,24 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
     const optionsRef = useRef<HTMLDivElement>(null);
 
     const addItem = (item: ISkill) => {
-        if (values.length < maxItems && !values.some(skill => skill.name === item.name)) {
+        if (
+            values.length < maxItems &&
+            !values.some((skill) => skill.name === item.name)
+        ) {
             selectValues([...values, item]);
         }
     };
 
     // const valuesListRef = useRef<any>(null);
 
+    console.log(errorText);
+
     return (
-        <div className={styles.container}>
+        <div
+            className={classNames(styles.container, {
+                [styles.error]: errorText,
+            })}
+        >
             <p className="text fz24 fw500">
                 {title}{" "}
                 {values.length > maxItems - 1 && `(максимум ${maxItems})`}
@@ -68,7 +79,9 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                     timeout={200}
                     classNames="values"
                 >
-                    <p className="text fz20">Тут пока пусто... (начните вводить название навыка)</p>
+                    <p className="text fz20">
+                        Тут пока пусто... (начните вводить название навыка)
+                    </p>
                 </CSSTransition>
                 <CSSTransition
                     unmountOnExit
@@ -93,7 +106,9 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                                     }
                                     className={styles.value}
                                 >
-                                    <p className="text fw500 fz24">{value.name}</p>
+                                    <p className="text fw500 fz24">
+                                        {value.name}
+                                    </p>
                                     <img src="/icons/trash.svg" alt="trash" />
                                 </div>
                             </CSSTransition>
@@ -101,6 +116,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                     </TransitionGroup>
                 </CSSTransition>
             </div>
+            {errorText && <p className="text fz20 fw500 red">{errorText}</p>}
             <div className={styles.inputWrapper}>
                 <Input
                     // onKeyUp={(e) => e.key === "Enter" && addItem(mockQueryText)}
@@ -135,7 +151,12 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                 >
                     <TransitionGroup>
                         {filteredList
-                            .filter(({ item }) => !values.some(skill => skill.name === item.name))
+                            .filter(
+                                ({ item }) =>
+                                    !values.some(
+                                        (skill) => skill.name === item.name,
+                                    ),
+                            )
                             .map(({ item }) => (
                                 <CSSTransition
                                     className={styles.filteredItem}

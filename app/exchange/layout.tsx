@@ -9,17 +9,24 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { user, isAuth } = useTypesSelector((state) => state.userReducer);
+    const { isProfileVerified, user, isAuth } = useTypesSelector(
+        (state) => state.userReducer,
+    );
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
     const router = useRouter();
 
     useEffect(() => {
-        if (!isLoading && !isAuth) {
-            if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && !isLoading) {
+            if (!isAuth) {
                 router.replace("/");
+                return;
+            }
+            if (isAuth && !isProfileVerified) {
+                router.replace("/profile");
+                return;
             }
         }
-    }, [isLoading, isAuth]);
+    }, [isLoading, isAuth, isProfileVerified]);
 
     return children;
 }

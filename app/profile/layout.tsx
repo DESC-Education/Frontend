@@ -23,20 +23,21 @@ export default function RootLayout({
     const dispatch = useTypesDispatch();
     const { updateProfile } = userSlice.actions;
 
-    // useEffect(() => {
-    //     if (!isLoading && !isAuth) {
-    //         if (typeof window !== "undefined") {
-    //             router.replace("/");
-    //         }
-    //     }
-    // }, [isLoading, isAuth]);
+    useEffect(() => {
+        if (!isLoading && !isAuth) {
+            if (typeof window !== "undefined") {
+                router.replace("/");
+            }
+        }
+    }, [isLoading, isAuth]);
 
     useEffect(() => {
         const asyncFunc = async () => {
             const res = await getProfile();
-            console.log(res);
-            
-            dispatch(updateProfile(res.profile));
+
+            if (res.status === 200) {
+                dispatch(updateProfile(res.profile));
+            }
         };
         asyncFunc();
     }, []);
