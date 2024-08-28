@@ -35,4 +35,49 @@
 
         }
     }
+
+    .navigationButtons {
+        margin-bottom: 60px;
+        display: flex;
+        justify-content: space-evenly;
+
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: fadeIn 0.4s forwards;
+
+        &.exit {
+            animation: fadeOut 0.4s forwards;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {            
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+    }
 }
