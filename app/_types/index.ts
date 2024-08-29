@@ -134,3 +134,17 @@ export type IFaculty = {
     name: string;
     university: string
 };
+
+export type IPartner = {
+    id: string;
+    logo: string;
+    name: string;
+    description: string;
+}
+
+export type IProject = {
+    id: string;
+    img: string;
+    name: string;
+    avatar: string;
+};

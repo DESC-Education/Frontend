@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import ProjectCard from "./_components/ProjectCard/ProjectCard";
+import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
 import { useContext, useState } from "react";
 import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";
@@ -12,53 +12,138 @@ import CustomSearch from "./_components/ui/CustomSearch/CustomSearch";
 import BriefModal from "./_components/modals/BriefModal/BriefModal";
 import { ModalContext } from "./_context/ModalContext";
 import Link from "next/link";
+import ProjectsList from "./_components/ProjectsList/ProjectsList";
+import PartnersList from "./_components/PartnersList/PartnersList";
 
 const projects = [
     {
-        id: 1,
-        imgSrc: "/images/projectCardImage1.png",
-        nickname: "nickname12",
-        userImage: "/images/userImage1.png",
+        id: "1",
+        img: "/images/projectCardImage1.png",
+        name: "nickname12",
+        avatar: "/images/userImage1.png",
     },
     {
-        id: 2,
-        imgSrc: "/images/projectCardImage2.png",
-        nickname: "nickname12",
-        userImage: "/images/userImage2.png",
+        id: "2",
+        img: "/images/projectCardImage2.png",
+        name: "nickname12",
+        avatar: "/images/userImage2.png",
     },
     {
-        id: 3,
-        imgSrc: "/images/projectCardImage3.png",
-        nickname: "nickname12",
-        userImage: "/images/userImage3.png",
+        id: "3",
+        img: "/images/projectCardImage3.png",
+        name: "nickname12",
+        avatar: "/images/userImage3.png",
     },
     {
-        id: 4,
-        imgSrc: "/images/projectCardImage4.png",
-        nickname: "nickname12",
-        userImage: "/images/userImage4.png",
+        id: "4",
+        img: "/images/projectCardImage4.png",
+        name: "nickname12",
+        avatar: "/images/userImage4.png",
+    },
+    {
+        id: "1",
+        img: "/images/projectCardImage1.png",
+        name: "nickname12",
+        avatar: "/images/userImage1.png",
+    },
+    {
+        id: "2",
+        img: "/images/projectCardImage2.png",
+        name: "nickname12",
+        avatar: "/images/userImage2.png",
+    },
+    {
+        id: "3",
+        img: "/images/projectCardImage3.png",
+        name: "nickname12",
+        avatar: "/images/userImage3.png",
+    },
+    {
+        id: "4",
+        img: "/images/projectCardImage4.png",
+        name: "nickname12",
+        avatar: "/images/userImage4.png",
+    },
+    {
+        id: "1",
+        img: "/images/projectCardImage1.png",
+        name: "nickname12",
+        avatar: "/images/userImage1.png",
+    },
+    {
+        id: "2",
+        img: "/images/projectCardImage2.png",
+        name: "nickname12",
+        avatar: "/images/userImage2.png",
+    },
+    {
+        id: "3",
+        img: "/images/projectCardImage3.png",
+        name: "nickname12",
+        avatar: "/images/userImage3.png",
+    },
+    {
+        id: "4",
+        img: "/images/projectCardImage4.png",
+        name: "nickname12",
+        avatar: "/images/userImage4.png",
     },
 ];
 
 const partners = [
     // { id: 1, logo: '/images/IKITlogo.svg', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
     {
-        id: 2,
+        id: "1",
         logo: "/images/politechlogo.png",
         name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
     },
     {
-        id: 3,
-        logo: "ikit.png",
+        id: "2",
+        logo: "/images/politechlogo.png",
         name: "ИКИТ",
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
     },
     {
-        id: 4,
-        logo: "polytechnic.png",
+        id: "3",
+        logo: "/images/politechlogo.png",
+        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: "4",
+        logo: "/images/politechlogo.png",
+        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: "1",
+        logo: "/images/politechlogo.png",
+        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: "2",
+        logo: "/images/politechlogo.png",
+        name: "ИКИТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: "3",
+        logo: "/images/politechlogo.png",
+        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: "4",
+        logo: "/images/politechlogo.png",
         name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
@@ -280,67 +365,15 @@ export default function Home() {
             <div className={styles.studentProjects}>
                 <h2 className="title fz48">Проекты студентов</h2>
                 <div className={styles.projectsContainer}>
-                    {projects.map((project) => (
-                        <Link href={`/projects/${project.id}`} key={project.id}>
-                            <ProjectCard
-                                key={project.id}
-                                nickName={project.nickname}
-                                image={project.imgSrc}
-                                userIcon={project.userImage}
-                            />
-                        </Link>
-                    ))}
-                </div>
-                <div className={styles.pagination}>
-                    {projects.map((_, index) => (
-                        <span
-                            key={index}
-                            className={`${styles.bullet} ${index === 0 ? styles.active : ""
-                                }`}
-                        ></span>
-                    ))}
+                    <ProjectsList projects={projects} />
                 </div>
             </div>
 
             {/* Partners div */}
-            {/* <div className={styles.partners}>
+            <div className={styles.partners}>
                 <h2 className="title fz48">Партнеры</h2>
-                <div className={styles.carousel}>
-                    <button onClick={handlePrev} className={styles.arrowButton}>
-                        <span>&larr;</span>
-                    </button>
-                    <div className={styles.partnerDetails}>
-                        <div className={styles.partnerLogo}>
-                            <img
-                                src={partners[activeIndex].logo}
-                                alt={partners[activeIndex].name}
-                            />
-                        </div>
-                        <div className={styles.partnerInfo}>
-                            <h3 className="title fz48">
-                                {partners[activeIndex].name}
-                            </h3>
-                            <p className="text">
-                                {partners[activeIndex].description}
-                            </p>
-                        </div>
-                    </div>
-                    <button onClick={handleNext} className={styles.arrowButton}>
-                        <span>&rarr;</span>
-                    </button>
-                </div>
-                <div className={styles.partnerLogos}>
-                    {partners.map((partner, index) => (
-                        <img
-                            key={partner.id}
-                            src={partner.logo}
-                            alt={partner.name}
-                            className={`${styles.smallLogo} ${index === activeIndex ? styles.active : ""
-                                }`}
-                        />
-                    ))}
-                </div>
-            </div> */}
+                <PartnersList partners={partners} />
+            </div>
 
             {/* Footer div */}
             <footer className={styles.footer}>
