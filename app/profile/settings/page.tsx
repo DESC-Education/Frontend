@@ -138,35 +138,49 @@ const SettingsPage = () => {
         asyncFunc();
     }, []);
 
+    useEffect(() => {
+        setErrors({});
+        setErrorsExist(false);
+    }, [
+        studentProfile.skills,
+        studentProfile.firstName,
+        studentProfile.lastName,
+        currentCity,
+        currentUniversity,
+        currentFaculty,
+        currentSpeciality,
+    ]);
+
     const [errors, setErrors] = useState<any>({});
     const [errorsExist, setErrorsExist] = useState<boolean>(false);
 
-    const validateForm = (e: any) => {
-        e.preventDefault();
+    const validateForm = () => {
+        // e.preventDefault();
+        console.log("i fired a validate form");
 
         const errorsTemp: any = {};
 
-        if (studentProfile.firstName?.length <= 3) {
+        if (studentProfile.firstName?.length < 2) {
             errorsTemp.firstName = "Введите имя";
         }
 
-        if (studentProfile.lastName?.length <= 3) {
+        if (studentProfile.lastName?.length < 2) {
             errorsTemp.lastName = "Введите фамилию";
         }
 
-        if (!studentProfile.city) {
+        if (!currentCity) {
             errorsTemp.city = "Выберите город";
         }
 
-        if (!studentProfile.university) {
+        if (!currentUniversity) {
             errorsTemp.university = "Выберите университет";
         }
 
-        if (!studentProfile.speciality) {
+        if (!currentFaculty) {
             errorsTemp.speciality = "Выберите специальность";
         }
 
-        if (!studentProfile.faculty) {
+        if (!currentFaculty) {
             errorsTemp.faculty = "Выберите факультет";
         }
 
@@ -174,7 +188,15 @@ const SettingsPage = () => {
             errorsTemp.skills = "Выберите навыки";
         }
 
-        console.log("errorsTemp", errorsTemp, studentProfile);
+        console.log(
+            "errorsTemp",
+            errorsTemp,
+            studentProfile,
+            currentCity,
+            currentUniversity,
+            currentFaculty,
+            currentSpeciality,
+        );
 
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
@@ -384,7 +406,7 @@ const SettingsPage = () => {
                 return {
                     content: (
                         <form
-                            onSubmit={validateForm}
+                            onSubmit={(e) => e.preventDefault()}
                             className={styles.content}
                         >
                             <div className={styles.settingsBlock}>
@@ -578,9 +600,11 @@ const SettingsPage = () => {
                                         value={currentSpeciality?.id}
                                     />
                                 </div>
-                                
+
                                 <div className={styles.generalSettingsBlock}>
-                                    <p className="text fz24 fw500">Студенческий билет</p>
+                                    <p className="text fz24 fw500">
+                                        Студенческий билет
+                                    </p>
                                     <label className={styles.fileInput}>
                                         <input
                                             type="file"
@@ -596,7 +620,9 @@ const SettingsPage = () => {
                                         {studentCard ? (
                                             <img
                                                 className={styles.userImage}
-                                                src={URL.createObjectURL(studentCard)}
+                                                src={URL.createObjectURL(
+                                                    studentCard,
+                                                )}
                                                 alt="logo"
                                             />
                                         ) : (
@@ -613,7 +639,9 @@ const SettingsPage = () => {
                                                         Максимальный вес: 5МБ
                                                     </p>
                                                     <p className="text fz16 gray">
-                                                        Ваше имя, лицо и институт должны быть четко различимы 
+                                                        Ваше имя, лицо и
+                                                        институт должны быть
+                                                        четко различимы
                                                     </p>
                                                 </div>
                                             </>
@@ -824,9 +852,15 @@ const SettingsPage = () => {
                                         maxItems={15}
                                         options={skills}
                                         title="Выберите навыки"
-                                        selectValues={(e) =>
-                                            setCurrentSkills(e)
-                                        }
+                                        selectValues={(e) => {
+                                            setCurrentSkills(e);
+                                            dispatch(
+                                                updateStudentProfile({
+                                                    ...studentProfile,
+                                                    skills: e,
+                                                }),
+                                            );
+                                        }}
                                         values={currentSkills}
                                         errorText={errors.skills}
                                     />
@@ -843,6 +877,7 @@ const SettingsPage = () => {
                                 </p>
                                 <Button
                                     // disabled={errorsExist}
+                                    onClick={() => validateForm()}
                                     htmlType="submit"
                                     className={styles.saveButton}
                                     type="secondary"
