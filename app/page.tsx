@@ -11,6 +11,7 @@ import { createProfileCompany, filesTest } from "./_http/API/profileApi";
 import CustomSearch from "./_components/ui/CustomSearch/CustomSearch";
 import BriefModal from "./_components/modals/BriefModal/BriefModal";
 import { ModalContext } from "./_context/ModalContext";
+import Link from "next/link";
 
 const projects = [
     {
@@ -222,10 +223,10 @@ export default function Home() {
                     </div>
                 </div>
                 <div className={styles.instructions}>
-                    <Button type="primary" onClick={() => showModal({ content: <BriefModal  initModalState="forStudent" /> })}>
+                    <Button type="primary" onClick={() => showModal({ content: <BriefModal initModalState="forStudent" /> })}>
                         Инструкция для студента
                     </Button>
-                    <Button type="primary" onClick={() => showModal({ content: <BriefModal  initModalState="forCompany" /> })}>
+                    <Button type="primary" onClick={() => showModal({ content: <BriefModal initModalState="forCompany" /> })}>
                         Инструкция для компании
                     </Button>
                 </div>
@@ -280,12 +281,14 @@ export default function Home() {
                 <h2 className="title fz48">Проекты студентов</h2>
                 <div className={styles.projectsContainer}>
                     {projects.map((project) => (
-                        <ProjectCard
-                            key={project.id}
-                            nickName={project.nickname}
-                            image={project.imgSrc}
-                            userIcon={project.userImage}
-                        />
+                        <Link href={`/projects/${project.id}`} key={project.id}>
+                            <ProjectCard
+                                key={project.id}
+                                nickName={project.nickname}
+                                image={project.imgSrc}
+                                userIcon={project.userImage}
+                            />
+                        </Link>
                     ))}
                 </div>
                 <div className={styles.pagination}>

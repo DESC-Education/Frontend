@@ -1,0 +1,57 @@
+.project {
+    .projectHeader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 0px 0px 50px 0px;
+        position: relative;
+
+        .backButton {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 0px;
+
+            .img {
+                margin-left: 0px;
+                margin-right: 5px;
+                transform: translateX(0px);
+                transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+
+            &:hover {
+                .img {
+                    margin-left: 15px;
+                    transform: translateX(-10px);
+                    transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+                }
+
+            }
+        }
+
+
+        .projectInfo {
+
+            .title {
+                margin-bottom: 10px;
+            }
+
+            .author {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+        }
+    }
+
+    .projectDescription {
+        .text {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+    }
+}
