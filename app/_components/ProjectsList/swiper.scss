@@ -1,0 +1,21 @@
+.swiper-wrapper {
+    padding-bottom: 40px;
+}
+
+.swiper-pagination {
+    bottom: 0px !important;
+
+    &-bullet {
+        transition: .3s;
+        background-color: rgba(var(--gray1), 0.5);
+        opacity: 0.5;
+        width: 12px;
+        height: 12px;
+        margin: 0 8px;
+
+        &-active {
+            background-color: rgba(var(--gray1), 1);
+            opacity: 1;
+        }
+    }
+}
