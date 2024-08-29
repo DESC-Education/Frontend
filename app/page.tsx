@@ -11,6 +11,7 @@ import { createProfileCompany, filesTest } from "./_http/API/profileApi";
 import CustomSearch from "./_components/ui/CustomSearch/CustomSearch";
 import BriefModal from "./_components/modals/BriefModal/BriefModal";
 import { ModalContext } from "./_context/ModalContext";
+import Link from "next/link";
 import ProjectsList from "./_components/ProjectsList/ProjectsList";
 import PartnersList from "./_components/PartnersList/PartnersList";
 
@@ -307,28 +308,10 @@ export default function Home() {
                     </div>
                 </div>
                 <div className={styles.instructions}>
-                    <Button
-                        type="primary"
-                        onClick={() =>
-                            showModal({
-                                content: (
-                                    <BriefModal initModalState="forStudent" />
-                                ),
-                            })
-                        }
-                    >
+                    <Button type="primary" onClick={() => showModal({ content: <BriefModal initModalState="forStudent" /> })}>
                         Инструкция для студента
                     </Button>
-                    <Button
-                        type="primary"
-                        onClick={() =>
-                            showModal({
-                                content: (
-                                    <BriefModal initModalState="forCompany" />
-                                ),
-                            })
-                        }
-                    >
+                    <Button type="primary" onClick={() => showModal({ content: <BriefModal initModalState="forCompany" /> })}>
                         Инструкция для компании
                     </Button>
                 </div>
