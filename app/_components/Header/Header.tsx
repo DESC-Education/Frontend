@@ -70,8 +70,8 @@ const Header = () => {
         ref: RefObject<HTMLDivElement>;
     } => {
         switch (activeState) {
-            // case "student":
-            case "admin":
+            case "student":
+            // case "admin":
                 return {
                     content: (
                         <>
@@ -374,8 +374,8 @@ const Header = () => {
                         </>,
                     ref: createRef(),
                 };
-            // case "admin":
-            case "student":
+            case "admin":
+            // case "student":
                 return {
                     content: (
                         <div className={styles.navigation}>

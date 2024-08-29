@@ -5,6 +5,11 @@ import styles from "./ProfileNavMenu.module.scss";
 import classNames from "classnames";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import { userSlice } from "@/app/_store/reducers/userSlice";
+import { useContext } from "react";
+import { ModalContext } from "@/app/_context/ModalContext";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 const pages = [
     {
@@ -23,8 +28,9 @@ const pages = [
 
 const ProfileNavMenu = () => {
     const { user } = useTypesSelector((state) => state.userReducer);
-
-    console.log(user);
+    const dispatch = useTypesDispatch();
+    const { logoutUser } = userSlice.actions;
+    const { showAlert } = useContext(AlertContext);
 
     if (!user) return null;
 
@@ -41,7 +47,7 @@ const ProfileNavMenu = () => {
                 <img className={styles.edit} src="/icons/edit.svg" alt="edit" />
             </div>
             <p className={classNames("text fz20 gray", styles.mail)}>
-                {user.mail || "example@mail.com"}
+                {user.email || "example@mail.com"}
             </p>
             <div className={styles.pages}>
                 {pages.map((page) => (
@@ -63,7 +69,13 @@ const ProfileNavMenu = () => {
                     </Link>
                 ))}
             </div>
-            <p className={classNames(styles.logout, "text fz32 under white")}>
+            <p
+                onClick={() => {
+                    dispatch(logoutUser());
+                    showAlert("Вы вышли из аккаунта!", "success");
+                }}
+                className={classNames(styles.logout, "text fz32 under white")}
+            >
                 Выход
             </p>
         </div>

@@ -60,8 +60,6 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
 
     // const valuesListRef = useRef<any>(null);
 
-    console.log(errorText);
-
     return (
         <div
             className={classNames(styles.container, {
