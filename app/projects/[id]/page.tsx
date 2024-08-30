@@ -1,11 +1,78 @@
+"use client";
+
+
 import Link from "next/link";
 import styles from "./page.module.scss";
 import Image from "next/image";
 import classNames from "classnames";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "./swiper.scss";
 
 
 
 const Project = () => {
+
+    const files = [
+        {
+            id: "1",
+            name: "file1.txt",
+            path: "/images/projectCardImage1.png",
+            type: "png",
+        },
+        {
+            id: "2",
+            name: "file2.txt",
+            path: "/images/projectCardImage2.png",
+            type: "png",
+        },
+        {
+            id: "3",
+            name: "file3.txt",
+            path: "/images/projectCardImage3.png",
+            type: "png",
+        },
+        {
+            id: "1",
+            name: "file1.txt",
+            path: "/images/projectCardImage1.png",
+            type: "png",
+        },
+        {
+            id: "2",
+            name: "file2.txt",
+            path: "/images/projectCardImage2.png",
+            type: "png",
+        },
+        {
+            id: "3",
+            name: "file3.txt",
+            path: "/images/projectCardImage3.png",
+            type: "png",
+        },
+        {
+            id: "1",
+            name: "file1.txt",
+            path: "/images/projectCardImage1.png",
+            type: "png",
+        },
+        {
+            id: "2",
+            name: "file2.txt",
+            path: "/images/projectCardImage2.png",
+            type: "png",
+        },
+        {
+            id: "3",
+            name: "file3.txt",
+            path: "/images/projectCardImage3.png",
+            type: "png",
+        },
+    ];
+
+
     return (
         <div className="container">
             <div className={styles.project}>
@@ -24,8 +91,26 @@ const Project = () => {
                 </div>
                 <div className={styles.projectDescription}>
                     <p className={classNames("text fw500", styles.text)}>Redis — это key-value хранилище. Если провести аналогию с питоновскими типами — словарь, который отлично подходит для хранения кэша. Удобно использовать для межкомпонентного взаимодействия.
-                    MongoDB — это хранилище JSON-документов, по такой же аналогии — список json’ов. Отлично подходит, если у вас где‑то генерируется большое количество данных, которые вы не хотели бы терять. Например, если бы все эти данные писали в реальном времени в реляционную: это долго, могут случится ошибки записи.
+                        MongoDB — это хранилище JSON-документов, по такой же аналогии — список json’ов. Отлично подходит, если у вас где‑то генерируется большое количество данных, которые вы не хотели бы терять. Например, если бы все эти данные писали в реальном времени в реляционную: это долго, могут случится ошибки записи.
                     </p>
+                </div>
+                <div className={styles.projectFiles}>
+                    <Swiper
+                        slidesPerView={1}
+                        spaceBetween={15}
+                        pagination={{ clickable: true, dynamicBullets: false }}
+                        modules={[Pagination]}
+                        className={styles.swiper}
+                    >
+                        {files.map((file, index) => (
+                            <SwiperSlide className={styles.swiperSlide} key={index}>
+                                <div className={styles.file}>
+                                    <img src={file.path} alt="icon" />
+                                </div>
+                            </SwiperSlide>
+                        ))}
+
+                    </Swiper>
                 </div>
             </div>
         </div>

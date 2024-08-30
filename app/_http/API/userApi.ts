@@ -71,6 +71,7 @@ export const verifyEmail = async (dto: {
 export const registerUser = async (dto: {
     email: string;
     password: string;
+    role: "student" | "company";
 }): Promise<{ status: number; message: string }> => {
     try {
         const { data } = await $host.post<{

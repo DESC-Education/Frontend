@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
 import { useContext, useState } from "react";
 import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";

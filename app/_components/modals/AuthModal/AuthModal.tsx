@@ -241,6 +241,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         const res = await registerUser({
             email: state.email,
             password: state.password,
+            role: regState === "regClient" ? "student" : "company",
         });
 
         if (res.status === 200) {
