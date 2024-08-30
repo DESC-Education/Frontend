@@ -12,20 +12,21 @@ import {
     IFaculty,
     IProfile,
     ISkill,
-    ISpeciality,
+    ISpecialty,
     IStudentProfile,
     IUniversity,
     IUser,
 } from "@/app/_types";
 
 export const createProfileStudent = async (
-    dto: CreateStudentProfileDTO,
+    dto: any,
 ): Promise<{ status: number; message: string }> => {
     try {
-        const { data } = await $authHost.post(
-            "/api/v1/profiles/student_profile",
-            dto,
-        );
+        const { data } = await $authHost.post("/api/v1/profiles/profile", dto, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
 
         return { status: 200, message: data.message };
     } catch (error) {
@@ -227,7 +228,7 @@ export const getSpecialities = async (q: string) => {
     try {
         const { data } = await $authHost.get<{
             count: string;
-            results: ISpeciality[];
+            results: ISpecialty[];
         }>(`/api/v1/profiles/specialties?search=${q}`);
 
         return {

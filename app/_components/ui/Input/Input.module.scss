@@ -18,6 +18,38 @@
     align-items: center;
 }
 
+.fileInput {
+    margin: 15px 0 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    >div {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .userImage {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+    input {
+        display: none;
+    }
+
+    img {
+        width: 200px;
+        cursor: pointer;
+        transition: .3s;
+
+        &:hover {
+            filter: brightness(1.05);
+        }
+    }
+}
+
 .input {
     font-family: inherit;
     padding: 12px 20px;

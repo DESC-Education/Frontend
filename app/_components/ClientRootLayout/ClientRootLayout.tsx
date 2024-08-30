@@ -23,7 +23,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
             if (token) {
                 const res = await auth();
 
-                console.log("res:", res);
+                console.log("res for auth", res);
                 
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));

@@ -1,6 +1,6 @@
 import { useSelect } from "react-select-search";
 import styles from "./CustomSearch.module.scss";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import classNames from "classnames";
 
 type CustomSelectProps = {
@@ -13,6 +13,7 @@ type CustomSelectProps = {
     onChange: (value: any) => void;
     search?: boolean;
     errorText?: string;
+    isFirstOptionBlank?: boolean;
 };
 
 const CustomSearch: FC<CustomSelectProps> = ({
@@ -25,6 +26,7 @@ const CustomSearch: FC<CustomSelectProps> = ({
     useFuzzySearch = true,
     disabled = false,
     errorText = "",
+    isFirstOptionBlank = false,
 }) => {
     const [snapshot, valueProps, optionProps]: any = useSelect({
         options,
@@ -35,6 +37,15 @@ const CustomSearch: FC<CustomSelectProps> = ({
         multiple,
         search,
     });
+
+    // console.log(snapshot.options, value);
+
+    const currOptions = useMemo(() => {
+        if (isFirstOptionBlank) {
+            return snapshot.options.slice(1);
+        }
+        return snapshot.options;
+    }, [isFirstOptionBlank, snapshot.options]);
 
     return (
         <>
@@ -58,7 +69,7 @@ const CustomSearch: FC<CustomSelectProps> = ({
                         [styles.hasFocus]: snapshot.focus,
                     })}
                 >
-                    {snapshot.options.map((option: any, index: number) => (
+                    {currOptions.map((option: any, index: number) => (
                         <li className={styles.row} key={index}>
                             <button {...optionProps} value={option.value}>
                                 {option.name}

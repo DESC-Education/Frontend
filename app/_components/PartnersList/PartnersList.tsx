@@ -23,8 +23,6 @@ const PartnersList: FC<PartnersListProps> = ({ partners }) => {
 
     const [activeSlide, setActiveSlide] = useState(0);
 
-    console.log(partners.length, activeSlide);
-
     return (
         <div className={styles.partners}>
             <div className={styles.carousel}>
