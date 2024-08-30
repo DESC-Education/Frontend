@@ -2,7 +2,14 @@
 
 import { InputMask } from "@react-input/mask";
 import classNames from "classnames";
-import { FC, useEffect, useRef, useState } from "react";
+import {
+    Dispatch,
+    FC,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import styles from "./Input.module.scss";
 import "./Input.scss";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
@@ -17,6 +24,7 @@ type InputProps = {
         | "checkbox"
         | "code"
         | "number"
+        | "file"
         | "textarea";
     containerClassName?: string;
     onChange?: (val: string) => void;
@@ -31,6 +39,12 @@ type InputProps = {
     autoComplete?: string;
     title?: string;
     errorText?: string;
+    file?: File | null;
+    setFile?: Dispatch<SetStateAction<File | null>>;
+    addFileHandler?: (
+        file: File,
+        fileSetter: Dispatch<SetStateAction<File | null>>,
+    ) => void;
 };
 
 const Input: FC<InputProps> = ({
@@ -48,6 +62,9 @@ const Input: FC<InputProps> = ({
     checked = false,
     autoComplete = "off",
     errorText = "",
+    file,
+    setFile,
+    addFileHandler,
 }) => {
     const uniqueId = "id" + Math.random().toString(16).slice(2);
     const errorRef = useRef<HTMLParagraphElement>(null);
@@ -197,6 +214,48 @@ const Input: FC<InputProps> = ({
                         onChange={(e) => onChange(e.target.value)}
                     />
                 </div>
+            );
+        case "file":
+            return (
+                <label className={styles.fileInput}>
+                    <div>
+                        <input
+                            type="file"
+                            onChange={async (e) => {
+                                if (!e.target.files) return;
+
+                                addFileHandler!(e.target.files[0], setFile!);
+                            }}
+                        />
+                        {file ? (
+                            <img
+                                className={styles.userImage}
+                                src={URL.createObjectURL(file)}
+                                alt="logo"
+                            />
+                        ) : (
+                            <>
+                                <img src="/icons/add_file.svg" alt="add" />
+                                <div>
+                                    <p className="text fz16 gray">
+                                        Форматы: PNG, JPG, JPEG
+                                    </p>
+                                    <p className="text fz16 gray">
+                                        Максимальный вес: 5МБ
+                                    </p>
+                                    <p className="text fz16 gray">
+                                        Ваше имя, лицо и институт должны быть
+                                        четко различимы
+                                    </p>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    <p className={classNames("text fz20", styles.errorText)}>
+                        {errorText}
+                    </p>
+                </label>
             );
         default:
             return (

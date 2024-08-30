@@ -42,17 +42,36 @@ $authHost.interceptors.response.use(
                 try {
                     times++;
 
-                    if (!LocalStorage.getRefreshToken() || !LocalStorage.getAccessToken() || times >= 3) { // || times >= 3
+                    if (
+                        !LocalStorage.getRefreshToken() ||
+                        !LocalStorage.getAccessToken() ||
+                        times >= 3
+                    ) {
+                        // || times >= 3
                         return;
                     }
 
-                    const { data } = await $host.post<{ access: string }>("/api/v1/users/token_refresh", {
-                        refresh: LocalStorage.getRefreshToken(),
-                    });
+                    const res = await $host.post<{ access: string }>(
+                        "/api/v1/users/token_refresh",
+                        {
+                            refresh: LocalStorage.getRefreshToken(),
+                        },
+                    );
 
-                    const token = data.access;
-                    console.log(token, originalConfig);
-                    
+                    const token = res.data.access;
+                    console.log(
+                        "in http index.ts __ local_refresh_token __",
+                        LocalStorage.getRefreshToken(),
+                        " __ local_access_token __ ",
+                        LocalStorage.getAccessToken(),
+                        " __ res given as a response from /refresh __",
+                        res,
+                        " __ originalConfig __",
+                        originalConfig,
+                        " __ err.response __",
+                        err.response,
+                    );
+
                     LocalStorage.setAccessToken(token);
 
                     return $authHost(originalConfig);

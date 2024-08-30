@@ -5,7 +5,7 @@ import {
     ICompanyProfile,
     IFaculty,
     IFile,
-    ISpeciality,
+    ISpecialty,
     IStudentProfile,
     IUniversity,
     IUser,
@@ -26,7 +26,7 @@ type UserInterface = {
 const initProfileStudent: IStudentProfile = {
     id: "",
     isVerified: false,
-    admissionYear: 0,
+    admissionYear: null,
     description: "",
     firstName: "",
     lastName: "",
@@ -34,11 +34,11 @@ const initProfileStudent: IStudentProfile = {
     phone: "",
     emailVisibility: false,
     phoneVisibility: false,
-    timezone: 0,
+    timezone: null,
     university: {} as IUniversity,
-    speciality: {} as ISpeciality,
+    specialty: {} as ISpecialty,
     faculty: {} as IFaculty,
-    formOfEducation: "part_time",
+    formOfEducation: "",
     telegramLink: "",
     vkLink: "",
     city: {} as ICity,
@@ -61,6 +61,7 @@ const initProfileCompany: ICompanyProfile = {
     linkToCompany: "",
     telegramLink: "",
     vkLink: "",
+    skills: [],
 };
 
 const initialState: UserInterface = {

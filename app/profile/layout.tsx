@@ -35,6 +35,8 @@ export default function RootLayout({
         const asyncFunc = async () => {
             const res = await getProfile();
 
+            console.log(res);
+
             if (res.status === 200) {
                 dispatch(updateProfile(res.profile));
             }

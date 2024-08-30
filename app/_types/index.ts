@@ -21,10 +21,12 @@ export type IProfile<T> = T extends RoleStudent
     ? IStudentProfile
     : ICompanyProfile;
 
+export type FormsOfEducation = "" | "part_time" | "full_time" | "part_full_time";
+
 export type IStudentProfile = {
     id: string;
     isVerified: boolean;
-    admissionYear: number;
+    admissionYear: number | null;
     description: string;
     firstName: string;
     lastName: string;
@@ -32,11 +34,11 @@ export type IStudentProfile = {
     phone: string;
     emailVisibility: boolean;
     phoneVisibility: boolean;
-    timezone: number;
+    timezone: number | null;
     university: IUniversity;
-    speciality: ISpeciality;
+    specialty: ISpecialty;
     faculty: IFaculty;
-    formOfEducation: "part_time" | "full_time" | "part_full_time";
+    formOfEducation: FormsOfEducation;
     telegramLink?: string;
     vkLink?: string;
     city: ICity;
@@ -59,6 +61,7 @@ export type ICompanyProfile = {
     phone: string;
     emailVisibility: boolean;
     phoneVisibility: boolean;
+    skills: ISkill[];
 };
 
 export type IChat = {
@@ -104,10 +107,10 @@ export type IFile = {
     type: string;
 };
 
-export type ISpeciality = {
+export type ISpecialty = {
     id: string;
     name: string;
-    type: "bachelor" | "speciality" | "magister";
+    type: "bachelor" | "specialty" | "magister";
     code: string;
 };
 
