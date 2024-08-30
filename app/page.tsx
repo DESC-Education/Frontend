@@ -40,86 +40,9 @@ const projects = [
         name: "nickname12",
         avatar: "/images/userImage4.png",
     },
-    {
-        id: "1",
-        img: "/images/projectCardImage1.png",
-        name: "nickname12",
-        avatar: "/images/userImage1.png",
-    },
-    {
-        id: "2",
-        img: "/images/projectCardImage2.png",
-        name: "nickname12",
-        avatar: "/images/userImage2.png",
-    },
-    {
-        id: "3",
-        img: "/images/projectCardImage3.png",
-        name: "nickname12",
-        avatar: "/images/userImage3.png",
-    },
-    {
-        id: "4",
-        img: "/images/projectCardImage4.png",
-        name: "nickname12",
-        avatar: "/images/userImage4.png",
-    },
-    {
-        id: "1",
-        img: "/images/projectCardImage1.png",
-        name: "nickname12",
-        avatar: "/images/userImage1.png",
-    },
-    {
-        id: "2",
-        img: "/images/projectCardImage2.png",
-        name: "nickname12",
-        avatar: "/images/userImage2.png",
-    },
-    {
-        id: "3",
-        img: "/images/projectCardImage3.png",
-        name: "nickname12",
-        avatar: "/images/userImage3.png",
-    },
-    {
-        id: "4",
-        img: "/images/projectCardImage4.png",
-        name: "nickname12",
-        avatar: "/images/userImage4.png",
-    },
 ];
 
 const partners = [
-    // { id: 1, logo: '/images/IKITlogo.svg', name: 'ИКИТ', description: 'Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач' },
-    {
-        id: "1",
-        logo: "/images/politechlogo.png",
-        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-        description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-    },
-    {
-        id: "2",
-        logo: "/images/politechlogo.png",
-        name: "ИКИТ",
-        description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-    },
-    {
-        id: "3",
-        logo: "/images/politechlogo.png",
-        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-        description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-    },
-    {
-        id: "4",
-        logo: "/images/politechlogo.png",
-        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-        description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-    },
     {
         id: "1",
         logo: "/images/politechlogo.png",
@@ -308,10 +231,28 @@ export default function Home() {
                     </div>
                 </div>
                 <div className={styles.instructions}>
-                    <Button type="primary" onClick={() => showModal({ content: <BriefModal initModalState="forStudent" /> })}>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            showModal({
+                                content: (
+                                    <BriefModal initModalState="forStudent" />
+                                ),
+                            })
+                        }
+                    >
                         Инструкция для студента
                     </Button>
-                    <Button type="primary" onClick={() => showModal({ content: <BriefModal initModalState="forCompany" /> })}>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            showModal({
+                                content: (
+                                    <BriefModal initModalState="forCompany" />
+                                ),
+                            })
+                        }
+                    >
                         Инструкция для компании
                     </Button>
                 </div>
