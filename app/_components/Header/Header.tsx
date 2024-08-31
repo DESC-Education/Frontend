@@ -70,8 +70,8 @@ const Header = () => {
         ref: RefObject<HTMLDivElement>;
     } => {
         switch (activeState) {
+            // case "student":
             case "student":
-            // case "admin":
                 return {
                     content: (
                         <>
@@ -205,6 +205,19 @@ const Header = () => {
                                     href="/exchange"
                                 >
                                     Биржа
+                                </Link>
+                                <Link
+                                    className={classNames(
+                                        styles.link,
+                                        "text fz24 fw500",
+                                        {
+                                            [styles.active]:
+                                                pathname === "/jobs",
+                                        },
+                                    )}
+                                    href="/tasks"
+                                >
+                                    Задания
                                 </Link>
                                 <Link
                                     className={classNames(
@@ -374,8 +387,8 @@ const Header = () => {
                         </>,
                     ref: createRef(),
                 };
+            // case "admin":
             case "admin":
-            // case "student":
                 return {
                     content: (
                         <div className={styles.navigation}>

@@ -1,0 +1,36 @@
+.container {
+    .taskHeader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+
+        .backButton {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 0px;
+
+            .img {
+                margin-left: 0px;
+                margin-right: 5px;
+                transform: translateX(0px);
+                transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+
+            &:hover {
+                .img {
+                    margin-left: 15px;
+                    transform: translateX(-10px);
+                    transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+                }
+
+            }
+
+
+        }
+    }
+}

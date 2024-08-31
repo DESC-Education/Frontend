@@ -10,7 +10,7 @@ type ProjectCardProps = {
 
 const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
     return (
-        <Link href={project.id} className={styles.projectCard}>
+        <Link href={`projects/${project.id}`} className={styles.projectCard}>
             {project.img && (
                 <img src={project.img} alt="icon" className={styles.image} />
             )}
