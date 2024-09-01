@@ -17,7 +17,17 @@
         border: 1px solid rgba(var(--gray2));
         text-align: center;
 
+        >p {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
         &.hide {
+            * {
+                pointer-events: none;
+            }
+
             z-index: -10;
             opacity: 0;
         }

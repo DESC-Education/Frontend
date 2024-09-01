@@ -18,6 +18,17 @@
     align-items: center;
 }
 
+.userImage {
+    max-width: 200px;
+    max-height: 200px;
+
+    &.imgDocument {
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid rgba(var(--gray2), 1);
+    }
+}
+
 .fileInput {
     margin: 15px 0 3px;
     display: flex;
@@ -30,10 +41,7 @@
         gap: 15px;
     }
 
-    .userImage {
-        max-width: 200px;
-        max-height: 200px;
-    }
+
 
     input {
         display: none;
@@ -46,6 +54,41 @@
 
         &:hover {
             filter: brightness(1.05);
+        }
+    }
+}
+
+.filesContainer {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+
+    .file {
+        position: relative;
+
+        .delete {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            transition: .3s;
+
+            &:hover {
+                filter: brightness(1.1);
+            }
+
+        }
+
+        p {
+            max-width: 200px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            text-align: center;
         }
     }
 }
@@ -77,7 +120,7 @@
     &.checkbox {
         display: none;
 
-        + label {
+        +label {
             cursor: pointer;
             display: flex;
             align-items: center;
