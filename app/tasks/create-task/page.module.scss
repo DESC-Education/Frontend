@@ -33,4 +33,65 @@
 
         }
     }
+
+    .taskContent {
+        display: flex;
+        .templates {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+
+            .templateButton {
+                width: 400px;
+            }
+        }
+
+        .createTask {
+            margin-left: 50px;
+            display: flex;
+            flex-direction: column;
+            text-align: justify;
+            gap: 20px;
+
+            .taskForm {
+                margin-bottom: 50px;
+                border-radius: 20px;
+                border: 1px solid rgba(var(--gray2), 1);
+                padding: 50px 30px;
+
+                p {
+                    margin-bottom: 10px;
+                }
+
+                .textName {
+                    margin-bottom: 50px;
+                }
+
+                .textarea {
+                    height: 200px;
+                }
+
+                .underdescription {
+                    margin: 10px 0 50px 0;
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .selects {
+                    display: flex;
+                    gap: 20px;
+                }
+            }
+
+            .submitButtons {
+                display: flex;
+                justify-content: center;
+                margin-top: 50px;
+                gap: 20px;
+                .submitButton {
+                    width: 400px;
+                }
+            }
+        }
+    }
 }
