@@ -7,6 +7,7 @@ import Link from "next/link";
 import Button from "@/app/_components/ui/Button/Button";
 import { ICompanyProfile, ITask } from "@/app/_types";
 import TaskCard from "@/app/_components/TaskCard/TaskCard";
+import ProfileStatus from "../ProfileStatus/ProfileStatus";
 
 const tasks: ITask[] = [
     {
@@ -37,7 +38,7 @@ const tasks: ITask[] = [
             companyName: "",
             firstName: "",
             lastName: "",
-            verification: "verified",
+            verification: { status: "verified" },
         },
         isVisible: true,
         createdAt: "10.03.2024",
@@ -48,20 +49,12 @@ const tasks: ITask[] = [
 ];
 
 export default function Home() {
-    const { isProfileVerified } = useTypesSelector(
+    const { profileVerification } = useTypesSelector(
         (state) => state.userReducer,
     );
 
-    if (!isProfileVerified)
-        return (
-            <div className={styles.emptyProfile}>
-                <img src="/images/questions.png" alt="questions" />
-                <p className="text fz24">Ваш профиль не верифицирован!</p>
-                <Link href="/profile/settings">
-                    <Button type="secondary">Исправить!</Button>
-                </Link>
-            </div>
-        );
+    if (profileVerification.status !== "verified")
+        return <ProfileStatus profileVerification={profileVerification} />;
 
     return (
         <div className={styles.container}>

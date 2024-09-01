@@ -27,6 +27,11 @@ export type FormsOfEducation =
     | "full_time"
     | "part_full_time";
 
+export type IVerification = {
+    status: VerificationStatuses;
+    comment?: string;
+};
+
 export type VerificationStatuses =
     | "verified"
     | "on_verification"
@@ -35,7 +40,7 @@ export type VerificationStatuses =
 
 export type IStudentProfile = {
     id: string;
-    verification: VerificationStatuses;
+    verification: IVerification;
     admissionYear: number | null;
     description: string;
     firstName: string;
@@ -61,7 +66,7 @@ export type ICompanyProfile = {
     firstName: string;
     lastName: string;
     id: string;
-    verification: VerificationStatuses;
+    verification: IVerification;
     logoImg: IFile;
     description: string;
     vkLink?: string;

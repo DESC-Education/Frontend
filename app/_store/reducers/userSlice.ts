@@ -9,6 +9,8 @@ import {
     IStudentProfile,
     IUniversity,
     IUser,
+    IVerification,
+    VerificationStatuses,
 } from "@/app/_types";
 import LocalStorage from "@/app/_utils/LocalStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -18,14 +20,14 @@ type UserInterface = {
     chats: IChat[];
     isAuth: boolean;
     isProfileLoading: boolean;
-    isProfileVerified: boolean;
+    profileVerification: IVerification;
     companyProfile: ICompanyProfile;
     studentProfile: IStudentProfile;
 };
 
 const initProfileStudent: IStudentProfile = {
     id: "",
-    isVerified: false,
+    verification: { status: "not_verified" },
     admissionYear: null,
     description: "",
     firstName: "",
@@ -47,7 +49,7 @@ const initProfileStudent: IStudentProfile = {
 
 const initProfileCompany: ICompanyProfile = {
     id: "",
-    isVerified: false,
+    verification: { status: "not_verified" },
     description: "",
     logoImg: {} as IFile,
     city: {} as ICity,
@@ -69,7 +71,7 @@ const initialState: UserInterface = {
     chats: [],
     isAuth: false,
     isProfileLoading: true,
-    isProfileVerified: false,
+    profileVerification: { status: "not_verified" },
     companyProfile: initProfileCompany,
     studentProfile: initProfileStudent,
 };
@@ -94,9 +96,7 @@ export const userSlice = createSlice({
         updateProfile(state, action: PayloadAction<any>) {
             state.isProfileLoading = false;
 
-            if (action.payload.isVerified) {
-                state.isProfileVerified = true;
-            }
+            state.profileVerification = action.payload.verification;
             if (state.user.role === "student") {
                 state.studentProfile = action.payload;
             } else {
