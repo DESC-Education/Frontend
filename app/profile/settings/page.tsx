@@ -45,9 +45,11 @@ type SettingsState = "personal_data" | "profile" | "verification";
 
 const SettingsPage = () => {
     const { user } = useTypesSelector((state) => state.userReducer);
-    const { studentProfile, companyProfile } = useTypesSelector(
-        (state) => state.userReducer,
-    );
+    const {
+        studentProfile,
+        companyProfile,
+        profileVerification,
+    } = useTypesSelector((state) => state.userReducer);
     const { showAlert } = useContext(AlertContext);
 
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
@@ -286,7 +288,7 @@ const SettingsPage = () => {
             const formdata = new FormData();
 
             verFiles!.forEach((el, i) => {
-                formdata.append(`verFiles`, el, el.name);
+                formdata.append(`files`, el, el.name);
             });
             formdata.append("companyName", companyProfile.companyName);
             formdata.append("firstName", companyProfile.firstName);
@@ -1296,32 +1298,18 @@ const SettingsPage = () => {
         }, 300);
     };
 
-    const currentProfile = useMemo(() => {
-        if (user.role === "student") {
-            return studentProfile;
-        }
-        return companyProfile;
-    }, []);
-
     const getInitTab = (): SettingsState => {
-        console.log(currentProfile);
-        
-        switch (currentProfile.verification) {
-            case "verified":
-                return "personal_data";
-            case "on_verification":
-                return "verification";
-            case "not_verified":
-                return "verification";
-            case "rejected":
-                return "verification";
+        if (profileVerification.status === "verified") {
+            return "personal_data";
+        } else {
+            return "verification";
         }
     };
 
     const [activeTab, setActiveTab] = useState<SettingsState>(getInitTab());
 
     const getTabsContent = (): ReactNode => {
-        switch (currentProfile.verification) {
+        switch (profileVerification.status) {
             case "not_verified":
                 return (
                     <Button
@@ -1372,8 +1360,7 @@ const SettingsPage = () => {
 
     if (!user.email) return null;
 
-    console.log("activeTab", activeTab);
-    
+    // if (profileVerification.status === "not_verified" || profileVerification.status === "on_verification")
 
     return (
         <div className={styles.container}>

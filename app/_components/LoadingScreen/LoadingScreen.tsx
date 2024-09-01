@@ -20,6 +20,11 @@ const LoadingScreen = () => {
     const loadingRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        console.log("isLoading", isLoading);
+        
+    }, [isLoading]);
+
+    useEffect(() => {
         const loading = setInterval(() => {
             setDots((prev) => (prev === 3 ? 1 : prev + 1));
         }, 300);
