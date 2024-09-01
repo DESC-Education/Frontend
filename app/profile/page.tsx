@@ -20,31 +20,22 @@ import { userSlice } from "../_store/reducers/userSlice";
 import { yearsOfEducation } from "../_utils/constants";
 import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
 import Button from "../_components/ui/Button/Button";
+import ProfileStatus from "./ProfileStatus/ProfileStatus";
 
 export default function Home() {
     const {
         user,
         isAuth,
         isProfileLoading,
-        isProfileVerified,
+        profileVerification,
         companyProfile,
         studentProfile,
     } = useTypesSelector((state) => state.userReducer);
     const { updateProfile } = userSlice.actions;
     const dispatch = useTypesDispatch();
 
-    // if (isProfileLoading) return <LoadingScreen />;
-
-    if (!isProfileVerified)
-        return (
-            <div className={styles.emptyProfile}>
-                <img src="/images/questions.png" alt="questions" />
-                <p className="text fz24">Ваш профиль не верифицирован!</p>
-                <Link href="/profile/settings">
-                    <Button type="secondary">Исправить!</Button>
-                </Link>
-            </div>
-        );
+    if (profileVerification.status !== "verified")
+        return <ProfileStatus profileVerification={profileVerification} />;
 
     return (
         <div
@@ -125,7 +116,7 @@ export default function Home() {
                             >
                                 Образование
                             </p>
-                            <p
+                            {/* <p
                                 className={classNames(
                                     styles.yearOfEducation,
                                     "text gray fz20",
@@ -137,7 +128,7 @@ export default function Home() {
                                         studentProfile.educationProgram
                                     ]}{" "}
                                 гг.
-                            </p>
+                            </p> */}
                             <p
                                 className={classNames(
                                     styles.university,
@@ -285,7 +276,7 @@ export default function Home() {
                             >
                                 Образование
                             </p>
-                            <p
+                            {/* <p
                                 className={classNames(
                                     styles.yearOfEducation,
                                     "text gray fz20",
@@ -297,7 +288,7 @@ export default function Home() {
                                         studentProfile.educationProgram
                                     ]}{" "}
                                 гг.
-                            </p>
+                            </p> */}
                             <p
                                 className={classNames(
                                     styles.university,
