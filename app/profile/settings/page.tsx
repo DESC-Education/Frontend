@@ -286,7 +286,7 @@ const SettingsPage = () => {
             const formdata = new FormData();
 
             verFiles!.forEach((el, i) => {
-                formdata.append(`verFiles`, el.name);
+                formdata.append(`verFiles`, el, el.name);
             });
             formdata.append("companyName", companyProfile.companyName);
             formdata.append("firstName", companyProfile.firstName);
