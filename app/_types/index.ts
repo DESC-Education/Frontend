@@ -21,11 +21,21 @@ export type IProfile<T> = T extends RoleStudent
     ? IStudentProfile
     : ICompanyProfile;
 
-export type FormsOfEducation = "" | "part_time" | "full_time" | "part_full_time";
+export type FormsOfEducation =
+    | ""
+    | "part_time"
+    | "full_time"
+    | "part_full_time";
+
+export type VerificationStatuses =
+    | "verified"
+    | "on_verification"
+    | "not_verified"
+    | "rejected";
 
 export type IStudentProfile = {
     id: string;
-    isVerified: boolean;
+    verification: VerificationStatuses;
     admissionYear: number | null;
     description: string;
     firstName: string;
@@ -51,7 +61,7 @@ export type ICompanyProfile = {
     firstName: string;
     lastName: string;
     id: string;
-    isVerified: boolean;
+    verification: VerificationStatuses;
     logoImg: IFile;
     description: string;
     vkLink?: string;
@@ -88,12 +98,11 @@ export type IMessage = {
 
 export type ITask = {
     id: string;
-    companyId: string;
+    company: ICompanyProfile;
     name: string;
     description: string;
     deadline: string;
-    createdat: string;
-    catogoryId: string;
+    createdAt: string;
     isVerified: boolean;
     isSuspicious: boolean;
     isVisible: boolean;
@@ -135,7 +144,7 @@ export type IUniversity = {
 export type IFaculty = {
     id: string;
     name: string;
-    university: string
+    university: string;
 };
 
 export type IPartner = {
@@ -143,7 +152,7 @@ export type IPartner = {
     logo: string;
     name: string;
     description: string;
-}
+};
 
 export type IProject = {
     id: string;

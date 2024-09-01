@@ -39,7 +39,7 @@ export default function Home() {
         return (
             <div className={styles.emptyProfile}>
                 <img src="/images/questions.png" alt="questions" />
-                <p className="text fz24">Ваш профиль не заполнен!</p>
+                <p className="text fz24">Ваш профиль не верифицирован!</p>
                 <Link href="/profile/settings">
                     <Button type="secondary">Исправить!</Button>
                 </Link>

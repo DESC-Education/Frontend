@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { ModalContext } from "@/app/_context/ModalContext";
 import { AlertContext } from "@/app/_context/AlertContext";
 
-const pages = [
+const studentPages = [
     {
         name: "Профиль",
         path: "/profile",
@@ -22,7 +22,22 @@ const pages = [
     },
     {
         name: "История заданий",
-        path: "/profile/history",
+        path: "/profile/tasks",
+    },
+];
+
+const companyPages = [
+    {
+        name: "Профиль",
+        path: "/profile",
+    },
+    {
+        name: "Настройки",
+        path: "/profile/settings",
+    },
+    {
+        name: "Мои задания",
+        path: "/profile/tasks",
     },
 ];
 
@@ -50,24 +65,47 @@ const ProfileNavMenu = () => {
                 {user.email || "example@mail.com"}
             </p>
             <div className={styles.pages}>
-                {pages.map((page) => (
-                    <Link
-                        key={page.name}
-                        className={classNames("text fz32 white", styles.page, {
-                            [styles.active]: page.path === pathname,
-                        })}
-                        href={page.path}
-                    >
-                        <span
-                            className={classNames(styles.activePanel, {
-                                [styles.active]: page.path === pathname,
-                            })}
-                        ></span>
-                        {/* <span className={styles.square1}></span> */}
-                        <p className={styles.text}>{page.name}</p>
-                        {/* <span className={styles.square2}></span> */}
-                    </Link>
-                ))}
+                {user.role === "student"
+                    ? studentPages.map((page) => (
+                          <Link
+                              key={page.name}
+                              className={classNames(
+                                  "text fz32 white",
+                                  styles.page,
+                                  {
+                                      [styles.active]: page.path === pathname,
+                                  },
+                              )}
+                              href={page.path}
+                          >
+                              <span
+                                  className={classNames(styles.activePanel, {
+                                      [styles.active]: page.path === pathname,
+                                  })}
+                              ></span>
+                              <p className={styles.text}>{page.name}</p>
+                          </Link>
+                      ))
+                    : companyPages.map((page) => (
+                          <Link
+                              key={page.name}
+                              className={classNames(
+                                  "text fz32 white",
+                                  styles.page,
+                                  {
+                                      [styles.active]: page.path === pathname,
+                                  },
+                              )}
+                              href={page.path}
+                          >
+                              <span
+                                  className={classNames(styles.activePanel, {
+                                      [styles.active]: page.path === pathname,
+                                  })}
+                              ></span>
+                              <p className={styles.text}>{page.name}</p>
+                          </Link>
+                      ))}
             </div>
             <p
                 onClick={() => {

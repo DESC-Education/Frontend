@@ -1,15 +1,16 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import styles from "./page.module.scss";
 import Button from "../_components/ui/Button/Button";
 import Input from "../_components/ui/Input/Input";
 import SelectSearch from "react-select-search";
-import OrderCard from "../_components/OrderCard/OrderCard";
+import OrderCard from "../_components/TaskCard/TaskCard";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
 import classNames from "classnames";
 import Header from "../_components/Header/Header";
-import { ICompanyProfile } from "../_types";
+import { ICompanyProfile, ITask } from "../_types";
+import TaskCard from "../_components/TaskCard/TaskCard";
 
 export default function ExchangePage() {
     const [selectedFilters, setSelectedFilters] = useState<string[]>([
@@ -26,11 +27,44 @@ export default function ExchangePage() {
         "C++",
         "C#",
     ]);
-    const orders = [
-        { title: "Заказ1", description: "Описание заказа на Flutter и Firebase но с примерами в обоих языках и еще технических документах", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания1", logoImg: { id: "1", name: "logo1", path: "/images/userImage1.png", type: "image/png" } } , isViewed: false },
-        { title: "Заказ2", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания2", logoImg: { id: "2", name: "logo2", path: "/images/userImage2.png", type: "image/png" } }, isViewed: true },
-        { title: "Заказ3", description: "Описание заказа", deadline: "10.03.2024", reminingTime: "2 дня", company: { isVerified: true, name: "Компания3", logoImg: { id: "3", name: "logo3", path: "/images/userImage3.png", type: "image/png" } }, isViewed: false },
- ];
+    const tasks: ITask[] = [
+        {
+            name: "Заказ1",
+            deadline: "10.03.2024",
+            description: "asdasd",
+            id: "1",
+            company: {
+                id: "1",
+                logoImg: {
+                    id: "2",
+                    name: "logo1",
+                    path: "/images/userImage2.png",
+                    type: "png",
+                },
+                linkToCompany: "",
+                description: "",
+                phone: "",
+                emailVisibility: false,
+                phoneVisibility: false,
+                timezone: 0,
+                city: {
+                    id: "1",
+                    name: "Moscow",
+                    region: "Россия",
+                },
+                skills: [],
+                companyName: "",
+                firstName: "",
+                lastName: "",
+                verification: "verified",
+            },
+            isVisible: true,
+            createdAt: "10.03.2024",
+            files: [],
+            isSuspicious: false,
+            isVerified: true,
+        },
+    ];
 
     return (
         <div className="container">
@@ -44,7 +78,10 @@ export default function ExchangePage() {
                         <div className={styles.filterGroup}>
                             <h4 className="text gray fz20">Технологии</h4>
                             {selectedFilters.map((filter, index) => (
-                                <label key={index} className={styles.filterLabel}>
+                                <label
+                                    key={index}
+                                    className={styles.filterLabel}
+                                >
                                     <Input type="checkbox" />
                                     <p className="text fw500 fz20">{filter}</p>
                                 </label>
@@ -55,7 +92,10 @@ export default function ExchangePage() {
                                 Языки программирования
                             </h4>
                             {selectedLanguages.map((language, index) => (
-                                <label key={index} className={styles.filterLabel}>
+                                <label
+                                    key={index}
+                                    className={styles.filterLabel}
+                                >
                                     <Input type="checkbox" />
                                     <p className="text fw500 fz20">
                                         {language}
@@ -102,16 +142,8 @@ export default function ExchangePage() {
                         </div>
                     </div>
                     <div className={styles.taskList}>
-                        {orders.map((order, index) => (
-                            <OrderCard
-                                key={index}
-                                title={order.title}
-                                description={order.description}
-                                deadline={order.deadline}
-                                reminingTime={order.reminingTime}
-                                company={order.company}
-                                isViewed={order.isViewed}
-                            />
+                        {tasks.map((task, index) => (
+                            <TaskCard key={index} task={task} />
                         ))}
                     </div>
                 </main>

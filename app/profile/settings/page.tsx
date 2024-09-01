@@ -137,7 +137,7 @@ const SettingsPage = () => {
 
     const [logo, setLogo] = useState<File | null>(null);
     const [studentCard, setStudentCard] = useState<File | null>(null);
-    const [verFiles, setVerFiles] = useState<File[]>([]);
+    const [verFiles, setVerFiles] = useState<File[] | null>([]);
 
     useEffect(() => {
         setErrors({});
@@ -147,7 +147,7 @@ const SettingsPage = () => {
     const [errors, setErrors] = useState<any>({});
     const [errorsExist, setErrorsExist] = useState<boolean>(false);
 
-    const validateForm = async () => {
+    const validateFormStudent = async () => {
         const errorsTemp: any = {};
 
         console.log(studentProfile);
@@ -228,25 +228,85 @@ const SettingsPage = () => {
             });
 
             const res = await createProfileStudent(formdata);
-            console.log(res);
+            console.log("createProfileStudent res", res);
         }
     };
 
-    const addFileHandler = async (
-        file: File,
-        fileSetter: Dispatch<SetStateAction<File | null>>,
-    ) => {
-        if (!file) {
-            fileSetter(null);
-            return;
+    const validateFormCompany = async () => {
+        const errorsTemp: any = {};
+
+        console.log(companyProfile);
+
+        if (!companyProfile.firstName) {
+            errorsTemp.firstName = "Введите имя";
         }
 
-        if (!["png", "jpg", "jpeg"].includes(file.type.split("/")[1])) {
-            showAlert("Формат файла не поддерживается");
-            return;
+        if (!companyProfile.lastName) {
+            errorsTemp.lastName = "Введите фамилию";
         }
 
-        fileSetter(file);
+        if (!companyProfile.companyName) {
+            errorsTemp.companyName = "Введите название компании";
+        }
+
+        if (companyProfile.timezone === null) {
+            errorsTemp.timezone = "Выберите часовой пояс";
+        }
+
+        if (!companyProfile.city) {
+            errorsTemp.city = "Выберите город";
+        }
+
+        if (!logo) {
+            errorsTemp.logo = "Прикрепите логотип";
+        }
+
+        if (!companyProfile.skills || companyProfile.skills.length === 0) {
+            errorsTemp.skills = "Выберите навыки";
+        }
+
+        if (!companyProfile.linkToCompany) {
+            errorsTemp.linkToCompany = "Введите ссылку на сайт компании";
+        }
+
+        if (!companyProfile.description) {
+            errorsTemp.description = "Введите описание компании";
+        }
+
+        if (verFiles?.length === 0) {
+            errorsTemp.verFiles = "Прикрепите файлы";
+        }
+
+        setErrorsExist(Object.keys(errorsTemp).length !== 0);
+        setErrors(errorsTemp);
+
+        console.log(errorsTemp);
+
+        if (Object.keys(errorsTemp).length === 0) {
+            const formdata = new FormData();
+
+            verFiles!.forEach((el, i) => {
+                formdata.append(`verFiles`, el.name);
+            });
+            formdata.append("companyName", companyProfile.companyName);
+            formdata.append("firstName", companyProfile.firstName);
+            formdata.append("lastName", companyProfile.lastName);
+            formdata.append("linkToCompany", companyProfile.linkToCompany);
+            formdata.append("city", companyProfile.city!.id);
+            formdata.append("timezone", String(companyProfile.timezone));
+            formdata.append("phoneVisibility", "true");
+            formdata.append("emailVisibility", "true");
+            formdata.append("telegramLink", companyProfile.telegramLink ?? "");
+            formdata.append("vkLink", companyProfile.vkLink ?? "");
+            formdata.append("description", companyProfile.description ?? "");
+
+            companyProfile.skills.forEach((el, i) => {
+                formdata.append(`skills`, el.id);
+            });
+
+            const res = await createProfileStudent(formdata);
+            console.log("createProfileCompany res", res);
+        }
     };
 
     const getSettingsContent = (
@@ -354,9 +414,6 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                {/* <button onClick={() => console.log(studentProfile)}>
-                                test
-                            </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div className={styles.rowSettings}>
                                         <div
@@ -612,7 +669,6 @@ const SettingsPage = () => {
                                         </p>
                                         <Input
                                             type="file"
-                                            addFileHandler={addFileHandler}
                                             setFile={setStudentCard}
                                             file={studentCard}
                                             errorText={errors.studentCard}
@@ -834,12 +890,12 @@ const SettingsPage = () => {
                                             "Проверьте введенные данные"}
                                     </p>
                                     <Button
-                                        onClick={() => validateForm()}
+                                        onClick={() => validateFormStudent()}
                                         htmlType="submit"
                                         className={styles.saveButton}
                                         type="secondary"
                                     >
-                                        Сохранить изменения
+                                        Отправить на верификацию
                                     </Button>
                                 </div>
                             </form>
@@ -853,6 +909,34 @@ const SettingsPage = () => {
                                 >
                                     test
                                 </button>
+                                <div
+                                    className={classNames(
+                                        styles.nameSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Название компании
+                                    </p>
+                                    <Input
+                                        errorText={errors.companyName}
+                                        type="text"
+                                        value={companyProfile.companyName}
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateCompanyProfile({
+                                                    ...companyProfile,
+                                                    companyName: e,
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
                                 <div className={styles.settingsBlock}>
                                     <div className={styles.rowSettings}>
                                         <div
@@ -867,7 +951,7 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Имя
+                                                Имя представителя
                                             </p>
                                             <Input
                                                 errorText={errors.firstName}
@@ -895,7 +979,7 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Фамилия
+                                                Фамилия представителя
                                             </p>
                                             <Input
                                                 errorText={errors.lastName}
@@ -992,11 +1076,39 @@ const SettingsPage = () => {
                                             Логотип компании
                                         </p>
                                         <Input
+                                            accept="image/png, image/jpeg, image/jpg"
                                             type="file"
-                                            addFileHandler={addFileHandler}
                                             setFile={setLogo}
                                             file={logo}
                                             errorText={errors.logo}
+                                        />
+                                    </div>
+                                    <div
+                                        className={classNames(
+                                            styles.yearSettings,
+                                            styles.generalSettingsBlock,
+                                        )}
+                                    >
+                                        <p
+                                            className={classNames(
+                                                styles.title,
+                                                "text fz24 fw500",
+                                            )}
+                                        >
+                                            Ссылка на сайт компании
+                                        </p>
+                                        <Input
+                                            errorText={errors.linkToCompany}
+                                            type="text"
+                                            value={companyProfile.linkToCompany}
+                                            onChange={(e) =>
+                                                dispatch(
+                                                    updateCompanyProfile({
+                                                        ...companyProfile,
+                                                        linkToCompany: e,
+                                                    }),
+                                                )
+                                            }
                                         />
                                     </div>
                                     <div
@@ -1082,6 +1194,7 @@ const SettingsPage = () => {
                                             О компании
                                         </p>
                                         <Input
+                                            errorText={errors.description}
                                             value={
                                                 companyProfile?.description ??
                                                 ""
@@ -1107,7 +1220,7 @@ const SettingsPage = () => {
                                         <SelectSkills
                                             maxItems={15}
                                             options={skills}
-                                            title="Выберите навыки"
+                                            title="Навыки, которые вы используете в компании"
                                             selectValues={(e) => {
                                                 dispatch(
                                                     updateCompanyProfile({
@@ -1120,6 +1233,24 @@ const SettingsPage = () => {
                                             errorText={errors.skills}
                                         />
                                     </div>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <p className="text fz24 fw500">
+                                            Копии документов, подтверждающие
+                                            регистрацию, легитимность и
+                                            надежность компании
+                                        </p>
+                                        <Input
+                                            accept="application/pdf, application/msword, .docx, image/png, image/jpeg, image/jpg"
+                                            type="file_multiple"
+                                            maxFiles={5}
+                                            multiple
+                                            setFile={setVerFiles}
+                                            file={verFiles}
+                                            errorText={errors.verFiles}
+                                        />
+                                    </div>
                                     <p
                                         className={classNames(
                                             styles.errorText,
@@ -1130,12 +1261,12 @@ const SettingsPage = () => {
                                             "Проверьте введенные данные"}
                                     </p>
                                     <Button
-                                        onClick={() => validateForm()}
+                                        onClick={() => validateFormCompany()}
                                         htmlType="submit"
                                         className={styles.saveButton}
                                         type="secondary"
                                     >
-                                        Сохранить изменения
+                                        Отправить на верификацию
                                     </Button>
                                 </div>
                             </form>
@@ -1172,16 +1303,45 @@ const SettingsPage = () => {
         return companyProfile;
     }, []);
 
-    const [activeTab, setActiveTab] = useState<SettingsState>(
-        currentProfile.isVerified ? "profile" : "verification",
-    );
+    const getInitTab = (): SettingsState => {
+        console.log(currentProfile);
+        
+        switch (currentProfile.verification) {
+            case "verified":
+                return "personal_data";
+            case "on_verification":
+                return "verification";
+            case "not_verified":
+                return "verification";
+            case "rejected":
+                return "verification";
+        }
+    };
 
-    if (!user.email) return null;
+    const [activeTab, setActiveTab] = useState<SettingsState>(getInitTab());
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.navigationButtons}>
-                {currentProfile.isVerified ? (
+    const getTabsContent = (): ReactNode => {
+        switch (currentProfile.verification) {
+            case "not_verified":
+                return (
+                    <Button
+                        className={styles.navigationButton}
+                        type={
+                            activeTab === "verification"
+                                ? "secondary"
+                                : "primary"
+                        }
+                        onClick={() => handleTabChange("verification")}
+                    >
+                        Верификация
+                    </Button>
+                );
+            case "on_verification":
+                return null;
+            case "rejected":
+                return null;
+            case "verified":
+                return (
                     <>
                         <Button
                             className={styles.navigationButton}
@@ -1206,36 +1366,18 @@ const SettingsPage = () => {
                             Персональные данные
                         </Button>
                     </>
-                ) : (
-                    <Button
-                        className={styles.navigationButton}
-                        type={
-                            activeTab === "verification"
-                                ? "secondary"
-                                : "primary"
-                        }
-                        onClick={() => handleTabChange("verification")}
-                    >
-                        Верификация
-                    </Button>
-                )}
-                {/* <Button
-                    className={styles.navigationButton}
-                    type={activeTab === "profile" ? "secondary" : "primary"}
-                    onClick={() => handleTabChange("profile")}
-                >
-                    Профиль
-                </Button>
-                <Button
-                    className={styles.navigationButton}
-                    type={
-                        activeTab === "personal_data" ? "secondary" : "primary"
-                    }
-                    onClick={() => handleTabChange("personal_data")}
-                >
-                    Персональные данные
-                </Button> */}
-            </div>
+                );
+        }
+    };
+
+    if (!user.email) return null;
+
+    console.log("activeTab", activeTab);
+    
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.navigationButtons}>{getTabsContent()}</div>
             <div
                 className={classNames(styles.content, {
                     [styles.exit]: isAnimating,

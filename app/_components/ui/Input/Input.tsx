@@ -6,7 +6,9 @@ import {
     Dispatch,
     FC,
     SetStateAction,
+    useContext,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
@@ -14,6 +16,7 @@ import styles from "./Input.module.scss";
 import "./Input.scss";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import CodeInput from "./CodeInput/CodeInput";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 type InputProps = {
     type:
@@ -25,6 +28,7 @@ type InputProps = {
         | "code"
         | "number"
         | "file"
+        | "file_multiple"
         | "textarea";
     containerClassName?: string;
     onChange?: (val: string) => void;
@@ -39,12 +43,21 @@ type InputProps = {
     autoComplete?: string;
     title?: string;
     errorText?: string;
-    file?: File | null;
-    setFile?: Dispatch<SetStateAction<File | null>>;
-    addFileHandler?: (
-        file: File,
-        fileSetter: Dispatch<SetStateAction<File | null>>,
-    ) => void;
+    accept?: string;
+    file?: any; // File | File[] | null
+    setFile?: any; // Dispatch<SetStateAction<File | File[] | null>>
+    multiple?: boolean;
+    // files?: File[] | null;
+    // setFiles?: Dispatch<SetStateAction<File[] | null>>;
+    // addFileHandler?: (
+    // file: File,
+    // fileSetter: Dispatch<SetStateAction<File | null>>,
+    // ) => void;
+    maxFiles?: number;
+    // addFilesHandler?: (
+    // file: FileList,
+    // fileSetter: Dispatch<SetStateAction<File[] | null>>,
+    // ) => void;
 };
 
 const Input: FC<InputProps> = ({
@@ -62,14 +75,74 @@ const Input: FC<InputProps> = ({
     checked = false,
     autoComplete = "off",
     errorText = "",
+    accept = "",
     file,
     setFile,
-    addFileHandler,
+    multiple = false,
+    // files,
+    // setFiles,
+    maxFiles = 5,
+    // addFileHandler,
+    // addFilesHandler,
 }) => {
-    const uniqueId = "id" + Math.random().toString(16).slice(2);
+    const uniqueId = useMemo(
+        () => "id" + Math.random().toString(16).slice(2),
+        [],
+    );
     const errorRef = useRef<HTMLParagraphElement>(null);
     const checkRef = useRef<HTMLLabelElement>(null);
     const [codeValue, setCodeValue] = useState<string>("____");
+    const { showAlert } = useContext(AlertContext);
+
+    const addFileHandler = async (file: any, fileSetter: any) => {
+        if (!file) {
+            fileSetter(null);
+            return;
+        }
+
+        if (multiple) {
+            const newFile = Array.from(file).slice(0, 5);
+
+            let unsupportedFiles = false;
+
+            newFile.forEach((item: any) => {
+                if (
+                    ![
+                        "pdf",
+                        "vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        "png",
+                        "jpg",
+                        "jpeg",
+                    ].includes(item.type.split("/")[1])
+                ) {
+                    showAlert("Формат файла не поддерживается");
+                    unsupportedFiles = true;
+                }
+            });
+
+            if (unsupportedFiles) return;
+
+            fileSetter((prev: any) => {
+                if (!prev) return newFile;
+                return [...prev, ...newFile];
+            });
+        } else {
+            if (!["png", "jpg", "jpeg"].includes(file.type.split("/")[1])) {
+                showAlert("Формат файла не поддерживается");
+                return;
+            }
+
+            fileSetter(file);
+        }
+    };
+
+    const removeFile = (index: number) => {
+        if (!file) return;
+
+        const newFile = file.filter((_: any, i: number) => i !== index);
+
+        setFile(newFile);
+    };
 
     useEffect(() => {
         if (type === "code") {
@@ -213,6 +286,22 @@ const Input: FC<InputProps> = ({
                         onBlur={(e) => onBlur(e.target.value)}
                         onChange={(e) => onChange(e.target.value)}
                     />
+                    <CSSTransition
+                        in={errorText.length !== 0}
+                        nodeRef={errorRef}
+                        timeout={100}
+                        classNames="errorText"
+                    >
+                        <p
+                            ref={errorRef}
+                            className={classNames(
+                                "text fz20",
+                                styles.errorText,
+                            )}
+                        >
+                            {errorText}
+                        </p>
+                    </CSSTransition>
                 </div>
             );
         case "file":
@@ -220,6 +309,7 @@ const Input: FC<InputProps> = ({
                 <label className={styles.fileInput}>
                     <div>
                         <input
+                            accept={accept}
                             type="file"
                             onChange={async (e) => {
                                 if (!e.target.files) return;
@@ -256,6 +346,97 @@ const Input: FC<InputProps> = ({
                         {errorText}
                     </p>
                 </label>
+            );
+        case "file_multiple":
+            return (
+                <>
+                    {file?.length && (
+                        <div className={styles.filesContainer}>
+                            {file.map((file: File, index: number) => {
+                                return (
+                                    <div className={styles.file} key={index}>
+                                        <img
+                                            className={styles.delete}
+                                            src="/icons/cross.png"
+                                            alt="delete"
+                                            onClick={() => removeFile(index)}
+                                        />
+                                        {["png", "jpg", "jpeg"].includes(
+                                            file.name.split(".").slice(-1)[0],
+                                        ) ? (
+                                            <img
+                                                className={styles.userImage}
+                                                src={URL.createObjectURL(file)}
+                                                alt="logo"
+                                            />
+                                        ) : (
+                                            <>
+                                                <img
+                                                    className={classNames(
+                                                        styles.userImage,
+                                                        styles.imgDocument,
+                                                    )}
+                                                    src={`/icons/extensions/${
+                                                        file.name
+                                                            .split(".")
+                                                            .slice(-1)[0]
+                                                    }.png`}
+                                                />
+                                                <p>{file.name}</p>
+                                            </>
+                                        )}
+                                        {/* <img
+                                            className={styles.userImage}
+                                            src={URL.createObjectURL(file)}
+                                            alt="logo"
+                                        /> */}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                    {file!.length < maxFiles && (
+                        <label htmlFor={uniqueId} className={styles.fileInput}>
+                            <div>
+                                <input
+                                    id={uniqueId}
+                                    accept={accept}
+                                    type="file"
+                                    multiple
+                                    onChange={async (e) => {
+                                        if (!e.target.files) return;
+
+                                        addFileHandler!(
+                                            e.target.files,
+                                            setFile!,
+                                        );
+                                    }}
+                                />
+                                <img src="/icons/add_file.svg" alt="add" />
+                                <div>
+                                    <p className="text fz16 gray">
+                                        Форматы: PDF, DOCX, PNG, JPG, JPEG
+                                    </p>
+                                    <p className="text fz16 gray">
+                                        Максимальный вес: 5МБ
+                                    </p>
+                                    <p className="text fz16 gray">
+                                        Максимальное количество файлов: 5
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p
+                                className={classNames(
+                                    "text fz20",
+                                    styles.errorText,
+                                )}
+                            >
+                                {errorText}
+                            </p>
+                        </label>
+                    )}
+                </>
             );
         default:
             return (

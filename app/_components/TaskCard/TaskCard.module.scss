@@ -1,5 +1,4 @@
 .taskCard {
-
     .isViewed {
         visibility: hidden;
         width: min-content;
@@ -16,8 +15,7 @@
         border: 2px solid rgba(var(--gray2), 1);
     }   
 
-
-    .orderContent {
+    .wrapper {
         background-color: rgba(var(--white), 1);
         padding: 30px;
         margin-bottom: 20px;
