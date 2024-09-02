@@ -2,7 +2,6 @@
 
 import classNames from "classnames";
 import styles from "./page.module.scss";
-import { useTypesSelector } from "../_hooks/useTypesSelector";
 import {
     ICompanyProfile,
     IStudentProfile,
@@ -21,21 +20,17 @@ import { yearsOfEducation } from "../_utils/constants";
 import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
 import Button from "../_components/ui/Button/Button";
 import ProfileStatus from "./ProfileStatus/ProfileStatus";
+import { ProfileRoute } from "../_utils/protectedRoutes";
+import { useTypesSelector } from "../_hooks/useTypesSelector";
 
 export default function Home() {
-    const {
-        user,
-        isAuth,
-        isProfileLoading,
-        profileVerification,
-        companyProfile,
-        studentProfile,
-    } = useTypesSelector((state) => state.userReducer);
-    const { updateProfile } = userSlice.actions;
-    const dispatch = useTypesDispatch();
+    const { profileVerification, isProfileLoading, companyProfile, studentProfile, user } = useTypesSelector(
+        (state) => state.userReducer,
+    );
 
-    if (profileVerification.status !== "verified")
+    if (profileVerification.status !== "approved") {
         return <ProfileStatus profileVerification={profileVerification} />;
+    }
 
     return (
         <div

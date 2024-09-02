@@ -41,11 +41,11 @@ const CustomSearch: FC<CustomSelectProps> = ({
     // console.log(snapshot.options, value);
 
     const currOptions = useMemo(() => {
-        if (isFirstOptionBlank) {
+        if (isFirstOptionBlank && snapshot.search === "") {
             return snapshot.options.slice(1);
         }
         return snapshot.options;
-    }, [isFirstOptionBlank, snapshot.options]);
+    }, [isFirstOptionBlank, snapshot.options, snapshot.search]);
 
     return (
         <>

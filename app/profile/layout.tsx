@@ -31,18 +31,18 @@ export default function RootLayout({
         }
     }, [isLoading, isAuth]);
 
-    useEffect(() => {
-        const asyncFunc = async () => {
-            const res = await getProfile();
+    // useEffect(() => {
+    //     const asyncFunc = async () => {
+    //         const res = await getProfile();
 
-            console.log(res);
+    //         console.log(res);
 
-            if (res.status === 200) {
-                dispatch(updateProfile(res.profile));
-            }
-        };
-        asyncFunc();
-    }, []);
+    //         if (res.status === 200) {
+    //             dispatch(updateProfile(res.profile));
+    //         }
+    //     };
+    //     asyncFunc();
+    // }, []);
 
     return (
         <div className="container">

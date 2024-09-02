@@ -8,6 +8,7 @@ import Button from "@/app/_components/ui/Button/Button";
 import { ICompanyProfile, ITask } from "@/app/_types";
 import TaskCard from "@/app/_components/TaskCard/TaskCard";
 import ProfileStatus from "../ProfileStatus/ProfileStatus";
+import { ProfileRoute } from "@/app/_utils/protectedRoutes";
 
 const tasks: ITask[] = [
     {
@@ -38,7 +39,7 @@ const tasks: ITask[] = [
             companyName: "",
             firstName: "",
             lastName: "",
-            verification: { status: "verified" },
+            verification: { status: "approved" },
         },
         isVisible: true,
         createdAt: "10.03.2024",
@@ -53,8 +54,9 @@ export default function Home() {
         (state) => state.userReducer,
     );
 
-    if (profileVerification.status !== "verified")
+    if (profileVerification.status !== "approved") {
         return <ProfileStatus profileVerification={profileVerification} />;
+    }
 
     return (
         <div className={styles.container}>

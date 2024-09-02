@@ -1,6 +1,7 @@
 "use client";
 
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import { getProfile } from "@/app/_http/API/profileApi";
 import { auth } from "@/app/_http/API/userApi";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { userSlice } from "@/app/_store/reducers/userSlice";
@@ -13,10 +14,12 @@ type ClientRootLayoutProps = {
 
 const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const dispatch = useTypesDispatch();
-    const { authUser } = userSlice.actions;
+    const { authUser, updateProfile, updateIsProfileLoading } = userSlice.actions;
     const { updateIsLoading } = contentSlice.actions;
 
     useEffect(() => {
+        console.log("??");
+        
         const asyncFunc = async () => {
             const token = LocalStorage.getAccessToken();
 
@@ -24,12 +27,21 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                 const res = await auth();
 
                 console.log("res for auth", res);
-                
+
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
+
+                    const profile = await getProfile();
+
+                    console.log("profile in auth", profile);
+
+                    if (profile.status === 200) {
+                        dispatch(updateProfile(profile.profile!));
+                    }
+                    dispatch(updateIsProfileLoading(false));
                 }
             }
-            dispatch(updateIsLoading(false));    
+            dispatch(updateIsLoading(false));
         };
         asyncFunc();
     }, []);

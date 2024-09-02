@@ -103,6 +103,12 @@ export const userSlice = createSlice({
                 state.companyProfile = action.payload;
             }
         },
+        updateProfileVerification(state, action: PayloadAction<IVerification>) {
+            state.profileVerification = action.payload;
+        },
+        updateIsProfileLoading(state, action: PayloadAction<boolean>) {
+            state.isProfileLoading = action.payload;
+        },
         updateStudentProfile(state, action: PayloadAction<IStudentProfile>) {
             state.studentProfile = action.payload;
         },

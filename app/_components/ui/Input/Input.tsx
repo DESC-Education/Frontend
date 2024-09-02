@@ -85,10 +85,16 @@ const Input: FC<InputProps> = ({
     // addFileHandler,
     // addFilesHandler,
 }) => {
-    const uniqueId = useMemo(
-        () => "id" + Math.random().toString(16).slice(2),
-        [],
-    );
+    const [uniqueId, setUniqueId] = useState<string>();
+
+    useEffect(() => {
+        setUniqueId("id" + Math.random().toString(16).slice(2))
+    }, [])
+
+    // const uniqueId = useMemo(
+    //     () => "id" + Math.random().toString(16).slice(2),
+    //     [],
+    // );
     const errorRef = useRef<HTMLParagraphElement>(null);
     const checkRef = useRef<HTMLLabelElement>(null);
     const [codeValue, setCodeValue] = useState<string>("____");
@@ -101,7 +107,7 @@ const Input: FC<InputProps> = ({
         }
 
         if (multiple) {
-            const newFile = Array.from(file).slice(0, 5);
+            const newFile = Array.from(file);
 
             let unsupportedFiles = false;
 
@@ -124,7 +130,7 @@ const Input: FC<InputProps> = ({
 
             fileSetter((prev: any) => {
                 if (!prev) return newFile;
-                return [...prev, ...newFile];
+                return [...prev, ...newFile].slice(0, maxFiles);
             });
         } else {
             if (!["png", "jpg", "jpeg"].includes(file.type.split("/")[1])) {
@@ -350,7 +356,7 @@ const Input: FC<InputProps> = ({
         case "file_multiple":
             return (
                 <>
-                    {file?.length && (
+                    {Boolean(file!.length) && (
                         <div className={styles.filesContainer}>
                             {file.map((file: File, index: number) => {
                                 return (
@@ -361,7 +367,7 @@ const Input: FC<InputProps> = ({
                                             alt="delete"
                                             onClick={() => removeFile(index)}
                                         />
-                                        {["png", "jpg", "jpeg"].includes(
+                                        {["png", "jpg", "jpeg", "jfif"].includes(
                                             file.name.split(".").slice(-1)[0],
                                         ) ? (
                                             <img
@@ -385,11 +391,6 @@ const Input: FC<InputProps> = ({
                                                 <p>{file.name}</p>
                                             </>
                                         )}
-                                        {/* <img
-                                            className={styles.userImage}
-                                            src={URL.createObjectURL(file)}
-                                            alt="logo"
-                                        /> */}
                                     </div>
                                 );
                             })}
