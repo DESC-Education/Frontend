@@ -40,6 +40,9 @@ import {
 import SelectSkills from "@/app/_components/SelectSkills/SelectSkills";
 import { AlertContext } from "@/app/_context/AlertContext";
 import { formsOfEducation, timezones } from "@/app/_utils/constants";
+import ProfileStatus from "../ProfileStatus/ProfileStatus";
+import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
+import { AuthRoute } from "@/app/_utils/protectedRoutes";
 
 type SettingsState = "personal_data" | "profile" | "verification";
 
@@ -54,7 +57,11 @@ const SettingsPage = () => {
 
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
     const dispatch = useTypesDispatch();
-    const { updateCompanyProfile, updateStudentProfile } = userSlice.actions;
+    const {
+        updateCompanyProfile,
+        updateStudentProfile,
+        updateProfileVerification,
+    } = userSlice.actions;
 
     const [cities, setCities] = useState<ICity[]>([]);
 
@@ -149,7 +156,10 @@ const SettingsPage = () => {
     const [errors, setErrors] = useState<any>({});
     const [errorsExist, setErrorsExist] = useState<boolean>(false);
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const validateFormStudent = async () => {
+        setIsLoading(true);
         const errorsTemp: any = {};
 
         console.log(studentProfile);
@@ -221,9 +231,18 @@ const SettingsPage = () => {
             );
             formdata.append("phoneVisibility", "true");
             formdata.append("emailVisibility", "true");
-            formdata.append("telegramLink", studentProfile.telegramLink ?? "");
-            formdata.append("vkLink", studentProfile.vkLink ?? "");
-            formdata.append("description", studentProfile.description ?? "");
+            formdata.append(
+                "vkLink",
+                studentProfile.vkLink
+                    ? `https://vk.com/${studentProfile.vkLink}`
+                    : "",
+            );
+            formdata.append(
+                "telegramLink",
+                studentProfile.telegramLink
+                    ? `https://t.me/${studentProfile.telegramLink}`
+                    : "",
+            );
 
             studentProfile.skills.forEach((el, i) => {
                 formdata.append(`skills`, el.id);
@@ -231,10 +250,18 @@ const SettingsPage = () => {
 
             const res = await createProfileStudent(formdata);
             console.log("createProfileStudent res", res);
+
+            if (res.status === 200) {
+                dispatch(
+                    updateProfileVerification({ status: "on_verification" }),
+                );
+            }
         }
+        setIsLoading(false);
     };
 
     const validateFormCompany = async () => {
+        setIsLoading(true);
         const errorsTemp: any = {};
 
         console.log(companyProfile);
@@ -259,16 +286,17 @@ const SettingsPage = () => {
             errorsTemp.city = "Выберите город";
         }
 
-        if (!logo) {
-            errorsTemp.logo = "Прикрепите логотип";
-        }
-
         if (!companyProfile.skills || companyProfile.skills.length === 0) {
             errorsTemp.skills = "Выберите навыки";
         }
 
-        if (!companyProfile.linkToCompany) {
-            errorsTemp.linkToCompany = "Введите ссылку на сайт компании";
+        if (
+            !companyProfile.linkToCompany ||
+            !/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(
+                companyProfile.linkToCompany,
+            )
+        ) {
+            errorsTemp.linkToCompany = "Введите корректную ссылку на сайт компании";
         }
 
         if (!companyProfile.description) {
@@ -298,8 +326,18 @@ const SettingsPage = () => {
             formdata.append("timezone", String(companyProfile.timezone));
             formdata.append("phoneVisibility", "true");
             formdata.append("emailVisibility", "true");
-            formdata.append("telegramLink", companyProfile.telegramLink ?? "");
-            formdata.append("vkLink", companyProfile.vkLink ?? "");
+            formdata.append(
+                "vkLink",
+                companyProfile.vkLink
+                    ? `https://vk.com/${companyProfile.vkLink}`
+                    : "",
+            );
+            formdata.append(
+                "telegramLink",
+                companyProfile.telegramLink
+                    ? `https://t.me/${companyProfile.telegramLink}`
+                    : "",
+            );
             formdata.append("description", companyProfile.description ?? "");
 
             companyProfile.skills.forEach((el, i) => {
@@ -308,7 +346,14 @@ const SettingsPage = () => {
 
             const res = await createProfileStudent(formdata);
             console.log("createProfileCompany res", res);
+
+            if (res.status === 200) {
+                dispatch(
+                    updateProfileVerification({ status: "on_verification" }),
+                );
+            }
         }
+        setIsLoading(false);
     };
 
     const getSettingsContent = (
@@ -416,6 +461,11 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
+                                <button
+                                    onClick={() => console.log(studentProfile)}
+                                >
+                                    test
+                                </button>
                                 <div className={styles.settingsBlock}>
                                     <div className={styles.rowSettings}>
                                         <div
@@ -1071,7 +1121,7 @@ const SettingsPage = () => {
                                             value={companyProfile.city?.id}
                                         />
                                     </div>
-                                    <div
+                                    {/* <div
                                         className={styles.generalSettingsBlock}
                                     >
                                         <p className="text fz24 fw500">
@@ -1084,7 +1134,7 @@ const SettingsPage = () => {
                                             file={logo}
                                             errorText={errors.logo}
                                         />
-                                    </div>
+                                    </div> */}
                                     <div
                                         className={classNames(
                                             styles.yearSettings,
@@ -1299,7 +1349,7 @@ const SettingsPage = () => {
     };
 
     const getInitTab = (): SettingsState => {
-        if (profileVerification.status === "verified") {
+        if (profileVerification.status === "approved") {
             return "personal_data";
         } else {
             return "verification";
@@ -1328,7 +1378,7 @@ const SettingsPage = () => {
                 return null;
             case "rejected":
                 return null;
-            case "verified":
+            case "approved":
                 return (
                     <>
                         <Button
@@ -1360,19 +1410,29 @@ const SettingsPage = () => {
 
     if (!user.email) return null;
 
-    // if (profileVerification.status === "not_verified" || profileVerification.status === "on_verification")
+    if (profileVerification.status === "on_verification") {
+        return <ProfileStatus profileVerification={profileVerification} />;
+    }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.navigationButtons}>{getTabsContent()}</div>
-            <div
-                className={classNames(styles.content, {
-                    [styles.exit]: isAnimating,
-                })}
-            >
-                {getSettingsContent(activeTab).content}
+        <AuthRoute>
+            <div className={styles.container}>
+                <div className={styles.navigationButtons}>
+                    {getTabsContent()}
+                </div>
+                <div
+                    className={classNames(styles.content, {
+                        [styles.exit]: isAnimating,
+                        [styles.isLoading]: isLoading,
+                    })}
+                >
+                    <div className={styles.loader}>
+                        <CustomOval />
+                    </div>
+                    {getSettingsContent(activeTab).content}
+                </div>
             </div>
-        </div>
+        </AuthRoute>
     );
 };
 

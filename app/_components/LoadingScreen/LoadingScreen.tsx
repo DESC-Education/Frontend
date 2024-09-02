@@ -34,9 +34,9 @@ const LoadingScreen = () => {
         };
     }, []);
 
-    if (typeof window !== "undefined" && !LocalStorage.getAccessToken()) {
-        return null;
-    }
+    // if (typeof window !== "undefined" && !LocalStorage.getAccessToken()) {
+    //     return null;
+    // }
 
     return (
         <CSSTransition

@@ -33,7 +33,7 @@ type RoleState =
 const Header = () => {
     const { showModal } = useContext(ModalContext);
     const { isAuth } = useTypesSelector((state) => state.userReducer);
-    const { user, isProfileLoading, isProfileVerified } = useTypesSelector(
+    const { user, isProfileLoading, profileVerification } = useTypesSelector(
         (user) => user.userReducer,
     );
 
@@ -79,7 +79,7 @@ const Header = () => {
                                 <div className={styles.linkContainer}>
                                     <Link
                                         style={{
-                                            pointerEvents: isProfileVerified
+                                            pointerEvents: profileVerification.status === "verified"
                                                 ? "all"
                                                 : "none",
                                         }}
@@ -95,7 +95,7 @@ const Header = () => {
                                     >
                                         Биржа
                                     </Link>
-                                    {!isProfileVerified && (
+                                    {profileVerification.status !== "verified" && (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -115,7 +115,7 @@ const Header = () => {
                                 <div className={styles.linkContainer}>
                                     <Link
                                         style={{
-                                            pointerEvents: isProfileVerified
+                                            pointerEvents: profileVerification.status === "verified"
                                                 ? "all"
                                                 : "none",
                                         }}
@@ -125,14 +125,14 @@ const Header = () => {
                                             {
                                                 [styles.active]:
                                                     pathname === "/chat",
-                                                [styles.disabled]: !isProfileVerified,
+                                                [styles.disabled]: profileVerification.status !== "verified",
                                             },
                                         )}
                                         href="/chat"
                                     >
                                         Сообщения
                                     </Link>
-                                    {!isProfileVerified && (
+                                    {profileVerification.status !== "verified" && (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
