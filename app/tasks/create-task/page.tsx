@@ -8,6 +8,9 @@ import Image from "next/image";
 import Button from "@/app/_components/ui/Button/Button";
 import Input from "@/app/_components/ui/Input/Input";
 import SelectSearch from "react-select-search";
+import { createTask } from "@/app/_http/API/tasksApi";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
+import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 
 
 export default function CreateTaskPage() {
@@ -17,6 +20,26 @@ export default function CreateTaskPage() {
         { value: "1", name: "Наука и техника" },
         { value: "2", name: "Информационные технологии" },
     ];
+
+    const {task} = useTypesSelector((state) => state.taskReducer);
+
+    const dispatch = useTypesDispatch();
+
+    const validateFormTask = async () => {
+        const formData = new FormData();
+
+        formData.append("title", task.name);
+        formData.append("description", task.description);
+        formData.append("deadline", task.deadline);
+        formData.append("file", "123");
+        formData.append("categoryId", "3fa85f64-5717-4562-b3fc-2c963f66afa6");
+        formData.append("filtersId", "3fa85f64-5717-4562-b3fc-2c963f66afa6");
+
+        const res = await createTask(formData);
+
+        console.log("createTask res", res);
+    }
+
 
     return (
         <div className={classNames(styles.container, "container")}>
@@ -43,7 +66,7 @@ export default function CreateTaskPage() {
                     <p className="text gray fz20">Разместите свою задачу на платформе. Ваша задача станет видимой для тысячи студентов, и некоторые из них откликнуться на ваше задание уже с готовым решением. Изучите их решения и выберите лучших из них. Подтвердите заказ, когда будете удовлетворены результатом на 100% и оставьте рецензию на их решение.</p>
                     <div className={styles.taskForm}>
                         <p className="text">Название задания</p>
-                        <Input type="text" placeholder="Название должно привлечь внимание и отразить суть задачи." containerClassName={styles.textName} />
+                        <Input type="text" placeholder="Название должно привлечь внимание и отразить суть задачи." containerClassName={styles.textName} value="" />
                         <p className="text">О задании</p>
                         <Input type="textarea" placeholder="Опишите что именно вам нужно. Включите в описание важные аспекты." containerClassName={styles.textarea} />
                         <div className={styles.underdescription}>
@@ -78,6 +101,9 @@ export default function CreateTaskPage() {
                             </Button>
                             <Button type="primary" className={styles.submitButton}>
                                 Сохранить как PDF
+                            </Button>
+                            <Button type="primary" className={styles.submitButton} onClick={() => validateFormTask()}>
+                                    Сохранить
                             </Button>
                         </div>
 
