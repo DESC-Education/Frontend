@@ -108,6 +108,7 @@ export type ITask = {
     description: string;
     deadline: string;
     createdAt: string;
+    category: ICategory;
     isVerified: boolean;
     isSuspicious: boolean;
     isVisible: boolean;
@@ -120,6 +121,24 @@ export type IFile = {
     path: string;
     type: string;
 };
+
+export type ICategory = {
+    id: string;
+    name: string;
+    value: string;
+    filtersCategories: IFilterCategories;
+}
+
+export type IFilterCategories = {
+    id: string;
+    name: string;
+    filters: IFilter[];
+}
+
+export type IFilter = {
+    id: string;
+    name: string;
+}
 
 export type ISpecialty = {
     id: string;
