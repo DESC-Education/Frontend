@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 
 import classNames from "classnames";
 import styles from "./page.module.scss";
@@ -14,16 +13,20 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import { taskSlice } from "@/app/_store/reducers/taskSlice";
 import { use, useEffect, useState } from "react";
-import { ICategory, IFilter, IFilterCategories } from "@/app/_types";
+import { ICategory, IFilter, IFilterCategory } from "@/app/_types";
 import { on } from "events";
-
 
 const maxLength = 2000;
 const minLength = 5;
 
 export default function CreateTaskPage() {
-
-    const templates = ["Веб-разработка", "Мобильная разработка", "Искусственный интеллект", "Базы данных", "Безопасность информации"];
+    const templates = [
+        "Веб-разработка",
+        "Мобильная разработка",
+        "Искусственный интеллект",
+        "Базы данных",
+        "Безопасность информации",
+    ];
 
     const { task } = useTypesSelector((state) => state.taskReducer);
     const { updateTask } = taskSlice.actions;
@@ -41,11 +44,10 @@ export default function CreateTaskPage() {
                         ...task,
                         description: e,
                     },
-                })
+                }),
             );
         }
     };
-
 
     const [categories, setCategories] = useState<ICategory[]>([]);
     console.log("categories", categories);
@@ -58,7 +60,7 @@ export default function CreateTaskPage() {
                     res.categories!.map((item) => ({
                         ...item,
                         value: item.id,
-                        name: item.name
+                        name: item.name,
                     })),
                 );
                 console.log("rez", res);
@@ -68,8 +70,7 @@ export default function CreateTaskPage() {
         asyncFunc();
     }, []);
 
-    const [filtersCategory, setFiltersCategory] = useState<IFilterCategories>();
-
+    const [filtersCategory, setFiltersCategory] = useState<IFilterCategory>();
 
     const validateFormTask = async () => {
         const formData = new FormData();
@@ -81,32 +82,47 @@ export default function CreateTaskPage() {
         formData.append("filtersId", "3fa85f64-5717-4562-b3fc-2c963f66afa6");
 
         const res = await createTask(formData);
-    }
+    };
 
-    console.log("taskcat", filtersCategory);
+    console.log("taskcat", task.category.filterCategories);
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>
                 <Link href={"/tasks"} className={styles.backButton}>
-                    <Image src="/icons/backIcon.svg" width={15} height={15} alt="arrow-left" className={styles.img} />
+                    <Image
+                        src="/icons/backIcon.svg"
+                        width={15}
+                        height={15}
+                        alt="arrow-left"
+                        className={styles.img}
+                    />
                     <p className="text green fz20">Вернуться к списку</p>
                 </Link>
-                <p className="title">
-                    Создать задание
-                </p>
+                <p className="title">Создать задание</p>
             </div>
             <div className={styles.taskContent}>
                 <div className={styles.templates}>
                     <p className="text fw500">Шаблоны технических заданий</p>
                     {templates.map((template, index) => (
-                        <Button key={index} type="primary" className={styles.templateButton}>
+                        <Button
+                            key={index}
+                            type="primary"
+                            className={styles.templateButton}
+                        >
                             {template}
                         </Button>
                     ))}
                 </div>
                 <div className={styles.createTask}>
                     <p className="text fw500">Опишите, что нужно сделать</p>
-                    <p className="text gray fz20">Разместите свою задачу на платформе. Ваша задача станет видимой для тысячи студентов, и некоторые из них откликнуться на ваше задание уже с готовым решением. Изучите их решения и выберите лучших из них. Подтвердите заказ, когда будете удовлетворены результатом на 100% и оставьте рецензию на их решение.</p>
+                    <p className="text gray fz20">
+                        Разместите свою задачу на платформе. Ваша задача станет
+                        видимой для тысячи студентов, и некоторые
+                        из них откликнуться на ваше задание уже с готовым
+                        решением. Изучите их решения и выберите лучших из них.
+                        Подтвердите заказ, когда будете удовлетворены
+                        результатом на 100% и оставьте рецензию на их решение.
+                    </p>
                     <div className={styles.taskForm}>
                         <p className="text">Название задания</p>
                         <Input
@@ -119,9 +135,9 @@ export default function CreateTaskPage() {
                                     updateTask({
                                         task: {
                                             ...task,
-                                            name: e
-                                        }
-                                    })
+                                            name: e,
+                                        },
+                                    }),
                                 )
                             }
                         />
@@ -136,7 +152,15 @@ export default function CreateTaskPage() {
                         />
                         <div className={styles.underdescription}>
                             <p className="text gray fz20">Файл</p>
-                            <p className={classNames("text gray fz20", styles.length)}>{textLength} из {maxLength} символов (минимум {minLength})</p>
+                            <p
+                                className={classNames(
+                                    "text gray fz20",
+                                    styles.length,
+                                )}
+                            >
+                                {textLength} из {maxLength} символов (минимум{" "}
+                                {minLength})
+                            </p>
                         </div>
                         <div className={styles.selects}>
                             <div className={styles.select}>
@@ -150,21 +174,21 @@ export default function CreateTaskPage() {
                                                 task: {
                                                     ...task,
                                                     category: categories.find(
-                                                        (item) =>
-                                                            item.id === e,
+                                                        (item) => item.id === e,
                                                     )!,
-                                                }
-                                            })
-                                        ); 
-                                        setFiltersCategory(task.category.filtersCategories);
-                                    }
-                                    }
+                                                },
+                                            }),
+                                        );
+                                        // setFiltersCategory(
+                                        //     categories.find(
+                                        //         (item) => item.id === e,
+                                        //     )!.filtersCategories
+                                        // );
+                                    }}
                                 />
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Фильтры</p>
-
-
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Сроки</p>
@@ -180,9 +204,7 @@ export default function CreateTaskPage() {
                                                 },
                                             }),
                                         );
-
-                                    }
-                                    }
+                                    }}
                                 />
                                 {/* <SelectSearch
                                     options={[
@@ -197,17 +219,27 @@ export default function CreateTaskPage() {
                             </div>
                         </div>
                         <div className={styles.submitButtons}>
-                            <Button type="secondary" className={styles.submitButton}>
+                            <Button
+                                type="secondary"
+                                className={styles.submitButton}
+                            >
                                 Демо
                             </Button>
-                            <Button type="primary" className={styles.submitButton}>
+                            <Button
+                                type="primary"
+                                className={styles.submitButton}
+                            >
                                 Сохранить как PDF
                             </Button>
-                            <Button type="primary" className={styles.submitButton} onClick={() => validateFormTask()} disabled={textLength < minLength}>
+                            <Button
+                                type="primary"
+                                className={styles.submitButton}
+                                onClick={() => validateFormTask()}
+                                disabled={textLength < minLength}
+                            >
                                 Сохранить
                             </Button>
                         </div>
-
                     </div>
                 </div>
             </div>
