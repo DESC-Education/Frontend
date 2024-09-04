@@ -42,19 +42,19 @@ export type EditStudentDTO = {
     description: string;
     phoneVisibility: boolean;
     emailVisibility: boolean;
-    telegramLink: string;
-    vkLink: string;
-    skills: ISkill[];
+    telegramLink?: string;
+    vkLink?: string;
+    skills: string[];
 };
 
 export type EditCompanyDTO = {
     description: string;
     phoneVisibility: boolean;
     emailVisibility: boolean;
-    telegramLink: string;
-    vkLink: string;
+    telegramLink?: string;
+    vkLink?: string;
     linkToCompany: string;
-    skills: ISkill[];
+    skills: string[];
 };
 
 

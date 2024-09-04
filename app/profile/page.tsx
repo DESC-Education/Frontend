@@ -28,7 +28,7 @@ export default function Home() {
         (state) => state.userReducer,
     );
 
-    if (profileVerification.status !== "approved") {
+    if (profileVerification.status !== "verified") {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
 

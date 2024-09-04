@@ -47,12 +47,7 @@ type InputProps = {
     file?: any; // File | File[] | null
     setFile?: any; // Dispatch<SetStateAction<File | File[] | null>>
     multiple?: boolean;
-    // files?: File[] | null;
-    // setFiles?: Dispatch<SetStateAction<File[] | null>>;
-    // addFileHandler?: (
-    // file: File,
-    // fileSetter: Dispatch<SetStateAction<File | null>>,
-    // ) => void;
+    rows?: number;
     maxFiles?: number;
     // addFilesHandler?: (
     // file: FileList,
@@ -79,11 +74,8 @@ const Input: FC<InputProps> = ({
     file,
     setFile,
     multiple = false,
-    // files,
-    // setFiles,
+    rows = 5,
     maxFiles = 5,
-    // addFileHandler,
-    // addFilesHandler,
 }) => {
     const [uniqueId, setUniqueId] = useState<string>();
 
@@ -282,12 +274,11 @@ const Input: FC<InputProps> = ({
                     {title && <p className="text fz20 fw500">{title}</p>}
                     <textarea
                         placeholder={placeholder}
-                        // onKeyUp={onKeyUp}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, {
                             [styles.inputError]: errorText.length !== 0,
                         })}
-                        rows={30}
+                        rows={rows}
                         value={value}
                         onBlur={(e) => onBlur(e.target.value)}
                         onChange={(e) => onChange(e.target.value)}

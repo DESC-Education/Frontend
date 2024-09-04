@@ -18,8 +18,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const { updateIsLoading } = contentSlice.actions;
 
     useEffect(() => {
-        console.log("??");
-        
         const asyncFunc = async () => {
             const token = LocalStorage.getAccessToken();
 
