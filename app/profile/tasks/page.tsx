@@ -39,7 +39,7 @@ const tasks: ITask[] = [
             companyName: "",
             firstName: "",
             lastName: "",
-            verification: { status: "approved" },
+            verification: { status: "verified" },
         },
         isVisible: true,
         createdAt: "10.03.2024",
@@ -54,7 +54,7 @@ export default function Home() {
         (state) => state.userReducer,
     );
 
-    if (profileVerification.status !== "approved") {
+    if (profileVerification.status !== "verified") {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
 

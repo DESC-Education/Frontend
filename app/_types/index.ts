@@ -33,7 +33,7 @@ export type IVerification = {
 };
 
 export type VerificationStatuses =
-    | "approved"
+    | "verified"
     | "on_verification"
     | "not_verified"
     | "rejected";

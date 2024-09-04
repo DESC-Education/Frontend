@@ -22,6 +22,7 @@ import { userSlice } from "@/app/_store/reducers/userSlice";
 import SelectSearch from "react-select-search";
 import {
     createProfileStudent,
+    editStudentProfile,
     getCities,
     getFaculties,
     getSkills,
@@ -43,8 +44,11 @@ import { formsOfEducation, timezones } from "@/app/_utils/constants";
 import ProfileStatus from "../ProfileStatus/ProfileStatus";
 import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
 import { AuthRoute } from "@/app/_utils/protectedRoutes";
+import { set } from "zod";
 
 type SettingsState = "personal_data" | "profile" | "verification";
+
+const URLRegExp = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
 
 const SettingsPage = () => {
     const { user } = useTypesSelector((state) => state.userReducer);
@@ -126,6 +130,19 @@ const SettingsPage = () => {
     };
 
     const [skills, setSkills] = useState<ISkill[]>([]);
+
+    const setSkillsBySearch = async (search: string) => {
+        const res = await getSkills(search);
+
+        if (res.status === 200) {
+            setSkills(
+                res.skills!.map((item) => ({
+                    ...item,
+                    value: item.id,
+                })),
+            );
+        }
+    };
 
     useEffect(() => {
         const asyncFunc = async () => {
@@ -255,9 +272,15 @@ const SettingsPage = () => {
                 dispatch(
                     updateProfileVerification({ status: "on_verification" }),
                 );
+                showAlert(
+                    "Заявка на верификацию успешно отправлена",
+                    "success",
+                );
             }
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     const validateFormCompany = async () => {
@@ -292,11 +315,10 @@ const SettingsPage = () => {
 
         if (
             !companyProfile.linkToCompany ||
-            !/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(
-                companyProfile.linkToCompany,
-            )
+            !URLRegExp.test(companyProfile.linkToCompany)
         ) {
-            errorsTemp.linkToCompany = "Введите корректную ссылку на сайт компании";
+            errorsTemp.linkToCompany =
+                "Введите корректную ссылку на сайт компании";
         }
 
         if (!companyProfile.description) {
@@ -351,9 +373,133 @@ const SettingsPage = () => {
                 dispatch(
                     updateProfileVerification({ status: "on_verification" }),
                 );
+                showAlert(
+                    "Заявка на верификацию успешно отправлена",
+                    "success",
+                );
             }
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
         }
-        setIsLoading(false);
+    };
+
+    const validateEditProfileStudent = async () => {
+        setIsLoading(true);
+        const errorsTemp: any = {};
+
+        console.log(studentProfile);
+
+        if (
+            studentProfile.description !== null &&
+            studentProfile.description?.length < 2
+        ) {
+            errorsTemp.description = "Введите описание";
+        }
+
+        // if (!studentProfile.telegramLink) {
+        //     errorsTemp.telegramLink = "Введите корректную ссылку на телеграм";
+        // }
+
+        // if (!studentProfile.vkLink) {
+        //     errorsTemp.vkLink = "Введите корректную ссылку на вконтакте";
+        // }
+
+        if (studentProfile.skills?.length === 0) {
+            errorsTemp.skills = "Выберите навыки";
+        }
+
+        setErrorsExist(Object.keys(errorsTemp).length !== 0);
+        setErrors(errorsTemp);
+
+        console.log(errorsTemp);
+
+        if (Object.keys(errorsTemp).length === 0) {
+            const res = await editStudentProfile({
+                description: studentProfile.description ?? "",
+                telegramLink: studentProfile.telegramLink
+                    ? `https://t.me/${studentProfile.telegramLink}`
+                    : undefined,
+                vkLink: studentProfile.vkLink
+                    ? `https://vk.com/${studentProfile.vkLink}`
+                    : undefined,
+                emailVisibility: studentProfile.emailVisibility,
+                phoneVisibility: studentProfile.phoneVisibility,
+                skills: studentProfile.skills.map((i) => i.id),
+            });
+
+            console.log("edit res", res);
+            if (res.status === 200) {
+                showAlert("Профиль успешно обновлен", "success");
+            }
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
+        }
+    };
+
+    const validateEditProfileCompany = async () => {
+        setIsLoading(true);
+        const errorsTemp: any = {};
+
+        console.log(companyProfile);
+
+        if (
+            companyProfile.description !== null &&
+            companyProfile.description?.length < 2
+        ) {
+            errorsTemp.description = "Введите описание";
+        }
+
+        // if (!companyProfile.telegramLink) {
+        //     errorsTemp.telegramLink = "Введите корректную ссылку на телеграм";
+        // }
+
+        // if (!companyProfile.vkLink) {
+        //     errorsTemp.vkLink = "Введите корректную ссылку на вконтакте";
+        // }
+
+        if (
+            !companyProfile.linkToCompany ||
+            !URLRegExp.test(companyProfile.linkToCompany)
+        ) {
+            errorsTemp.linkToCompany =
+                "Введите корректную ссылку на сайт компании";
+        }
+
+        if (companyProfile.skills?.length === 0) {
+            errorsTemp.skills = "Выберите навыки";
+        }
+
+        setErrorsExist(Object.keys(errorsTemp).length !== 0);
+        setErrors(errorsTemp);
+
+        console.log(errorsTemp);
+
+        if (Object.keys(errorsTemp).length === 0) {
+            const res = await editStudentProfile({
+                description: companyProfile.description ?? "",
+                telegramLink: companyProfile.telegramLink
+                    ? `https://t.me/${companyProfile.telegramLink}`
+                    : undefined,
+                vkLink: companyProfile.vkLink
+                    ? `https://vk.com/${companyProfile.vkLink}`
+                    : undefined,
+                emailVisibility: companyProfile.emailVisibility,
+                phoneVisibility: companyProfile.phoneVisibility,
+                skills: companyProfile.skills.map((i) => i.id),
+            });
+
+            console.log("edit res", res);
+
+            if (res.status === 200) {
+                showAlert("Профиль успешно обновлен", "success");
+            }
+
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
+        }
     };
 
     const getSettingsContent = (
@@ -930,6 +1076,9 @@ const SettingsPage = () => {
                                             }}
                                             values={studentProfile.skills}
                                             errorText={errors.skills}
+                                            onInput={(search) =>
+                                                setSkillsBySearch(search)
+                                            }
                                         />
                                     </div>
                                     <p
@@ -1121,20 +1270,6 @@ const SettingsPage = () => {
                                             value={companyProfile.city?.id}
                                         />
                                     </div>
-                                    {/* <div
-                                        className={styles.generalSettingsBlock}
-                                    >
-                                        <p className="text fz24 fw500">
-                                            Логотип компании
-                                        </p>
-                                        <Input
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            type="file"
-                                            setFile={setLogo}
-                                            file={logo}
-                                            errorText={errors.logo}
-                                        />
-                                    </div> */}
                                     <div
                                         className={classNames(
                                             styles.yearSettings,
@@ -1327,12 +1462,398 @@ const SettingsPage = () => {
                 };
             case "profile":
                 return {
-                    content: (
-                        <form
-                            onSubmit={(e) => e.preventDefault()}
-                            className={styles.content}
-                        ></form>
-                    ),
+                    content:
+                        user.role === "student" ? (
+                            <form
+                                onSubmit={(e) => e.preventDefault()}
+                                className={styles.content}
+                            >
+                                <button
+                                    onClick={() => console.log(studentProfile)}
+                                >
+                                    test
+                                </button>
+                                <div className={styles.settingsBlock}>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <Input
+                                            type="textarea"
+                                            title="О себе"
+                                            rows={10}
+                                            value={
+                                                studentProfile.description ?? ""
+                                            }
+                                            onChange={(e) =>
+                                                dispatch(
+                                                    updateStudentProfile({
+                                                        ...studentProfile,
+                                                        description: e,
+                                                    }),
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.settingsBlock}>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <Input
+                                            checked={
+                                                studentProfile.emailVisibility
+                                            }
+                                            onCheck={(e) =>
+                                                dispatch(
+                                                    updateStudentProfile({
+                                                        ...studentProfile,
+                                                        emailVisibility: e,
+                                                    }),
+                                                )
+                                            }
+                                            type="checkbox"
+                                            labelContent="Показывать почту в профиле?"
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.settingsBlock}>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <Input
+                                            checked={
+                                                studentProfile.phoneVisibility
+                                            }
+                                            onCheck={(e) =>
+                                                dispatch(
+                                                    updateStudentProfile({
+                                                        ...studentProfile,
+                                                        phoneVisibility: e,
+                                                    }),
+                                                )
+                                            }
+                                            type="checkbox"
+                                            labelContent="Показывать телефон в профиле?"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    className={classNames(
+                                        styles.yearSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Telegram
+                                    </p>
+                                    <Input
+                                        type="text"
+                                        placeholder="@Nickname"
+                                        value={
+                                            "https://t.me/" +
+                                            (studentProfile?.telegramLink
+                                                ? studentProfile?.telegramLink
+                                                      .split("https://t.me/")
+                                                      .pop()
+                                                : "")
+                                        }
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateStudentProfile({
+                                                    ...studentProfile,
+                                                    telegramLink: e.slice(13),
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className={classNames(
+                                        styles.yearSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Вконтакте
+                                    </p>
+                                    <Input
+                                        type="text"
+                                        placeholder="@Nickname"
+                                        value={
+                                            "https://vk.com/" +
+                                            (studentProfile?.vkLink
+                                                ? studentProfile?.vkLink
+                                                      .split("https://vk.com/")
+                                                      .pop()
+                                                : "")
+                                        }
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateStudentProfile({
+                                                    ...studentProfile,
+                                                    vkLink: e.slice(15),
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div className={styles.settingsBlock}>
+                                    <SelectSkills
+                                        title="Выберите навыки, которыми Вы владеете"
+                                        maxItems={15}
+                                        options={skills}
+                                        selectValues={(e) => {
+                                            dispatch(
+                                                updateStudentProfile({
+                                                    ...studentProfile,
+                                                    skills: e,
+                                                }),
+                                            );
+                                        }}
+                                        values={studentProfile.skills}
+                                        errorText={errors.skills}
+                                        onInput={(search) =>
+                                            setSkillsBySearch(search)
+                                        }
+                                    />
+                                    <p
+                                        className={classNames(
+                                            styles.errorText,
+                                            "text fz24 fw500 red",
+                                        )}
+                                    >
+                                        {errorsExist &&
+                                            "Проверьте введенные данные"}
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => validateEditProfileStudent()}
+                                    htmlType="submit"
+                                    className={styles.saveButton}
+                                    type="secondary"
+                                >
+                                    Сохранить изменения
+                                </Button>
+                            </form>
+                        ) : (
+                            <form
+                                onSubmit={(e) => e.preventDefault()}
+                                className={styles.content}
+                            >
+                                <button
+                                    onClick={() => console.log(companyProfile)}
+                                >
+                                    test
+                                </button>
+                                <div className={styles.settingsBlock}>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <Input
+                                            type="textarea"
+                                            title="О себе"
+                                            rows={10}
+                                            value={
+                                                companyProfile.description ?? ""
+                                            }
+                                            onChange={(e) =>
+                                                dispatch(
+                                                    updateCompanyProfile({
+                                                        ...companyProfile,
+                                                        description: e,
+                                                    }),
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.settingsBlock}>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <Input
+                                            checked={
+                                                companyProfile.emailVisibility
+                                            }
+                                            onCheck={(e) =>
+                                                dispatch(
+                                                    updateCompanyProfile({
+                                                        ...companyProfile,
+                                                        emailVisibility: e,
+                                                    }),
+                                                )
+                                            }
+                                            type="checkbox"
+                                            labelContent="Показывать почту в профиле?"
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.settingsBlock}>
+                                    <div
+                                        className={styles.generalSettingsBlock}
+                                    >
+                                        <Input
+                                            checked={
+                                                companyProfile.phoneVisibility
+                                            }
+                                            onCheck={(e) =>
+                                                dispatch(
+                                                    updateCompanyProfile({
+                                                        ...companyProfile,
+                                                        phoneVisibility: e,
+                                                    }),
+                                                )
+                                            }
+                                            type="checkbox"
+                                            labelContent="Показывать телефон в профиле?"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    className={classNames(
+                                        styles.yearSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Ссылка на сайт компании
+                                    </p>
+                                    <Input
+                                        type="text"
+                                        placeholder="@Nickname"
+                                        value={
+                                            companyProfile?.linkToCompany || ""
+                                        }
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateCompanyProfile({
+                                                    ...companyProfile,
+                                                    linkToCompany: e.slice(13),
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className={classNames(
+                                        styles.yearSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Telegram
+                                    </p>
+                                    <Input
+                                        type="text"
+                                        placeholder="@Nickname"
+                                        value={
+                                            "https://t.me/" +
+                                            (companyProfile?.telegramLink
+                                                ? companyProfile?.telegramLink
+                                                : "")
+                                        }
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateCompanyProfile({
+                                                    ...companyProfile,
+                                                    telegramLink: e.slice(13),
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className={classNames(
+                                        styles.yearSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
+                                        Вконтакте
+                                    </p>
+                                    <Input
+                                        type="text"
+                                        placeholder="@Nickname"
+                                        value={
+                                            "https://vk.com/" +
+                                            (companyProfile?.vkLink
+                                                ? companyProfile?.vkLink
+                                                : "")
+                                        }
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateCompanyProfile({
+                                                    ...companyProfile,
+                                                    vkLink: e.slice(15),
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div className={styles.settingsBlock}>
+                                    <SelectSkills
+                                        title="Выберите навыки, которые Вы используете в компании"
+                                        maxItems={15}
+                                        options={skills}
+                                        selectValues={(e) => {
+                                            dispatch(
+                                                updateCompanyProfile({
+                                                    ...companyProfile,
+                                                    skills: e,
+                                                }),
+                                            );
+                                        }}
+                                        values={companyProfile.skills}
+                                        errorText={errors.skills}
+                                        onInput={(search) =>
+                                            setSkillsBySearch(search)
+                                        }
+                                    />
+                                    <p
+                                        className={classNames(
+                                            styles.errorText,
+                                            "text fz24 fw500 red",
+                                        )}
+                                    >
+                                        {errorsExist &&
+                                            "Проверьте введенные данные"}
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => validateEditProfileCompany()}
+                                    htmlType="submit"
+                                    className={styles.saveButton}
+                                    type="secondary"
+                                >
+                                    Сохранить изменения
+                                </Button>
+                            </form>
+                        ),
                     ref: createRef(),
                 };
         }
@@ -1347,16 +1868,19 @@ const SettingsPage = () => {
             setIsAnimating(false);
         }, 300);
     };
+    const [activeTab, setActiveTab] = useState<SettingsState>("verification");
 
-    const getInitTab = (): SettingsState => {
-        if (profileVerification.status === "approved") {
-            return "personal_data";
-        } else {
-            return "verification";
-        }
-    };
+    useEffect(() => {
+        setActiveTab(() => {
+            if (profileVerification.status === "verified") {
+                return "profile";
+            } else {
+                return "verification";
+            }
+        });
+    }, [profileVerification.status]);
 
-    const [activeTab, setActiveTab] = useState<SettingsState>(getInitTab());
+    // console.log(activeTab, profileVerification.status);
 
     const getTabsContent = (): ReactNode => {
         switch (profileVerification.status) {
@@ -1378,7 +1902,7 @@ const SettingsPage = () => {
                 return null;
             case "rejected":
                 return null;
-            case "approved":
+            case "verified":
                 return (
                     <>
                         <Button

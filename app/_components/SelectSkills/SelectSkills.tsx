@@ -15,6 +15,7 @@ type SelectSkillsProps = {
     values: ISkill[];
     selectValues: (values: ISkill[]) => void;
     errorText?: string;
+    onInput?: (search: string) => void;
 };
 
 const SelectSkills: React.FC<SelectSkillsProps> = ({
@@ -24,11 +25,13 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
     values,
     selectValues,
     errorText,
+    onInput = () => {},
 }) => {
     const [queryText, setQueryText] = useState("");
     const [mockQueryText, setMockQueryText] = useState("");
 
     useEffect(() => {
+        onInput(mockQueryText);
         const timeout = setTimeout(() => {
             setQueryText(mockQueryText);
         }, 200);
@@ -42,9 +45,9 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
         list: options,
         getText: (item) => [item.name],
         queryText: mockQueryText === "" ? queryText : mockQueryText,
-        mapResultItem: ({ item }) => ({
-            item,
-        }),
+        mapResultItem: (item) => {
+            return item.item;
+        },
     });
 
     const optionsRef = useRef<HTMLDivElement>(null);
@@ -150,12 +153,12 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                     <TransitionGroup>
                         {filteredList
                             .filter(
-                                ({ item }) =>
+                                (item) =>
                                     !values.some(
                                         (skill) => skill.name === item.name,
                                     ),
                             )
-                            .map(({ item }) => (
+                            .map((item) => (
                                 <CSSTransition
                                     className={styles.filteredItem}
                                     key={item.id}

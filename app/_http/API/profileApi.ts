@@ -92,7 +92,7 @@ export const editStudentProfile = async (
     dto: EditStudentDTO,
 ): Promise<{ status: number; message: string }> => {
     try {
-        const { data } = await $authHost.patch(
+        const { data } = await $authHost.post(
             "/api/v1/profiles/profile/edit",
             dto,
         );
@@ -117,7 +117,7 @@ export const editCompanyProfile = async (
     dto: EditCompanyDTO,
 ): Promise<{ status: number; message: string }> => {
     try {
-        const { data } = await $authHost.patch(
+        const { data } = await $authHost.post(
             "/api/v1/profiles/profile/edit",
             dto,
         );

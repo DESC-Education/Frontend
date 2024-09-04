@@ -110,10 +110,26 @@ export const userSlice = createSlice({
             state.isProfileLoading = action.payload;
         },
         updateStudentProfile(state, action: PayloadAction<IStudentProfile>) {
-            state.studentProfile = action.payload;
+            state.studentProfile = {
+                ...action.payload,
+                telegramLink: action.payload.telegramLink
+                    ? `https://t.me/${action.payload.telegramLink}`
+                    : undefined,
+                vkLink: action.payload.vkLink
+                    ? `https://vk.com/${action.payload.vkLink}`
+                    : undefined,
+            };
         },
         updateCompanyProfile(state, action: PayloadAction<ICompanyProfile>) {
-            state.companyProfile = action.payload;
+            state.companyProfile = {
+                ...action.payload,
+                telegramLink: action.payload.telegramLink
+                    ? `https://t.me/${action.payload.telegramLink}`
+                    : undefined,
+                vkLink: action.payload.vkLink
+                    ? `https://vk.com/${action.payload.vkLink}`
+                    : undefined,
+            };
         },
         updateUser(state, action: PayloadAction<IUser>) {
             state.user = action.payload;
