@@ -1,4 +1,4 @@
-import { IFile, ISkill } from "../_types";
+import { ICategory, IFile, ISkill } from "../_types";
 
 export type Tokens = {
     accessToken: string;
@@ -64,7 +64,7 @@ export type CreateTaskDTO = {
     deadline: string;
     file: string;
     //files: File[];
-    category: string;
+    category: ICategory[];
     filters: string;
 
 }

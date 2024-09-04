@@ -1,4 +1,4 @@
-import { ITask } from "@/app/_types";
+import { ICategory, ITask } from "@/app/_types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -15,6 +15,7 @@ const initialState: TaskInterface = {
         description: "",
         deadline: "",
         createdAt: "",
+        category: {} as ICategory,
         isVerified: false,
         isSuspicious: false,
         isVisible: false,
@@ -26,8 +27,9 @@ export const taskSlice = createSlice({
     name: "task",
     initialState,
     reducers: {
-        createTask(state, action: PayloadAction<{task: ITask}>) {
+        updateTask(state, action: PayloadAction<{task: ITask}>) {
             state.task = action.payload.task;
+            console.log("tsak state", JSON.stringify(state.task));
         },
     },
 });
