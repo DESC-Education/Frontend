@@ -29,7 +29,6 @@ export const taskSlice = createSlice({
     reducers: {
         updateTask(state, action: PayloadAction<{task: ITask}>) {
             state.task = action.payload.task;
-            console.log("tsak state", JSON.stringify(state.task));
         },
     },
 });

@@ -126,10 +126,10 @@ export type ICategory = {
     id: string;
     name: string;
     value: string;
-    filtersCategories: IFilterCategories;
+    filterCategories: IFilterCategory[];
 }
 
-export type IFilterCategories = {
+export type IFilterCategory = {
     id: string;
     name: string;
     filters: IFilter[];
