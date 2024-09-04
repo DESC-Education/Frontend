@@ -56,3 +56,15 @@ export type EditCompanyDTO = {
     linkToCompany: string;
     skills: ISkill[];
 };
+
+
+export type CreateTaskDTO = {
+    title: string;
+    description: string;
+    deadline: string;
+    file: string;
+    //files: File[];
+    category: string;
+    filters: string;
+
+}

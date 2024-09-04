@@ -31,7 +31,7 @@ export const getTasks = async (q: string) => {
     }
 };
 
-export const createTask = async (dto: CreateTaskDTO) => {
+export const createTask = async (dto: FormData) => {
     try {
         const { data } = await $authHost.post<{
             message: string;
