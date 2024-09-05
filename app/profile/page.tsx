@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import TipCard, { TipTypeBackground } from "../_components/TipCard/TipCard";
 // import { getuser } from "../_http/API/userApi";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { getProfile } from "../_http/API/profileApi";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { userSlice } from "../_store/reducers/userSlice";
@@ -24,13 +24,19 @@ import { ProfileRoute } from "../_utils/protectedRoutes";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
 
 export default function Home() {
-    const { profileVerification, isProfileLoading, companyProfile, studentProfile, user } = useTypesSelector(
-        (state) => state.userReducer,
-    );
+    const {
+        profileVerification,
+        isProfileLoading,
+        companyProfile,
+        studentProfile,
+        user,
+    } = useTypesSelector((state) => state.userReducer);
 
     if (profileVerification.status !== "verified") {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
+
+    console.log(companyProfile);
 
     return (
         <div
@@ -203,7 +209,7 @@ export default function Home() {
                 </>
             ) : (
                 <>
-                    <div className={styles.mainInfo}>
+                    {/* <div className={styles.mainInfo}>
                         <div
                             className={classNames(
                                 styles.speciality,
@@ -215,7 +221,7 @@ export default function Home() {
                         <div className={styles.level}>
                             <p className="text fw500">Средний уровень</p>
                         </div>
-                    </div>
+                    </div> */}
                     <div className={styles.description}>
                         <p
                             className={classNames(
@@ -223,7 +229,7 @@ export default function Home() {
                                 "title",
                             )}
                         >
-                            О cебе
+                            О компании
                         </p>
                         <p
                             className={classNames(
@@ -231,37 +237,58 @@ export default function Home() {
                                 "text",
                             )}
                         >
-                            {studentProfile.description}
+                            {companyProfile.description}
                         </p>
-                        {studentProfile.phoneVisibility && (
+                        {companyProfile.phoneVisibility &&
+                            companyProfile.phone && (
+                                <div className={styles.contact}>
+                                    <Image
+                                        src="/icons/phoneIcon.svg"
+                                        alt="phone"
+                                        width={35}
+                                        height={35}
+                                    />
+                                    <p className="text">
+                                        {companyProfile.phone}
+                                    </p>
+                                </div>
+                            )}
+                        {companyProfile.emailVisibility &&
+                            user.email && (
+                                <div className={styles.contact}>
+                                    <Image
+                                        src="/icons/email.png"
+                                        alt="phone"
+                                        width={35}
+                                        height={35}
+                                    />
+                                    <p className="text">
+                                        {user.email}
+                                    </p>
+                                </div>
+                            )}
+                        {companyProfile.telegramLink && (
                             <div className={styles.contact}>
-                                <Image
-                                    src="/icons/phoneIcon.svg"
-                                    alt="phone"
-                                    width={35}
-                                    height={35}
-                                />
-                                <p className="text">{studentProfile.phone}</p>
+                                <Link
+                                    href={
+                                        "https:/t.me/" +
+                                        companyProfile.telegramLink
+                                    }
+                                    className={styles.contact}
+                                >
+                                    <Image
+                                        src="/icons/telegramIcon.svg"
+                                        alt="telegram"
+                                        width={35}
+                                        height={35}
+                                    />
+                                    <p className="text">
+                                        @{companyProfile.telegramLink}
+                                    </p>
+                                </Link>
                             </div>
                         )}
-                        <div className={styles.contact}>
-                            <Link
-                                href={
-                                    "https:/t.me/" + studentProfile.telegramLink
-                                }
-                                className={styles.contact}
-                            >
-                                <Image
-                                    src="/icons/telegramIcon.svg"
-                                    alt="telegram"
-                                    width={35}
-                                    height={35}
-                                />
-                                <p className="text">
-                                    {studentProfile.telegramLink}
-                                </p>
-                            </Link>
-                        </div>
+
                         <div className={styles.education}>
                             <p
                                 className={classNames(
@@ -269,50 +296,20 @@ export default function Home() {
                                     "title",
                                 )}
                             >
-                                Образование
+                                Навыки, используемые в компании
                             </p>
-                            {/* <p
-                                className={classNames(
-                                    styles.yearOfEducation,
-                                    "text gray fz20",
-                                )}
-                            >
-                                {studentProfile.admissionYear} -{" "}
-                                {studentProfile.admissionYear +
-                                    yearsOfEducation[
-                                        studentProfile.educationProgram
-                                    ]}{" "}
-                                гг.
-                            </p> */}
-                            <p
-                                className={classNames(
-                                    styles.university,
-                                    "title",
-                                )}
-                            >
-                                {/* {studentProfile.instituteId} */}
-                                Сибирский федеральный университет
-                            </p>
-                            <p
-                                className={classNames(
-                                    styles.institute,
-                                    "text fw500",
-                                )}
-                            >
-                                {/* {studentProfile.university} */}
-                                Институт космических и информационных технологий
-                            </p>
-                            <p
-                                className={classNames(
-                                    styles.speciality,
-                                    "text gray fw500",
-                                )}
-                            >
-                                Прикладная информатика
-                            </p>
+                            <div className={styles.skills}>
+                                {companyProfile.skills.map((skill, index) => (
+                                    <div key={index} className={styles.skill}>
+                                        <p className="text fw500">
+                                            {skill.name}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-
+                    {/* 
                     <div className={styles.rubrics}>
                         <p className={classNames(styles.rubricsTitle, "title")}>
                             Навыки
@@ -345,9 +342,9 @@ export default function Home() {
                                     </div>
                                 ))}
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className={styles.tips}>
+                    {/* <div className={styles.tips}>
                         <TipCard
                             title="Совет 1"
                             description="Не стоит кушать желтый снег"
@@ -359,7 +356,7 @@ export default function Home() {
                             description="Не стоит кушать желтый снег"
                             image="/images/tip2Image.png"
                         />
-                    </div>
+                    </div> */}
                 </>
             )}
         </div>

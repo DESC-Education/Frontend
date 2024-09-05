@@ -6,23 +6,13 @@ import "./LoadingScreen.scss";
 import { CSSTransition } from "react-transition-group";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import LocalStorage from "@/app/_utils/LocalStorage";
-// import { contentSlice } from "@/app/_store/reducers/contentSlice";
-// import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 
 const LoadingScreen = () => {
     const [dots, setDots] = useState<number>(1);
 
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
 
-    // const { updateIsLoading } = contentSlice.actions
-    // const dispatch = useTypesDispatch();
-
     const loadingRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        console.log("isLoading", isLoading);
-        
-    }, [isLoading]);
 
     useEffect(() => {
         const loading = setInterval(() => {
@@ -33,10 +23,6 @@ const LoadingScreen = () => {
             clearInterval(loading);
         };
     }, []);
-
-    // if (typeof window !== "undefined" && !LocalStorage.getAccessToken()) {
-    //     return null;
-    // }
 
     return (
         <CSSTransition

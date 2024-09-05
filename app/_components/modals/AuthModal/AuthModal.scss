@@ -37,18 +37,37 @@
 
 .typeOfModal-enter {
     opacity: 0;
+
+    >div {
+        height: 0;
+    }
 }
 
 .typeOfModal-enter-active {
     opacity: 1;
     transition: opacity 200ms, transform 200ms;
+
+    >div {
+        height: 60px;
+    }
 }
 
 .typeOfModal-exit {
     opacity: 1;
+
+    >div {
+
+        height: 60px;
+    }
 }
 
 .typeOfModal-exit-active {
     opacity: 0;
-    transition: opacity 200ms, transform 200ms;
+
+    >div {
+        height: 0;
+    }
+
+    transition: opacity 200ms,
+    transform 200ms;
 }

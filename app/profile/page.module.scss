@@ -33,6 +33,18 @@
             }
         }
     }
+
+    .skills {
+        margin: 5px 0 35px;
+        display: flex;
+        gap: 15px;
+
+        .skill {
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: rgba(var(--gray2), .7);
+        }
+    }
 }
 
 @keyframes pulse {
