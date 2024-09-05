@@ -19,7 +19,7 @@ export const ProfileRoute: FC<RouteProps> = ({ children }) => {
     useEffect(() => {
         console.log(isLoading, isAuth, isProfileLoading, profileVerification, "___", typeof window !== "undefined" && !isLoading, !isAuth, isAuth &&
             !isProfileLoading &&
-            profileVerification.status !== "approved");
+            profileVerification.status !== "verified");
         
         if (typeof window !== "undefined" && !isLoading) {
             if (!isAuth) {
@@ -29,9 +29,9 @@ export const ProfileRoute: FC<RouteProps> = ({ children }) => {
             if (
                 isAuth &&
                 !isProfileLoading &&
-                profileVerification.status !== "approved"
+                profileVerification.status !== "verified"
             ) {
-                router.replace("/profile/settings");
+                router.replace("/profile");
                 return
             }
         }

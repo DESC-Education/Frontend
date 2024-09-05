@@ -133,7 +133,6 @@ export default function CreateTaskPage() {
                         name: item.name,
                     })),
                 );
-                console.log("rez", res);
             }
         };
 
@@ -167,7 +166,6 @@ export default function CreateTaskPage() {
         const res = await createTask(formData);
     };
 
-    console.log("task", state);
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>

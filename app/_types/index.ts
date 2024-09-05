@@ -67,7 +67,7 @@ export type ICompanyProfile = {
     lastName: string;
     id: string;
     verification: IVerification;
-    logoImg: IFile;
+    logoImg: string;
     description: string;
     vkLink?: string;
     telegramLink?: string;

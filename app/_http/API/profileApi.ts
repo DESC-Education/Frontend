@@ -44,33 +44,15 @@ export const createProfileStudent = async (
     }
 };
 
-export const filesTest = async (files: any) => {
-    try {
-        const { data } = await $authHost.post("/api/v1/profiles/test", files, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        return { status: 200, message: data.message };
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            return {
-                status: error.response!.status,
-                message: error.response!.data.message,
-            };
-        } else {
-            return {
-                status: 500,
-                message: "Ошибка сервера",
-            };
-        }
-    }
-};
-
 export const createProfileCompany = async (
-    dto: CreateCompanyProfileDTO,
+    dto: any,
 ): Promise<{ status: number; message: string }> => {
     try {
-        const { data } = await $authHost.post("/api/v1/profiles/profile", dto);
+        const { data } = await $authHost.post("/api/v1/profiles/profile", dto, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
 
         return { status: 200, message: data.message };
     } catch (error) {
@@ -286,6 +268,37 @@ export const getCities = async (q: string) => {
         return {
             status: 200,
             cities: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const changeLogo = async (formdata: FormData) => {
+    try {
+        const { data } = await $authHost.post(
+            "/api/v1/profiles/logo",
+            formdata,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            },
+        );
+
+        return {
+            status: 200,
+            logo: data.logo.logo,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

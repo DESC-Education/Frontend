@@ -33,29 +33,29 @@ import { userSlice } from "@/app/_store/reducers/userSlice";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 
-export const PasswordSchema = z.string();
+// export const PasswordSchema = z.string();
 
-// export const PasswordSchema = z
-//     .string()
-//     .min(6, "Пароль должен быть содержать хотя бы шесть символов")
-//     .regex(
-//         new RegExp(".*[A-Z].*"),
-//         "В пароле должна быть хотя бы одна буква в верхнем регистре",
-//     )
-//     .regex(
-//         new RegExp(".*[a-z].*"),
-//         "В пароле должна быть хотя бы одна буква в нижнем регистре",
-//     )
-//     .regex(new RegExp(".*[0-9].*"), "В пароле должна быть хотя бы одна цифра")
-//     .regex(
-//         new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-//         "В пароле должен быть хотя бы один специальный символ",
-//     );
+export const PasswordSchema = z
+    .string()
+    .min(6, "Пароль должен быть содержать хотя бы шесть символов")
+    .regex(
+        new RegExp(".*[A-Z].*"),
+        "В пароле должна быть хотя бы одна буква в верхнем регистре",
+    )
+    .regex(
+        new RegExp(".*[a-z].*"),
+        "В пароле должна быть хотя бы одна буква в нижнем регистре",
+    )
+    .regex(new RegExp(".*[0-9].*"), "В пароле должна быть хотя бы одна цифра")
+    .regex(
+        new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
+        "В пароле должен быть хотя бы один специальный символ",
+    );
 
-// export const EmailSchema = z
-//     .string()
-//     .email("Некорректный формат электронной почты");
-export const EmailSchema = z.string();
+export const EmailSchema = z
+    .string()
+    .email("Некорректный формат электронной почты");
+// export const EmailSchema = z.string();
 
 type AuthState = {
     code: string;

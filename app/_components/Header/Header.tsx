@@ -79,9 +79,11 @@ const Header = () => {
                                 <div className={styles.linkContainer}>
                                     <Link
                                         style={{
-                                            pointerEvents: profileVerification.status === "verified"
-                                                ? "all"
-                                                : "none",
+                                            pointerEvents:
+                                                profileVerification.status ===
+                                                "verified"
+                                                    ? "all"
+                                                    : "none",
                                         }}
                                         className={classNames(
                                             styles.link,
@@ -95,7 +97,8 @@ const Header = () => {
                                     >
                                         Биржа
                                     </Link>
-                                    {profileVerification.status !== "verified" && (
+                                    {profileVerification.status !==
+                                        "verified" && (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -115,9 +118,11 @@ const Header = () => {
                                 <div className={styles.linkContainer}>
                                     <Link
                                         style={{
-                                            pointerEvents: profileVerification.status === "verified"
-                                                ? "all"
-                                                : "none",
+                                            pointerEvents:
+                                                profileVerification.status ===
+                                                "verified"
+                                                    ? "all"
+                                                    : "none",
                                         }}
                                         className={classNames(
                                             styles.link,
@@ -125,14 +130,17 @@ const Header = () => {
                                             {
                                                 [styles.active]:
                                                     pathname === "/chat",
-                                                [styles.disabled]: profileVerification.status !== "verified",
+                                                [styles.disabled]:
+                                                    profileVerification.status !==
+                                                    "verified",
                                             },
                                         )}
                                         href="/chat"
                                     >
                                         Сообщения
                                     </Link>
-                                    {profileVerification.status !== "verified" && (
+                                    {profileVerification.status !==
+                                        "verified" && (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -193,45 +201,90 @@ const Header = () => {
                     content: (
                         <>
                             <div className={styles.navigation}>
-                                <Link
-                                    className={classNames(
-                                        styles.link,
-                                        "text fz24 fw500",
-                                        {
-                                            [styles.active]:
-                                                pathname === "/exchange",
-                                        },
+                                <div className={styles.linkContainer}>
+                                    <Link
+                                        style={{
+                                            pointerEvents:
+                                                profileVerification.status ===
+                                                "verified"
+                                                    ? "all"
+                                                    : "none",
+                                        }}
+                                        className={classNames(
+                                            styles.link,
+                                            "text fz24 fw500",
+                                            {
+                                                [styles.active]:
+                                                    pathname === "/exchange",
+                                                [styles.disabled]:
+                                                    profileVerification.status !==
+                                                    "verified",
+                                            },
+                                        )}
+                                        href="/exchange"
+                                    >
+                                        Биржа
+                                    </Link>
+                                    {profileVerification.status !==
+                                        "verified" && (
+                                        <InfoIcon
+                                            className={styles.infoIcon}
+                                            tooltipContent={
+                                                <>
+                                                    Для доступа к бирже
+                                                    необходимо подтвердить
+                                                    профиль
+                                                    <Button type="primary">
+                                                        Инструкция
+                                                    </Button>
+                                                </>
+                                            }
+                                            action="tooltip"
+                                        />
                                     )}
-                                    href="/exchange"
-                                >
-                                    Биржа
-                                </Link>
-                                <Link
-                                    className={classNames(
-                                        styles.link,
-                                        "text fz24 fw500",
-                                        {
-                                            [styles.active]:
-                                                pathname === "/jobs",
-                                        },
+                                </div>
+                                <div className={styles.linkContainer}>
+                                    <Link
+                                        style={{
+                                            pointerEvents:
+                                                profileVerification.status ===
+                                                "verified"
+                                                    ? "all"
+                                                    : "none",
+                                        }}
+                                        className={classNames(
+                                            styles.link,
+                                            "text fz24 fw500",
+                                            {
+                                                [styles.active]:
+                                                    pathname === "/chat",
+                                                [styles.disabled]:
+                                                    profileVerification.status !==
+                                                    "verified",
+                                            },
+                                        )}
+                                        href="/chat"
+                                    >
+                                        Сообщения
+                                    </Link>
+                                    {profileVerification.status !==
+                                        "verified" && (
+                                        <InfoIcon
+                                            className={styles.infoIcon}
+                                            tooltipContent={
+                                                <>
+                                                    Для доступа к сообщениям
+                                                    необходимо подтвердить
+                                                    профиль
+                                                    <Button type="primary">
+                                                        Инструкция
+                                                    </Button>
+                                                </>
+                                            }
+                                            action="tooltip"
+                                        />
                                     )}
-                                    href="/tasks"
-                                >
-                                    Задания
-                                </Link>
-                                <Link
-                                    className={classNames(
-                                        styles.link,
-                                        "text fz24 fw500",
-                                        {
-                                            [styles.active]:
-                                                pathname === "/chat",
-                                        },
-                                    )}
-                                    href="/chat"
-                                >
-                                    Сообщения
-                                </Link>
+                                </div>
                                 <Link
                                     className={classNames(
                                         styles.link,
@@ -331,7 +384,7 @@ const Header = () => {
             // case "moderator":
             case "moderator":
                 return {
-                    content:
+                    content: (
                         <>
                             <div className={styles.navigation}>
                                 <Link
@@ -384,7 +437,8 @@ const Header = () => {
                                     Выйти
                                 </Link>
                             </div>
-                        </>,
+                        </>
+                    ),
                     ref: createRef(),
                 };
             // case "admin":
