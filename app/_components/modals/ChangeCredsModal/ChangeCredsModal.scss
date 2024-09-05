@@ -1,0 +1,73 @@
+.label {
+    margin-bottom: 0.5rem;
+}
+
+.modes {
+    margin-bottom: 1rem;
+}
+
+.button-container {
+    margin-bottom: 0.5rem;
+}
+
+.fade-enter .formContent {
+    opacity: .1;
+    transform: translateX(-10%);
+}
+
+.fade-enter-active .formContent {
+    opacity: 1;
+    transform: translateX(0%);
+}
+
+.fade-exit .formContent {
+    opacity: 1;
+    transform: translateX(0%);
+}
+
+.fade-exit-active .formContent {
+    opacity: .1;
+    transform: translateX(10%);
+}
+
+.fade-enter-active .formContent,
+.fade-exit-active .formContent {
+    transition: opacity 200ms, transform 200ms;
+}
+
+.typeOfModal-enter {
+    opacity: 0;
+
+    >div {
+        height: 0;
+    }
+}
+
+.typeOfModal-enter-active {
+    opacity: 1;
+    transition: opacity 200ms, transform 200ms;
+
+    >div {
+        height: 60px;
+    }
+}
+
+.typeOfModal-exit {
+    opacity: 1;
+
+    >div {
+
+        height: 60px;
+    }
+}
+
+.typeOfModal-exit-active {
+    opacity: 0;
+
+    >div {
+        height: 0;
+    }
+
+    transition: opacity 200ms,
+    transform 200ms;
+}
