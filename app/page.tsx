@@ -6,7 +6,6 @@ import styles from "./page.module.scss";
 import Button from "./_components/ui/Button/Button";
 import classNames from "classnames";
 import Header from "./_components/Header/Header";
-import { createProfileCompany, filesTest } from "./_http/API/profileApi";
 import CustomSearch from "./_components/ui/CustomSearch/CustomSearch";
 import BriefModal from "./_components/modals/BriefModal/BriefModal";
 import { ModalContext } from "./_context/ModalContext";

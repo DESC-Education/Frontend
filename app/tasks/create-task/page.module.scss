@@ -80,6 +80,15 @@
                 .selects {
                     display: flex;
                     gap: 20px;
+
+                    .select {
+                        .filters {
+                            margin-bottom: 20px;
+                            display: flex;
+                            align-items: center;
+                            flex-wrap: wrap;
+                        }
+                    }
                 }
             }
 

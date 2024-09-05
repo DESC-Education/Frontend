@@ -228,16 +228,6 @@ export default function CreateTaskPage() {
                             max={maxLength}
                         />
                         <div className={styles.underdescription}>
-                            {/* <p className="text gray fz20">Файл</p> */}
-                            <Input
-                            accept="application/pdf, application/msword, .docx, image/png, image/jpeg, image/jpg"
-                                type="file_multiple"
-                                maxFiles={5}
-                                multiple
-                                containerClassName={styles.file}
-                                setFile={setFiles}
-                                file={files}
-                            />
                             <p
                                 className={classNames(
                                     "text gray fz20",
@@ -247,6 +237,17 @@ export default function CreateTaskPage() {
                                 {textLength} из {maxLength} символов (минимум{" "}
                                 {minLength})
                             </p>
+                        </div>
+                        <div className={styles.selects}>
+                            <Input
+                                accept="application/pdf, application/msword, .docx, image/png, image/jpeg, image/jpg"
+                                type="file_multiple"
+                                maxFiles={5}
+                                multiple
+                                containerClassName={styles.file}
+                                setFile={setFiles}
+                                file={files}
+                            />
                         </div>
                         <div className={styles.selects}>
                             <div className={styles.select}>
@@ -265,13 +266,42 @@ export default function CreateTaskPage() {
                                 />
                             </div>
                             <div className={styles.select}>
-                                <p className="text fw500">Фильтры</p>
-                                {categories?.find(
+                                <p className={"text fw500"}>Фильтры</p>
+                                {
+                                    categories?.find((item) => item.id === state.categoryId)?.filterCategories ? (
+                                        categories
+                                            .find((item) => item.id === state.categoryId)
+                                            ?.filterCategories.map((filter, index) => (
+                                                <div className={styles.filters} key={index}>
+                                                    <p className={classNames("text fw500", styles.filterTitle)}>{filter.name}</p>
+                                                    <SelectSearch
+                                                        key={index}
+                                                        options={filter.filters.map((i) => ({ ...i, value: i.id}))}
+                                                        placeholder="Выберите фильтр"
+                                                        value={state.filtersId.find((i) => i === filter.id)}
+                                                        onChange={(e: any) => {
+                                                            taskDispatch({
+                                                                type: "change_filtersId",
+                                                                filtersId: [e],
+                                                            });
+                                                            console.log("state.filtersId",state.filtersId);
+                                                            console.log("e",e);
+                                                            console.log("filter",filter.filters );
+                                                        }}
+                                                    />
+                                                </div>
+                                            ))
+                                    ) : (
+                                        <div className={classNames("text fw500", styles.filterTitle)}>Выберите категорию</div>
+                                    )
+                                }
+
+                                {/* {categories?.find(
                                     (item) => item.id === state.categoryId,
                                 )?.filterCategories?.map(
                                     (filter, index) => (
-                                        <div>
-                                            <p className="text fw500">{filter.name}</p>
+                                        <div className={styles.filters} key={index}>
+                                            <p className={classNames("text fw500", styles.filterTitle)}>{filter.name}</p>
                                             <SelectSearch
                                                 key={index}
                                                 options={filter.filters}
@@ -286,7 +316,7 @@ export default function CreateTaskPage() {
                                             />
                                         </div>
                                     ),
-                                )}
+                                )} */}
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Сроки</p>
