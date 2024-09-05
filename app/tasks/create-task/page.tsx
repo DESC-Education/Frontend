@@ -50,7 +50,6 @@ export default function CreateTaskPage() {
     };
 
     const [categories, setCategories] = useState<ICategory[]>([]);
-    console.log("categories", categories);
 
     useEffect(() => {
         const asyncFunc = async () => {
@@ -63,7 +62,6 @@ export default function CreateTaskPage() {
                         name: item.name,
                     })),
                 );
-                console.log("rez", res);
             }
         };
 
@@ -84,7 +82,6 @@ export default function CreateTaskPage() {
         const res = await createTask(formData);
     };
 
-    console.log("taskcat", task.category.filterCategories);
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>

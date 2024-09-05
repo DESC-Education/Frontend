@@ -28,7 +28,7 @@
 
     .typeOfModal {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         margin: 15px 0;
 
         div {
@@ -36,7 +36,7 @@
             display: flex;
             justify-content: center;
             gap: 6px;
-            padding: 14px 20px 14px 40px;
+            padding: 14px 15px;
             cursor: pointer;
             transition: .3s;
 

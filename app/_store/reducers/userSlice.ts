@@ -51,7 +51,7 @@ const initProfileCompany: ICompanyProfile = {
     id: "",
     verification: { status: "not_verified" },
     description: "",
-    logoImg: {} as IFile,
+    logoImg: "",
     city: {} as ICity,
     companyName: "",
     firstName: "",
@@ -110,26 +110,10 @@ export const userSlice = createSlice({
             state.isProfileLoading = action.payload;
         },
         updateStudentProfile(state, action: PayloadAction<IStudentProfile>) {
-            state.studentProfile = {
-                ...action.payload,
-                telegramLink: action.payload.telegramLink
-                    ? `https://t.me/${action.payload.telegramLink}`
-                    : undefined,
-                vkLink: action.payload.vkLink
-                    ? `https://vk.com/${action.payload.vkLink}`
-                    : undefined,
-            };
+            state.studentProfile = action.payload;
         },
         updateCompanyProfile(state, action: PayloadAction<ICompanyProfile>) {
-            state.companyProfile = {
-                ...action.payload,
-                telegramLink: action.payload.telegramLink
-                    ? `https://t.me/${action.payload.telegramLink}`
-                    : undefined,
-                vkLink: action.payload.vkLink
-                    ? `https://vk.com/${action.payload.vkLink}`
-                    : undefined,
-            };
+            state.companyProfile = action.payload;
         },
         updateUser(state, action: PayloadAction<IUser>) {
             state.user = action.payload;
@@ -140,6 +124,9 @@ export const userSlice = createSlice({
         logoutUser(state) {
             state.user = {} as IUser;
             state.isAuth = false;
+            state.profileVerification.status = "not_verified";
+            state.studentProfile = initProfileStudent;
+            state.companyProfile = initProfileCompany;
             LocalStorage.logout();
         },
         updateAuth(state, action: PayloadAction<boolean>) {

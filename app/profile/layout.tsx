@@ -3,7 +3,7 @@
 import classNames from "classnames";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
 import styles from "./layout.module.scss";
-import ProfileNavMenu from "../_components/ProfileNavMenu/ProfileNavMenu";
+import ProfileNavMenu from "./ProfileNavMenu/ProfileNavMenu";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
 import { use, useEffect, useRef } from "react";
@@ -20,8 +20,6 @@ export default function RootLayout({
     const { user, isAuth } = useTypesSelector((state) => state.userReducer);
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
     const router = useRouter();
-    const dispatch = useTypesDispatch();
-    const { updateProfile } = userSlice.actions;
 
     useEffect(() => {
         if (!isLoading && !isAuth) {
@@ -30,19 +28,6 @@ export default function RootLayout({
             }
         }
     }, [isLoading, isAuth]);
-
-    // useEffect(() => {
-    //     const asyncFunc = async () => {
-    //         const res = await getProfile();
-
-    //         console.log(res);
-
-    //         if (res.status === 200) {
-    //             dispatch(updateProfile(res.profile));
-    //         }
-    //     };
-    //     asyncFunc();
-    // }, []);
 
     return (
         <div className="container">

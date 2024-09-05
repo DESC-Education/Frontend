@@ -35,12 +35,7 @@ export default function ExchangePage() {
             id: "1",
             company: {
                 id: "1",
-                logoImg: {
-                    id: "2",
-                    name: "logo1",
-                    path: "/images/userImage2.png",
-                    type: "png",
-                },
+                logoImg: "/images/userImage2.png",
                 linkToCompany: "",
                 description: "",
                 phone: "",
@@ -56,7 +51,13 @@ export default function ExchangePage() {
                 companyName: "",
                 firstName: "",
                 lastName: "",
-                verification: "verified",
+                verification: { status: "verified" },
+            },
+            category: {
+                id: "1",
+                name: "Категория1",
+                value: "sadads",
+                filterCategories: [],
             },
             isVisible: true,
             createdAt: "10.03.2024",

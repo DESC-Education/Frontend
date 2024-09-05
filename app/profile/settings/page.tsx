@@ -45,6 +45,8 @@ import ProfileStatus from "../ProfileStatus/ProfileStatus";
 import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
 import { AuthRoute } from "@/app/_utils/protectedRoutes";
 import { set } from "zod";
+import ChangeCredsModal from "@/app/_components/modals/ChangeCredsModal/ChangeCredsModal";
+import { ModalContext } from "@/app/_context/ModalContext";
 
 type SettingsState = "personal_data" | "profile" | "verification";
 
@@ -55,9 +57,12 @@ const SettingsPage = () => {
     const {
         studentProfile,
         companyProfile,
+        isProfileLoading,
         profileVerification,
     } = useTypesSelector((state) => state.userReducer);
+
     const { showAlert } = useContext(AlertContext);
+    const { showModal } = useContext(ModalContext);
 
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
     const dispatch = useTypesDispatch();
@@ -164,11 +169,28 @@ const SettingsPage = () => {
     const [logo, setLogo] = useState<File | null>(null);
     const [studentCard, setStudentCard] = useState<File | null>(null);
     const [verFiles, setVerFiles] = useState<File[] | null>([]);
+    const [isChanged, setIsChanged] = useState<number>(0);
 
     useEffect(() => {
         setErrors({});
         setErrorsExist(false);
     }, [studentProfile, studentCard, companyProfile, logo, verFiles]);
+
+    useEffect(() => {
+        console.log(
+            "HLREOOELE",
+            studentProfile,
+            companyProfile,
+            isProfileLoading,
+            // isChanged,
+        );
+        if (isProfileLoading) return;
+
+        setIsChanged((prev) => prev + 1);
+        return () => {
+            // setIsChanged(true);
+        };
+    }, [studentProfile, companyProfile, isProfileLoading]);
 
     const [errors, setErrors] = useState<any>({});
     const [errorsExist, setErrorsExist] = useState<boolean>(false);
@@ -451,14 +473,6 @@ const SettingsPage = () => {
             errorsTemp.description = "Введите описание";
         }
 
-        // if (!companyProfile.telegramLink) {
-        //     errorsTemp.telegramLink = "Введите корректную ссылку на телеграм";
-        // }
-
-        // if (!companyProfile.vkLink) {
-        //     errorsTemp.vkLink = "Введите корректную ссылку на вконтакте";
-        // }
-
         if (
             !companyProfile.linkToCompany ||
             !URLRegExp.test(companyProfile.linkToCompany)
@@ -538,6 +552,13 @@ const SettingsPage = () => {
                                             "text fz24 blue pointer",
                                             styles.linkText,
                                         )}
+                                        onClick={() =>
+                                            showModal({
+                                                content: (
+                                                    <ChangeCredsModal initActiveTab="phone" />
+                                                ),
+                                            })
+                                        }
                                     >
                                         {studentProfile.phone
                                             ? "Сменить"
@@ -566,6 +587,13 @@ const SettingsPage = () => {
                                             "text fz24 blue pointer",
                                             styles.linkText,
                                         )}
+                                        onClick={() =>
+                                            showModal({
+                                                content: (
+                                                    <ChangeCredsModal initActiveTab="mail" />
+                                                ),
+                                            })
+                                        }
                                     >
                                         Сменить
                                     </p>
@@ -590,6 +618,13 @@ const SettingsPage = () => {
                                             "text fz24 blue pointer",
                                             styles.linkText,
                                         )}
+                                        onClick={() =>
+                                            showModal({
+                                                content: (
+                                                    <ChangeCredsModal initActiveTab="password" />
+                                                ),
+                                            })
+                                        }
                                     >
                                         Сменить
                                     </p>
@@ -1558,15 +1593,13 @@ const SettingsPage = () => {
                                             "https://t.me/" +
                                             (studentProfile?.telegramLink
                                                 ? studentProfile?.telegramLink
-                                                      .split("https://t.me/")
-                                                      .pop()
                                                 : "")
                                         }
                                         onChange={(e) =>
                                             dispatch(
                                                 updateStudentProfile({
                                                     ...studentProfile,
-                                                    telegramLink: e.slice(13),
+                                                    telegramLink: e.slice(15),
                                                 }),
                                             )
                                         }
@@ -1593,15 +1626,13 @@ const SettingsPage = () => {
                                             "https://vk.com/" +
                                             (studentProfile?.vkLink
                                                 ? studentProfile?.vkLink
-                                                      .split("https://vk.com/")
-                                                      .pop()
                                                 : "")
                                         }
                                         onChange={(e) =>
                                             dispatch(
                                                 updateStudentProfile({
                                                     ...studentProfile,
-                                                    vkLink: e.slice(15),
+                                                    vkLink: e.slice(13),
                                                 }),
                                             )
                                         }
@@ -1637,6 +1668,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
+                                    disabled={isChanged < 2}
                                     onClick={() => validateEditProfileStudent()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -1743,7 +1775,7 @@ const SettingsPage = () => {
                                             dispatch(
                                                 updateCompanyProfile({
                                                     ...companyProfile,
-                                                    linkToCompany: e.slice(13),
+                                                    linkToCompany: e,
                                                 }),
                                             )
                                         }
@@ -1845,6 +1877,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
+                                    disabled={isChanged < 2}
                                     onClick={() => validateEditProfileCompany()}
                                     htmlType="submit"
                                     className={styles.saveButton}
