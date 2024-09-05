@@ -374,25 +374,25 @@
 
     }
 
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
+    // .pagination {
+    //     display: flex;
+    //     justify-content: center;
+    //     margin-top: 20px;
 
-        .bullet {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: rgba(var(--gray2), 1);
-            margin: 0 5px;
-            transition: background-color 0.3s ease;
+    //     .bullet {
+    //         display: inline-block;
+    //         width: 10px;
+    //         height: 10px;
+    //         border-radius: 50%;
+    //         background-color: rgba(var(--gray2), 1);
+    //         margin: 0 5px;
+    //         transition: background-color 0.3s ease;
 
-            &.active {
-                background-color: rgba(var(--black), 1);
-            }
-        }
-    }
+    //         &.active {
+    //             background-color: rgba(var(--black), 1);
+    //         }
+    //     }
+    // }
 }
 
 .footer {

@@ -109,6 +109,7 @@ export type ITask = {
     deadline: string;
     createdAt: string;
     category: ICategory;
+    filtersId: IFilter[];
     isVerified: boolean;
     isSuspicious: boolean;
     isVisible: boolean;

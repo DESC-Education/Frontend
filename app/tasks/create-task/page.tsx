@@ -6,18 +6,43 @@ import Link from "next/link";
 import Image from "next/image";
 import Button from "@/app/_components/ui/Button/Button";
 import Input from "@/app/_components/ui/Input/Input";
-import SelectSearch from "react-select-search";
+import SelectSearch, { SelectedOptionValue } from "react-select-search";
 import { createTask, getCategory } from "@/app/_http/API/tasksApi";
-import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
-import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
-import { userSlice } from "@/app/_store/reducers/userSlice";
-import { taskSlice } from "@/app/_store/reducers/taskSlice";
-import { use, useEffect, useState } from "react";
-import { ICategory, IFilter, IFilterCategory } from "@/app/_types";
-import { on } from "events";
+import { use, useEffect, useReducer, useState } from "react";
+import { ICategory, IFile, IFilter, IFilterCategory } from "@/app/_types";
+import { set } from "zod";
 
 const maxLength = 2000;
 const minLength = 5;
+
+
+type TaskState = {
+    title: string;
+    description: string;
+    deadline: string;
+    file: IFile[];
+    categoryId: string;
+    filtersId: string[];
+}
+
+type TaskAction =
+    | { type: "change_title"; title: string }
+    | { type: "change_description"; description: string }
+    | { type: "change_deadline"; deadline: string }
+    | { type: "change_file"; file: IFile[] }
+    | { type: "change_categoryId"; categoryId: string }
+    | { type: "change_filtersId"; filtersId: string[] }
+    | { type: "clear" };
+
+const initState: TaskState = {
+    title: "",
+    description: "",
+    deadline: "",
+    file: [],
+    categoryId: "",
+    filtersId: [""],
+};
+
 
 export default function CreateTaskPage() {
     const templates = [
@@ -28,29 +53,74 @@ export default function CreateTaskPage() {
         "Безопасность информации",
     ];
 
-    const { task } = useTypesSelector((state) => state.taskReducer);
-    const { updateTask } = taskSlice.actions;
 
-    const dispatch = useTypesDispatch();
+    const reduser = (state: TaskState, action: TaskAction): TaskState => {
+        switch (action.type) {
+            case "change_title": {
+                return {
+                    ...state,
+                    title: action.title,
+                };
+            }
+            case "change_description": {
+                return {
+                    ...state,
+                    description: action.description,
+                };
+            }
+            case "change_deadline": {
+                return {
+                    ...state,
+                    deadline: action.deadline,
+                };
+            }
+            case "change_file": {
+                return {
+                    ...state,
+                    file: action.file,
+                };
+            }
+            case "change_categoryId": {
+                return {
+                    ...state,
+                    categoryId: action.categoryId,
+                };
+            }
+            case "change_filtersId": {
+                const newFiltersId = new Set([...state.filtersId, ...action.filtersId]);
+                return {
+                    ...state,
+                    filtersId: Array.from(newFiltersId),
+                };
+            }
+            case "clear": {
+                return {
+                    ...initState,
+                };
+            }
+        }
+    };
 
-    const [textLength, setTextLength] = useState(task.description.length || 0);
+    const [state, taskDispatch] = useReducer(reduser, initState);
+
+    // const { task } = useTypesSelector((state) => state.taskReducer);
+    // const { updateTask } = taskSlice.actions;
+
+    // const dispatch = useTypesDispatch();
+
+    const [textLength, setTextLength] = useState(state.description.length || 0);
 
     const handleTextChange = (e: string) => {
         if (e.length < maxLength) {
             setTextLength(e.length);
-            dispatch(
-                updateTask({
-                    task: {
-                        ...task,
-                        description: e,
-                    },
-                }),
-            );
+            taskDispatch({
+                type: "change_description",
+                description: e,
+            });
         }
     };
 
     const [categories, setCategories] = useState<ICategory[]>([]);
-    console.log("categories", categories);
 
     useEffect(() => {
         const asyncFunc = async () => {
@@ -70,21 +140,34 @@ export default function CreateTaskPage() {
         asyncFunc();
     }, []);
 
-    const [filtersCategory, setFiltersCategory] = useState<IFilterCategory>();
+    const [filters, setFilters] = useState<IFilter[] | null>([]);
+    const [files, setFiles] = useState<IFile[]>([]);
+
+    useEffect(() => {
+        files.forEach((el, i) => {
+            taskDispatch({
+                type: "change_file",
+                file: [...files, el],
+            });
+        });
+    }), [files]
+
 
     const validateFormTask = async () => {
         const formData = new FormData();
 
-        formData.append("title", task.name);
-        formData.append("description", task.description);
-        formData.append("deadline", task.deadline);
-        formData.append("categoryId", task.category.id);
-        formData.append("filtersId", "3fa85f64-5717-4562-b3fc-2c963f66afa6");
+        formData.append("title", state.title);
+        formData.append("description", state.description);
+        formData.append("deadline", state.deadline);
+        formData.append("categoryId", state.categoryId);
+        state.filtersId.forEach((el, i) => {
+            formData.append(`filtersId`, el);
+        });
 
         const res = await createTask(formData);
     };
 
-    console.log("taskcat", task.category.filterCategories);
+    console.log("task", state);
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>
@@ -129,16 +212,12 @@ export default function CreateTaskPage() {
                             type="text"
                             placeholder="Название должно привлечь внимание и отразить суть задачи."
                             containerClassName={styles.textName}
-                            value={task.name}
+                            value={state.title}
                             onChange={(e) =>
-                                dispatch(
-                                    updateTask({
-                                        task: {
-                                            ...task,
-                                            name: e,
-                                        },
-                                    }),
-                                )
+                                taskDispatch({
+                                    type: "change_title",
+                                    title: e,
+                                })
                             }
                         />
                         <p className="text">О задании</p>
@@ -146,12 +225,21 @@ export default function CreateTaskPage() {
                             type="textarea"
                             placeholder="Опишите что именно вам нужно. Включите в описание важные аспекты."
                             containerClassName={styles.textarea}
-                            value={task.description}
+                            value={state.description}
                             onChange={handleTextChange}
                             max={maxLength}
                         />
                         <div className={styles.underdescription}>
-                            <p className="text gray fz20">Файл</p>
+                            {/* <p className="text gray fz20">Файл</p> */}
+                            <Input
+                            accept="application/pdf, application/msword, .docx, image/png, image/jpeg, image/jpg"
+                                type="file_multiple"
+                                maxFiles={5}
+                                multiple
+                                containerClassName={styles.file}
+                                setFile={setFiles}
+                                file={files}
+                            />
                             <p
                                 className={classNames(
                                     "text gray fz20",
@@ -169,26 +257,38 @@ export default function CreateTaskPage() {
                                     options={categories}
                                     placeholder="Выберите категорию"
                                     onChange={(e) => {
-                                        dispatch(
-                                            updateTask({
-                                                task: {
-                                                    ...task,
-                                                    category: categories.find(
-                                                        (item) => item.id === e,
-                                                    )!,
-                                                },
-                                            }),
-                                        );
-                                        // setFiltersCategory(
-                                        //     categories.find(
-                                        //         (item) => item.id === e,
-                                        //     )!.filtersCategories
-                                        // );
+                                        taskDispatch({
+                                            type: "change_categoryId",
+                                            categoryId: categories.find(
+                                                (item) => item.id === e,
+                                            )?.id!,
+                                        });
                                     }}
                                 />
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Фильтры</p>
+                                {categories?.find(
+                                    (item) => item.id === state.categoryId,
+                                )?.filterCategories?.map(
+                                    (filter, index) => (
+                                        <div>
+                                            <p className="text fw500">{filter.name}</p>
+                                            <SelectSearch
+                                                key={index}
+                                                options={filter.filters}
+                                                placeholder="Выберите фильтр"
+                                                onChange={(e) => {
+
+                                                    taskDispatch({
+                                                        type: "change_filtersId",
+                                                        filtersId: [e],
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    ),
+                                )}
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Сроки</p>
@@ -196,26 +296,12 @@ export default function CreateTaskPage() {
                                     type="date"
                                     className={styles.time}
                                     onChange={(e) => {
-                                        dispatch(
-                                            updateTask({
-                                                task: {
-                                                    ...task,
-                                                    deadline: e.target.value,
-                                                },
-                                            }),
-                                        );
+                                        taskDispatch({
+                                            type: "change_deadline",
+                                            deadline: e.target.value,
+                                        });
                                     }}
                                 />
-                                {/* <SelectSearch
-                                    options={[
-                                        { value: "1", name: "1 неделя" },
-                                        { value: "2", name: "2 недели" },
-                                        { value: "3", name: "3 недели" },
-                                        { value: "4", name: "4 недели" },
-                                        { value: "5", name: "5 недель" },
-                                    ]}
-                                    placeholder="Выберите сроки"
-                                /> */}
                             </div>
                         </div>
                         <div className={styles.submitButtons}>

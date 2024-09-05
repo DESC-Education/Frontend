@@ -13,6 +13,11 @@ import { ModalContext } from "./_context/ModalContext";
 import Link from "next/link";
 import ProjectsList from "./_components/ProjectsList/ProjectsList";
 import PartnersList from "./_components/PartnersList/PartnersList";
+import { Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "./swiper.scss";
 
 const projects = [
     {
@@ -305,7 +310,19 @@ export default function Home() {
             <div className={styles.studentProjects}>
                 <h2 className="title fz48">Проекты студентов</h2>
                 <div className={styles.projectsContainer}>
-                    <ProjectsList projects={projects} />
+                    <Swiper
+                        slidesPerView={1}
+                        spaceBetween={15}
+                        pagination={{ clickable: true, dynamicBullets: true }}
+                        modules={[Pagination]}
+                        className={styles.swiper}
+                    >
+                        {projects.map((project, index) => ( 
+                            <SwiperSlide className={styles.swiperSlide} key={index}>    
+                                <ProjectsList projects={projects}/>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
                 </div>
             </div>
 

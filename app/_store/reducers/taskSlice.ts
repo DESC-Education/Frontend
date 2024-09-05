@@ -1,4 +1,4 @@
-import { ICategory, ITask } from "@/app/_types";
+import { ICategory, IFile, IFilter, ITask } from "@/app/_types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -16,6 +16,7 @@ const initialState: TaskInterface = {
         deadline: "",
         createdAt: "",
         category: {} as ICategory,
+        filtersId: [],
         isVerified: false,
         isSuspicious: false,
         isVisible: false,
