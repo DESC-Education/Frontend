@@ -15,15 +15,16 @@ import { set } from "zod";
 const maxLength = 2000;
 const minLength = 5;
 
-
 type TaskState = {
     title: string;
     description: string;
     deadline: string;
     file: IFile[];
     categoryId: string;
-    filtersId: string[];
-}
+    filters: {
+        [key: string]: string | null;
+    };
+};
 
 type TaskAction =
     | { type: "change_title"; title: string }
@@ -31,7 +32,7 @@ type TaskAction =
     | { type: "change_deadline"; deadline: string }
     | { type: "change_file"; file: IFile[] }
     | { type: "change_categoryId"; categoryId: string }
-    | { type: "change_filtersId"; filtersId: string[] }
+    | { type: "change_filters"; filterCategoryId: string; filterId: string }
     | { type: "clear" };
 
 const initState: TaskState = {
@@ -40,9 +41,8 @@ const initState: TaskState = {
     deadline: "",
     file: [],
     categoryId: "",
-    filtersId: [""],
+    filters: {} as any,
 };
-
 
 export default function CreateTaskPage() {
     const templates = [
@@ -52,7 +52,6 @@ export default function CreateTaskPage() {
         "Базы данных",
         "Безопасность информации",
     ];
-
 
     const reduser = (state: TaskState, action: TaskAction): TaskState => {
         switch (action.type) {
@@ -86,11 +85,13 @@ export default function CreateTaskPage() {
                     categoryId: action.categoryId,
                 };
             }
-            case "change_filtersId": {
-                const newFiltersId = new Set([...state.filtersId, ...action.filtersId]);
+            case "change_filters": {
                 return {
                     ...state,
-                    filtersId: Array.from(newFiltersId),
+                    filters: {
+                        ...state.filters,
+                        [action.filterCategoryId]: action.filterId,
+                    },
                 };
             }
             case "clear": {
@@ -149,8 +150,8 @@ export default function CreateTaskPage() {
                 file: [...files, el],
             });
         });
-    }), [files]
-
+    }),
+        [files];
 
     const validateFormTask = async () => {
         const formData = new FormData();
@@ -159,11 +160,13 @@ export default function CreateTaskPage() {
         formData.append("description", state.description);
         formData.append("deadline", state.deadline);
         formData.append("categoryId", state.categoryId);
-        state.filtersId.forEach((el, i) => {
-            formData.append(`filtersId`, el);
+        Object.values(state.filters).forEach((el, i) => {
+            formData.append(`filtersId`, el!);
         });
 
         const res = await createTask(formData);
+        console.log("createTask res", res);
+        
     };
 
     return (
@@ -267,34 +270,71 @@ export default function CreateTaskPage() {
                             </div>
                             <div className={styles.select}>
                                 <p className={"text fw500"}>Фильтры</p>
-                                {
-                                    categories?.find((item) => item.id === state.categoryId)?.filterCategories ? (
-                                        categories
-                                            .find((item) => item.id === state.categoryId)
-                                            ?.filterCategories.map((filter, index) => (
-                                                <div className={styles.filters} key={index}>
-                                                    <p className={classNames("text fw500", styles.filterTitle)}>{filter.name}</p>
+                                {categories?.find(
+                                    (item) => item.id === state.categoryId,
+                                )?.filterCategories ? (
+                                    categories
+                                        .find(
+                                            (item) =>
+                                                item.id === state.categoryId,
+                                        )
+                                        ?.filterCategories.map(
+                                            (filter, index) => (
+                                                <div
+                                                    className={styles.filters}
+                                                    key={index}
+                                                >
+                                                    <p
+                                                        className={classNames(
+                                                            "text fw500",
+                                                            styles.filterTitle,
+                                                        )}
+                                                    >
+                                                        {filter.name}
+                                                    </p>
                                                     <SelectSearch
                                                         key={index}
-                                                        options={filter.filters.map((i) => ({ ...i, value: i.id}))}
+                                                        options={filter.filters.map(
+                                                            (i) => ({
+                                                                ...i,
+                                                                value: i.id,
+                                                            }),
+                                                        )}
                                                         placeholder="Выберите фильтр"
-                                                        value={state.filtersId.find((i) => i === filter.id)}
+                                                        value={state.filters[filter.id]!}
                                                         onChange={(e: any) => {
                                                             taskDispatch({
-                                                                type: "change_filtersId",
-                                                                filtersId: [e],
+                                                                type:
+                                                                    "change_filters",
+                                                                filterCategoryId:
+                                                                    filter.id,
+                                                                filterId: e,
+                                                                // filterId: e,
                                                             });
-                                                            console.log("state.filtersId",state.filtersId);
-                                                            console.log("e",e);
-                                                            console.log("filter",filter.filters );
+                                                            console.log(
+                                                                "state.filtersId",
+                                                                state.filters,
+                                                            );
+                                                            console.log("e", e);
+                                                            console.log(
+                                                                "filter.filters",
+                                                                filter.filters,
+                                                            );
                                                         }}
                                                     />
                                                 </div>
-                                            ))
-                                    ) : (
-                                        <div className={classNames("text fw500", styles.filterTitle)}>Выберите категорию</div>
-                                    )
-                                }
+                                            ),
+                                        )
+                                ) : (
+                                    <div
+                                        className={classNames(
+                                            "text fw500",
+                                            styles.filterTitle,
+                                        )}
+                                    >
+                                        Выберите категорию
+                                    </div>
+                                )}
 
                                 {/* {categories?.find(
                                     (item) => item.id === state.categoryId,
