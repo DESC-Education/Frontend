@@ -3,14 +3,16 @@ import { $authHost } from "..";
 import { ICategory, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
-
-
-export const getTasks = async (q: string) => {
+export const getTasks = async (
+    q: string = "",
+    page: number = 1,
+    limit: number = 15,
+) => {
     try {
         const { data } = await $authHost.get<{
             count: string;
             results: ITask[];
-        }>(`/api/v1/tasks/tasks`);
+        }>(`/api/v1/tasks/tasks?page=${page}&limit=${limit}&search=${q}`);
 
         return {
             status: 200,

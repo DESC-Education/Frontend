@@ -13,20 +13,22 @@ import { ICompanyProfile, ITask } from "../_types";
 import TaskCard from "../_components/TaskCard/TaskCard";
 
 export default function ExchangePage() {
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([
-        "Веб-разработка",
-        "Мобильная разработка",
-        "Искусственный интеллект",
-        "Базы данных",
-        "Безопасность информации",
-    ]);
-    const [selectedLanguages, setSelectedLanguages] = useState<string[]>([
-        "JavaScript",
-        "Python",
-        "Java",
-        "C++",
-        "C#",
-    ]);
+    
+    // const [selectedFilters, setSelectedFilters] = useState<string[]>([
+    //     "Веб-разработка",
+    //     "Мобильная разработка",
+    //     "Искусственный интеллект",
+    //     "Базы данных",
+    //     "Безопасность информации",
+    // ]);
+    // const [selectedLanguages, setSelectedLanguages] = useState<string[]>([
+    //     "JavaScript",
+    //     "Python",
+    //     "Java",
+    //     "C++",
+    //     "C#",
+    // ]);
+
     const tasks: ITask[] = [
         {
             name: "Заказ1",
@@ -52,6 +54,9 @@ export default function ExchangePage() {
                 firstName: "",
                 lastName: "",
                 verification: { status: "verified" },
+                leadTaskCategories: [],
+                telegramLink: "",
+                vkLink: "",
             },
             category: {
                 id: "1",
@@ -59,6 +64,7 @@ export default function ExchangePage() {
                 value: "sadads",
                 filterCategories: [],
             },
+            filtersId: [],
             isVisible: true,
             createdAt: "10.03.2024",
             files: [],
@@ -72,7 +78,7 @@ export default function ExchangePage() {
             <h2 className={classNames(styles.exchangeTitle, "title fz48")}>
                 Биржа заданий
             </h2>
-            <div className={styles.mainContainer}>
+            {/* <div className={styles.mainContainer}>
                 <aside className={styles.sidebar}>
                     <div className={styles.filters}>
                         <h3 className="title">Фильтры</h3>
@@ -148,7 +154,7 @@ export default function ExchangePage() {
                         ))}
                     </div>
                 </main>
-            </div>
+            </div> */}
         </div>
     );
 }

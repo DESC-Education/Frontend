@@ -20,6 +20,7 @@ export type CreateStudentProfileDTO = {
     admissionYear: string;
     university: string; // "uuid"
     studentCard: IFile;
+    profission: string;
 };
 
 export type CreateCompanyProfileDTO = {
@@ -45,6 +46,7 @@ export type EditStudentDTO = {
     telegramLink?: string;
     vkLink?: string;
     skills: string[];
+    profession: string;
 };
 
 export type EditCompanyDTO = {

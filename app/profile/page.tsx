@@ -2,26 +2,13 @@
 
 import classNames from "classnames";
 import styles from "./page.module.scss";
-import {
-    ICompanyProfile,
-    IStudentProfile,
-    IUser,
-    RoleStudent,
-} from "../_types";
+import "./page.scss";
 import Image from "next/image";
 import Link from "next/link";
-import TipCard, { TipTypeBackground } from "../_components/TipCard/TipCard";
-// import { getuser } from "../_http/API/userApi";
-import { use, useEffect } from "react";
-import { getProfile } from "../_http/API/profileApi";
-import { useTypesDispatch } from "../_hooks/useTypesDispatch";
-import { userSlice } from "../_store/reducers/userSlice";
 import { yearsOfEducation } from "../_utils/constants";
-import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
-import Button from "../_components/ui/Button/Button";
 import ProfileStatus from "./ProfileStatus/ProfileStatus";
-import { ProfileRoute } from "../_utils/protectedRoutes";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
+import { getBeautifiedPhone } from "../_utils/utils";
 
 export default function Home() {
     const {
@@ -36,8 +23,6 @@ export default function Home() {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
 
-    console.log(companyProfile);
-
     return (
         <div
             className={classNames(styles.userContainer, {
@@ -45,7 +30,7 @@ export default function Home() {
             })}
         >
             {user.role === "student" ? (
-                <>
+                <div>
                     <div className={styles.mainInfo}>
                         <div
                             className={classNames(
@@ -53,11 +38,16 @@ export default function Home() {
                                 "title fz48",
                             )}
                         >
-                            {studentProfile?.formOfEducation}
+                            {studentProfile.profession}
                         </div>
-                        <div className={styles.level}>
+                        <div
+                            className={classNames(
+                                styles.level,
+                                `level${studentProfile.level.value}`,
+                            )}
+                        >
                             <p className="text fw500">
-                                {studentProfile?.formOfEducation}
+                                {studentProfile.level.name}
                             </p>
                         </div>
                     </div>
@@ -78,19 +68,43 @@ export default function Home() {
                         >
                             {studentProfile?.description}
                         </p>
-                        {studentProfile?.phoneVisibility && (
-                            <div className={styles.contact}>
+                        {studentProfile?.emailVisibility && user.email && (
+                            <Link
+                                href={`mailto:${user.email}`}
+                                className={styles.contact}
+                            >
                                 <Image
-                                    src="/icons/phoneIcon.svg"
+                                    src="/icons/mail.png"
                                     alt="phone"
                                     width={35}
                                     height={35}
                                 />
-                                <p className="text">{studentProfile?.phone}</p>
-                            </div>
+                                <p className="text">{user.email}</p>
+                            </Link>
                         )}
-                        <div className={styles.contact}>
+                        {studentProfile?.phoneVisibility &&
+                            studentProfile.phone && (
+                                <Link
+                                    href={`tel:${studentProfile.phone}`}
+                                    className={styles.contact}
+                                >
+                                    <Image
+                                        src="/icons/tel.png"
+                                        alt="phone"
+                                        width={35}
+                                        height={35}
+                                    />
+                                    <p className="text">
+                                        {getBeautifiedPhone(
+                                            studentProfile.phone,
+                                        )}
+                                    </p>
+                                </Link>
+                            )}
+                        {studentProfile?.telegramLink && (
                             <Link
+                                target="_blank"
+                                rel="noreferrer"
                                 href={
                                     "https:/t.me/" +
                                     studentProfile?.telegramLink
@@ -98,16 +112,33 @@ export default function Home() {
                                 className={styles.contact}
                             >
                                 <Image
-                                    src="/icons/telegramIcon.svg"
+                                    src="/icons/tg.png"
                                     alt="telegram"
                                     width={35}
                                     height={35}
                                 />
                                 <p className="text">
-                                    {studentProfile.telegramLink}
+                                    @{studentProfile.telegramLink}
                                 </p>
                             </Link>
-                        </div>
+                        )}
+                        {studentProfile?.vkLink && (
+                            <Link
+                                target="_blank"
+                                rel="noreferrer"
+                                href={"https:/vk.com/" + studentProfile?.vkLink}
+                                className={styles.contact}
+                            >
+                                <Image
+                                    src="/icons/vk.png"
+                                    alt="vk"
+                                    width={35}
+                                    height={35}
+                                />
+                                <p className="text">{studentProfile.vkLink}</p>
+                            </Link>
+                        )}
+
                         <div className={styles.education}>
                             <p
                                 className={classNames(
@@ -117,27 +148,26 @@ export default function Home() {
                             >
                                 Образование
                             </p>
-                            {/* <p
+                            <p
                                 className={classNames(
                                     styles.yearOfEducation,
                                     "text gray fz20",
                                 )}
                             >
                                 {studentProfile.admissionYear} -{" "}
-                                {studentProfile.admissionYear +
+                                {studentProfile.admissionYear! +
                                     yearsOfEducation[
-                                        studentProfile.educationProgram
+                                        studentProfile.specialty.type
                                     ]}{" "}
                                 гг.
-                            </p> */}
+                            </p>
                             <p
                                 className={classNames(
                                     styles.university,
-                                    "title",
+                                    "title fz28",
                                 )}
                             >
-                                {/* {studentProfile.instituteId} */}
-                                Сибирский федеральный университет
+                                {studentProfile.university.name}
                             </p>
                             <p
                                 className={classNames(
@@ -145,8 +175,7 @@ export default function Home() {
                                     "text fw500",
                                 )}
                             >
-                                {/* {studentProfile.university} */}
-                                Институт космических и информационных технологий
+                                {studentProfile.faculty.name}
                             </p>
                             <p
                                 className={classNames(
@@ -154,46 +183,75 @@ export default function Home() {
                                     "text gray fw500",
                                 )}
                             >
-                                Прикладная информатика
+                                {studentProfile.specialty.name}
                             </p>
                         </div>
-                    </div>
 
-                    <div className={styles.rubrics}>
-                        <p className={classNames(styles.rubricsTitle, "title")}>
-                            Навыки
-                        </p>
-                        <div className={styles.circles}>
-                            {studentProfile.skills &&
-                                studentProfile.skills.map((skill, index) => (
-                                    <div
-                                        key={index}
-                                        className={styles.circleWrapper}
-                                    >
-                                        <div
-                                            className={styles.circle}
-                                            style={{
-                                                background: `conic-gradient(#19282C ${skill.percent}%, #e0e0e0 0%)`,
-                                            }}
-                                        >
-                                            <span
-                                                className={classNames(
-                                                    styles.percentage,
-                                                    "title",
-                                                )}
-                                            >
-                                                {skill.percent}%
-                                            </span>
-                                        </div>
+                        <div className={styles.education}>
+                            <p
+                                className={classNames(
+                                    styles.educationTitle,
+                                    "title",
+                                )}
+                            >
+                                Навыки
+                            </p>
+                            <div className={styles.skills}>
+                                {studentProfile.skills.map((skill, index) => (
+                                    <div key={index} className={styles.skill}>
                                         <p className="text fw500">
                                             {skill.name}
                                         </p>
                                     </div>
                                 ))}
+                            </div>
                         </div>
                     </div>
 
-                    <div className={styles.tips}>
+                    {!!studentProfile.leadTaskCategories?.length && (
+                        <div className={styles.rubrics}>
+                            <p
+                                className={classNames(
+                                    styles.rubricsTitle,
+                                    "title",
+                                )}
+                            >
+                                Лидирующие категории решенных задач
+                            </p>
+                            <div className={styles.circles}>
+                                {studentProfile.leadTaskCategories &&
+                                    studentProfile.leadTaskCategories.map(
+                                        (category, index) => (
+                                            <div
+                                                key={index}
+                                                className={styles.circleWrapper}
+                                            >
+                                                <div
+                                                    className={styles.circle}
+                                                    style={{
+                                                        background: `conic-gradient(#19282C ${category.percent}%, #e0e0e0 0%)`,
+                                                    }}
+                                                >
+                                                    <span
+                                                        className={classNames(
+                                                            styles.percentage,
+                                                            "title",
+                                                        )}
+                                                    >
+                                                        {category.percent}%
+                                                    </span>
+                                                </div>
+                                                <p className="text fw500">
+                                                    {category.name}
+                                                </p>
+                                            </div>
+                                        ),
+                                    )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* <div className={styles.tips}>
                         <TipCard
                             title="Совет 1"
                             description="Не стоит кушать желтый снег"
@@ -205,23 +263,23 @@ export default function Home() {
                             description="Не стоит кушать желтый снег"
                             image="/images/tip2Image.png"
                         />
-                    </div>
-                </>
+                    </div> */}
+                </div>
             ) : (
-                <>
-                    {/* <div className={styles.mainInfo}>
+                <div>
+                    <div className={styles.mainInfo}>
                         <div
                             className={classNames(
                                 styles.speciality,
                                 "title fz48",
                             )}
                         >
-                            Веб дизайнер
+                            {companyProfile.companyName}
                         </div>
-                        <div className={styles.level}>
-                            <p className="text fw500">Средний уровень</p>
-                        </div>
-                    </div> */}
+                        {/* <div className={styles.level}> */}
+                        {/* <p className="text fw500">Средний уровень</p> */}
+                        {/* </div> */}
+                    </div>
                     <div className={styles.description}>
                         <p
                             className={classNames(
@@ -249,24 +307,23 @@ export default function Home() {
                                         height={35}
                                     />
                                     <p className="text">
-                                        {companyProfile.phone}
+                                        {getBeautifiedPhone(
+                                            companyProfile.phone,
+                                        )}
                                     </p>
                                 </div>
                             )}
-                        {companyProfile.emailVisibility &&
-                            user.email && (
-                                <div className={styles.contact}>
-                                    <Image
-                                        src="/icons/email.png"
-                                        alt="phone"
-                                        width={35}
-                                        height={35}
-                                    />
-                                    <p className="text">
-                                        {user.email}
-                                    </p>
-                                </div>
-                            )}
+                        {companyProfile.emailVisibility && user.email && (
+                            <div className={styles.contact}>
+                                <Image
+                                    src="/icons/email.png"
+                                    alt="phone"
+                                    width={35}
+                                    height={35}
+                                />
+                                <p className="text">{user.email}</p>
+                            </div>
+                        )}
                         {companyProfile.telegramLink && (
                             <div className={styles.contact}>
                                 <Link
@@ -309,40 +366,48 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-                    {/* 
-                    <div className={styles.rubrics}>
-                        <p className={classNames(styles.rubricsTitle, "title")}>
-                            Навыки
-                        </p>
-                        <div className={styles.circles}>
-                            {studentProfile.skills &&
-                                studentProfile.skills.map((skill, index) => (
-                                    <div
-                                        key={index}
-                                        className={styles.circleWrapper}
-                                    >
-                                        <div
-                                            className={styles.circle}
-                                            style={{
-                                                background: `conic-gradient(#19282C ${skill.percent}%, #e0e0e0 0%)`,
-                                            }}
-                                        >
-                                            <span
-                                                className={classNames(
-                                                    styles.percentage,
-                                                    "title",
-                                                )}
+                    {companyProfile.leadTaskCategories?.length && (
+                        <div className={styles.rubrics}>
+                            <p
+                                className={classNames(
+                                    styles.rubricsTitle,
+                                    "title",
+                                )}
+                            >
+                                Лидирующие категории созданных задач
+                            </p>
+                            <div className={styles.circles}>
+                                {companyProfile.leadTaskCategories &&
+                                    companyProfile.leadTaskCategories.map(
+                                        (category, index) => (
+                                            <div
+                                                key={index}
+                                                className={styles.circleWrapper}
                                             >
-                                                {skill.percent}%
-                                            </span>
-                                        </div>
-                                        <p className="text fw500">
-                                            {skill.name}
-                                        </p>
-                                    </div>
-                                ))}
+                                                <div
+                                                    className={styles.circle}
+                                                    style={{
+                                                        background: `conic-gradient(#19282C ${category.percent}%, #e0e0e0 0%)`,
+                                                    }}
+                                                >
+                                                    <span
+                                                        className={classNames(
+                                                            styles.percentage,
+                                                            "title",
+                                                        )}
+                                                    >
+                                                        {category.percent}%
+                                                    </span>
+                                                </div>
+                                                <p className="text fw500">
+                                                    {category.name}
+                                                </p>
+                                            </div>
+                                        ),
+                                    )}
+                            </div>
                         </div>
-                    </div> */}
+                    )}
 
                     {/* <div className={styles.tips}>
                         <TipCard
@@ -357,7 +422,7 @@ export default function Home() {
                             image="/images/tip2Image.png"
                         />
                     </div> */}
-                </>
+                </div>
             )}
         </div>
     );

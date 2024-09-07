@@ -1,6 +1,8 @@
+export const TIMER_TIME = 60;
+
 export const yearsOfEducation = {
     bachelor: 4,
-    speciality: 5,
+    specialty: 5,
     magister: 2,
 };
 
@@ -43,3 +45,9 @@ export const formsOfEducation = [
     { name: "Очно-заочное", value: "full_time" },
     { name: "Заочное", value: "part_full_time" },
 ];
+
+export const levels = [
+    { name: "Начинающий", value: 0 },
+    { name: "Средний", value: 1 },
+    { name: "Продвинутый", value: 2 },
+]

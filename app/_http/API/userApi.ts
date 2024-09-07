@@ -214,3 +214,25 @@ export const changeEmail = async (dto: {
         }
     }
 };
+
+export const verifyEmailChange = async (dto: {
+    code: number;
+}): Promise<{ status: number; message?: string }> => {
+    try {
+        const { data } = await $authHost.post("/api/v1/users/change_email", dto);
+
+        return { status: 200, message: "Успешно" };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};

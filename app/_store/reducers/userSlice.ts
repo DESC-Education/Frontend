@@ -45,6 +45,9 @@ const initProfileStudent: IStudentProfile = {
     vkLink: "",
     city: {} as ICity,
     skills: [],
+    profession: "",
+    leadTaskCategories: [],
+    level: { value: 0, name: "Начинающий" },
 };
 
 const initProfileCompany: ICompanyProfile = {
@@ -64,6 +67,7 @@ const initProfileCompany: ICompanyProfile = {
     telegramLink: "",
     vkLink: "",
     skills: [],
+    leadTaskCategories: [],
 };
 
 const initialState: UserInterface = {
@@ -105,6 +109,11 @@ export const userSlice = createSlice({
         },
         updateProfileVerification(state, action: PayloadAction<IVerification>) {
             state.profileVerification = action.payload;
+            if (state.user.role === "student") {
+                state.studentProfile.verification = action.payload;
+            } else {
+                state.companyProfile.verification = action.payload;
+            }
         },
         updateIsProfileLoading(state, action: PayloadAction<boolean>) {
             state.isProfileLoading = action.payload;
@@ -127,6 +136,7 @@ export const userSlice = createSlice({
             state.profileVerification.status = "not_verified";
             state.studentProfile = initProfileStudent;
             state.companyProfile = initProfileCompany;
+            state.isProfileLoading = true;
             LocalStorage.logout();
         },
         updateAuth(state, action: PayloadAction<boolean>) {
