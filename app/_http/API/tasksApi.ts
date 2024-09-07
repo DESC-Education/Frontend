@@ -37,7 +37,11 @@ export const createTask = async (dto: FormData) => {
     try {
         const { data } = await $authHost.post<{
             message: string;
-        }>("/api/v1/tasks/task", dto);
+        }>("/api/v1/tasks/task", dto, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
 
         return { status: 200, message: data.message };
     } catch (error) {
@@ -65,6 +69,32 @@ export const getCategory = async (q: string) => {
         return {
             status: 200,
             categories: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+const getPatterns = async (q: string) => {
+    try {
+        const { data } = await $authHost.get<{
+            count: string;
+            results: ITask[];
+        }>(`/api/v1/tasks/patterns`);
+
+        return {
+            status: 200,
+            patterns: data.results,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

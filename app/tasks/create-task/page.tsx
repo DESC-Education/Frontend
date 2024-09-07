@@ -11,6 +11,7 @@ import { createTask, getCategory } from "@/app/_http/API/tasksApi";
 import { use, useEffect, useReducer, useState } from "react";
 import { ICategory, IFile, IFilter, IFilterCategory } from "@/app/_types";
 import { set } from "zod";
+import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
 
 const maxLength = 2000;
 const minLength = 5;
@@ -94,6 +95,56 @@ export default function CreateTaskPage() {
                     },
                 };
             }
+
+            // case "change_title_err": {
+            //     return {
+            //         ...state,
+            //         titleErr: action.err,
+            //     };
+            // }
+            // case "change_description_err": {
+            //     return {
+            //         ...state,
+            //         descriptionErr: action.err,
+            //     };
+            // }
+            // case "change_deadline_err": {
+            //     return {
+            //         ...state,
+            //         deadlineErr: action.err,
+            //     };
+            // }
+            // case "change_file_err": {
+            //     return {
+            //         ...state,
+            //         fileErr: action.err,
+            //     };
+            // }
+            // case "change_categoryId_err": {
+            //     return {
+            //         ...state,
+            //         categoryIdErr: action.err,
+            //     };
+            // }
+            // case "change_filters_err": {
+            //     return {
+            //         ...state,
+            //         filtersErr: action.err,
+            //     };
+            // }
+
+            // case "clear_errors": {
+            //     return {
+            //         ...state,
+            //         titleErr: "",
+            //         descriptionErr: "",
+            //         deadlineErr: "",
+            //         fileErr: "",
+            //         categoryIdErr: "",
+            //         filtersErr: "",
+            //     };
+            // }
+
             case "clear": {
                 return {
                     ...initState,
@@ -103,11 +154,6 @@ export default function CreateTaskPage() {
     };
 
     const [state, taskDispatch] = useReducer(reduser, initState);
-
-    // const { task } = useTypesSelector((state) => state.taskReducer);
-    // const { updateTask } = taskSlice.actions;
-
-    // const dispatch = useTypesDispatch();
 
     const [textLength, setTextLength] = useState(state.description.length || 0);
 
@@ -122,6 +168,19 @@ export default function CreateTaskPage() {
     };
 
     const [categories, setCategories] = useState<ICategory[]>([]);
+
+    // const getCategories = async () => {
+    //     const res = await getCategory("");
+    //     if (res.status === 200) {
+    //         setCategories(
+    //             res.categories!.map((item) => ({
+    //                 ...item,
+    //                 value: item.id,
+    //                 name: item.name,
+    //             })),
+    //         );
+    //     }
+    // };
 
     useEffect(() => {
         const asyncFunc = async () => {
@@ -140,33 +199,56 @@ export default function CreateTaskPage() {
         asyncFunc();
     }, []);
 
-    const [filters, setFilters] = useState<IFilter[] | null>([]);
     const [files, setFiles] = useState<IFile[]>([]);
 
+    const [errors, setErrors] = useState<any>({});
+    const [errorsExist, setErrorsExist] = useState<boolean>(false);
+
     useEffect(() => {
-        files.forEach((el, i) => {
-            taskDispatch({
-                type: "change_file",
-                file: [...files, el],
-            });
-        });
-    }),
-        [files];
+        setErrors({});
+        setErrorsExist(false);
+    }, [state]);
 
     const validateFormTask = async () => {
-        const formData = new FormData();
 
-        formData.append("title", state.title);
-        formData.append("description", state.description);
-        formData.append("deadline", state.deadline);
-        formData.append("categoryId", state.categoryId);
-        Object.values(state.filters).forEach((el, i) => {
-            formData.append(`filtersId`, el!);
-        });
+        const errorsTemp: any = {};
+        if (state.title.length < 2) {
+            errorsTemp.title = "Введите название задания";
+        }
 
-        const res = await createTask(formData);
-        console.log("createTask res", res);
-        
+        if (state.categoryId === "") {
+            errorsTemp.categoryId = "Выберите категорию";
+        }
+        console.log(state.filters);
+        if (Object.keys(state.filters).length < categories.find((item) => item.id === state.categoryId)?.filterCategories?.length!) {
+            errorsTemp.filters = "Не все фильтры выбраны";
+        }
+
+        setErrorsExist(Object.keys(errorsTemp).length !== 0);
+        setErrors(errorsTemp);
+
+        if (Object.keys(errorsTemp).length === 0) {
+            const formData = new FormData();
+
+            formData.append("title", state.title);
+            formData.append("description", state.description);
+            formData.append("deadline", state.deadline);
+            formData.append("categoryId", state.categoryId);
+            Object.values(state.filters).forEach((el, i) => {
+                formData.append(`filtersId`, el!);
+            });
+
+            files!.forEach((el, i) => {
+                // ???????
+                formData.append(`file`, el, el.name);
+            });
+
+
+            const res = await createTask(formData);
+            console.log("createTask res", res);
+        }
+
+
     };
 
     return (
@@ -220,6 +302,7 @@ export default function CreateTaskPage() {
                                     title: e,
                                 })
                             }
+                            errorText={errors.title}
                         />
                         <p className="text">О задании</p>
                         <Input
@@ -252,12 +335,11 @@ export default function CreateTaskPage() {
                                 file={files}
                             />
                         </div>
-                        <div className={styles.selects}>
+                        <div className={styles.selects} >
                             <div className={styles.select}>
                                 <p className="text fw500">Категории</p>
                                 <SelectSearch
                                     options={categories}
-                                    placeholder="Выберите категорию"
                                     onChange={(e) => {
                                         taskDispatch({
                                             type: "change_categoryId",
@@ -266,9 +348,13 @@ export default function CreateTaskPage() {
                                             )?.id!,
                                         });
                                     }}
+                                    value={state.categoryId}
+                                    placeholder="Выберите категорию"
+
                                 />
+                                <p className={classNames("text red fz20", styles.errorText)}>{errors.categoryId}</p>
                             </div>
-                            <div className={styles.select}>
+                            <div className={classNames(styles.select, {[styles.error]: errors.filters})}>
                                 <p className={"text fw500"}>Фильтры</p>
                                 {categories?.find(
                                     (item) => item.id === state.categoryId,
@@ -309,7 +395,6 @@ export default function CreateTaskPage() {
                                                                 filterCategoryId:
                                                                     filter.id,
                                                                 filterId: e,
-                                                                // filterId: e,
                                                             });
                                                             console.log(
                                                                 "state.filtersId",
@@ -335,28 +420,7 @@ export default function CreateTaskPage() {
                                         Выберите категорию
                                     </div>
                                 )}
-
-                                {/* {categories?.find(
-                                    (item) => item.id === state.categoryId,
-                                )?.filterCategories?.map(
-                                    (filter, index) => (
-                                        <div className={styles.filters} key={index}>
-                                            <p className={classNames("text fw500", styles.filterTitle)}>{filter.name}</p>
-                                            <SelectSearch
-                                                key={index}
-                                                options={filter.filters}
-                                                placeholder="Выберите фильтр"
-                                                onChange={(e) => {
-
-                                                    taskDispatch({
-                                                        type: "change_filtersId",
-                                                        filtersId: [e],
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    ),
-                                )} */}
+                                <p className={classNames("text red fz20", styles.errorText)}>{errors.filters}</p>
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Сроки</p>
@@ -382,6 +446,7 @@ export default function CreateTaskPage() {
                             <Button
                                 type="primary"
                                 className={styles.submitButton}
+                                disabled={true}
                             >
                                 Сохранить как PDF
                             </Button>
