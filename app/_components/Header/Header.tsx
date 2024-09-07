@@ -32,7 +32,9 @@ type RoleState =
 
 const Header = () => {
     const { showModal } = useContext(ModalContext);
-    const { isAuth } = useTypesSelector((state) => state.userReducer);
+    const { isAuth, studentProfile } = useTypesSelector(
+        (state) => state.userReducer,
+    );
     const { user, isProfileLoading, profileVerification } = useTypesSelector(
         (user) => user.userReducer,
     );
@@ -520,6 +522,9 @@ const Header = () => {
 
     return (
         <div className={classNames(styles.header)}>
+            <button onClick={() => console.log(studentProfile, user)}>
+                test
+            </button>
             <div className={classNames("container", styles.container)}>
                 <Link href="/">
                     <Image

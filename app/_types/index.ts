@@ -21,7 +21,7 @@ export type IProfile<T> = T extends RoleStudent
     ? IStudentProfile
     : ICompanyProfile;
 
-export type FormsOfEducation =
+export type IFormsOfEducation =
     | ""
     | "part_time"
     | "full_time"
@@ -53,11 +53,14 @@ export type IStudentProfile = {
     university: IUniversity;
     specialty: ISpecialty;
     faculty: IFaculty;
-    formOfEducation: FormsOfEducation;
+    formOfEducation: IFormsOfEducation;
     telegramLink?: string;
     vkLink?: string;
     city: ICity;
     skills: ISkill[];
+    profession: string;
+    leadTaskCategories: ILeadTaskCategory[];
+    level: ILevel;
 };
 
 export type ICompanyProfile = {
@@ -77,7 +80,19 @@ export type ICompanyProfile = {
     emailVisibility: boolean;
     phoneVisibility: boolean;
     skills: ISkill[];
+    leadTaskCategories: ILeadTaskCategory[]
 };
+
+export type ILevel = {
+    value: number;
+    name: string;
+}
+
+export type ILeadTaskCategory = {
+    id: string;
+    name: string;
+    percent: number;
+}
 
 export type IChat = {
     id: string;

@@ -32,6 +32,7 @@ import Timer, { TimerState } from "../../ui/Timer/Timer";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import CustomOval from "../../ui/CustomOval/CustomOval";
+import { TIMER_TIME } from "@/app/_utils/constants";
 
 // export const PasswordSchema = z.string();
 
@@ -109,8 +110,6 @@ type AuthModalProps = {
 };
 
 type ModalState = "reg" | "login" | "regCode" | "recover" | "recoverCode";
-
-const TIMER_TIME = 59;
 
 const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     const [modalState, setModalState] = useState<ModalState>(initModalState);
@@ -273,7 +272,6 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
 
     const verifyRegCodeHandler = async () => {
         setIsLoading(true);
-        setCodeSentAgain(false);
         
         const res = await verifyEmail({
             email: state.email,
@@ -330,8 +328,9 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
     };
 
     const [timerState, setTimerState] = useState<TimerState>("paused");
-    const [codeSentAgain, setCodeSentAgain] = useState<boolean>(false);
-    const [isSentAgain, setIsSentAgain] = useState<boolean>(false);
+
+    const [isCodeSentAgain, setIsCodeSentAgain] = useState<boolean>(false);
+    const [isCodeTimerTimeUp, setIsCodeTimerTimeUp] = useState<boolean>(false);
 
     const getModalContent = (
         modalState: ModalState,
@@ -529,7 +528,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                             >
                                 Подтвердить регистрацию
                             </Button>
-                            {isSentAgain ? (
+                            {isCodeSentAgain ? (
                                 <div className={styles.tipBlock}>
                                     <p className="text fz20 fw500 center">
                                         Код отправлен!
@@ -546,7 +545,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                         Не приходит код?
                                     </p>
                                     <div className={styles.timerContainer}>
-                                        {codeSentAgain ? (
+                                        {isCodeTimerTimeUp ? (
                                             <span
                                                 className="text fz20 blue under pointer"
                                                 onClick={() =>
@@ -564,7 +563,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                                 </p>
                                                 <Timer
                                                     handlerTimeUp={() =>
-                                                        setCodeSentAgain(true)
+                                                        setIsCodeTimerTimeUp(true)
                                                     }
                                                     autostart
                                                     time={TIMER_TIME}
@@ -896,7 +895,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                             >
                                 Восстановить пароль
                             </Button>
-                            {isSentAgain ? (
+                            {isCodeSentAgain ? (
                                 <div className={styles.tipBlock}>
                                     <p className="text fz20 fw500 center">
                                         Код отправлен!
@@ -913,7 +912,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                         Не приходит код?
                                     </p>
                                     <div className={styles.timerContainer}>
-                                        {codeSentAgain ? (
+                                        {isCodeTimerTimeUp ? (
                                             <span
                                                 className="text fz20 blue under pointer"
                                                 onClick={() =>
@@ -931,7 +930,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                                 </p>
                                                 <Timer
                                                     handlerTimeUp={() =>
-                                                        setCodeSentAgain(true)
+                                                        setIsCodeTimerTimeUp(true)
                                                     }
                                                     autostart
                                                     time={TIMER_TIME}

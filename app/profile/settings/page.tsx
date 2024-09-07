@@ -22,6 +22,7 @@ import { userSlice } from "@/app/_store/reducers/userSlice";
 import SelectSearch from "react-select-search";
 import {
     createProfileStudent,
+    editCompanyProfile,
     editStudentProfile,
     getCities,
     getFaculties,
@@ -47,6 +48,7 @@ import { AuthRoute } from "@/app/_utils/protectedRoutes";
 import { set } from "zod";
 import ChangeCredsModal from "@/app/_components/modals/ChangeCredsModal/ChangeCredsModal";
 import { ModalContext } from "@/app/_context/ModalContext";
+import { getBeautifiedPhone } from "@/app/_utils/utils";
 
 type SettingsState = "personal_data" | "profile" | "verification";
 
@@ -164,6 +166,7 @@ const SettingsPage = () => {
         };
 
         asyncFunc();
+        // showModal({content: <ChangeCredsModal initActiveTab="mail" />})
     }, []);
 
     const [logo, setLogo] = useState<File | null>(null);
@@ -177,19 +180,9 @@ const SettingsPage = () => {
     }, [studentProfile, studentCard, companyProfile, logo, verFiles]);
 
     useEffect(() => {
-        console.log(
-            "HLREOOELE",
-            studentProfile,
-            companyProfile,
-            isProfileLoading,
-            // isChanged,
-        );
         if (isProfileLoading) return;
 
         setIsChanged((prev) => prev + 1);
-        return () => {
-            // setIsChanged(true);
-        };
     }, [studentProfile, companyProfile, isProfileLoading]);
 
     const [errors, setErrors] = useState<any>({});
@@ -202,6 +195,10 @@ const SettingsPage = () => {
         const errorsTemp: any = {};
 
         console.log(studentProfile);
+
+        if (!studentProfile.profession || studentProfile.profession?.length < 2) {
+            errorsTemp.profession = "Введите профессию";
+        }
 
         if (studentProfile.firstName?.length < 2) {
             errorsTemp.firstName = "Введите имя";
@@ -223,7 +220,7 @@ const SettingsPage = () => {
             errorsTemp.admissionYear = "Выберите год поступления";
         }
 
-        if (!studentProfile.city) {
+        if (!studentProfile.city || !Object.keys(studentProfile.city).length) {
             errorsTemp.city = "Выберите город";
         }
 
@@ -231,15 +228,15 @@ const SettingsPage = () => {
             errorsTemp.studentCard = "Прикрепите студенческий билет";
         }
 
-        if (!studentProfile.university) {
+        if (!studentProfile.university || !Object.keys(studentProfile.university).length) {
             errorsTemp.university = "Выберите университет";
         }
 
-        if (!studentProfile.specialty) {
+        if (!studentProfile.specialty || !Object.keys(studentProfile.specialty).length) {
             errorsTemp.specialty = "Выберите специальность";
         }
 
-        if (!studentProfile.faculty) {
+        if (!studentProfile.faculty || !Object.keys(studentProfile.faculty).length) {
             errorsTemp.faculty = "Выберите факультет";
         }
 
@@ -268,6 +265,7 @@ const SettingsPage = () => {
                 "admissionYear",
                 String(studentProfile.admissionYear),
             );
+            formdata.append("profession", studentProfile.profession);
             formdata.append("phoneVisibility", "true");
             formdata.append("emailVisibility", "true");
             formdata.append(
@@ -327,7 +325,7 @@ const SettingsPage = () => {
             errorsTemp.timezone = "Выберите часовой пояс";
         }
 
-        if (!companyProfile.city) {
+        if (!companyProfile.city || !Object.keys(companyProfile.city).length) {
             errorsTemp.city = "Выберите город";
         }
 
@@ -410,7 +408,7 @@ const SettingsPage = () => {
         setIsLoading(true);
         const errorsTemp: any = {};
 
-        console.log(studentProfile);
+        console.log("studentProfile", studentProfile);
 
         if (
             studentProfile.description !== null &&
@@ -434,7 +432,7 @@ const SettingsPage = () => {
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
-        console.log(errorsTemp);
+        console.log("errorsTemp", errorsTemp);
 
         if (Object.keys(errorsTemp).length === 0) {
             const res = await editStudentProfile({
@@ -448,6 +446,7 @@ const SettingsPage = () => {
                 emailVisibility: studentProfile.emailVisibility,
                 phoneVisibility: studentProfile.phoneVisibility,
                 skills: studentProfile.skills.map((i) => i.id),
+                profession: studentProfile.profession,
             });
 
             console.log("edit res", res);
@@ -464,7 +463,7 @@ const SettingsPage = () => {
         setIsLoading(true);
         const errorsTemp: any = {};
 
-        console.log(companyProfile);
+        console.log("caompanyProfile", companyProfile);
 
         if (
             companyProfile.description !== null &&
@@ -488,11 +487,12 @@ const SettingsPage = () => {
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
-        console.log(errorsTemp);
+        console.log("erroresTemp", errorsTemp);
 
         if (Object.keys(errorsTemp).length === 0) {
-            const res = await editStudentProfile({
+            const res = await editCompanyProfile({
                 description: companyProfile.description ?? "",
+                linkToCompany: companyProfile.linkToCompany,
                 telegramLink: companyProfile.telegramLink
                     ? `https://t.me/${companyProfile.telegramLink}`
                     : undefined,
@@ -504,7 +504,7 @@ const SettingsPage = () => {
                 skills: companyProfile.skills.map((i) => i.id),
             });
 
-            console.log("edit res", res);
+            // console.log("edit res", res);
 
             if (res.status === 200) {
                 showAlert("Профиль успешно обновлен", "success");
@@ -544,7 +544,7 @@ const SettingsPage = () => {
                                     </p>
                                     <p className="text fz24 fw500">
                                         {studentProfile.phone
-                                            ? studentProfile.phone
+                                            ? getBeautifiedPhone(studentProfile.phone)
                                             : "Телефон не указан!"}
                                     </p>
                                     <p
@@ -1062,6 +1062,48 @@ const SettingsPage = () => {
                                     </div>
                                     <div
                                         className={classNames(
+                                            styles.surnameSettings,
+                                            styles.generalSettingsBlock,
+                                        )}
+                                    >
+                                        <p
+                                            className={classNames(
+                                                styles.title,
+                                                "text fz24 fw500",
+                                            )}
+                                        >
+                                            Профессия
+                                        </p>
+                                        <p
+                                            className={classNames(
+                                                styles.title,
+                                                "text fz20",
+                                            )}
+                                        >
+                                            Введите профессию, которая Вам
+                                            максимально близка. Примеры:
+                                            "Веб-разработчик", "Системный
+                                            администратор", "Дизайнер", "AI
+                                            инженер", "React Middle разработчик"
+                                            и пр.
+                                        </p>
+                                        <Input
+                                            placeholder="Flask разработчик"
+                                            errorText={errors.profession}
+                                            type="text"
+                                            value={studentProfile.profession}
+                                            onChange={(e) =>
+                                                dispatch(
+                                                    updateStudentProfile({
+                                                        ...studentProfile,
+                                                        profession: e,
+                                                    }),
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                    <div
+                                        className={classNames(
                                             styles.yearSettings,
                                             styles.generalSettingsBlock,
                                         )}
@@ -1140,11 +1182,11 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                <button
+                                {/* <button
                                     onClick={() => console.log(companyProfile)}
                                 >
                                     test
-                                </button>
+                                </button> */}
                                 <div
                                     className={classNames(
                                         styles.nameSettings,
@@ -1503,11 +1545,11 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                <button
+                                {/* <button
                                     onClick={() => console.log(studentProfile)}
                                 >
                                     test
-                                </button>
+                                </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div
                                         className={styles.generalSettingsBlock}
@@ -1599,7 +1641,7 @@ const SettingsPage = () => {
                                             dispatch(
                                                 updateStudentProfile({
                                                     ...studentProfile,
-                                                    telegramLink: e.slice(15),
+                                                    telegramLink: e.slice(13),
                                                 }),
                                             )
                                         }
@@ -1632,7 +1674,7 @@ const SettingsPage = () => {
                                             dispatch(
                                                 updateStudentProfile({
                                                     ...studentProfile,
-                                                    vkLink: e.slice(13),
+                                                    vkLink: e.slice(15),
                                                 }),
                                             )
                                         }
@@ -1682,11 +1724,11 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                <button
+                                {/* <button
                                     onClick={() => console.log(companyProfile)}
                                 >
                                     test
-                                </button>
+                                </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div
                                         className={styles.generalSettingsBlock}

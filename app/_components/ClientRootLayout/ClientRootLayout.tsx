@@ -38,6 +38,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                     // console.log("profile in auth", profile);
 
                     if (profile.status === 200) {
+                        console.log("УБРАТЬ КОСТЫЛЬНЫЙ level", profile)
                         dispatch(
                             updateProfile({
                                 ...profile.profile!,
