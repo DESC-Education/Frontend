@@ -8,17 +8,30 @@ import Button from "@/app/_components/ui/Button/Button";
 import Input from "@/app/_components/ui/Input/Input";
 import SelectSearch, { SelectedOptionValue } from "react-select-search";
 import { createTask, getCategory } from "@/app/_http/API/tasksApi";
-import { use, useEffect, useReducer, useState } from "react";
-import { ICategory, IFile, IFilter, IFilterCategory } from "@/app/_types";
+import { use, useContext, useEffect, useReducer, useState } from "react";
+import { ICategory, IFile, IFilter, IFilterCategory, ITask } from "@/app/_types";
 import { set } from "zod";
+import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 const maxLength = 2000;
 const minLength = 5;
 
+function addDaysAndFormat(date: Date, days: number): string {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    
+    const year = result.getFullYear();
+    const month = String(result.getMonth() + 1).padStart(2, '0');
+    const day = String(result.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+}
+
 type TaskState = {
     title: string;
     description: string;
-    deadline: string;
+    deadline: number;
     file: IFile[];
     categoryId: string;
     filters: {
@@ -38,13 +51,16 @@ type TaskAction =
 const initState: TaskState = {
     title: "",
     description: "",
-    deadline: "",
+    deadline: 0,
     file: [],
     categoryId: "",
     filters: {} as any,
 };
 
 export default function CreateTaskPage() {
+
+    const { showAlert } = useContext(AlertContext);
+
     const templates = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -94,6 +110,7 @@ export default function CreateTaskPage() {
                     },
                 };
             }
+
             case "clear": {
                 return {
                     ...initState,
@@ -103,11 +120,6 @@ export default function CreateTaskPage() {
     };
 
     const [state, taskDispatch] = useReducer(reduser, initState);
-
-    // const { task } = useTypesSelector((state) => state.taskReducer);
-    // const { updateTask } = taskSlice.actions;
-
-    // const dispatch = useTypesDispatch();
 
     const [textLength, setTextLength] = useState(state.description.length || 0);
 
@@ -120,6 +132,11 @@ export default function CreateTaskPage() {
             });
         }
     };
+
+
+    const [patterns, setPatterns] = useState<TaskState[]>([]);
+
+
 
     const [categories, setCategories] = useState<ICategory[]>([]);
 
@@ -140,39 +157,73 @@ export default function CreateTaskPage() {
         asyncFunc();
     }, []);
 
-    const [filters, setFilters] = useState<IFilter[] | null>([]);
     const [files, setFiles] = useState<IFile[]>([]);
 
+    const [errors, setErrors] = useState<any>({});
+    const [errorsExist, setErrorsExist] = useState<boolean>(false);
+
     useEffect(() => {
-        files.forEach((el, i) => {
-            taskDispatch({
-                type: "change_file",
-                file: [...files, el],
-            });
-        });
-    }),
-        [files];
+        setErrors({});
+        setErrorsExist(false);
+    }, [state]);
 
     const validateFormTask = async () => {
-        const formData = new FormData();
 
-        formData.append("title", state.title);
-        formData.append("description", state.description);
-        formData.append("deadline", state.deadline);
-        formData.append("categoryId", state.categoryId);
-        Object.values(state.filters).forEach((el, i) => {
-            formData.append(`filtersId`, el!);
-        });
+        const errorsTemp: any = {};
+        if (state.title.length < 2) {
+            errorsTemp.title = "Введите название задания";
+        }
 
-        const res = await createTask(formData);
-        console.log("createTask res", res);
-        
+        if (state.categoryId === "") {
+            errorsTemp.categoryId = "Выберите категорию";
+        }
+        console.log(state.filters);
+        if (Object.keys(state.filters).length < categories.find((item) => item.id === state.categoryId)?.filterCategories?.length!) {
+            errorsTemp.filters = "Не все фильтры выбраны";
+        }
+
+        setErrorsExist(Object.keys(errorsTemp).length !== 0);
+        setErrors(errorsTemp);
+
+        if (Object.keys(errorsTemp).length === 0) {
+            const formData = new FormData();
+
+            const dedlineAsDate = addDaysAndFormat(new Date(), state.deadline);
+            console.log(dedlineAsDate);
+
+            formData.append("title", state.title);
+            formData.append("description", state.description);
+            formData.append("deadline", `${dedlineAsDate}`);
+            formData.append("categoryId", state.categoryId);
+            Object.values(state.filters).forEach((el, i) => {
+                formData.append(`filtersId`, el!);
+            });
+
+            files!.forEach((el, i) => {
+                // ???????
+                formData.append(`file`, el, el.name);
+            });
+
+
+            const res = await createTask(formData);
+
+            if (res.status === 200) {
+                showAlert("Задание успешно создано!", "success");
+                taskDispatch({
+                    type: "clear",
+                });
+                setFiles([]);
+            }
+            console.log("createTask res", res);
+        }
+
+
     };
 
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>
-                <Link href={"/tasks"} className={styles.backButton}>
+                <Link href={"/profile/tasks"} className={styles.backButton}>
                     <Image
                         src="/icons/backIcon.svg"
                         width={15}
@@ -220,6 +271,7 @@ export default function CreateTaskPage() {
                                     title: e,
                                 })
                             }
+                            errorText={errors.title}
                         />
                         <p className="text">О задании</p>
                         <Input
@@ -252,12 +304,11 @@ export default function CreateTaskPage() {
                                 file={files}
                             />
                         </div>
-                        <div className={styles.selects}>
+                        <div className={styles.selects} >
                             <div className={styles.select}>
                                 <p className="text fw500">Категории</p>
                                 <SelectSearch
                                     options={categories}
-                                    placeholder="Выберите категорию"
                                     onChange={(e) => {
                                         taskDispatch({
                                             type: "change_categoryId",
@@ -266,9 +317,13 @@ export default function CreateTaskPage() {
                                             )?.id!,
                                         });
                                     }}
+                                    value={state.categoryId}
+                                    placeholder="Выберите категорию"
+
                                 />
+                                <p className={classNames("text red fz20", styles.errorText)}>{errors.categoryId}</p>
                             </div>
-                            <div className={styles.select}>
+                            <div className={classNames(styles.select, { [styles.error]: errors.filters })}>
                                 <p className={"text fw500"}>Фильтры</p>
                                 {categories?.find(
                                     (item) => item.id === state.categoryId,
@@ -309,7 +364,6 @@ export default function CreateTaskPage() {
                                                                 filterCategoryId:
                                                                     filter.id,
                                                                 filterId: e,
-                                                                // filterId: e,
                                                             });
                                                             console.log(
                                                                 "state.filtersId",
@@ -335,32 +389,22 @@ export default function CreateTaskPage() {
                                         Выберите категорию
                                     </div>
                                 )}
-
-                                {/* {categories?.find(
-                                    (item) => item.id === state.categoryId,
-                                )?.filterCategories?.map(
-                                    (filter, index) => (
-                                        <div className={styles.filters} key={index}>
-                                            <p className={classNames("text fw500", styles.filterTitle)}>{filter.name}</p>
-                                            <SelectSearch
-                                                key={index}
-                                                options={filter.filters}
-                                                placeholder="Выберите фильтр"
-                                                onChange={(e) => {
-
-                                                    taskDispatch({
-                                                        type: "change_filtersId",
-                                                        filtersId: [e],
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    ),
-                                )} */}
+                                <p className={classNames("text red fz20", styles.errorText)}>{errors.filters}</p>
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Сроки</p>
-                                <input
+                                <Input
+                                    type="number"
+                                    placeholder="Количество дней"
+                                    value={state.deadline}
+                                    onChange={(e) =>
+                                        taskDispatch({
+                                            type: "change_deadline",
+                                            deadline: e,
+                                        })
+                                    }
+                                />
+                                {/* <input
                                     type="date"
                                     className={styles.time}
                                     onChange={(e) => {
@@ -369,7 +413,7 @@ export default function CreateTaskPage() {
                                             deadline: e.target.value,
                                         });
                                     }}
-                                />
+                                /> */}
                             </div>
                         </div>
                         <div className={styles.submitButtons}>
@@ -382,6 +426,7 @@ export default function CreateTaskPage() {
                             <Button
                                 type="primary"
                                 className={styles.submitButton}
+                                disabled={true}
                             >
                                 Сохранить как PDF
                             </Button>
