@@ -1,35 +1,43 @@
 import { ICategory, IFile, IFilter, ITask } from "@/app/_types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
-
 type TaskInterface = {
-    task: ITask;
+    tasks: ITask[] | null;
+    categories: ICategory[] | null;
 };
 
 const initialState: TaskInterface = {
-    task: {
-        id: "",
-        company: {} as any,
-        name: "",
-        description: "",
-        deadline: "",
-        createdAt: "",
-        category: {} as ICategory,
-        filtersId: [],
-        isVerified: false,
-        isSuspicious: false,
-        isVisible: false,
-        files: [],
-    } as ITask,
+    tasks: [
+        {
+            id: "",
+            company: {} as any,
+            name: "",
+            description: "",
+            deadline: "",
+            createdAt: "",
+            category: {} as ICategory,
+            filtersId: [],
+            isVerified: false,
+            isSuspicious: false,
+            isVisible: false,
+            files: [],
+        },
+    ],
+    categories: null,
 };
 
 export const taskSlice = createSlice({
     name: "task",
     initialState,
     reducers: {
-        updateTask(state, action: PayloadAction<{task: ITask}>) {
-            state.task = action.payload.task;
+        updateTasks(state, action: PayloadAction<{ task: ITask[] }>) {
+            state.tasks = action.payload.task;
+        },
+        updateCategories(
+            state,
+            action: PayloadAction<{ categories: ICategory[] }>,
+        ) {
+            state.categories = action.payload.categories;
         },
     },
 });

@@ -20,10 +20,18 @@
     margin-bottom: 20px;
 }
 
+.selectText {
+    margin: 10px 0 15px
+}
+
 .filterGroup {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+
+    .filterTitle {
+        margin-bottom: 10px;
+    }
 
     .filterLabel {
         display: flex;

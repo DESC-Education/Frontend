@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./swiper.scss";
+import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
 
 const projects = [
     {
@@ -308,21 +309,7 @@ export default function Home() {
             {/* Projects div */}
             <div className={styles.studentProjects}>
                 <h2 className="title fz48">Проекты студентов</h2>
-                <div className={styles.projectsContainer}>
-                    <Swiper
-                        slidesPerView={1}
-                        spaceBetween={15}
-                        pagination={{ clickable: true, dynamicBullets: true }}
-                        modules={[Pagination]}
-                        className={styles.swiper}
-                    >
-                        {projects.map((project, index) => ( 
-                            <SwiperSlide className={styles.swiperSlide} key={index}>    
-                                <ProjectsList projects={projects}/>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
+                <ProjectsList projects={projects} />
             </div>
 
             {/* Partners div */}

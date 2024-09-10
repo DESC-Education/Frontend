@@ -4,15 +4,21 @@ import { ICategory, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
 export const getTasks = async (
-    q: string = "",
     page: number = 1,
     limit: number = 15,
+    category: string = "",
+    filters: string[] = [],
+    ordering: "createdAt" | "-createdAt" | "relevance" = "createdAt",
 ) => {
     try {
+        const filtersString =
+            filters.length > 0 ? `&filters=${filters.join("&filters=")}` : "";
         const { data } = await $authHost.get<{
             count: string;
             results: ITask[];
-        }>(`/api/v1/tasks/tasks?page=${page}&limit=${limit}&search=${q}`);
+        }>(
+            `/api/v1/tasks/tasks?page=${page}&limit=${limit}&category=${category}${filtersString}&ordering=${ordering}`,
+        );
 
         return {
             status: 200,
@@ -55,7 +61,7 @@ export const createTask = async (dto: FormData) => {
     }
 };
 
-export const getCategory = async (q: string) => {
+export const getCategories = async (q: string = "") => {
     try {
         const { data } = await $authHost.get<{
             count: string;

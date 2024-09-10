@@ -15,7 +15,7 @@ type ProjectListProps = {
 const ProjectsList: FC<ProjectListProps> = ({ projects }) => {
     return (
         <Swiper
-            slidesPerView={4}
+            slidesPerView={2}
             spaceBetween={15}
             pagination={{ clickable: true, dynamicBullets: true }}
             modules={[Pagination]}
