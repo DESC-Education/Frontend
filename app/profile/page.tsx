@@ -229,7 +229,7 @@ export default function Home() {
                                                 <div
                                                     className={styles.circle}
                                                     style={{
-                                                        background: `conic-gradient(#19282C ${category.percent}%, #e0e0e0 0%)`,
+                                                        background: `conic-gradient(#19282C ${category.percent * 100}%, #e0e0e0 0%)`,
                                                     }}
                                                 >
                                                     <span
@@ -238,7 +238,7 @@ export default function Home() {
                                                             "title",
                                                         )}
                                                     >
-                                                        {category.percent}%
+                                                        {category.percent * 100}%
                                                     </span>
                                                 </div>
                                                 <p className="text fw500">
@@ -387,7 +387,7 @@ export default function Home() {
                                                 <div
                                                     className={styles.circle}
                                                     style={{
-                                                        background: `conic-gradient(#19282C ${category.percent}%, #e0e0e0 0%)`,
+                                                        background: `conic-gradient(#19282C ${category.percent * 100}%, #e0e0e0 0%)`,
                                                     }}
                                                 >
                                                     <span
@@ -396,7 +396,7 @@ export default function Home() {
                                                             "title",
                                                         )}
                                                     >
-                                                        {category.percent}%
+                                                        {category.percent * 100}%
                                                     </span>
                                                 </div>
                                                 <p className="text fw500">

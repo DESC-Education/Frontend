@@ -8,18 +8,30 @@ import Button from "@/app/_components/ui/Button/Button";
 import Input from "@/app/_components/ui/Input/Input";
 import SelectSearch, { SelectedOptionValue } from "react-select-search";
 import { createTask, getCategory } from "@/app/_http/API/tasksApi";
-import { use, useEffect, useReducer, useState } from "react";
-import { ICategory, IFile, IFilter, IFilterCategory } from "@/app/_types";
+import { use, useContext, useEffect, useReducer, useState } from "react";
+import { ICategory, IFile, IFilter, IFilterCategory, ITask } from "@/app/_types";
 import { set } from "zod";
 import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 const maxLength = 2000;
 const minLength = 5;
 
+function addDaysAndFormat(date: Date, days: number): string {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    
+    const year = result.getFullYear();
+    const month = String(result.getMonth() + 1).padStart(2, '0');
+    const day = String(result.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+}
+
 type TaskState = {
     title: string;
     description: string;
-    deadline: string;
+    deadline: number;
     file: IFile[];
     categoryId: string;
     filters: {
@@ -39,13 +51,16 @@ type TaskAction =
 const initState: TaskState = {
     title: "",
     description: "",
-    deadline: "",
+    deadline: 0,
     file: [],
     categoryId: "",
     filters: {} as any,
 };
 
 export default function CreateTaskPage() {
+
+    const { showAlert } = useContext(AlertContext);
+
     const templates = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -96,55 +111,6 @@ export default function CreateTaskPage() {
                 };
             }
 
-            // case "change_title_err": {
-            //     return {
-            //         ...state,
-            //         titleErr: action.err,
-            //     };
-            // }
-            // case "change_description_err": {
-            //     return {
-            //         ...state,
-            //         descriptionErr: action.err,
-            //     };
-            // }
-            // case "change_deadline_err": {
-            //     return {
-            //         ...state,
-            //         deadlineErr: action.err,
-            //     };
-            // }
-            // case "change_file_err": {
-            //     return {
-            //         ...state,
-            //         fileErr: action.err,
-            //     };
-            // }
-            // case "change_categoryId_err": {
-            //     return {
-            //         ...state,
-            //         categoryIdErr: action.err,
-            //     };
-            // }
-            // case "change_filters_err": {
-            //     return {
-            //         ...state,
-            //         filtersErr: action.err,
-            //     };
-            // }
-
-            // case "clear_errors": {
-            //     return {
-            //         ...state,
-            //         titleErr: "",
-            //         descriptionErr: "",
-            //         deadlineErr: "",
-            //         fileErr: "",
-            //         categoryIdErr: "",
-            //         filtersErr: "",
-            //     };
-            // }
-
             case "clear": {
                 return {
                     ...initState,
@@ -167,20 +133,12 @@ export default function CreateTaskPage() {
         }
     };
 
-    const [categories, setCategories] = useState<ICategory[]>([]);
 
-    // const getCategories = async () => {
-    //     const res = await getCategory("");
-    //     if (res.status === 200) {
-    //         setCategories(
-    //             res.categories!.map((item) => ({
-    //                 ...item,
-    //                 value: item.id,
-    //                 name: item.name,
-    //             })),
-    //         );
-    //     }
-    // };
+    const [patterns, setPatterns] = useState<TaskState[]>([]);
+
+
+
+    const [categories, setCategories] = useState<ICategory[]>([]);
 
     useEffect(() => {
         const asyncFunc = async () => {
@@ -230,9 +188,12 @@ export default function CreateTaskPage() {
         if (Object.keys(errorsTemp).length === 0) {
             const formData = new FormData();
 
+            const dedlineAsDate = addDaysAndFormat(new Date(), state.deadline);
+            console.log(dedlineAsDate);
+
             formData.append("title", state.title);
             formData.append("description", state.description);
-            formData.append("deadline", state.deadline);
+            formData.append("deadline", `${dedlineAsDate}`);
             formData.append("categoryId", state.categoryId);
             Object.values(state.filters).forEach((el, i) => {
                 formData.append(`filtersId`, el!);
@@ -245,6 +206,14 @@ export default function CreateTaskPage() {
 
 
             const res = await createTask(formData);
+
+            if (res.status === 200) {
+                showAlert("Задание успешно создано!", "success");
+                taskDispatch({
+                    type: "clear",
+                });
+                setFiles([]);
+            }
             console.log("createTask res", res);
         }
 
@@ -254,7 +223,7 @@ export default function CreateTaskPage() {
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>
-                <Link href={"/tasks"} className={styles.backButton}>
+                <Link href={"/profile/tasks"} className={styles.backButton}>
                     <Image
                         src="/icons/backIcon.svg"
                         width={15}
@@ -354,7 +323,7 @@ export default function CreateTaskPage() {
                                 />
                                 <p className={classNames("text red fz20", styles.errorText)}>{errors.categoryId}</p>
                             </div>
-                            <div className={classNames(styles.select, {[styles.error]: errors.filters})}>
+                            <div className={classNames(styles.select, { [styles.error]: errors.filters })}>
                                 <p className={"text fw500"}>Фильтры</p>
                                 {categories?.find(
                                     (item) => item.id === state.categoryId,
@@ -424,7 +393,18 @@ export default function CreateTaskPage() {
                             </div>
                             <div className={styles.select}>
                                 <p className="text fw500">Сроки</p>
-                                <input
+                                <Input
+                                    type="number"
+                                    placeholder="Количество дней"
+                                    value={state.deadline}
+                                    onChange={(e) =>
+                                        taskDispatch({
+                                            type: "change_deadline",
+                                            deadline: e,
+                                        })
+                                    }
+                                />
+                                {/* <input
                                     type="date"
                                     className={styles.time}
                                     onChange={(e) => {
@@ -433,7 +413,7 @@ export default function CreateTaskPage() {
                                             deadline: e.target.value,
                                         });
                                     }}
-                                />
+                                /> */}
                             </div>
                         </div>
                         <div className={styles.submitButtons}>
