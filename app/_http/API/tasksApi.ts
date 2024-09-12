@@ -1,5 +1,5 @@
 import axios from "axios";
-import { $authHost } from "..";
+import { $authHost, $host } from "..";
 import { ICategory, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
@@ -13,16 +13,18 @@ export const getTasks = async (
     try {
         const filtersString =
             filters.length > 0 ? `&filters=${filters.join("&filters=")}` : "";
-        const { data } = await $authHost.get<{
+        const { data } = await $host.get<{
             count: string;
             results: ITask[];
+            numPages: number;
         }>(
-            `/api/v1/tasks/tasks?page=${page}&limit=${limit}&category=${category}${filtersString}&ordering=${ordering}`,
+            `/api/v1/tasks/tasks?page=${page}&page_size=${limit}&category=${category}${filtersString}&ordering=${ordering}`,
         );
 
         return {
             status: 200,
             tasks: data.results,
+            pageCount: data.numPages,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

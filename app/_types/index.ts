@@ -61,6 +61,8 @@ export type IStudentProfile = {
     profession: string;
     leadTaskCategories: ILeadTaskCategory[];
     level: ILevel;
+    replyCount: number;
+    replyReloadDate: string;
 };
 
 export type ICompanyProfile = {
@@ -118,8 +120,8 @@ export type IMessage = {
 
 export type ITask = {
     id: string;
-    company: ICompanyProfile;
-    name: string;
+    profile: ICompanyProfile;
+    title: string;
     description: string;
     deadline: string;
     createdAt: string;

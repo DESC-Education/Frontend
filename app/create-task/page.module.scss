@@ -1,5 +1,23 @@
 .container {
     
+    .deadline {
+        display: flex;
+        // align-items: center;
+        gap: 10px;
+    
+        p {
+            margin-top: 10px;
+        }
+
+        &Input {
+            width: 150px;
+
+            input {
+                border-radius: 10px;
+            }
+        }
+    }
+
     .taskHeader {
         display: flex;
         align-items: center;
@@ -8,31 +26,7 @@
         margin-bottom: 50px;
         position: relative;
 
-        .backButton {
-            display: flex;
-            align-items: center;
-            position: absolute;
-            left: 0px;
-
-            .img {
-                margin-left: 0px;
-                margin-right: 5px;
-                transform: translateX(0px);
-                transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
-            }
-
-            &:hover {
-                .img {
-                    margin-left: 15px;
-                    transform: translateX(-10px);
-                    transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
-
-                }
-
-            }
-
-
-        }
+        
     }
 
     .taskContent {
@@ -101,10 +95,11 @@
 
                 .selects {
                     display: flex;
-                    gap: 20px;
+                    justify-content: space-between;
                     transition: all 0.3s ease-in-out;
 
                     .select {
+                        width: 30%;
                         .filters {
                             margin-bottom: 20px;
                             display: flex;

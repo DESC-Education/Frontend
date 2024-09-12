@@ -6,6 +6,7 @@ import {
     use,
     useContext,
     useEffect,
+    useMemo,
     useReducer,
     useRef,
     useState,
@@ -272,12 +273,12 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
 
     const verifyRegCodeHandler = async () => {
         setIsLoading(true);
-        
+
         const res = await verifyEmail({
             email: state.email,
             code: Number(state.code),
         });
-        
+
         if (res.status === 200) {
             setTimerState("stopped");
             showAlert("Почта успешно подтверждена!", "success");
@@ -563,7 +564,9 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                                 </p>
                                                 <Timer
                                                     handlerTimeUp={() =>
-                                                        setIsCodeTimerTimeUp(true)
+                                                        setIsCodeTimerTimeUp(
+                                                            true,
+                                                        )
                                                     }
                                                     autostart
                                                     time={TIMER_TIME}
@@ -930,7 +933,9 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
                                                 </p>
                                                 <Timer
                                                     handlerTimeUp={() =>
-                                                        setIsCodeTimerTimeUp(true)
+                                                        setIsCodeTimerTimeUp(
+                                                            true,
+                                                        )
                                                     }
                                                     autostart
                                                     time={TIMER_TIME}
@@ -952,7 +957,9 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
         authDispatch({ type: "clear" });
     }, [modalState]);
 
-    const nodeRef = getModalContent(modalState).ref;
+    const nodeRef = useMemo(() => getModalContent(modalState).ref, [
+        modalState,
+    ]);
     const typeOfModalRef = useRef<HTMLDivElement>(null);
 
     return (

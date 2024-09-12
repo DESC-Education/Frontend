@@ -13,17 +13,18 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    // const { tasks, categories } = useTypesSelector((state) => state.taskReducer);
     const { updateCategories, updateTasks } = taskSlice.actions;
     const dispatch = useTypesDispatch();
 
     useEffect(() => {
         const asyncFunc = async () => {
-            const tasks = await getTasks();
+            const tasks = await getTasks(1, 5);
             const categories = await getCategories();
 
+            console.log("tasks", tasks);
+
             if (tasks.status === 200) {
-                dispatch(updateTasks({ task: tasks.tasks! }));
+                dispatch(updateTasks({ tasks: tasks.tasks! }));
             }
             if (categories.status === 200) {
                 dispatch(
