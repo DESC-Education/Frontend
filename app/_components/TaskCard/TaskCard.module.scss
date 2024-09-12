@@ -18,10 +18,15 @@
     .wrapper {
         background-color: rgba(var(--white), 1);
         padding: 30px;
+        gap: 20px;
         margin-bottom: 20px;
         border-radius: 50px;
         border: 2px solid rgba(var(--gray2), 1);
         display: flex;
+
+        .proposeButton {
+            white-space: nowrap;
+        }
 
         justify-content: space-between;
 
@@ -46,8 +51,11 @@
                 }
 
                 .description {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3; /* Number of lines */
+                    line-clamp: 3; /* Number of lines */
+                    -webkit-box-orient: vertical;
                     max-width: 850px;
-                    white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }

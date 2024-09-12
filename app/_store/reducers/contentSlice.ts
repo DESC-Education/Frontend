@@ -5,10 +5,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UserInterface = {
     isLoading: boolean;
+    replyCount: number;
 };
 
 const initialState: UserInterface = {
     isLoading: true,
+    replyCount: 30,
 };
 
 export const contentSlice = createSlice({

@@ -10,8 +10,8 @@ const initialState: TaskInterface = {
     tasks: [
         {
             id: "",
-            company: {} as any,
-            name: "",
+            profile: { companyName: "", logoImg: "" } as any,
+            title: "",
             description: "",
             deadline: "",
             createdAt: "",
@@ -30,8 +30,8 @@ export const taskSlice = createSlice({
     name: "task",
     initialState,
     reducers: {
-        updateTasks(state, action: PayloadAction<{ task: ITask[] }>) {
-            state.tasks = action.payload.task;
+        updateTasks(state, action: PayloadAction<{ tasks: ITask[] }>) {
+            state.tasks = action.payload.tasks;
         },
         updateCategories(
             state,
