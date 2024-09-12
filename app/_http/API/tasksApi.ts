@@ -1,22 +1,30 @@
 import axios from "axios";
-import { $authHost } from "..";
+import { $authHost, $host } from "..";
 import { ICategory, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
 export const getTasks = async (
-    q: string = "",
     page: number = 1,
     limit: number = 15,
+    category: string = "",
+    filters: string[] = [],
+    ordering: "createdAt" | "-createdAt" | "relevance" = "createdAt",
 ) => {
     try {
-        const { data } = await $authHost.get<{
+        const filtersString =
+            filters.length > 0 ? `&filters=${filters.join("&filters=")}` : "";
+        const { data } = await $host.get<{
             count: string;
             results: ITask[];
-        }>(`/api/v1/tasks/tasks?page=${page}&limit=${limit}&search=${q}`);
+            numPages: number;
+        }>(
+            `/api/v1/tasks/tasks?page=${page}&page_size=${limit}&category=${category}${filtersString}&ordering=${ordering}`,
+        );
 
         return {
             status: 200,
             tasks: data.results,
+            pageCount: data.numPages,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -59,7 +67,7 @@ export const createTask = async (dto: FormData) => {
     }
 };
 
-export const getCategory = async (q: string) => {
+export const getCategories = async (q: string = "") => {
     try {
         const { data } = await $authHost.get<{
             count: string;

@@ -51,3 +51,9 @@ export const levels = [
     { name: "Средний", value: 1 },
     { name: "Продвинутый", value: 2 },
 ]
+
+export const sortingOptions = [
+    { name: "Сначала новые", value: "createdAt" },
+    { name: "Сначала старые", value: "-createdAt" },
+    // { name: "Сначала рекомендуемые", value: "relevant" },
+]
