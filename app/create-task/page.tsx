@@ -20,11 +20,11 @@ const minLength = 5;
 function addDaysAndFormat(date: Date, days: number): string {
     const result = new Date(date);
     result.setDate(result.getDate() + days);
-    
+
     const year = result.getFullYear();
     const month = String(result.getMonth() + 1).padStart(2, '0');
     const day = String(result.getDate()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day}`;
 }
 

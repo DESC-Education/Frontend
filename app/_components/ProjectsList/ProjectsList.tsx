@@ -16,6 +16,29 @@ const ProjectsList: FC<ProjectListProps> = ({ projects }) => {
     return (
         <Swiper
             slidesPerView={4}
+            breakpoints={{
+                1400: {
+                    slidesPerView: 4,
+                },
+                1200: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                425: {
+                    slidesPerView: 1,
+                },
+                375: {
+                    slidesPerView: 1,
+                },
+                320: {
+                    slidesPerView: 1,
+                },
+            }}
             spaceBetween={15}
             pagination={{ clickable: true, dynamicBullets: true }}
             modules={[Pagination]}

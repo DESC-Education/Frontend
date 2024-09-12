@@ -83,7 +83,7 @@ const Header = () => {
                                         style={{
                                             pointerEvents:
                                                 profileVerification.status ===
-                                                "verified"
+                                                    "verified"
                                                     ? "all"
                                                     : "none",
                                         }}
@@ -101,28 +101,28 @@ const Header = () => {
                                     </Link>
                                     {profileVerification.status !==
                                         "verified" && (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <>
-                                                    Для доступа к бирже
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    )}
+                                            <InfoIcon
+                                                className={styles.infoIcon}
+                                                tooltipContent={
+                                                    <>
+                                                        Для доступа к бирже
+                                                        необходимо подтвердить
+                                                        профиль
+                                                        <Button type="primary">
+                                                            Инструкция
+                                                        </Button>
+                                                    </>
+                                                }
+                                                action="tooltip"
+                                            />
+                                        )}
                                 </div>
                                 <div className={styles.linkContainer}>
                                     <Link
                                         style={{
                                             pointerEvents:
                                                 profileVerification.status ===
-                                                "verified"
+                                                    "verified"
                                                     ? "all"
                                                     : "none",
                                         }}
@@ -143,21 +143,21 @@ const Header = () => {
                                     </Link>
                                     {profileVerification.status !==
                                         "verified" && (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <>
-                                                    Для доступа к сообщениям
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    )}
+                                            <InfoIcon
+                                                className={styles.infoIcon}
+                                                tooltipContent={
+                                                    <>
+                                                        Для доступа к сообщениям
+                                                        необходимо подтвердить
+                                                        профиль
+                                                        <Button type="primary">
+                                                            Инструкция
+                                                        </Button>
+                                                    </>
+                                                }
+                                                action="tooltip"
+                                            />
+                                        )}
                                 </div>
                                 <div className={styles.linkContainer}>
                                     <Link
@@ -208,7 +208,7 @@ const Header = () => {
                                         style={{
                                             pointerEvents:
                                                 profileVerification.status ===
-                                                "verified"
+                                                    "verified"
                                                     ? "all"
                                                     : "none",
                                         }}
@@ -229,28 +229,28 @@ const Header = () => {
                                     </Link>
                                     {profileVerification.status !==
                                         "verified" && (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <>
-                                                    Для доступа к бирже
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    )}
+                                            <InfoIcon
+                                                className={styles.infoIcon}
+                                                tooltipContent={
+                                                    <>
+                                                        Для доступа к бирже
+                                                        необходимо подтвердить
+                                                        профиль
+                                                        <Button type="primary">
+                                                            Инструкция
+                                                        </Button>
+                                                    </>
+                                                }
+                                                action="tooltip"
+                                            />
+                                        )}
                                 </div>
                                 <div className={styles.linkContainer}>
                                     <Link
                                         style={{
                                             pointerEvents:
                                                 profileVerification.status ===
-                                                "verified"
+                                                    "verified"
                                                     ? "all"
                                                     : "none",
                                         }}
@@ -271,21 +271,21 @@ const Header = () => {
                                     </Link>
                                     {profileVerification.status !==
                                         "verified" && (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <>
-                                                    Для доступа к сообщениям
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    )}
+                                            <InfoIcon
+                                                className={styles.infoIcon}
+                                                tooltipContent={
+                                                    <>
+                                                        Для доступа к сообщениям
+                                                        необходимо подтвердить
+                                                        профиль
+                                                        <Button type="primary">
+                                                            Инструкция
+                                                        </Button>
+                                                    </>
+                                                }
+                                                action="tooltip"
+                                            />
+                                        )}
                                 </div>
                                 <Link
                                     className={classNames(
@@ -518,57 +518,85 @@ const Header = () => {
         }
     };
 
+
+    const [isMobile, setIsMobile] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 600);
+        };
+
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
     if (!getHeaderContent(activeState)) setActiveState("student");
 
     return (
-        <div className={classNames(styles.header)}>
-            <button onClick={() => console.log(studentProfile, user)}>
-                test
-            </button>
-            <div className={classNames("container", styles.container)}>
-                <Link href="/">
-                    <Image
-                        className={"text pointer"}
-                        src="/icons/headerLogo.svg"
-                        alt="Logo"
-                        width={125}
-                        height={53}
-                    />
-                </Link>
-                {isAuth ? (
-                    getHeaderContent(activeState).content
-                ) : (
-                    <nav>
-                        <div className={styles.navList}>
-                            <Button
-                                onClick={() =>
-                                    showModal({
-                                        content: (
-                                            <AuthModal initModalState="login" />
-                                        ),
-                                    })
-                                }
-                                type="primary"
-                            >
-                                Вход
-                            </Button>
-                            <Button
-                                onClick={() =>
-                                    showModal({
-                                        content: (
-                                            <AuthModal initModalState="reg" />
-                                        ),
-                                    })
-                                }
-                                type="secondary"
-                            >
-                                Регистрация
-                            </Button>
-                        </div>
-                    </nav>
-                )}
+        <>
+            {isMobile && (
+                <div
+                    className={classNames(styles.menuButton, {
+                        [styles.isOpen]: isOpen,
+                    })}
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                </div>
+            )}
+            <div className={classNames(styles.header, {
+                [styles.open]: isOpen,
+                [styles.hidden]: isMobile && !isOpen,
+            })}>
+                <div className={classNames("container", styles.container)}>
+                    <Link href="/">
+                        <Image
+                            className={"text pointer"}
+                            src="/icons/headerLogo.svg"
+                            alt="Logo"
+                            width={125}
+                            height={53}
+                        />
+                    </Link>
+
+                    {isAuth ? (
+                        getHeaderContent(activeState).content
+                    ) : (
+                        <nav>
+                            <div className={styles.navList}>
+                                <Button
+                                    onClick={() =>
+                                        showModal({
+                                            content: (
+                                                <AuthModal initModalState="login" />
+                                            ),
+                                        })
+                                    }
+                                    type="primary"
+                                >
+                                    Вход
+                                </Button>
+                                <Button
+                                    onClick={() =>
+                                        showModal({
+                                            content: (
+                                                <AuthModal initModalState="reg" />
+                                            ),
+                                        })
+                                    }
+                                    type="secondary"
+                                >
+                                    Регистрация
+                                </Button>
+                            </div>
+                        </nav>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

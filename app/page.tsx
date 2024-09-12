@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./swiper.scss";
+import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
 
 const projects = [
     {
@@ -94,7 +95,7 @@ export default function Home() {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={classNames("container", styles.container)}>
             <div className={styles.hero}>
                 <div className={styles.heroContent}>
                     <p className="title fz36">
@@ -141,6 +142,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword1,
+                                "text fz16 fw500"
                             )}
                         >
                             🚀 Большие проекты
@@ -149,6 +151,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword2,
+                                "text fz16 fw500"
                             )}
                         >
                             📈 Карьерный рост
@@ -157,6 +160,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword3,
+                                "text fz16 fw500"
                             )}
                         >
                             🔥 Реальный опыт
@@ -165,6 +169,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword4,
+                                "text fz16 fw500"
                             )}
                         >
                             💼 Трудоустройство
@@ -173,6 +178,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword5,
+                                "text fz16 fw500"
                             )}
                         >
                             🏆 Команда мечты
@@ -309,19 +315,7 @@ export default function Home() {
             <div className={styles.studentProjects}>
                 <h2 className="title fz48">Проекты студентов</h2>
                 <div className={styles.projectsContainer}>
-                    <Swiper
-                        slidesPerView={1}
-                        spaceBetween={15}
-                        pagination={{ clickable: true, dynamicBullets: true }}
-                        modules={[Pagination]}
-                        className={styles.swiper}
-                    >
-                        {projects.map((project, index) => ( 
-                            <SwiperSlide className={styles.swiperSlide} key={index}>    
-                                <ProjectsList projects={projects}/>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    <ProjectsList projects={projects} />
                 </div>
             </div>
 
