@@ -100,4 +100,8 @@
             color: rgba(var(--white), 1);
         }
     }
+
+    @media (max-width: 768px) {
+        padding: 10px 20px;
+    }
 }

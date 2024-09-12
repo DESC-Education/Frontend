@@ -35,7 +35,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
 
                     const profile = await getProfile();
 
-                    // console.log("profile in auth", profile);
+                    console.log("profile in auth", profile);
 
                     if (profile.status === 200) {
                         console.log("УБРАТЬ КОСТЫЛЬНЫЙ level", profile)
