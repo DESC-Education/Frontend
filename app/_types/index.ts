@@ -98,13 +98,18 @@ export type ILeadTaskCategory = {
 
 export type IChat = {
     id: string;
-    companion: IUser;
+    companion: ChatCompanion;
     createdAt: string;
     taskId: string;
     isSupport: boolean;
     isSuspicious: boolean;
     messages: IMessage[];
 };
+
+export type ChatCompanion = {
+    name: string;
+    avatar: string;
+}
 
 export type IMessage = {
     id: string;
@@ -113,7 +118,7 @@ export type IMessage = {
     ticketId?: string;
     userId: string;
     isRead: boolean;
-    createdat: string;
+    createdAt: string;
     isVisible: boolean;
     changedId?: string;
 };

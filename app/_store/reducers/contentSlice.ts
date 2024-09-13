@@ -6,11 +6,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type UserInterface = {
     isLoading: boolean;
     replyCount: number;
+    chats: IChat[];
 };
 
 const initialState: UserInterface = {
     isLoading: true,
     replyCount: 30,
+    chats: [],
 };
 
 export const contentSlice = createSlice({
@@ -19,6 +21,9 @@ export const contentSlice = createSlice({
     reducers: {
         updateIsLoading(state, action: PayloadAction<boolean>) {
             state.isLoading = action.payload;
+        },
+        updateChats(state, action: PayloadAction<IChat[]>) {
+            state.chats = action.payload;
         },
     },
 });

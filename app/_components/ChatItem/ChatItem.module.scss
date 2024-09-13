@@ -2,7 +2,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 20px;
+    border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s;
 
@@ -16,6 +17,7 @@
 
         .avatar {
             width: 70px;
+            object-fit: cover;
             height: 70px;
             border-radius: 50%;
             margin-right: 30px;
@@ -48,6 +50,7 @@
     .chatMeta {
         display: flex;
         flex-direction: column;
+        align-items: flex-end;
 
         .date {
             color: rgba(var(--gray1), 1);

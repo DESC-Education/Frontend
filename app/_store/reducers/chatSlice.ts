@@ -1,24 +1,22 @@
-import { IMessage } from "@/app/_types";
-import { createSlice } from "@reduxjs/toolkit";
+// import { IChat, IMessage } from "@/app/_types";
+// import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type ChatState = {
-    messages: IMessage[];
-    activeChatId: string | null;
-};
+// type ChatState = {
+//     chats: IChat[];
+// };
 
-const initialState: ChatState = {
-    messages: [],
-    activeChatId: null,
-};
+// const initialState: ChatState = {
+//     chats: [],
+// };
 
-export const chatSlice = createSlice({
-    name: "chat",
-    initialState,
-    reducers: {
-        updateMessages: (state, action) => {
-            state.messages = action.payload;
-        },
-    },
-});
+// export const chatSlice = createSlice({
+//     name: "chat",
+//     initialState,
+//     reducers: {
+//         updateChats: (state, action: PayloadAction<IChat[]>) => {
+//             state.chats = action.payload;
+//         },
+//     },
+// });
 
-export default chatSlice.reducer;
+// export default chatSlice.reducer;
