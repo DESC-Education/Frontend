@@ -17,7 +17,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UserInterface = {
     user: IUser;
-    chats: IChat[];
     isAuth: boolean;
     isProfileLoading: boolean;
     profileVerification: IVerification;
@@ -48,6 +47,8 @@ const initProfileStudent: IStudentProfile = {
     profession: "",
     leadTaskCategories: [],
     level: { value: 0, name: "Начинающий" },
+    replyCount: 0,
+    replyReloadDate: ""
 };
 
 const initProfileCompany: ICompanyProfile = {
@@ -72,7 +73,6 @@ const initProfileCompany: ICompanyProfile = {
 
 const initialState: UserInterface = {
     user: {} as IUser,
-    chats: [],
     isAuth: false,
     isProfileLoading: true,
     profileVerification: { status: "not_verified" },
@@ -126,9 +126,6 @@ export const userSlice = createSlice({
         },
         updateUser(state, action: PayloadAction<IUser>) {
             state.user = action.payload;
-        },
-        updateChats(state, action: PayloadAction<IChat[]>) {
-            state.chats = action.payload;
         },
         logoutUser(state) {
             state.user = {} as IUser;

@@ -11,7 +11,6 @@ type ChatUserProps = {
     isRead: boolean;
 };
 
-
 const ChatUser: React.FC<ChatUserProps> = ({
     name,
     avatar,
@@ -22,7 +21,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
     return (
         <div className={styles.chatItem}>
             <div className={styles.chatInfo}>
-                <img src={avatar} alt="" className={styles.avatar} />
+                <img src={avatar} alt="avatar" className={styles.avatar} />
                 <div className={styles.userInfo}>
                     <div className={styles.mainInfo}>
                         <h4 className="text fw500">{name}</h4>
