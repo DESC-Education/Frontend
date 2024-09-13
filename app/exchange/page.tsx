@@ -205,10 +205,10 @@ export default function ExchangePage() {
 
     return (
         <div className="container">
-            <h2 className={classNames(styles.exchangeTitle, "title fz48")}>
+            <h2 className={classNames(styles.exchangeTitle, "title fz32")}>
                 Биржа заданий
             </h2>
-            <button
+            {/* <button
                 onClick={() =>
                     console.log(
                         "selectedCategory",
@@ -223,11 +223,11 @@ export default function ExchangePage() {
                 }
             >
                 test
-            </button>
+            </button> */}
             <div className={styles.mainContainer}>
                 <aside className={styles.sidebar}>
                     <div className={styles.filters}>
-                        <h3 className="title">Фильтры</h3>
+                        <h3 className="title fz28 fw500">Фильтры</h3>
                         <div className={styles.filterGroup}>
                             <p
                                 className={classNames(
@@ -370,7 +370,7 @@ export default function ExchangePage() {
                             </div>
                         )}
                         <div className={styles.sorting}>
-                            <span className="title">Сортировка:</span>
+                            <span className="title fz28 fw500">Сортировка:</span>
                             <SelectSearch
                                 value={sorting}
                                 onChange={(e: any) => {

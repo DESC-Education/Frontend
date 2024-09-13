@@ -1,0 +1,62 @@
+.container {
+    margin: 0 30px;
+    position: relative;
+
+    &.incomingMessage,
+    &.outgoingMessage {
+        padding: 10px 15px 5px;
+        border-radius: 10px;
+        max-width: 60%;
+        font-size: 14px;
+        position: relative;
+    }
+
+    &.incomingMessage {
+        background-color: rgba(var(--white), 1);
+        align-self: flex-start;
+        color: rgba(var(--black), 1);
+        border-bottom-left-radius: 0;
+
+        .decor {
+            left: -29px;
+            transform: scaleX(-1);
+            background: rgba(var(--white), 1);
+        }
+    }
+
+    &.outgoingMessage {
+        background-color: rgba(var(--gray1), 1);
+        align-self: flex-end;
+        color: rgba(var(--white), 1);
+        border-bottom-right-radius: 0;
+
+        .messageTime {
+            color: rgba(var(--white), 1);
+        }
+
+        .decor {
+            right: -29px;
+            background-color: rgba(var(--gray1), 1);
+        }
+    }
+
+    .decor {
+        clip-path: polygon(0% 99.892%, 0% 99.892%, 7.116% 99.899%, 14.865% 99.915%, 23.25% 99.938%, 32.275% 99.962%, 41.941% 99.983%, 52.252% 99.997%, 63.211% 99.999%, 74.82% 99.985%, 87.082% 99.951%, 100% 99.892%, 100% 99.892%, 95.854% 98.836%, 89.572% 97.639%, 81.468% 95.612%, 71.853% 92.06%, 61.043% 86.293%, 49.348% 77.618%, 37.084% 65.344%, 24.562% 48.777%, 12.096% 27.227%, 0% 0%, 0% 99.892%);
+        background: black;
+        width: 30px;
+        height: 20px;
+        bottom: 0;
+        position: absolute;
+    }
+
+    .footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: flex-end;
+
+        .checkMark {
+            width: 24px;
+        }
+    }
+}

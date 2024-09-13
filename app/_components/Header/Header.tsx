@@ -522,9 +522,9 @@ const Header = () => {
 
     return (
         <div className={classNames(styles.header)}>
-            <button onClick={() => console.log(studentProfile, user)}>
+            {/* <button onClick={() => console.log(studentProfile, user)}>
                 test
-            </button>
+            </button> */}
             <div className={classNames("container", styles.container)}>
                 <Link href="/">
                     <Image

@@ -7,16 +7,20 @@ import { getRemainingTime } from "@/app/_utils/time";
 import Moment from "react-moment";
 import { use, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import "moment/locale/ru";
 
 type TaskCardProps = {
     task: ITask;
+    viewer?:
+        | "student"
+        | "company"
+        | "moderator"
+        | "institute_moderator"
+        | "admin";
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, viewer = "student" }) => {
     const [dayTitle, setDayTitle] = useState<string>("");
-
-    console.log(task);
-    
 
     const getDayTitle = (day: number): "дней" | "день" | "дня" | "дней" => {
         const number = day;
@@ -40,7 +44,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 
     return (
         <div className={styles.taskCard}>
-            <button
+            {/* <button
                 onClick={() =>
                     console.log(
                         new Date(task.deadline),
@@ -49,7 +53,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 }
             >
                 test
-            </button>
+            </button> */}
             {/* <div
                 className={classNames(
                     "text gray fz20",
@@ -75,12 +79,22 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                                 height={60}
                             />
                         </div>
-                        <h4 className={classNames(styles.taskTitle, "title")}>
+                        <h4
+                            className={classNames(
+                                styles.taskTitle,
+                                "title fz28 fw500",
+                            )}
+                        >
                             {task.profile?.companyName}
                         </h4>
                     </div>
                     <div className={styles.taskDescription}>
-                        <div className={classNames(styles.taskName, "title")}>
+                        <div
+                            className={classNames(
+                                styles.taskName,
+                                "title fz28",
+                            )}
+                        >
                             {task.title}
                         </div>
                         <div className="text">
@@ -91,7 +105,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                                 href={`/tasks/${task.id}`}
                                 className={classNames(
                                     styles.showMore,
-                                    "text gray fz24 under pointer",
+                                    "text green fz24 under pointer",
                                 )}
                             >
                                 Показать полностью
@@ -124,15 +138,26 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                                 "text fw500 fz20",
                             )}
                         >
-                            осталось{" "}
-                            <Moment toNow ago>
+                            осталось:{" "}
+                            <Moment locale="ru" toNow ago>
                                 {task.deadline}
                             </Moment>
                         </span>
                     </div>
-                    <Button type="secondary" className={styles.proposeButton}>
-                        Предложить решение
-                    </Button>
+                    <Link
+                        href={`/tasks/${task.id}`}
+                        className={classNames(
+                            styles.showMore,
+                            styles.proposeButton,
+                            "text green fz24 under pointer",
+                        )}
+                    >
+                        <Button type="secondary">
+                            {viewer === "student"
+                                ? "Предложить решение"
+                                : "Просмотреть решения"}
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>
