@@ -145,8 +145,8 @@ const ProfileNavMenu = () => {
                     />
                 )}
             </div>
-            <p className={classNames("text fz20 gray", styles.mail)}>
-                {user.email || "example@mail.com"}
+            <p className={classNames("text fz20 white", styles.mail)}>
+                {`${activeProfile.firstName} ${activeProfile.lastName}`}
             </p>
             <div className={styles.pages}>
                 {user.role === "student"

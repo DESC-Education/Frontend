@@ -1,0 +1,27 @@
+.container {
+    padding: 20px 0;
+    background: rgba(var(--black), 1);
+    height: 100px;
+    width: 100%;
+
+    .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 125px;
+    }
+
+    .sm {
+        display: flex;
+        gap: 35px;
+
+        &Item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    }
+}

@@ -19,13 +19,14 @@ import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { getMyTasks } from "@/app/_http/API/tasksApi";
 import TaskCard from "@/app/_components/TaskCard/TaskCard";
 import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
+import ProfileStatus from "../ProfileStatus/ProfileStatus";
 
 type TasksPage = "current" | "past";
 
 export default function JobsPage() {
     const [activeTab, setActiveTab] = useState<TasksPage>("current");
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
-    const { user } = useTypesSelector((state) => state.userReducer);
+    const { user, profileVerification } = useTypesSelector((state) => state.userReducer);
     const { myTasks, myArchivedTasks } = useTypesSelector(
         (state) => state.contentReducer,
     );
@@ -74,7 +75,7 @@ export default function JobsPage() {
     } => {
         switch (jobsPage) {
             case "current":
-                console.log(user);
+                console.log(user, myTasks);
                 
                 return {
                     content: (
@@ -125,7 +126,11 @@ export default function JobsPage() {
                     ref: createRef(),
                 };
         }
-    }, [user.role]);
+    }, [user.role, myTasks, myArchivedTasks]);
+
+    if (profileVerification.status !== "verified") {
+        return <ProfileStatus profileVerification={profileVerification} />;
+    }
 
     return (
         <div className={classNames(styles.container, "container")}>

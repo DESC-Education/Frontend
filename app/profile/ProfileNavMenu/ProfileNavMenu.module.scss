@@ -52,6 +52,10 @@
         margin-top: 20px;
         text-align: center;
         margin-bottom: -40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 200px;
     }
 
     .pages {
@@ -62,7 +66,7 @@
         overflow: hidden;
         margin-right: -40px;
 
-        .page { 
+        .page {
             transition: .3s;
             background: rgba(var(--black), 1);
             padding: 25px 50px;

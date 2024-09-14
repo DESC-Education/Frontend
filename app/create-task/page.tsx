@@ -248,7 +248,7 @@ export default function CreateTaskPage() {
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>
-                <BackButton title="Вернуться к списку" />
+                <BackButton title="Назад" />
                 <p className="title">Создать задание</p>
             </div>
             <div className={styles.taskContent}>
