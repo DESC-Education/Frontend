@@ -183,4 +183,12 @@
             }
         }
     }
+
+    @media (max-width: 425px) {
+        .carousel {
+            .swiper {
+                width: calc(100% - 10px);
+            }
+        }
+    }
 }

@@ -28,11 +28,13 @@ const Accordion: React.FC<AccordionProps> = ({ index, title, content }) => {
                     className={styles.accordionHeader}
                     onClick={() => toggleAccordion(index)}
                 >
-                    <div className={classNames(styles.accordionIndex, "title")}>{`0${index}`}</div>
-                    <h3 className={classNames(styles.accordionTitle, "title")}>{title}</h3>
-                    <div
-                        className={classNames(styles.accordionIcon, activeIndex === index ? styles.active : "")}
-                    />
+                    <div className={styles.accordionIndexContainer}>
+                        <div className={classNames(styles.accordionIndex, "title fz48")}>{`0${index}`}</div>
+                        <div
+                            className={classNames(styles.accordionIcon, activeIndex === index ? styles.active : "")}
+                        />
+                    </div>
+                    <p className={classNames(styles.accordionTitle, "title")}>{title}</p>
                 </div>
             </div>
             <div
