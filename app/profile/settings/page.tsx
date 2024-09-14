@@ -7,9 +7,11 @@ import {
     ReactNode,
     RefObject,
     SetStateAction,
+    useCallback,
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from "react";
 import styles from "./page.module.scss";
@@ -172,7 +174,8 @@ const SettingsPage = () => {
     const [logo, setLogo] = useState<File | null>(null);
     const [studentCard, setStudentCard] = useState<File | null>(null);
     const [verFiles, setVerFiles] = useState<File[] | null>([]);
-    const [isChanged, setIsChanged] = useState<number>(0);
+    const isChanged = useRef<number>(0);
+    // const [isChanged, setIsChanged] = useState<number>(0);
 
     useEffect(() => {
         setErrors({});
@@ -180,9 +183,9 @@ const SettingsPage = () => {
     }, [studentProfile, studentCard, companyProfile, logo, verFiles]);
 
     useEffect(() => {
-        if (isProfileLoading) return;
+        if (isProfileLoading || isChanged.current === undefined) return;
 
-        setIsChanged((prev) => prev + 1);
+        isChanged.current = isChanged.current + 1;
     }, [studentProfile, companyProfile, isProfileLoading]);
 
     const [errors, setErrors] = useState<any>({});
@@ -196,7 +199,10 @@ const SettingsPage = () => {
 
         console.log(studentProfile);
 
-        if (!studentProfile.profession || studentProfile.profession?.length < 2) {
+        if (
+            !studentProfile.profession ||
+            studentProfile.profession?.length < 2
+        ) {
             errorsTemp.profession = "Введите профессию";
         }
 
@@ -228,15 +234,24 @@ const SettingsPage = () => {
             errorsTemp.studentCard = "Прикрепите студенческий билет";
         }
 
-        if (!studentProfile.university || !Object.keys(studentProfile.university).length) {
+        if (
+            !studentProfile.university ||
+            !Object.keys(studentProfile.university).length
+        ) {
             errorsTemp.university = "Выберите университет";
         }
 
-        if (!studentProfile.specialty || !Object.keys(studentProfile.specialty).length) {
+        if (
+            !studentProfile.specialty ||
+            !Object.keys(studentProfile.specialty).length
+        ) {
             errorsTemp.specialty = "Выберите специальность";
         }
 
-        if (!studentProfile.faculty || !Object.keys(studentProfile.faculty).length) {
+        if (
+            !studentProfile.faculty ||
+            !Object.keys(studentProfile.faculty).length
+        ) {
             errorsTemp.faculty = "Выберите факультет";
         }
 
@@ -451,6 +466,7 @@ const SettingsPage = () => {
 
             console.log("edit res", res);
             if (res.status === 200) {
+                isChanged.current = 0;
                 showAlert("Профиль успешно обновлен", "success");
             }
             setIsLoading(false);
@@ -507,6 +523,7 @@ const SettingsPage = () => {
             // console.log("edit res", res);
 
             if (res.status === 200) {
+                isChanged.current = 0;
                 showAlert("Профиль успешно обновлен", "success");
             }
 
@@ -544,7 +561,9 @@ const SettingsPage = () => {
                                     </p>
                                     <p className="text fz24 fw500">
                                         {studentProfile.phone
-                                            ? getBeautifiedPhone(studentProfile.phone)
+                                            ? getBeautifiedPhone(
+                                                  studentProfile.phone,
+                                              )
                                             : "Телефон не указан!"}
                                     </p>
                                     <p
@@ -1072,7 +1091,7 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Профессия
+                                            Сфера деятельности
                                         </p>
                                         <p
                                             className={classNames(
@@ -1080,7 +1099,7 @@ const SettingsPage = () => {
                                                 "text fz20",
                                             )}
                                         >
-                                            Введите профессию, которая Вам
+                                            Введите сферу деятельности, которая Вам
                                             максимально близка. Примеры:
                                             "Веб-разработчик", "Системный
                                             администратор", "Дизайнер", "AI
@@ -1710,7 +1729,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
-                                    disabled={isChanged < 2}
+                                    disabled={isChanged.current < 2}
                                     onClick={() => validateEditProfileStudent()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -1919,7 +1938,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
-                                    disabled={isChanged < 2}
+                                    disabled={isChanged.current < 2}
                                     onClick={() => validateEditProfileCompany()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -1954,6 +1973,52 @@ const SettingsPage = () => {
             }
         });
     }, [profileVerification.status]);
+
+    // const isChangesExist = useCallback(() => {
+    //     console.log("HELO!!", isChanged);
+
+    //     return isChanged.current > 2;
+    // }, [activeTab, isChanged.current]);
+
+    // console.log(isChangesExist(), isChanged);
+
+    // console.log(isChangesExist());
+    useEffect(() => {
+        return () => {
+            if (isChanged.current > 2) {
+                showAlert("Изменения не сохранены!", "warning");
+            }
+            // console.log("helo x", isChanged.current);
+        };
+        // console.log(isChanged, activeTab, "helo");
+    }, []);
+
+    useEffect(() => {
+        if (isChanged.current > 2 && activeTab === "personal_data") {
+            showAlert("Изменения не сохранены!", "warning");
+        }
+    }, [activeTab]);
+
+    // useEffect(() => {
+    //     console.log(isChanged, activeTab, "helo");
+
+    //     if (isChanged > 2 && activeTab === "profile") {
+    //         showAlert("Изменения не сохранены!", "warning");
+    //     }
+    //     return () => {
+    //         console.log("helo x 2", isChanged, activeTab);
+
+    //         if (isChanged > 2 && activeTab === "profile") {
+    //             showAlert("Изменения не сохранены!", "warning");
+    //         }
+    //         // if (activeTab === "personal_data") {
+    //             // showAlert("Изменения не сохранены!", "warning");
+    //             // dispatch(updateStudentProfile({ ...studentProfile,  }))
+    //         // }
+    //         // showAlert("Изменения не сохранены!", "warning");
+    //         // dispatch(updateStudentProfile({ ...studentProfile,  }))
+    //     }
+    // }, [activeTab, isChanged])
 
     // console.log(activeTab, profileVerification.status);
 

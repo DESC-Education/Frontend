@@ -19,7 +19,12 @@
 }
 
 body {
-    margin-top: 140px;
+    margin-top: 100px;
+    position: relative;
+    padding: 40px 0 0;
+    display: grid;
+    grid-template-rows: 1fr 100px;
+    min-height: calc(100vh - 100px);
 }
 
 .hide {
@@ -155,6 +160,12 @@ a {
     line-height: 36px;
     font-weight: 500;
 
+    &.fz24 {
+        font-size: 24px;
+        line-height: 28px;
+        font-weight: 300;
+    }
+
     &.fz28 {
         font-size: 28px;
         line-height: 32px;
@@ -175,6 +186,9 @@ a {
 
     &.under {
         text-decoration: underline;
+  }
+      &.fw500 {
+        font-weight: 500;
     }
 }
 

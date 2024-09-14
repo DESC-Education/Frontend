@@ -116,14 +116,11 @@
         display: flex;
         align-items: center;
 
-        .infoIcon {
-            position: absolute;
-            right: 7px;
-            top: 7px;
-
-            >div {
-                padding: 12px;
-            }
+        .tooltipContent {
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
     }
 

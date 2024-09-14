@@ -183,7 +183,7 @@ export default function Home() {
                         >
                             🏆 Команда мечты
                         </div>
-                        <img src="images/students.png" alt="students" />
+                        <img src="images/students.webp" alt="students" />
                     </div>
                 </div>
             </div>

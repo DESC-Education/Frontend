@@ -28,7 +28,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
             if (token) {
                 const res = await auth();
 
-                // console.log("res for auth", res);
+                console.log("res for auth", res);
 
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
@@ -38,7 +38,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                     console.log("profile in auth", profile);
 
                     if (profile.status === 200) {
-                        console.log("УБРАТЬ КОСТЫЛЬНЫЙ level", profile)
                         dispatch(
                             updateProfile({
                                 ...profile.profile!,
