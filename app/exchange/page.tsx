@@ -16,7 +16,11 @@ import { getTasks } from "../_http/API/tasksApi";
 import { getDateAndMonth } from "../_utils/time";
 import Moment from "react-moment";
 import "moment/locale/ru";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import {
+    CSSTransition,
+    SwitchTransition,
+    TransitionGroup,
+} from "react-transition-group";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { taskSlice } from "../_store/reducers/taskSlice";
 import "./page.scss";
@@ -149,11 +153,10 @@ export default function ExchangePage() {
         console.log(
             "in getTasksByFiltersAndSort",
             selectedFilters,
-            Object.keys(selectedFilters)
-                .map((key) => selectedFilters[key]),
+            Object.keys(selectedFilters).map((key) => selectedFilters[key]),
             Object.keys(selectedFilters)
                 .map((key) => selectedFilters[key])
-                .flat()
+                .flat(),
         );
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: res.tasks! }));
@@ -202,6 +205,15 @@ export default function ExchangePage() {
                 <CustomOval />
             </div>
         );
+
+    console.log(
+        hasMore,
+        tasks,
+        currentPage,
+        sorting,
+        selectedCategory,
+        selectedFilters,
+    );
 
     return (
         <div className="container">
@@ -263,45 +275,56 @@ export default function ExchangePage() {
                             ))}
                         </div>
                         {selectedCategory ? (
-                            selectedCategory.filterCategories.map(
-                                (filterCategory, catIndex) => (
-                                    <div
-                                        key={catIndex}
-                                        className={styles.filterGroup}
-                                    >
-                                        <h4 className="text gray fz20">
-                                            {filterCategory.name}
-                                        </h4>
-                                        {filterCategory.filters.map(
-                                            (filter, filIndex) => (
-                                                <label
-                                                    key={filIndex}
-                                                    className={
-                                                        styles.filterLabel
-                                                    }
-                                                >
-                                                    <Input
-                                                        type="checkbox"
-                                                        onCheck={(e) =>
-                                                            handleSelectFilter(
-                                                                filterCategory.id,
-                                                                filter.id,
-                                                                e,
-                                                            )
-                                                        }
-                                                        checked={selectedFilters[
-                                                            filterCategory.id
-                                                        ]?.includes(filter.id)}
-                                                    />
-                                                    <p className="text fw500 fz20">
-                                                        {filter.name}
-                                                    </p>
-                                                </label>
-                                            ),
-                                        )}
-                                    </div>
-                                ),
-                            )
+                            <TransitionGroup>
+                                {selectedCategory.filterCategories.map(
+                                    (filterCategory, catIndex) => (
+                                        <CSSTransition
+                                            key={catIndex}
+                                            timeout={200}
+                                            classNames="filterGroup"
+                                        >
+                                            <div
+                                                key={catIndex}
+                                                className={styles.filterGroup}
+                                            >
+                                                <h4 className="text gray fz20">
+                                                    {filterCategory.name}
+                                                </h4>
+                                                {filterCategory.filters.map(
+                                                    (filter, filIndex) => (
+                                                        <label
+                                                            key={filIndex}
+                                                            className={
+                                                                styles.filterLabel
+                                                            }
+                                                        >
+                                                            <Input
+                                                                type="checkbox"
+                                                                onCheck={(e) =>
+                                                                    handleSelectFilter(
+                                                                        filterCategory.id,
+                                                                        filter.id,
+                                                                        e,
+                                                                    )
+                                                                }
+                                                                checked={selectedFilters[
+                                                                    filterCategory
+                                                                        .id
+                                                                ]?.includes(
+                                                                    filter.id,
+                                                                )}
+                                                            />
+                                                            <p className="text fw500 fz20">
+                                                                {filter.name}
+                                                            </p>
+                                                        </label>
+                                                    ),
+                                                )}
+                                            </div>
+                                        </CSSTransition>
+                                    ),
+                                )}
+                            </TransitionGroup>
                         ) : (
                             <p
                                 className={classNames(
@@ -370,7 +393,9 @@ export default function ExchangePage() {
                             </div>
                         )}
                         <div className={styles.sorting}>
-                            <span className="title fz28 fw500">Сортировка:</span>
+                            <span className="title fz28 fw500">
+                                Сортировка:
+                            </span>
                             <SelectSearch
                                 value={sorting}
                                 onChange={(e: any) => {
@@ -393,28 +418,44 @@ export default function ExchangePage() {
                                 [styles.loading]: isLoading,
                             })}
                         >
-                            <div className={styles.loader}>
-                                <CustomOval />
-                            </div>
-                            <InfiniteScroll
-                                dataLength={tasks.length}
-                                next={getMoreTasks}
-                                hasMore={hasMore}
-                                loader={
-                                    <div className="centerContent">
+                            {tasks.length === 0 ? (
+                                <div className="centerContent">
+                                    <img src="/images/questions.png" />
+                                    <p
+                                        className={classNames(
+                                            "text fz24 fw500 center",
+                                            styles.noTasks,
+                                        )}
+                                    >
+                                        Заданий с такими фильтрами нет!
+                                    </p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className={styles.loader}>
                                         <CustomOval />
                                     </div>
-                                }
-                                endMessage={
-                                    <p className="text fz24 fw500 center">
-                                        Больше заданий нет!
-                                    </p>
-                                }
-                            >
-                                {tasks.map((task, index) => (
-                                    <TaskCard key={index} task={task} />
-                                ))}
-                            </InfiniteScroll>
+                                    <InfiniteScroll
+                                        dataLength={tasks.length}
+                                        next={getMoreTasks}
+                                        hasMore={hasMore}
+                                        loader={
+                                            <div className="centerContent">
+                                                <CustomOval />
+                                            </div>
+                                        }
+                                        endMessage={
+                                            <p className="text fz24 fw500 center">
+                                                Больше заданий нет!
+                                            </p>
+                                        }
+                                    >
+                                        {tasks.map((task, index) => (
+                                            <TaskCard key={index} task={task} />
+                                        ))}
+                                    </InfiniteScroll>
+                                </>
+                            )}
                         </div>
                     </CSSTransition>
                 </main>
