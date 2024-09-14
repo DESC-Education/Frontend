@@ -52,6 +52,12 @@ input {
     // transition: .3s;
 }
 
+@media (max-width: 768px) {
+    .modal-opened {
+        padding-right: 0;
+    }
+}
+
 #react-portal-wrapper {
     z-index: 30;
     position: fixed;
@@ -178,7 +184,10 @@ a {
         font-weight: 500;
     }
 
-    &.fw500 {
+    &.under {
+        text-decoration: underline;
+  }
+      &.fw500 {
         font-weight: 500;
     }
 }
@@ -313,43 +322,7 @@ a {
             line-height: 22px;
         }
         &.fz48 {
-            font-size: 36px;
-            line-height: 32px;
-        }
-    }
-}
-
-@media (max-width: 600px) {
-    body {
-        margin-top: 30px;
-    }
-    .text {
-        font-size: 16px;
-        line-height: 22px;
-
-        &.fz20 {
-            font-size: 14px;
-            line-height: 16px;
-        }        
-        &.fz16 {
-            font-size: 10px;
-            line-height: 12px;
-        }
-    }
-    .title {
-        font-size: 20px;
-        line-height: 24px;
-
-        &.fz28 {
-            font-size: 16px;
-            line-height: 20px;
-        }        
-        &.fz36 {
-            font-size: 22px;
-            line-height: 24px;
-        }
-        &.fz48 {
-            font-size: 30px;
+            font-size: 32px;
             line-height: 32px;
         }
     }

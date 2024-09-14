@@ -44,13 +44,13 @@
 
 @media (max-width: 1024px) {
     .hero {
-        padding: 208px 0;
+        padding: 208px 10px;
     }
 }
 
 @media (max-width: 425px) {
     .hero {
-        padding: 108px 0;
+        padding: 108px 10px;
     }
 
 }
@@ -238,11 +238,22 @@
         }
     }
 
+    @media (max-width: 1250px) {
+        .keywordsBlock {
+            .keyword {
+                &5 {
+                    left: 65%;
+                }
+            }
+        }
+    }
+
     @media (max-width: 1200px) {
         .textBlock {
             padding: 40px 50px;
         }
     }
+
 
     @media (max-width: 1024px) {
         .textBlock {
@@ -282,13 +293,24 @@
         }
     }
 
-    @media (max-width: 768px) {
+    // @media (max-width: 768px) {
+    //      .keywordsBlock {
+
+    //         .keyword {
+    //             &2 {
+    //                 top: 35%;
+    //             }
+    //             &5 {
+    //                 left: 60%;
+    //                 top: 40%;
+    //             }
+    //         }
+    //     }
+    // }
+
+    @media (max-width: 610px) {
         .keywordsBlock {
-            
             .keyword {
-                &2 {
-                    top: 35%;
-                }
                 &5 {
                     left: 60%;
                     top: 40%;
@@ -301,14 +323,32 @@
         .textBlock {
             padding: 40px 60px;
         }
+
         .keywordsBlock {
             img {
                 width: 100%;
             }
+
             .keyword {
                 &5 {
                     left: 60%;
                     top: 40%;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 396px) {
+        .keywordsBlock {
+            .keyword {
+                margin: 0;
+                padding: 10px 10px;
+                &2 {
+                    top: 60%;
+                }
+                &3 {
+                    left: 20%;
+                    top: 35%;
                 }
             }
         }

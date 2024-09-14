@@ -6,7 +6,7 @@ import styles from "./layout.module.scss";
 import ProfileNavMenu from "./ProfileNavMenu/ProfileNavMenu";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
-import { use, useEffect, useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import Header from "../_components/Header/Header";
 import { getProfile } from "../_http/API/profileApi";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
@@ -68,10 +68,13 @@ export default function RootLayout({
         // console.log("studentProfile", studentProfile);
     }, [isAuth]);
 
+    
     return (
         <div className="container">
             <div className={styles.container}>
+
                 <ProfileNavMenu />
+
                 {isProfileLoading ? (
                     <LoadingScreen />
                 ) : (

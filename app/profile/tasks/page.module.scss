@@ -24,6 +24,19 @@
         }
     }
 
+    @media (max-width: 768px) {
+        .navigation {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+
+            .navigationButtons {
+                margin-left: 0;
+                
+            }
+        }
+    }
+
     .content {
         opacity: 0;
         transform: translateX(-20px);
