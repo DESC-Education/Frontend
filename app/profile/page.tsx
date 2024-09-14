@@ -301,7 +301,7 @@ export default function Home() {
                             companyProfile.phone && (
                                 <div className={styles.contact}>
                                     <Image
-                                        src="/icons/phoneIcon.svg"
+                                        src="/icons/tel.png"
                                         alt="phone"
                                         width={35}
                                         height={35}
@@ -316,7 +316,7 @@ export default function Home() {
                         {companyProfile.emailVisibility && user.email && (
                             <div className={styles.contact}>
                                 <Image
-                                    src="/icons/email.png"
+                                    src="/icons/mail.png"
                                     alt="phone"
                                     width={35}
                                     height={35}
@@ -334,13 +334,34 @@ export default function Home() {
                                     className={styles.contact}
                                 >
                                     <Image
-                                        src="/icons/telegramIcon.svg"
+                                        src="/icons/tg.png"
                                         alt="telegram"
                                         width={35}
                                         height={35}
                                     />
                                     <p className="text">
                                         @{companyProfile.telegramLink}
+                                    </p>
+                                </Link>
+                            </div>
+                        )}
+                        {companyProfile.vkLink && (
+                            <div className={styles.contact}>
+                                <Link
+                                    href={
+                                        "https:/vk.com/" +
+                                        companyProfile.vkLink
+                                    }
+                                    className={styles.contact}
+                                >
+                                    <Image
+                                        src="/icons/vk.png"
+                                        alt="vk"
+                                        width={35}
+                                        height={35}
+                                    />
+                                    <p className="text">
+                                        {companyProfile.vkLink}
                                     </p>
                                 </Link>
                             </div>
