@@ -720,7 +720,6 @@ const Header = () => {
         logoutUser,
     } = userSlice.actions;
 
-
     if (!getHeaderContent(activeState)) setActiveState("student");
 
     return (

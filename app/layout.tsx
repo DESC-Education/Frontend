@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./_scss/globals.scss";
 
 import localFont from "next/font/local";
@@ -42,6 +42,13 @@ const gilroy = localFont({
     display: "swap",
     variable: "--font",
 });
+
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+};
 
 export const metadata: Metadata = {
     title: "DESC Education",
