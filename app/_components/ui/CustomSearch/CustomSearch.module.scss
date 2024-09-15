@@ -35,6 +35,12 @@
         }
     }
 
+    @media (max-width: 595px) {
+        input {
+            font-size: 15px !important; 
+            padding: 8px 15px !important;
+        }
+    }
 
     .errorText {
         margin-top: 3px;
