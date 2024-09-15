@@ -49,10 +49,6 @@ type InputProps = {
     multiple?: boolean;
     rows?: number;
     maxFiles?: number;
-    // addFilesHandler?: (
-    // file: FileList,
-    // fileSetter: Dispatch<SetStateAction<File[] | null>>,
-    // ) => void;
 };
 
 const Input: FC<InputProps> = ({
@@ -83,10 +79,6 @@ const Input: FC<InputProps> = ({
         setUniqueId("id" + Math.random().toString(16).slice(2))
     }, [])
 
-    // const uniqueId = useMemo(
-    //     () => "id" + Math.random().toString(16).slice(2),
-    //     [],
-    // );
     const errorRef = useRef<HTMLParagraphElement>(null);
     const checkRef = useRef<HTMLLabelElement>(null);
     const [codeValue, setCodeValue] = useState<string>("____");

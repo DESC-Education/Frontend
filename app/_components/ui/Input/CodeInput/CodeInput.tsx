@@ -2,6 +2,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import styles from "./CodeInput.module.scss";
 import "./CodeInput.scss";
 import classNames from "classnames";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 
 const CODE_LEN = 4;
 
@@ -12,8 +13,14 @@ type CodeInputProps = {
 };
 
 const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
-    const changeValue = (val: string, value: string) => {
-        if (val === "Backspace") {
+    const { isMobileDevice } = useTypesSelector(
+        (state) => state.contentReducer,
+    );
+
+    const changeValue = (char: string, value: string) => {
+        console.log("in changeValue", char, value);
+
+        if (char === "Backspace") {
             // Delete last char
             setValue((prev) => {
                 for (let i = CODE_LEN - 1; i >= 0; i--) {
@@ -29,8 +36,10 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
                 return "____";
             });
         } else {
+            // if (char.length > 4) return;
+
             if (value[0] === "_") {
-                setValue((prev) => `${val}___`);
+                setValue((prev) => `${char}___`);
                 return;
             }
             // Enter digit
@@ -42,7 +51,7 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
                         } else {
                             return [
                                 prev.slice(0, i),
-                                val,
+                                char,
                                 Array(CODE_LEN - i - 1)
                                     .fill("_")
                                     .join(""),
@@ -56,6 +65,8 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
     };
 
     useEffect(() => {
+        if (isMobileDevice) return;
+
         const listener = (e: KeyboardEvent) => {
             if ("1234567890".includes(e.key) || e.key === "Backspace") {
                 changeValue(e.key, value);
@@ -66,19 +77,38 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
         return () => {
             window.removeEventListener("keydown", listener);
         };
-    }, [value]);
+    }, [value, isMobileDevice]);
 
     const isActiveChar = (index: number, value: string) => {
         if (index === 0 && value[0] === "_") return true;
-        
+
         for (let i = 1; i < value.length; i++) {
             if (value[i] === "_" && value[i - 1] && value[i - 1] !== "_") {
                 return i === index;
             } else {
-                continue
+                continue;
             }
         }
     };
+
+    console.log("val is", value);
+
+    if (isMobileDevice)
+        return (
+            <input
+                value={value}
+                onChange={(e) => {
+                    console.log("helo?", e.target.value,value ,e.target.value.length, value.length);
+                    
+                    if (e.target.value.length < value.length) {
+                        changeValue("Backspace", value);
+                    } else {
+                        changeValue(e.target.value[4], value);
+                    }
+                }}
+                className={classNames(styles.input, className)}
+            />
+        );
 
     return (
         <div className={classNames(styles.container, className)}>
