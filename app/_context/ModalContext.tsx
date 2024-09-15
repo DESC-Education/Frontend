@@ -54,7 +54,6 @@ const ModalState = ({ children }: Partial<ModalStateProps>) => {
             document.body.classList.add("modal-opened");
         });
 
-
         const closeOnBorder =
             data.closeOnBorder === undefined ? true : data.closeOnBorder;
         const onCloseFunction =
@@ -92,7 +91,6 @@ const ModalState = ({ children }: Partial<ModalStateProps>) => {
         <ModalContext.Provider value={{ showModal, closeModal }}>
             <Modal
                 closeOnBorder={closeOnBorder}
-                children={currContent}
                 isOpen={isOpened}
                 allowClose={allowClose}
                 handleClose={() => {
@@ -107,7 +105,9 @@ const ModalState = ({ children }: Partial<ModalStateProps>) => {
                     }
                     setIsOpened(false);
                 }}
-            />
+            >
+                {currContent}
+            </Modal>
             {children}
         </ModalContext.Provider>
     );

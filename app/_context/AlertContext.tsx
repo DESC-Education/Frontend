@@ -33,10 +33,11 @@ const AlertState = ({ children }: Partial<AlertStateProps>) => {
         <AlertContext.Provider value={{ showAlert }}>
             <Alert
                 type={currType}
-                children={currContent}
                 isOpen={isOpened}
                 handleClose={() => setIsOpened(false)}
-            />
+            >
+                {currContent}
+            </Alert>
             {children}
         </AlertContext.Provider>
     );
