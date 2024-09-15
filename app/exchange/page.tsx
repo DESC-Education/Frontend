@@ -349,6 +349,9 @@ export default function ExchangePage() {
                                 onClick={() => {
                                     setSelectedCategory(null);
                                     setSelectedFilters({});
+                                    setTimeout(() => {
+                                        getTasksByFiltersAndSort();
+                                    }, 100);
                                 }}
                             >
                                 Очистить
