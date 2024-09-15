@@ -196,6 +196,7 @@
         position: relative;
 
         .keyword {
+            white-space: nowrap;
             background-color: rgba(var(--white), 1);
             position: absolute;
             color: rgba(var(--black), 1);

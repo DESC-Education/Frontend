@@ -16,7 +16,7 @@ import Header from "./_components/Header/Header";
 import Footer from "./_components/Footer/Footer";
 import Head from "next/head";
 
-import avatar from "../public/images/avatar.png";
+import hummingbird from "../public/images/hummingbird.svg";
 
 const gilroy = localFont({
     src: [
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
         title: "DESC Education",
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях.",
-        images: avatar.src,
+        images: hummingbird.src,
         siteName: "DESC Education",
     },
 };

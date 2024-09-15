@@ -33,8 +33,6 @@ const LoadingScreen = () => {
             unmountOnExit
         >
             <div className={styles.container} ref={loadingRef}>
-                <p className="title fz34">Загрузка{Array(dots).fill(".")}</p>
-                {/* <img style={{width: `${270 * value / 100}px`}} className={styles.hummingbird_loading} src="/icons/hummingbird.svg" alt="hummingbird" /> */}
                 <img src="/icons/hummingbird.svg" alt="hummingbird" />
             </div>
         </CSSTransition>

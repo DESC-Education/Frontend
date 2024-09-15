@@ -52,15 +52,22 @@ const projects = [
 const partners = [
     {
         id: "1",
-        logo: "/images/politechlogo.png",
-        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+        logo: "/partners/ikit.jpg",
+        name: "ИКИТ",
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
     },
     {
         id: "2",
-        logo: "/images/politechlogo.png",
-        name: "ИКИТ",
+        logo: "/partners/polytech.jpg",
+        name: "Политех",
+        description:
+            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    },
+    {
+        id: "3",
+        logo: "/partners/iec.png",
+        name: "Инженерный образовательный центр",
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
     },
@@ -83,7 +90,9 @@ const partners = [
 export default function Home() {
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const { isMobileDevice } = useTypesSelector((state) => state.contentReducer);
+    const { isMobileDevice } = useTypesSelector(
+        (state) => state.contentReducer,
+    );
 
     const { showModal } = useContext(ModalContext);
 
