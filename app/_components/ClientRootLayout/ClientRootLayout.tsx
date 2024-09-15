@@ -12,6 +12,12 @@ type ClientRootLayoutProps = {
     children: React.ReactNode;
 };
 
+declare global {
+    interface Window {
+        opera: any;
+    }
+}
+
 const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const dispatch = useTypesDispatch();
     const {
