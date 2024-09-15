@@ -80,4 +80,21 @@
             }
         }
     }
+
+    @media (max-width: 595px) {
+        .inputWrapper {
+            .input {
+                input {
+                    padding: 8px 15px;
+                }
+            }
+        }
+
+        .filteredList {
+            .filteredItem {
+                padding: 8px 10px;
+                font-size: 16px;
+            }
+        }
+    }
 }

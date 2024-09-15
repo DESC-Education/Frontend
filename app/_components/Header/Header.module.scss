@@ -376,7 +376,7 @@
             transition: all 1s ease;
 
             &.open {
-                filter: brightness(10);
+                filter: brightness(0) saturate(100%) invert(100%) sepia(0%) hue-rotate(33deg) brightness(100%) contrast(109%);
                 //animation: hue 1s infinite linear;
             }
 
