@@ -98,12 +98,28 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
             <input
                 value={value}
                 onChange={(e) => {
-                    console.log("helo?", e.target.value,value ,e.target.value.length, value.length);
-                    
+                    console.log(
+                        "helo?",
+                        e.target.value,
+                        value,
+                        e.target.value.length,
+                        value.length,
+                    );
+
                     if (e.target.value.length < value.length) {
                         changeValue("Backspace", value);
                     } else {
-                        changeValue(e.target.value[4], value);
+                        if (!!e.target.value.match(/_/g) && e.target.value.match(/_/g)!.length === 4) {
+                            changeValue(
+                                e.target.value.replaceAll("_", "")[0],
+                                value,
+                            );
+                        } else {
+                            changeValue(
+                                e.target.value[4],
+                                value,
+                            );
+                        }
                     }
                 }}
                 className={classNames(styles.input, className)}
