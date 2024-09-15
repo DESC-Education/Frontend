@@ -13,7 +13,7 @@ const Footer = () => {
                 />
                 <div className={styles.sm}>
                     <Link
-                        href="https://t.me/iuckycoder"
+                        href="https://t.me/studio_desc"
                         className={styles.smItem}
                         target="_blank"
                         rel="noreferrer"
@@ -27,7 +27,7 @@ const Footer = () => {
                         <p className="text white">Telegram</p>
                     </Link>
                     <Link
-                        href="https://vk.com/flyingtothem00n"
+                        href="https://vk.com/desc_edu"
                         className={styles.smItem}
                         target="_blank"
                         rel="noreferrer"
