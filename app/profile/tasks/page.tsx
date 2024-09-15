@@ -50,7 +50,22 @@ export default function JobsPage() {
     useEffect(() => {
         if (!user.id) return;
         const asyncFunc = async () => {
-            const tasks = await getMyTasks({
+            const activeTasks = await getMyTasks({
+                page: 1,
+                limit: 15,
+                q: "",
+                role: user.role,
+                status: "active",
+            });
+
+            // console.log("tasks", tasks);
+
+            if (activeTasks.status === 200) {
+                dispatch(updateMyTasks(activeTasks.results!));
+                // dispatch(updateMyArchivedTasks(tasks.archived_tasks!));
+            }
+
+            const archivedTasks = await getMyTasks({
                 page: 1,
                 limit: 15,
                 q: "",
@@ -58,11 +73,10 @@ export default function JobsPage() {
                 status: "archived",
             });
 
-            console.log("tasks", tasks);
+            console.log("archivedTasks", archivedTasks);
 
-            if (tasks.status === 200) {
-                // dispatch(updateMyTasks(tasks.active_tasks!));
-                // dispatch(updateMyArchivedTasks(tasks.archived_tasks!));
+            if (archivedTasks.status === 200) {
+                dispatch(updateMyArchivedTasks(archivedTasks.results!));
             }
 
             setIsLoading(false);
