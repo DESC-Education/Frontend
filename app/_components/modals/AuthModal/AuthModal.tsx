@@ -108,15 +108,16 @@ const titles = {
 
 type AuthModalProps = {
     initModalState: "reg" | "login";
+    initRegState?: "regClient" | "regCompany";
 };
 
 type ModalState = "reg" | "login" | "regCode" | "recover" | "recoverCode";
 
-const AuthModal: FC<AuthModalProps> = ({ initModalState }) => {
+const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState = "regClient" }) => {
     const [modalState, setModalState] = useState<ModalState>(initModalState);
 
     const [regState, setRegState] = useState<"regClient" | "regCompany">(
-        "regClient",
+        initRegState,
     );
 
     const { showAlert } = useContext(AlertContext);

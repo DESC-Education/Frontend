@@ -106,3 +106,22 @@
         }
     }
 }
+
+@media screen and (max-width: 500px) {
+    .container {
+        .typeOfModal {
+            div {
+                height: 45px !important;
+                padding: 7px 12px !important;
+
+                &.active {
+                    // padding: 7px 12px;
+                }
+
+                p {
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+}

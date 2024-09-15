@@ -5,6 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UserInterface = {
     isLoading: boolean;
+    isMobileDevice: boolean;
     replyCount: number;
     chats: IChat[];
     myTasks: ITask[];
@@ -13,6 +14,7 @@ type UserInterface = {
 
 const initialState: UserInterface = {
     isLoading: true,
+    isMobileDevice: false,
     replyCount: 30,
     chats: [],
     myTasks: [],
@@ -34,6 +36,9 @@ export const contentSlice = createSlice({
         },
         updateMyArchivedTasks(state, action: PayloadAction<ITask[]>) {
             state.myArchivedTasks = action.payload;
+        },
+        updateIsMobileDevice(state, action: PayloadAction<boolean>) {
+            state.isMobileDevice = action.payload;
         },
     },
 });

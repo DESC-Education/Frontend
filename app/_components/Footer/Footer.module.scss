@@ -24,4 +24,23 @@
             gap: 10px;
         }
     }
+
+    @media screen and (max-width: 768px) {
+        height: auto;
+        padding-bottom: 50px;
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+
+            .sm {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+        }
+    }
 }
