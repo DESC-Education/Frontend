@@ -3,6 +3,29 @@ import { $authHost, $host } from "..";
 import { ICategory, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
+export const getTask = async (id: string) => {
+    try {
+        const { data } = await $authHost.get<ITask>(`/api/v1/tasks/task/${id}`);
+
+        return {
+            status: 200,
+            task: data,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
 export const getTasks = async (
     page: number = 1,
     limit: number = 15,
@@ -42,7 +65,13 @@ export const getTasks = async (
 };
 
 export const getMyTasks = async (
-    dto: { page: number; limit: number; q: string; role: string; status: "active" | "archived" } = {
+    dto: {
+        page: number;
+        limit: number;
+        q: string;
+        role: string;
+        status: "active" | "archived";
+    } = {
         page: 1,
         limit: 15,
         q: "",

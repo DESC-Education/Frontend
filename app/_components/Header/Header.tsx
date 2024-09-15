@@ -282,6 +282,7 @@ const Header = () => {
                                         className={classNames(
                                             styles.linkContainer,
                                             styles.subLinkContainer,
+                                            styles.lastSubLinkContainer,
                                         )}
                                     >
                                         <Link
