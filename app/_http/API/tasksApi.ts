@@ -42,27 +42,26 @@ export const getTasks = async (
 };
 
 export const getMyTasks = async (
-    dto: { page: number; limit: number; q: string; role: string } = {
+    dto: { page: number; limit: number; q: string; role: string; status: "active" | "archived" } = {
         page: 1,
         limit: 15,
         q: "",
         role: "company",
+        status: "active",
     },
 ) => {
     try {
         const { data } = await $authHost.get<{
             count: string;
-            active_tasks: ITask[];
-            archived_tasks: ITask[];
+            results: ITask[];
             numPages: number;
         }>(
-            `/api/v1/tasks/my/${dto.role}?page=${dto.page}&page_size=${dto.limit}&search=${dto.q}`,
+            `/api/v1/tasks/my/${dto.role}?page=${dto.page}&page_size=${dto.limit}&search=${dto.q}&status=${dto.status}`,
         );
 
         return {
             status: 200,
-            active_tasks: data.active_tasks,
-            archived_tasks: data.archived_tasks,
+            results: data.results,
             pageCount: data.numPages,
         };
     } catch (error) {
