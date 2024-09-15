@@ -55,21 +55,21 @@ const partners = [
         logo: "/partners/ikit.jpg",
         name: "ИКИТ",
         description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+            "ИКИТ активно поддерживает проект, предоставляя информационное сопровождение и необходимые ресурсы для организации мероприятий. Благодаря их участию, студенты получают доступ к современным технологиям и оборудованию для выполнения практических заданий.",
     },
     {
         id: "2",
         logo: "/partners/polytech.jpg",
         name: "Политех",
         description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+            "Политехнический институт содействует проекту, помогая устанавливать контакты с новыми партнерами и предоставляя инфраструктуру для образовательных мероприятий. Их поддержка расширяет возможности для студентов, открывая двери к новым знаниям и практическому опыту.",
     },
     {
         id: "3",
         logo: "/partners/iec.png",
         name: "Инженерный образовательный центр",
         description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+            "Инженерный образовательный центр СФУ вносит значительный вклад в развитие проекта, предоставляя доступ к современным лабораториям и оборудованию. Их помощь позволяет участникам освоить передовые технологии и применять их на практике.",
     },
     // {
     //     id: "3",
@@ -93,6 +93,8 @@ export default function Home() {
     const { isMobileDevice } = useTypesSelector(
         (state) => state.contentReducer,
     );
+
+    const { isAuth } = useTypesSelector((state) => state.userReducer);
 
     const { showModal } = useContext(ModalContext);
 
@@ -120,38 +122,40 @@ export default function Home() {
                     <h2 className="title fz48">
                         Один шаг к открытию возможностей
                     </h2>
-                    <div className={styles.buttons}>
-                        <Button
-                            onClick={() =>
-                                showModal({
-                                    content: (
-                                        <AuthModal
-                                            initRegState="regClient"
-                                            initModalState="reg"
-                                        />
-                                    ),
-                                })
-                            }
-                            type="primary"
-                        >
-                            Студент
-                        </Button>
-                        <Button
-                            onClick={() =>
-                                showModal({
-                                    content: (
-                                        <AuthModal
-                                            initRegState="regCompany"
-                                            initModalState="reg"
-                                        />
-                                    ),
-                                })
-                            }
-                            type="primary"
-                        >
-                            Компания
-                        </Button>
-                    </div>
+                    {!isAuth && (
+                        <div className={styles.buttons}>
+                            <Button
+                                onClick={() =>
+                                    showModal({
+                                        content: (
+                                            <AuthModal
+                                                initRegState="regClient"
+                                                initModalState="reg"
+                                            />
+                                        ),
+                                    })
+                                }
+                                type="primary"
+                            >
+                                Студент
+                            </Button>
+                            <Button
+                                onClick={() =>
+                                    showModal({
+                                        content: (
+                                            <AuthModal
+                                                initRegState="regCompany"
+                                                initModalState="reg"
+                                            />
+                                        ),
+                                    })
+                                }
+                                type="primary"
+                            >
+                                Компания
+                            </Button>
+                        </div>
+                    )}
                 </div>
                 <div className={styles.heroImageContainer}>
                     <Image

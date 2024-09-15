@@ -64,19 +64,23 @@
             gap: 20px;
 
             .partnerLogo {
-                width: 453px;
-                height: 435px;
+                width: 350px;
+                height: 350px;
                 border-radius: 50%;
                 overflow: hidden;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 border: 2px solid rgba(var(--gray2), 1);
+
+                img {
+                    object-fit: cover;
+                }
             }
 
             .partnerInfo {
                 text-align: left;
-                max-width: 400px;
+                max-width: 600px;
                 max-height: 350px;
                 margin: 60px;
 
@@ -141,13 +145,16 @@
 
     @media (max-width: 1024px) {
         padding: 40px 0;
+
         .carousel {
             .arrowButton {
                 width: 30px;
                 height: 30px;
             }
+
             .partnerDetails {
                 gap: 0;
+
                 .partnerInfo {
                     margin: 10px;
 
@@ -161,6 +168,7 @@
                         font-size: 14px;
                     }
                 }
+
                 .partnerLogo {
                     width: 150px;
                     height: 150px;

@@ -405,7 +405,7 @@ const Input: FC<InputProps> = ({
                                         Максимальный вес: 5МБ
                                     </p>
                                     <p className="text fz16 gray">
-                                        Максимальное количество файлов: 5
+                                        Максимальное количество файлов: {maxFiles}
                                     </p>
                                 </div>
                             </div>
