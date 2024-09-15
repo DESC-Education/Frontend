@@ -661,11 +661,11 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                <button
+                                {/* <button
                                     onClick={() => console.log(studentProfile)}
                                 >
                                     test
-                                </button>
+                                </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div className={styles.rowSettings}>
                                         <div

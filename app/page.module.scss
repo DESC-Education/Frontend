@@ -35,20 +35,20 @@
         transform: translateY(-50%);
     }
 
-    @media (max-width: 1200px) {
+    @media screen and (max-width: 1200px) {
         .heroImage {
             opacity: 0.5;
         }
     }
 }
 
-@media (max-width: 1024px) {
+@media screen and (max-width: 1024px) {
     .hero {
         padding: 158px 10px;
     }
 }
 
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
     .hero {
         padding: 58px 10px;
         margin: 0;
@@ -56,7 +56,7 @@
 
 }
 
-@media (max-width: 350px) {
+@media screen and (max-width: 350px) {
     .hero {
         .buttons {
             display: flex;
@@ -253,13 +253,13 @@
         }
     }
 
-    @media (max-width: 1400px) {
+    @media screen and (max-width: 1400px) {
         .textBlock {
             padding: 60px 80px;
         }
     }
 
-    @media (max-width: 1250px) {
+    @media screen and (max-width: 1250px) {
         .keywordsBlock {
             .keyword {
                 &5 {
@@ -269,14 +269,14 @@
         }
     }
 
-    @media (max-width: 1200px) {
+    @media screen and (max-width: 1200px) {
         .textBlock {
             padding: 40px 50px;
         }
     }
 
 
-    @media (max-width: 1024px) {
+    @media screen and (max-width: 1024px) {
         .textBlock {
             padding: 60px 80px;
         }
@@ -314,7 +314,7 @@
         }
     }
 
-    // @media (max-width: 768px) {
+    // @media screen and (max-width: 768px) {
     //      .keywordsBlock {
 
     //         .keyword {
@@ -329,7 +329,7 @@
     //     }
     // }
 
-    @media (max-width: 610px) {
+    @media screen and (max-width: 610px) {
         .keywordsBlock {
             .keyword {
                 padding: 7px 12px;
@@ -346,7 +346,7 @@
         }
     }
 
-    @media (max-width: 425px) {
+    @media screen and (max-width: 425px) {
         .textBlock {
             padding: 20px 30px;
         }
@@ -365,7 +365,7 @@
         }
     }
 
-    @media (max-width: 396px) {
+    @media screen and (max-width: 396px) {
         .keywordsBlock {
             .keyword {
                 margin: 0;
@@ -458,7 +458,7 @@
         margin-top: 20px;
     }
 
-    @media (max-width: 1200px) {
+    @media screen and (max-width: 1200px) {
         .step {
             padding: 30px;
 
@@ -475,7 +475,7 @@
 
     }
 
-    @media (max-width: 1024px) {
+    @media screen and (max-width: 1024px) {
         .stepsContainer {
             grid-template-columns: none;
             grid-template-rows: repeat(1, 1fr);
@@ -560,7 +560,7 @@
         z-index: 2;
     }
 
-    @media (max-width: 1024px) {
+    @media screen and (max-width: 1024px) {
         .container {
             grid-template-columns: none;
             grid-template-rows: repeat(1, 1fr);
@@ -574,7 +574,7 @@
         }
     }
 
-    @media (max-width: 425px) {
+    @media screen and (max-width: 425px) {
         padding: 25px 0;
 
         .block {
