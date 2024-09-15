@@ -165,15 +165,23 @@
 
     @media (max-width: 768px) {
         padding: 40px 0;
+
         .carousel {
+            gap: 5px;
 
             .partnerDetails {
                 flex-direction: column;
+
                 .partnerLogo {
                     width: 100px;
                     height: 100px;
                 }
 
+                .partnerInfo {
+                    p {
+                        text-align: center;
+                    }
+                }
             }
         }
 

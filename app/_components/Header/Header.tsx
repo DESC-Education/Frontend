@@ -28,7 +28,6 @@ import { userSlice } from "@/app/_store/reducers/userSlice";
 import { get } from "http";
 import { on } from "events";
 
-
 type RoleState =
     | "student"
     | "company"
@@ -66,6 +65,28 @@ const Header = () => {
             href: "/admin-panel/verification/tasks",
         },
     ];
+
+    const changeMenuVisibility = (val?: boolean) => {
+        console.log("in change", val, document.body.classList);
+
+        if (val === undefined) {
+            setIsOpen((prev) => !prev);
+
+            if (isOpen) {
+                document.body.classList.remove("modal-opened");
+            } else {
+                document.body.classList.add("modal-opened");
+            }
+        } else {
+            setIsOpen(val);
+
+            if (val) {
+                document.body.classList.add("modal-opened");
+            } else {
+                document.body.classList.remove("modal-opened");
+            }
+        }
+    };
 
     useEffect(() => {
         setActiveState(user?.role);
@@ -220,90 +241,101 @@ const Header = () => {
                                     </Link>
                                 </div>
                             </div>
-                            {
-                                isMobile ?
-                                    (
-                                        <>
-                                            <div className={styles.linkContainer}>
-                                                <Link
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname === "/faq",
-                                                        },
-                                                    )}
-                                                    href="/profile"
-                                                >
-                                                    Профиль
-                                                </Link>
-                                            </div>
-                                            <div className={styles.linkContainer}>
-                                                <Link
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname === "/faq",
-                                                        },
-                                                    )}
-                                                    href="/profile/settings"
-                                                >
-                                                    Натсройки
-                                                </Link>
-                                            </div>
-                                            <div className={styles.linkContainer}>
-                                                <Link
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname === "/faq",
-                                                        },
-                                                    )}
-                                                    href="/profile/tasks"
-                                                >
-                                                    История заданий
-                                                </Link>
-                                            </div>
-                                            <div className={styles.linkContainer}>
-                                                <p
-                                                    onClick={() => {
-                                                        dispatch(logoutUser());
-                                                        showAlert("Вы вышли из аккаунта!", "success");
-                                                    }}
-                                                    className={classNames(styles.link, "text fz24 fw500 under")}
-                                                >
-                                                    Выход
-                                                </p>
-                                            </div>
-                                        </>
-                                    )
-                                    :
-                                    (
-                                        <div className={styles.icons}>
-                                            <Link href="/profile">
-                                                <Image
-                                                    width={45}
-                                                    height={45}
-                                                    src="/icons/profile.svg"
-                                                    alt="profile"
-                                                />
-                                            </Link>
-                                            <span>
-                                                <Image
-                                                    width={45}
-                                                    height={45}
-                                                    src="/icons/notification.svg"
-                                                    alt="notification"
-                                                />
-                                            </span>
-                                        </div>
-                                    )
-                            }
+                            {isMobile ? (
+                                <>
+                                    <div className={styles.linkContainer}>
+                                        <Link
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname === "/faq",
+                                                },
+                                            )}
+                                            href="/profile"
+                                        >
+                                            Профиль
+                                        </Link>
+                                    </div>
+                                    <div
+                                        className={classNames(
+                                            styles.linkContainer,
+                                            styles.subLinkContainer,
+                                        )}
+                                    >
+                                        <Link
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname === "/faq",
+                                                },
+                                            )}
+                                            href="/profile/settings"
+                                        >
+                                            Настройки
+                                        </Link>
+                                    </div>
+                                    <div
+                                        className={classNames(
+                                            styles.linkContainer,
+                                            styles.subLinkContainer,
+                                        )}
+                                    >
+                                        <Link
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname === "/faq",
+                                                },
+                                            )}
+                                            href="/profile/tasks"
+                                        >
+                                            История заданий
+                                        </Link>
+                                    </div>
+                                    <div className={styles.linkContainer}>
+                                        <p
+                                            onClick={() => {
+                                                dispatch(logoutUser());
+                                                showAlert(
+                                                    "Вы вышли из аккаунта!",
+                                                    "success",
+                                                );
+                                            }}
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500 under",
+                                            )}
+                                        >
+                                            Выход
+                                        </p>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={styles.icons}>
+                                    <Link href="/profile">
+                                        <Image
+                                            width={45}
+                                            height={45}
+                                            src="/icons/profile.svg"
+                                            alt="profile"
+                                        />
+                                    </Link>
+                                    <span>
+                                        <Image
+                                            width={45}
+                                            height={45}
+                                            src="/icons/notification.svg"
+                                            alt="notification"
+                                        />
+                                    </span>
+                                </div>
+                            )}
                         </>
                     ),
                     ref: createRef(),
@@ -413,92 +445,108 @@ const Header = () => {
                                         FAQ
                                     </Link>
                                 </div>
-
                             </div>
-                            {
-                                isMobile ?
-                                    (
-                                        <>
-                                            <div className={styles.linkContainer}>
-                                                <Link
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname === "/faq",
-                                                        },
-                                                    )}
-                                                    href="/profile"
-                                                >
-                                                    Профиль
-                                                </Link>
-                                            </div>
-                                            <div className={styles.linkContainer}>
-                                                <Link
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname === "/faq",
-                                                        },
-                                                    )}
-                                                    href="/profile/settings"
-                                                >
-                                                    Настройки
-                                                </Link>
-                                            </div>
-                                            <div className={styles.linkContainer}>
-                                                <Link
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname === "/faq",
-                                                        },
-                                                    )}
-                                                    href="/profile/tasks"
-                                                >
-                                                    История заданий
-                                                </Link>
-                                            </div>
-                                            <div className={styles.linkContainer}>
-                                                <p
-                                                    onClick={() => {
-                                                        dispatch(logoutUser());
-                                                        showAlert("Вы вышли из аккаунта!", "success");
-                                                    }}
-                                                    className={classNames(styles.link, "text fz24 fw500 under")}
-                                                >
-                                                    Выход
-                                                </p>
-                                            </div>
-                                        </>
-                                    )
-                                    :
-                                    (
-                                        <div className={styles.icons}>
-                                            <Link href="/profile">
-                                                <Image
-                                                    width={45}
-                                                    height={45}
-                                                    src="/icons/profile.svg"
-                                                    alt="profile"
-                                                />
-                                            </Link>
-                                            <span>
-                                                <Image
-                                                    width={45}
-                                                    height={45}
-                                                    src="/icons/notification.svg"
-                                                    alt="notification"
-                                                />
-                                            </span>
-                                        </div>
-                                    )
-                            }
+                            {isMobile ? (
+                                <>
+                                    <div
+                                        className={classNames(
+                                            styles.linkContainer,
+                                            styles.linkGroupHeader,
+                                        )}
+                                    >
+                                        <Link
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname === "/faq",
+                                                },
+                                            )}
+                                            href="/profile"
+                                        >
+                                            Профиль
+                                        </Link>
+                                    </div>
+                                    <div
+                                        className={classNames(
+                                            styles.linkContainer,
+                                            styles.subLinkContainer,
+                                        )}
+                                    >
+                                        <Link
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname === "/faq",
+                                                },
+                                            )}
+                                            href="/profile/settings"
+                                        >
+                                            Настройки
+                                        </Link>
+                                    </div>
+                                    <div
+                                        className={classNames(
+                                            styles.linkContainer,
+                                            styles.subLinkContainer,
+                                            styles.lastSubLinkContainer,
+                                        )}
+                                    >
+                                        <Link
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname === "/faq",
+                                                },
+                                            )}
+                                            href="/profile/tasks"
+                                        >
+                                            Мои задания
+                                        </Link>
+                                    </div>
+                                    <div className={styles.linkContainer}>
+                                        <p
+                                            onClick={() => {
+                                                dispatch(logoutUser());
+                                                showAlert(
+                                                    "Вы вышли из аккаунта!",
+                                                    "success",
+                                                );
+                                            }}
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500 under",
+                                            )}
+                                        >
+                                            Выход
+                                        </p>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={styles.icons}>
+                                    <Link href="/profile">
+                                        <Image
+                                            width={45}
+                                            height={45}
+                                            src="/icons/profile.svg"
+                                            alt="profile"
+                                        />
+                                    </Link>
+                                    <span>
+                                        <Image
+                                            width={45}
+                                            height={45}
+                                            src="/icons/notification.svg"
+                                            alt="notification"
+                                        />
+                                    </span>
+                                </div>
+                            )}
                         </>
                     ),
                     ref: createRef(),
@@ -558,7 +606,6 @@ const Header = () => {
                                 >
                                     Выйти
                                 </Link>
-
                             </div>
                         </>
                     ),
@@ -702,7 +749,6 @@ const Header = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -716,109 +762,67 @@ const Header = () => {
 
     const { showAlert } = useContext(AlertContext);
     const dispatch = useTypesDispatch();
-    const {
-        logoutUser,
-    } = userSlice.actions;
+    const { logoutUser } = userSlice.actions;
 
     if (!getHeaderContent(activeState)) setActiveState("student");
 
     return (
         <>
-            {
-                isMobile ?
-                    (
-                        <div className={classNames(styles.header, { [styles.open]: isOpen })}>
-                            <div className={classNames(styles.container)}>
-                                <Link href="/">
-                                    <Image
-                                        className={classNames("text pointer", {[styles.open]: isOpen})}
-                                        src="/icons/headerLogo.svg"
-                                        alt="Logo"
-                                        width={125}
-                                        height={53}
-                                    />
-                                </Link>
-                                <button className={classNames(styles.burgerButton, { [styles.open]: isOpen })} onClick={() => setIsOpen(!isOpen)}>
-                                    <span className={styles.burgerLine}></span>
-                                    <span className={styles.burgerLine}></span>
-                                    <span className={styles.burgerLine}></span>
-                                </button>
-                                <div className={classNames(styles.burgerMenu, { [styles.open]: isOpen })}>
-                                    <div className={styles.burgerList}>
-                                        {
-                                            isAuth ?
-                                                (
-                                                    <div
-                                                        className={
-                                                            classNames(
-                                                                styles.clickItems,
-                                                                // {[styles.disabled]: !(profileVerification.status === "verified")},
-                                                            )
-                                                        }
-                                                        onClick={() => setIsOpen(false)}
-                                                    >
-                                                        {getHeaderContent(activeState).content}
-                                                    </div>
-                                                )
-                                                :
-                                                (
-                                                    <div className={styles.clickItems} onClick={() => setIsOpen(false)}>
-                                                        <div className={styles.linkContainer}>
-                                                            <div
-                                                                onClick={() =>
-                                                                    showModal({
-                                                                        content: (
-                                                                            <AuthModal initModalState="login" />
-                                                                        ),
-                                                                    })
-                                                                }
-                                                                className={classNames(styles.link, "text fz24 fw500")}
-                                                            >
-                                                                Вход
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles.linkContainer}>
-                                                            <div
-                                                                onClick={() =>
-                                                                    showModal({
-                                                                        content: (
-                                                                            <AuthModal initModalState="reg" />
-                                                                        ),
-                                                                    })
-                                                                }
-                                                                className={classNames(styles.link, "text fz24 fw500")}
-                                                            >
-                                                                Регистрация
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ) :
-                    (
-                        <div className={classNames(styles.header)}>
-                            <div className={classNames("container", styles.container)}>
-                                <Link href="/">
-                                    <Image
-                                        className={"text pointer"}
-                                        src="/icons/headerLogo.svg"
-                                        alt="Logo"
-                                        width={125}
-                                        height={53}
-                                    />
-                                </Link>
-
-
+            {isMobile ? (
+                <div
+                    className={classNames(styles.header, {
+                        [styles.open]: isOpen,
+                    })}
+                >
+                    <div className={classNames(styles.container)}>
+                        <Link href="/">
+                            <Image
+                                className={classNames("text pointer", {
+                                    [styles.open]: isOpen,
+                                })}
+                                src="/icons/headerLogo.svg"
+                                alt="Logo"
+                                width={125}
+                                height={53}
+                            />
+                        </Link>
+                        <button
+                            className={classNames(styles.burgerButton, {
+                                [styles.open]: isOpen,
+                            })}
+                            onClick={() => changeMenuVisibility()}
+                        >
+                            <span className={styles.burgerLine}></span>
+                            <span className={styles.burgerLine}></span>
+                            <span className={styles.burgerLine}></span>
+                        </button>
+                        <div
+                            className={classNames(styles.burgerMenu, {
+                                [styles.open]: isOpen,
+                            })}
+                        >
+                            <div className={styles.burgerList}>
                                 {isAuth ? (
-                                    getHeaderContent(activeState).content
+                                    <div
+                                        className={classNames(
+                                            styles.clickItems,
+                                            // {[styles.disabled]: !(profileVerification.status === "verified")},
+                                        )}
+                                        onClick={() =>
+                                            changeMenuVisibility(false)
+                                        }
+                                    >
+                                        {getHeaderContent(activeState).content}
+                                    </div>
                                 ) : (
-                                    <nav>
-                                        <div className={styles.navList}>
-                                            <Button
+                                    <div
+                                        className={styles.clickItems}
+                                        onClick={() =>
+                                            changeMenuVisibility(false)
+                                        }
+                                    >
+                                        <div className={styles.linkContainer}>
+                                            <div
                                                 onClick={() =>
                                                     showModal({
                                                         content: (
@@ -826,11 +830,16 @@ const Header = () => {
                                                         ),
                                                     })
                                                 }
-                                                type="primary"
+                                                className={classNames(
+                                                    styles.link,
+                                                    "text fz24 fw500",
+                                                )}
                                             >
                                                 Вход
-                                            </Button>
-                                            <Button
+                                            </div>
+                                        </div>
+                                        <div className={styles.linkContainer}>
+                                            <div
                                                 onClick={() =>
                                                     showModal({
                                                         content: (
@@ -838,18 +847,68 @@ const Header = () => {
                                                         ),
                                                     })
                                                 }
-                                                type="secondary"
+                                                className={classNames(
+                                                    styles.link,
+                                                    "text fz24 fw500",
+                                                )}
                                             >
                                                 Регистрация
-                                            </Button>
+                                            </div>
                                         </div>
-                                    </nav>
+                                    </div>
                                 )}
                             </div>
                         </div>
-                    )
-            }
+                    </div>
+                </div>
+            ) : (
+                <div className={classNames(styles.header)}>
+                    <div className={classNames("container", styles.container)}>
+                        <Link href="/">
+                            <Image
+                                className={"text pointer"}
+                                src="/icons/headerLogo.svg"
+                                alt="Logo"
+                                width={125}
+                                height={53}
+                            />
+                        </Link>
 
+                        {isAuth ? (
+                            getHeaderContent(activeState).content
+                        ) : (
+                            <nav>
+                                <div className={styles.navList}>
+                                    <Button
+                                        onClick={() =>
+                                            showModal({
+                                                content: (
+                                                    <AuthModal initModalState="login" />
+                                                ),
+                                            })
+                                        }
+                                        type="primary"
+                                    >
+                                        Вход
+                                    </Button>
+                                    <Button
+                                        onClick={() =>
+                                            showModal({
+                                                content: (
+                                                    <AuthModal initModalState="reg" />
+                                                ),
+                                            })
+                                        }
+                                        type="secondary"
+                                    >
+                                        Регистрация
+                                    </Button>
+                                </div>
+                            </nav>
+                        )}
+                    </div>
+                </div>
+            )}
         </>
     );
 };

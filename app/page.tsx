@@ -18,6 +18,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "./swiper.scss";
 import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
+import AuthModal from "./_components/modals/AuthModal/AuthModal";
+import { useTypesSelector } from "./_hooks/useTypesSelector";
 
 const projects = [
     {
@@ -61,24 +63,26 @@ const partners = [
         description:
             "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
     },
-    {
-        id: "3",
-        logo: "/images/politechlogo.png",
-        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-        description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-    },
-    {
-        id: "4",
-        logo: "/images/politechlogo.png",
-        name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
-        description:
-            "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
-    },
+    // {
+    //     id: "3",
+    //     logo: "/images/politechlogo.png",
+    //     name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+    //     description:
+    //         "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    // },
+    // {
+    //     id: "4",
+    //     logo: "/images/politechlogo.png",
+    //     name: "ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ",
+    //     description:
+    //         "Desc Education - инновационная платформа, соединяющая студентов IT-специальностей с компаниями, которые нуждаются в IT-решениях. Наша миссия — сделать процесс поиска талантливых специалистов и решения задач",
+    // },
 ];
 
 export default function Home() {
     const [activeIndex, setActiveIndex] = useState(0);
+
+    const { isMobileDevice } = useTypesSelector((state) => state.contentReducer);
 
     const { showModal } = useContext(ModalContext);
 
@@ -101,12 +105,41 @@ export default function Home() {
                     <p className="title fz36">
                         Студенты создают. Компании растут
                     </p>
+                    {isMobileDevice ? "МОБИЛКА" : "НЕ МОБИЛКА"}
                     <h2 className="title fz48">
                         Один шаг к открытию возможностей
                     </h2>
                     <div className={styles.buttons}>
-                        <Button type="primary">Студент</Button>
-                        <Button type="primary">Компания</Button>
+                        <Button
+                            onClick={() =>
+                                showModal({
+                                    content: (
+                                        <AuthModal
+                                            initRegState="regClient"
+                                            initModalState="reg"
+                                        />
+                                    ),
+                                })
+                            }
+                            type="primary"
+                        >
+                            Студент
+                        </Button>
+                        <Button
+                            onClick={() =>
+                                showModal({
+                                    content: (
+                                        <AuthModal
+                                            initRegState="regCompany"
+                                            initModalState="reg"
+                                        />
+                                    ),
+                                })
+                            }
+                            type="primary"
+                        >
+                            Компания
+                        </Button>
                     </div>
                 </div>
                 <div className={styles.heroImageContainer}>
@@ -142,7 +175,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword1,
-                                "text fz16 fw500"
+                                "text fz16 fw500",
                             )}
                         >
                             🚀 Большие проекты
@@ -151,7 +184,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword2,
-                                "text fz16 fw500"
+                                "text fz16 fw500",
                             )}
                         >
                             📈 Карьерный рост
@@ -160,7 +193,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword3,
-                                "text fz16 fw500"
+                                "text fz16 fw500",
                             )}
                         >
                             🔥 Реальный опыт
@@ -169,7 +202,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword4,
-                                "text fz16 fw500"
+                                "text fz16 fw500",
                             )}
                         >
                             💼 Трудоустройство
@@ -178,7 +211,7 @@ export default function Home() {
                             className={classNames(
                                 styles.keyword,
                                 styles.keyword5,
-                                "text fz16 fw500"
+                                "text fz16 fw500",
                             )}
                         >
                             🏆 Команда мечты
@@ -239,7 +272,7 @@ export default function Home() {
                         </p>
                     </div>
                 </div>
-                <div className={styles.instructions}>
+                {/* <div className={styles.instructions}>
                     <Button
                         type="primary"
                         onClick={() =>
@@ -264,7 +297,7 @@ export default function Home() {
                     >
                         Инструкция для компании
                     </Button>
-                </div>
+                </div> */}
             </div>
 
             {/* Opportunities div */}
@@ -324,11 +357,6 @@ export default function Home() {
                 <h2 className="title fz48">Партнеры</h2>
                 <PartnersList partners={partners} />
             </div>
-
-            {/* Footer div */}
-            <footer className={styles.footer}>
-                <p>DIESC © 2024</p>
-            </footer>
         </div>
     );
 }

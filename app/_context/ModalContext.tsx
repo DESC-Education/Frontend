@@ -49,7 +49,11 @@ const ModalState = ({ children }: Partial<ModalStateProps>) => {
         onClose?: (() => any) | undefined;
         allowClose?: boolean;
     }) => {
-        document.body.classList.add("modal-opened");
+        setTimeout(() => {
+            console.log("in show", document.body.classList);
+            document.body.classList.add("modal-opened");
+        });
+
 
         const closeOnBorder =
             data.closeOnBorder === undefined ? true : data.closeOnBorder;
@@ -68,6 +72,8 @@ const ModalState = ({ children }: Partial<ModalStateProps>) => {
     };
 
     const closeModal = () => {
+        console.log("in close", document.body.classList);
+
         setTimeout(() => {
             document.body.classList.remove("modal-opened");
         }, 300);

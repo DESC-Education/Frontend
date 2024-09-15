@@ -122,6 +122,44 @@
             flex-direction: column;
             gap: 8px;
         }
+
+        &.linkGroupHeader {
+            padding-bottom: 0;
+
+            .link {
+                padding-bottom: 10px;
+            }
+        }
+
+        &.subLinkContainer {
+            border-top: none;
+            position: relative;
+            padding: 0 40px 0 0;
+            // padding-right: 20px;
+
+            &:after {
+                position: absolute;
+                content: "";
+                width: 5px;
+                height: 5px;
+                background: rgba(var(--white), 1);
+                border-radius: 50%;
+                right: 28px;
+                top: calc(50% - 2.5px);
+            }
+
+            .link {
+                padding: 5px 0;
+            }
+
+            a {
+                font-size: 17px;
+            }
+
+            &.lastSubLinkContainer {
+                margin-bottom: 20px;
+            }
+        }
     }
 
     .icons {
@@ -152,7 +190,7 @@
     .header {
         transition: transform 0.3s ease;
         z-index: 20;
-
+        // padding: 3px 0 !important;
 
         .clickItems {
             width: 100%;
@@ -165,7 +203,7 @@
         .navigation {
             flex-direction: column;
             align-items: flex-end;
-            margin: 0 10px;
+            margin: 0;
             width: 100%;
         }
 
@@ -336,6 +374,7 @@
             position: relative;
             z-index: 20;
             transition: all 1s ease;
+
             &.open {
                 filter: brightness(10);
                 //animation: hue 1s infinite linear;
@@ -349,7 +388,7 @@
             //         filter: hue-rotate(-360deg);
             //     }
             // }
-            
+
         }
 
         .burgerMenu {

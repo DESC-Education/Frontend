@@ -179,3 +179,12 @@
     color: rgba(var(--red), 1);
     // transition: .3s !important;
 }
+
+@media screen and (max-width: 595px) {
+    .inputWrapper {
+        input {
+            padding: 8px 15px;
+            font-size: 15px !important;
+        }
+    }
+}

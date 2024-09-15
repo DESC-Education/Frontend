@@ -44,13 +44,30 @@
 
 @media (max-width: 1024px) {
     .hero {
-        padding: 208px 10px;
+        padding: 158px 10px;
     }
 }
 
 @media (max-width: 425px) {
     .hero {
-        padding: 108px 10px;
+        padding: 58px 10px;
+        margin: 0;
+    }
+
+}
+
+@media (max-width: 350px) {
+    .hero {
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .heroImage {
+            right: 5%;
+        }
     }
 
 }
@@ -133,6 +150,10 @@
     align-items: center;
     padding: 80px 0;
 
+    @media screen and (max-width: 500px) {
+        padding: 45px 0 65px;
+    }
+
     .aboutUsContent {
         display: grid;
         gap: 20px;
@@ -155,11 +176,11 @@
                 margin-bottom: 0;
             }
         }
-
     }
 
     .keywordsBlock {
         background: url("/images/keywords_bg.png") no-repeat center;
+        background-size: cover;
         flex: 1;
         display: flex;
         // align-items: center;
@@ -311,17 +332,23 @@
     @media (max-width: 610px) {
         .keywordsBlock {
             .keyword {
+                padding: 7px 12px;
+
                 &5 {
                     left: 60%;
                     top: 40%;
                 }
+            }
+
+            img {
+                width: 90%;
             }
         }
     }
 
     @media (max-width: 425px) {
         .textBlock {
-            padding: 40px 60px;
+            padding: 20px 30px;
         }
 
         .keywordsBlock {
@@ -371,6 +398,10 @@
     h2 {
         text-align: center;
         margin-bottom: 40px;
+
+        @media screen and (max-width: 500px) {
+            margin-bottom: 20px;
+        }
     }
 
     .stepsContainer {
@@ -456,7 +487,13 @@
                 height: 60px;
             }
         }
+    }
 
+    @media screen and (max-width: 500px) {
+        .step {
+            border-radius: 15px;
+            padding: 15px 20px;
+        }
     }
 }
 
@@ -538,10 +575,16 @@
     }
 
     @media (max-width: 425px) {
+        padding: 25px 0;
+
         .block {
             ul {
                 li {
-                    padding: 0 20px;
+                    padding: 0;
+
+                    &:before {
+                        margin-right: 10px;
+                    }
                 }
             }
         }
@@ -558,6 +601,10 @@
 
     h2 {
         margin-bottom: 80px;
+
+        @media screen and (max-width: 500px) {
+            margin-bottom: 40px;
+        }
     }
 
     .projectsContainer {

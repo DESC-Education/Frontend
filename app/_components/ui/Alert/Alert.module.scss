@@ -10,8 +10,11 @@
     padding: 0 30px;
     z-index: 100;
 
+
     p {
+        text-align: center;
         color: white;
+
     }
 
     &.active {
@@ -28,5 +31,14 @@
 
     &.warning {
         background: rgb(227, 177, 85);
+    }
+}
+
+@media screen and (max-width: 595px) {
+    .container {
+        p {
+            font-size: 14px;
+            line-height: 16px;
+        }
     }
 }
