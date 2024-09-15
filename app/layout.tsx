@@ -16,7 +16,7 @@ import Header from "./_components/Header/Header";
 import Footer from "./_components/Footer/Footer";
 import Head from "next/head";
 
-import hummingbird from "../public/images/hummingbird.svg";
+import hummingbird from "../public/images/hummingbird.jpg";
 
 const gilroy = localFont({
     src: [
