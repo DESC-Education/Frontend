@@ -26,7 +26,9 @@ type TasksPage = "current" | "past";
 export default function JobsPage() {
     const [activeTab, setActiveTab] = useState<TasksPage>("current");
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
-    const { user, profileVerification } = useTypesSelector((state) => state.userReducer);
+    const { user, profileVerification } = useTypesSelector(
+        (state) => state.userReducer,
+    );
     const { myTasks, myArchivedTasks } = useTypesSelector(
         (state) => state.contentReducer,
     );
@@ -53,7 +55,7 @@ export default function JobsPage() {
                 limit: 15,
                 q: "",
                 role: user.role,
-                status: "archived"
+                status: "archived",
             });
 
             console.log("tasks", tasks);
@@ -68,114 +70,120 @@ export default function JobsPage() {
         asyncFunc();
     }, [user.role]);
 
-return <div></div>
-//     const getJobsPageContent = useCallback((
-//         jobsPage: TasksPage,
-//     ): {
-//         content: ReactNode;
-//         ref: RefObject<HTMLDivElement>;
-//     } => {
-//         switch (jobsPage) {
-//             case "current":
-//                 console.log(user, myTasks);
-                
-//                 return {
-//                     content: (
-//                         <div className={styles.content}>
-//                             {myTasks.length > 0 ? (
-//                                 <div>
-//                                     {myTasks.map((task, index) => (
-//                                         <TaskCard viewer={user.role} key={index} task={task} />
-//                                     ))}
-//                                 </div>
-//                             ) : (
-//                                 <div className={styles.noTasks}>
-//                                     <img
-//                                         src="/images/no-tasks.png"
-//                                         alt="no tasks"
-//                                     />
-//                                     <p className="title">Заданий нет</p>
-//                                     {!!(user.role === "company") && (
-//                                         <Link href="/create-task">
-//                                             <Button type="secondary">
-//                                                 Создать задание
-//                                             </Button>
-//                                         </Link>
-//                                     )}
-//                                 </div>
-//                             )}
-//                         </div>
-//                     ),
-//                     ref: createRef(),
-//                 };
-//             case "past":
-//                 return {
-//                     content: (
-//                         <div className={styles.content}>
-//                             {myArchivedTasks.length > 0 ? (
-//                                 <div>Такси есть</div>
-//                             ) : (
-//                                 <div className={styles.noTasks}>
-//                                     <img
-//                                         src="/images/no-tasks.png"
-//                                         alt="no tasks"
-//                                     />
-//                                     <p className="title">Заданий нет</p>
-//                                 </div>
-//                             )}
-//                         </div>
-//                     ),
-//                     ref: createRef(),
-//                 };
-//         }
-//     }, [user.role, myTasks, myArchivedTasks]);
+    const getJobsPageContent = useCallback(
+        (
+            jobsPage: TasksPage,
+        ): {
+            content: ReactNode;
+            ref: RefObject<HTMLDivElement>;
+        } => {
+            switch (jobsPage) {
+                case "current":
+                    console.log(user, myTasks);
 
-//     if (profileVerification.status !== "verified") {
-//         return <ProfileStatus profileVerification={profileVerification} />;
-//     }
+                    return {
+                        content: (
+                            <div className={styles.content}>
+                                {myTasks.length > 0 ? (
+                                    <div>
+                                        {myTasks.map((task, index) => (
+                                            <TaskCard
+                                                viewer={user.role}
+                                                key={index}
+                                                task={task}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className={styles.noTasks}>
+                                        <img
+                                            src="/images/no-tasks.png"
+                                            alt="no tasks"
+                                        />
+                                        <p className="title">Заданий нет</p>
+                                        {!!(user.role === "company") && (
+                                            <Link href="/create-task">
+                                                <Button type="secondary">
+                                                    Создать задание
+                                                </Button>
+                                            </Link>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ),
+                        ref: createRef(),
+                    };
+                case "past":
+                    return {
+                        content: (
+                            <div className={styles.content}>
+                                {myArchivedTasks.length > 0 ? (
+                                    <div>Такси есть</div>
+                                ) : (
+                                    <div className={styles.noTasks}>
+                                        <img
+                                            src="/images/no-tasks.png"
+                                            alt="no tasks"
+                                        />
+                                        <p className="title">Заданий нет</p>
+                                    </div>
+                                )}
+                            </div>
+                        ),
+                        ref: createRef(),
+                    };
+            }
+        },
+        [user.role, myTasks, myArchivedTasks],
+    );
 
-//     return (
-//         <div className={classNames(styles.container, "container")}>
-//             <div className={styles.navigation}>
-//                 <p className="title fz48">Мои задания</p>
-//                 <div className={styles.navigationButtons}>
-//                     <Button
-//                         className={styles.navigationButton}
-//                         type={activeTab === "current" ? "secondary" : "primary"}
-//                         onClick={() => handleTabChange("current")}
-//                     >
-//                         Актуальные
-//                     </Button>
-//                     <Button
-//                         className={styles.navigationButton}
-//                         type={activeTab === "past" ? "secondary" : "primary"}
-//                         onClick={() => handleTabChange("past")}
-//                     >
-//                         Архив
-//                     </Button>
-//                     {!!(user.role === "company") && (
-//                         <Link
-//                             className={styles.navigationButtonLast}
-//                             href="/create-task"
-//                         >
-//                             <Button type="secondary">Создать задание</Button>
-//                         </Link>
-//                     )}
-//                 </div>
-//             </div>
-//             {isLoading ? (
-//                 <div className="centerContent">
-//                     <CustomOval />
-//                 </div>
-//             ) : (
-//                 <div
-//                     className={classNames(styles.content, {
-//                         [styles.exit]: isAnimating,
-//                     })}
-//                 >
-//                     {getJobsPageContent(activeTab).content}
-//                 </div>
-//             )}
-//         </div>
-//     );
+    if (profileVerification.status !== "verified") {
+        return <ProfileStatus profileVerification={profileVerification} />;
+    }
+
+    return (
+        <div className={classNames(styles.container, "container")}>
+            <div className={styles.navigation}>
+                <p className="title fz48">Мои задания</p>
+                <div className={styles.navigationButtons}>
+                    <Button
+                        className={styles.navigationButton}
+                        type={activeTab === "current" ? "secondary" : "primary"}
+                        onClick={() => handleTabChange("current")}
+                    >
+                        Актуальные
+                    </Button>
+                    <Button
+                        className={styles.navigationButton}
+                        type={activeTab === "past" ? "secondary" : "primary"}
+                        onClick={() => handleTabChange("past")}
+                    >
+                        Архив
+                    </Button>
+                    {!!(user.role === "company") && (
+                        <Link
+                            className={styles.navigationButtonLast}
+                            href="/create-task"
+                        >
+                            <Button type="secondary">Создать задание</Button>
+                        </Link>
+                    )}
+                </div>
+            </div>
+            {isLoading ? (
+                <div className="centerContent">
+                    <CustomOval />
+                </div>
+            ) : (
+                <div
+                    className={classNames(styles.content, {
+                        [styles.exit]: isAnimating,
+                    })}
+                >
+                    {getJobsPageContent(activeTab).content}
+                </div>
+            )}
+        </div>
+    );
 }
