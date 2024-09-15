@@ -451,7 +451,7 @@ export default function ExchangePage() {
                                         }
                                     >
                                         {tasks.map((task, index) => (
-                                            <TaskCard key={index} task={task} />
+                                            <TaskCard key={index} task={task}/>
                                         ))}
                                     </InfiniteScroll>
                                 </>

@@ -13,7 +13,7 @@
         margin: 0 0 10px 30px;
         border-radius: 50px;
         border: 2px solid rgba(var(--gray2), 1);
-    }   
+    }
 
     .wrapper {
         background-color: rgba(var(--white), 1);
@@ -52,8 +52,10 @@
 
                 .description {
                     display: -webkit-box;
-                    -webkit-line-clamp: 3; /* Number of lines */
-                    line-clamp: 3; /* Number of lines */
+                    -webkit-line-clamp: 3;
+                    /* Number of lines */
+                    line-clamp: 3;
+                    /* Number of lines */
                     -webkit-box-orient: vertical;
                     max-width: 850px;
                     overflow: hidden;
@@ -80,6 +82,112 @@
                 .timeLeft {
                     color: rgba(var(--red), 1);
                 }
+            }
+        }
+    }
+
+    &.extended {
+        .wrapper {
+            .taskDescription {
+                .description {
+                    display: inline;
+                }
+
+                .showMore {
+                    display: none;
+                }
+
+                .downloadItem {
+                    margin-top: 15px;
+                }
+            }
+        }
+    }
+
+    &.solution {
+        border: 2px solid rgba(var(--gray2), 1);
+        border-radius: 50px;
+
+        .wrapper {
+
+            border: none;
+
+            .taskDescription {
+                .description {
+                    display: inline;
+                }
+
+                .showMore {
+                    display: none;
+                }
+
+                .downloadItem {
+                    margin-top: 15px;
+                }
+            }
+
+            .taskFooter {
+                .proposeButton {
+                    display: none;
+                }
+
+                .deadlineAndTime {
+                    .deadline {
+                        text-wrap: nowrap;
+                    }
+
+                    .timeLeft {
+                        text-wrap: nowrap;
+                    }
+                }
+            }
+        }
+
+        .solutionContent {
+            padding: 30px;
+
+            background-color: rgba(var(--gray3), 1);
+            border-radius: 50px;
+            margin: 0 15px 30px; 
+
+            .solutionTitle {
+                background-color: rgba(var(--white), 1);
+                border-radius: 100px;
+                padding: 25px 30px;
+            }
+
+            .solutionDescription {
+                margin: 40px 30px;
+
+                p {
+                    margin: 10px 0;
+                }
+            }
+
+            .solution {
+                p {
+                    margin: 0 30px;
+                }
+
+                .textarea {
+                    margin: 20px 0 10px;
+                    textarea {
+                        height: 400px;
+                    }
+                }
+
+                .underdescription {
+                    .length {
+                        display: flex;
+                        justify-content: flex-end;
+                    }
+                }
+
+            }
+
+            .applyButton {
+                width: 100%;
+                margin-top: 40px;
             }
         }
     }

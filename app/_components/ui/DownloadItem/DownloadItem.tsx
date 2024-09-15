@@ -26,14 +26,14 @@ const DownloadItem: FC<DownloadItemProps> = ({ extension, name, url }) => {
                             [styles.hover]: isHover,
                         })}
                         alt="icon"
-                        src={`/icons/${extension}.png`}
+                        src={`/icons/extensions/${extension}.png`}
                     />
                     <img
                         className={classNames(styles.imgHover, {
                             [styles.hover]: isHover,
                         })}
                         alt="icon"
-                        src={`/icons/${extension}_hover.png`}
+                        src={`/icons/extensions/${extension}_hover.png`}
                     />
                 </div>
                 <p className="text fz20">{name}</p>
