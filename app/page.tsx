@@ -20,6 +20,7 @@ import "./swiper.scss";
 import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
 import AuthModal from "./_components/modals/AuthModal/AuthModal";
 import { useTypesSelector } from "./_hooks/useTypesSelector";
+import CodeInput from "./_components/ui/Input/CodeInput/CodeInput";
 
 const projects = [
     {
@@ -98,14 +99,16 @@ export default function Home() {
         );
     };
 
+    const [value, setValue] = useState<string>("____");
+
     return (
         <div className={classNames("container", styles.container)}>
             <div className={styles.hero}>
                 <div className={styles.heroContent}>
+                    <CodeInput value={value} setValue={setValue} />
                     <p className="title fz36">
                         Студенты создают. Компании растут
                     </p>
-                    {isMobileDevice ? "МОБИЛКА" : "НЕ МОБИЛКА"}
                     <h2 className="title fz48">
                         Один шаг к открытию возможностей
                     </h2>

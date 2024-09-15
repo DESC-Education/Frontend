@@ -45,7 +45,9 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         };
 
         dispatch(updateIsMobileDevice(isMobile()));
+    }, []);
 
+    useEffect(() => {
         const asyncFunc = async () => {
             const token = LocalStorage.getAccessToken();
 
