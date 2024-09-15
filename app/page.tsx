@@ -105,7 +105,6 @@ export default function Home() {
         <div className={classNames("container", styles.container)}>
             <div className={styles.hero}>
                 <div className={styles.heroContent}>
-                    <CodeInput value={value} setValue={setValue} />
                     <p className="title fz36">
                         Студенты создают. Компании растут
                     </p>
