@@ -133,7 +133,15 @@ export default function JobsPage() {
                         content: (
                             <div className={styles.content}>
                                 {myArchivedTasks.length > 0 ? (
-                                    <div>Такси есть</div>
+                                    <div>
+                                        {myArchivedTasks.map((task, index) => (
+                                            <TaskCard
+                                                viewer={user.role}
+                                                key={index}
+                                                task={task}
+                                            />
+                                        ))}
+                                    </div>
                                 ) : (
                                     <div className={styles.noTasks}>
                                         <img

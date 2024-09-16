@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(var(--gray3), 1);
+
+    .reviewContent {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .reviewProfile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            >img {
+                border: 1px solid rgba(var(--gray2), 1);
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .rating {
+                display: flex;
+                gap: 5px;
+            }
+        }
+
+        .reviewText {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+}

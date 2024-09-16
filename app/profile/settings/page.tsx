@@ -929,6 +929,22 @@ const SettingsPage = () => {
                                             setFile={setStudentCard}
                                             file={studentCard}
                                             errorText={errors.studentCard}
+                                            fileTipContent={
+                                                <div>
+                                                    <p className="text fz16 gray">
+                                                        Форматы: PNG, JPG, JPEG
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальный вес: 5МБ
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Данные студенческого
+                                                        билета и ваше лицо
+                                                        должно быть четко
+                                                        различимы
+                                                    </p>
+                                                </div>
+                                            }
                                         />
                                         <p
                                             className={classNames(
@@ -1548,6 +1564,21 @@ const SettingsPage = () => {
                                             setFile={setVerFiles}
                                             file={verFiles}
                                             errorText={errors.verFiles}
+                                            fileTipContent={
+                                                <div>
+                                                    <p className="text fz16 gray">
+                                                        Форматы: PDF, DOCX, PNG,
+                                                        JPG, JPEG
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальный вес: 5МБ
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальное количество
+                                                        файлов: {5}
+                                                    </p>
+                                                </div>
+                                            }
                                         />
                                     </div>
                                     <p

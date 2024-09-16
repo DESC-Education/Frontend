@@ -180,6 +180,12 @@
     }
 }
 
+.reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 
 .tips {
     display: grid;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { getProfile } from "@/app/_http/API/profileApi";
 import { auth } from "@/app/_http/API/userApi";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
@@ -20,6 +21,7 @@ declare global {
 
 const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const dispatch = useTypesDispatch();
+    const { isAuth } = useTypesSelector((state) => state.userReducer);
     const {
         authUser,
         updateProfile,
@@ -48,8 +50,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     }, []);
 
     useEffect(() => {
+        
         const asyncFunc = async () => {
             const token = LocalStorage.getAccessToken();
+            console.log(token, "OSAMDOASMDOASDM");
 
             if (token) {
                 const res = await auth();
@@ -82,7 +86,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
             dispatch(updateIsLoading(false));
         };
         asyncFunc();
-    }, []);
+    }, [isAuth]);
 
     return children;
 };

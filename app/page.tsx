@@ -88,29 +88,9 @@ const partners = [
 ];
 
 export default function Home() {
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const { isMobileDevice } = useTypesSelector(
-        (state) => state.contentReducer,
-    );
-
     const { isAuth } = useTypesSelector((state) => state.userReducer);
 
     const { showModal } = useContext(ModalContext);
-
-    const handlePrev = () => {
-        setActiveIndex((prevIndex) =>
-            prevIndex === 0 ? partners.length - 1 : prevIndex - 1,
-        );
-    };
-
-    const handleNext = () => {
-        setActiveIndex((prevIndex) =>
-            prevIndex === partners.length - 1 ? 0 : prevIndex + 1,
-        );
-    };
-
-    const [value, setValue] = useState<string>("____");
 
     return (
         <div className={classNames("container", styles.container)}>
