@@ -42,7 +42,7 @@ export default function ExchangePage() {
     const { updateTasks } = taskSlice.actions;
     const [isLoading, setIsLoading] = useState(tasks?.length === 0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(false);
 
     const listRef = useRef<any>(null);
 
@@ -133,6 +133,20 @@ export default function ExchangePage() {
             }));
         }
     };
+
+    useEffect(() => {
+        const asyncFunc = async () => {
+            const tasks = await getTasks(1, 5);
+
+            console.log("tasks", tasks);
+
+            if (tasks.status === 200) {
+                dispatch(updateTasks({ tasks: tasks.tasks! }));
+                setHasMore(tasks.pageCount! > 1);
+            }
+        };
+        asyncFunc();
+    }, []);
 
     const getTasksByFiltersAndSort = async (
         sortingBy: "createdAt" | "-createdAt" = "createdAt",
@@ -454,7 +468,7 @@ export default function ExchangePage() {
                                         }
                                     >
                                         {tasks.map((task, index) => (
-                                            <TaskCard key={index} task={task}/>
+                                            <TaskCard key={index} task={task} />
                                         ))}
                                     </InfiniteScroll>
                                 </>
