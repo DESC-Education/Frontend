@@ -17,9 +17,9 @@ export const ProfileRoute: FC<RouteProps> = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        console.log(isLoading, isAuth, isProfileLoading, profileVerification, "___", typeof window !== "undefined" && !isLoading, !isAuth, isAuth &&
-            !isProfileLoading &&
-            profileVerification.status !== "verified");
+        // console.log(isLoading, isAuth, isProfileLoading, profileVerification, "___", typeof window !== "undefined" && !isLoading, !isAuth, isAuth &&
+        //     !isProfileLoading &&
+        //     profileVerification.status !== "verified");
         
         if (typeof window !== "undefined" && !isLoading) {
             if (!isAuth) {

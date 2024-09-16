@@ -53,19 +53,19 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         
         const asyncFunc = async () => {
             const token = LocalStorage.getAccessToken();
-            console.log(token, "OSAMDOASMDOASDM");
+            // console.log(token, "OSAMDOASMDOASDM");
 
             if (token) {
                 const res = await auth();
 
-                console.log("res for auth", res);
+                // console.log("res for auth", res);
 
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
 
                     const profile = await getProfile();
 
-                    console.log("profile in auth", profile);
+                    // console.log("profile in auth", profile);
 
                     if (profile.status === 200) {
                         dispatch(

@@ -451,7 +451,7 @@ export default function Home() {
                                                     <span
                                                         className={classNames(
                                                             styles.percentage,
-                                                            "title",
+                                                            "text fw500",
                                                         )}
                                                     >
                                                         {category.percent * 100}

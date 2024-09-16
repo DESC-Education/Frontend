@@ -40,7 +40,7 @@ const Accordion: React.FC<AccordionProps> = ({ index, title, content }) => {
             <div
                 className={classNames(styles.accordionContent, activeIndex === index ? styles.active : "")}
             >
-                <p className="text fz20">{content}</p>
+                <p className="text fz24">{content}</p>
             </div>
         </div>
     );
