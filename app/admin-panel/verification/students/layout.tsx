@@ -1,9 +1,18 @@
+"use client";
+
 import { IStudentProfile } from '@/app/_types';
 import SideBar from '../../../_components/SideBar/SideBar';
 import styles from './layout.module.scss';
 import Image from 'next/image';
 import classNames from 'classnames';
 import Link from 'next/link';
+import { get } from 'http';
+import { getRequests } from '@/app/_http/API/adminApi';
+import { useTypesSelector } from '@/app/_hooks/useTypesSelector';
+import { use, useEffect } from 'react';
+import { useTypesDispatch } from '@/app/_hooks/useTypesDispatch';
+import { profileVerifySlice } from '@/app/_store/reducers/profileVerifySlice';
+import { Oval } from 'react-loader-spinner';
 
 
 
@@ -13,60 +22,33 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
 
-    const students = [
-        {
-            id: "1",
-            isVerified: true,
-            admissionYear: 2024,
-            description: "Описание",
-            firstName: "Петя",
-            lastName: "Иванов",
-            logoImg: "/images/userIcon.png",
-            phone: "123456789",
-            emailVisibility: true,
-            phoneVisibility: true,
-            timezone: "Europe/Moscow",
-            university: { id: "1", name: "Университет имени", city: { id: "1", name: "Москва", region: "Россия" } },
-            speciality: { id: "1", name: "Специализация", type: "speciality", code: "1" },
-            faculty: { id: "1", name: "Факультет", university: "1" }, formOfEducation: "part_time",
-            educationProgram: "bachelor", telegramLink: "https://t.me/joinchat/123456789",
-            vkLink: "https://vk.com/joinchat/123456789",
-            city: { id: "1", name: "Москва", region: "Россия" },
-            skills: [{ id: "1", name: "Навык", percent: 100 }]
-        },
-        {
-            id: "2",
-            isVerified: true,
-            admissionYear: 2024,
-            description: "Описание",
-            firstName: "Вася",
-            lastName: "Васильев",
-            logoImg: "/images/userImage10.png",
-            phone: "123456789",
-            emailVisibility: true,
-            phoneVisibility: true,
-            timezone: "Europe/Moscow",
-            university: { id: "1", name: "Университет имени", city: { id: "1", name: "Москва", region: "Россия" } },
-            speciality: { id: "1", name: "Специализация", type: "speciality", code: "1" },
-            faculty: { id: "1", name: "Факультет", university: "1" }, formOfEducation: "part_time",
-            educationProgram: "bachelor", telegramLink: "https://t.me/joinchat/123456789",
-            vkLink: "https://vk.com/joinchat/123456789",
-            city: { id: "1", name: "Москва", region: "Россия" },
-            skills: [{ id: "1", name: "Навык", percent: 100 }]
-        }
-    ]
+    const { studentsVerifications } = useTypesSelector((state) => state.profileVerifyReducer);
+    const { updateStudentsVerifications } = profileVerifySlice.actions;
+    const dispatch = useTypesDispatch();
 
+    const updateProfiles = async () => {
+        const profiles = await getRequests("pending");
+        if (profiles.status === 200) {
+            
+            dispatch(updateStudentsVerifications({ profiles: profiles.requests! }));
+        }
+    }
+
+    useEffect(() => {
+        updateProfiles();
+    }, []);
+
+    if (!studentsVerifications) return (<div className={styles.loading}><Oval /></div>);
     return (
         <div className="container">
             <div className='selectLayout'>
                 <SideBar>
                     <div className={styles.studentsList}>
-                        {students.map((student, index) => (
-                            <Link href={`/admin-panel/verification/students/${index}`} key={index} className={styles.studentItem}>
+                        {studentsVerifications?.map((profile, index) => (
+                            <Link href={`/admin-panel/verification/students/${profile.id}`} key={index} className={styles.studentItem}>
                                 <div className={styles.studentItem} key={index}>
                                     <div className={styles.mainInfo}>
-                                        <Image src={student.logoImg} alt={student.logoImg} width={70} height={70} />
-                                        <div className={classNames("text fw500", styles.studetnName)}>{student.firstName} {student.lastName}</div>
+                                        <div className={classNames("text fw500", styles.studetnName)}>{profile.firstName} {profile.lastName}</div>
                                     </div>
                                     <div className={styles.info}>
                                         <div> </div>

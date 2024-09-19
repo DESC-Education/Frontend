@@ -46,6 +46,12 @@ export const formsOfEducation = [
     { name: "Заочное", value: "part_full_time" },
 ];
 
+export const typeOfSpeciality = [
+    { name: "Бакалавриат", value: "bachelor" },
+    { name: "Специалитет", value: "specialty" },
+    { name: "Магистратура", value: "magister" },
+];
+
 export const levels = [
     { name: "Начинающий", value: 0 },
     { name: "Средний", value: 1 },

@@ -66,6 +66,14 @@ const Header = () => {
         },
     ];
 
+    const optionsForInstitutesModerator = [
+        {
+            label: "Студентов",
+            value: "students",
+            href: "/admin-panel/verification/students",
+        },
+    ]
+
     const changeMenuVisibility = (val?: boolean) => {
         console.log("in change", val, document.body.classList);
 
@@ -107,7 +115,7 @@ const Header = () => {
                             <div className={styles.navigation}>
                                 <div className={styles.linkContainer}>
                                     {profileVerification.status !==
-                                    "verified" ? (
+                                        "verified" ? (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -150,7 +158,7 @@ const Header = () => {
                                             style={{
                                                 pointerEvents:
                                                     profileVerification.status ===
-                                                    "verified"
+                                                        "verified"
                                                         ? "all"
                                                         : "none",
                                             }}
@@ -166,7 +174,7 @@ const Header = () => {
                                 </div>
                                 <div className={styles.linkContainer}>
                                     {profileVerification.status !==
-                                    "verified" ? (
+                                        "verified" ? (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -204,7 +212,7 @@ const Header = () => {
                                             style={{
                                                 pointerEvents:
                                                     profileVerification.status ===
-                                                    "verified"
+                                                        "verified"
                                                         ? "all"
                                                         : "none",
                                             }}
@@ -342,14 +350,14 @@ const Header = () => {
                     ref: createRef(),
                 };
             //case "company":
-            case "company":
+            case "institute_moderator":
                 return {
                     content: (
                         <>
                             <div className={styles.navigation}>
                                 <div className={styles.linkContainer}>
                                     {profileVerification.status !==
-                                    "verified" ? (
+                                        "verified" ? (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -392,7 +400,7 @@ const Header = () => {
                                             style={{
                                                 pointerEvents:
                                                     profileVerification.status ===
-                                                    "verified"
+                                                        "verified"
                                                         ? "all"
                                                         : "none",
                                             }}
@@ -408,7 +416,7 @@ const Header = () => {
                                 </div>
                                 <div className={styles.linkContainer}>
                                     {profileVerification.status !==
-                                    "verified" ? (
+                                        "verified" ? (
                                         <InfoIcon
                                             className={styles.infoIcon}
                                             tooltipContent={
@@ -446,7 +454,7 @@ const Header = () => {
                                             style={{
                                                 pointerEvents:
                                                     profileVerification.status ===
-                                                    "verified"
+                                                        "verified"
                                                         ? "all"
                                                         : "none",
                                             }}
@@ -588,8 +596,8 @@ const Header = () => {
                     ),
                     ref: createRef(),
                 };
-            case "institute_moderator":
-                // case "student":
+            case "company":
+                // case "institute_moderator":
                 return {
                     content: (
                         <>
@@ -622,18 +630,18 @@ const Header = () => {
                                 >
                                     Статистика
                                 </Link>
-                                <div
+                                <Link
                                     className={classNames(styles.link, {
                                         [styles.active]: pathname.startsWith(
                                             "/admin-panel/verification",
                                         ),
-                                    })}
+                                    },
+                                        "text fz24 fw500"
+                                    )}
+                                    href="/admin-panel/verification/students"
                                 >
-                                    <Dropdown
-                                        options={options}
-                                        placeholder="Верификация"
-                                    />
-                                </div>
+                                    Верификация студентов
+                                </Link>
                                 <Link
                                     className={classNames(
                                         styles.link,
