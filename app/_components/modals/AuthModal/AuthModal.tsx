@@ -445,7 +445,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
                                             )}
                                         >
                                             Я ознакомлен(-а), понимаю и принимаю{" "}
-                                            <Link
+                                            {/* <Link
                                                 className="text fz20 blue under"
                                                 href="policy"
                                             >
@@ -457,7 +457,8 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
                                                 href="policy"
                                             >
                                                 Политику конфиденциальности
-                                            </Link>
+                                            </Link> */}
+                                            Пользовательское соглашение и Политику конфиденциальности
                                         </p>
                                     }
                                 />

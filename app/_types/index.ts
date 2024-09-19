@@ -82,19 +82,19 @@ export type ICompanyProfile = {
     emailVisibility: boolean;
     phoneVisibility: boolean;
     skills: ISkill[];
-    leadTaskCategories: ILeadTaskCategory[]
+    leadTaskCategories: ILeadTaskCategory[];
 };
 
 export type ILevel = {
     value: number;
     name: string;
-}
+};
 
 export type ILeadTaskCategory = {
     id: string;
     name: string;
     percent: number;
-}
+};
 
 export type IChat = {
     id: string;
@@ -109,7 +109,7 @@ export type IChat = {
 export type ChatCompanion = {
     name: string;
     avatar: string;
-}
+};
 
 export type IMessage = {
     id: string;
@@ -135,11 +135,7 @@ export type ITask = {
     isVerified: boolean;
     isSuspicious: boolean;
     isVisible: boolean;
-<<<<<<< Updated upstream
     files: IFile[];
-=======
-    // files: IFile[];
-    file: string;
     solutions: ISolution[];
 };
 
@@ -156,14 +152,13 @@ export type ISolution = {
     companyComment: string;
     status: "completed" | "failed" | "pending";
     createdAt: string;
->>>>>>> Stashed changes
+    files: IFile[];
 };
 
 export type IFile = {
-    id: string;
     name: string;
     path: string;
-    type: string;
+    extension: string;
 };
 
 export type ICategory = {
@@ -171,18 +166,18 @@ export type ICategory = {
     name: string;
     value: string;
     filterCategories: IFilterCategory[];
-}
+};
 
 export type IFilterCategory = {
     id: string;
     name: string;
     filters: IFilter[];
-}
+};
 
 export type IFilter = {
     id: string;
     name: string;
-}
+};
 
 export type ISpecialty = {
     id: string;
@@ -227,4 +222,14 @@ export type IProject = {
     img: string;
     name: string;
     avatar: string;
+};
+
+export type IReview = {
+    profile: {
+        companyName: string;
+        logoImg: string;
+    };
+    title: string;
+    rating: number;
+    description: string;
 };

@@ -5,6 +5,7 @@ import classNames from "classnames";
 import {
     Dispatch,
     FC,
+    ReactNode,
     SetStateAction,
     useContext,
     useEffect,
@@ -49,6 +50,8 @@ type InputProps = {
     multiple?: boolean;
     rows?: number;
     maxFiles?: number;
+    maxFileSize?: number;
+    fileTipContent?: ReactNode | string;
 };
 
 const Input: FC<InputProps> = ({
@@ -72,6 +75,8 @@ const Input: FC<InputProps> = ({
     multiple = false,
     rows = 5,
     maxFiles = 5,
+    maxFileSize = 5e6,
+    fileTipContent = "",
 }) => {
     const [uniqueId, setUniqueId] = useState<string>();
 
@@ -85,6 +90,8 @@ const Input: FC<InputProps> = ({
     const { showAlert } = useContext(AlertContext);
 
     const addFileHandler = async (file: any, fileSetter: any) => {
+        console.log("hgelo???");
+        
         if (!file) {
             fileSetter(null);
             return;
@@ -96,6 +103,8 @@ const Input: FC<InputProps> = ({
             let unsupportedFiles = false;
 
             newFile.forEach((item: any) => {
+                console.log(item.size);
+                
                 if (
                     ![
                         "pdf",
@@ -106,6 +115,11 @@ const Input: FC<InputProps> = ({
                     ].includes(item.type.split("/")[1])
                 ) {
                     showAlert("Формат файла не поддерживается");
+                    unsupportedFiles = true;
+                }
+
+                if (item.size > maxFileSize) {
+                    showAlert("Файл слишком большой");
                     unsupportedFiles = true;
                 }
             });
@@ -119,6 +133,11 @@ const Input: FC<InputProps> = ({
         } else {
             if (!["png", "jpg", "jpeg"].includes(file.type.split("/")[1])) {
                 showAlert("Формат файла не поддерживается");
+                return;
+            }
+
+            if (file.size > maxFileSize) {
+                showAlert("Файл слишком большой");
                 return;
             }
 
@@ -388,6 +407,8 @@ const Input: FC<InputProps> = ({
                                     type="file"
                                     multiple
                                     onChange={async (e) => {
+                                        console.log(e.target.files, "THERE");
+                                        
                                         if (!e.target.files) return;
 
                                         addFileHandler!(
@@ -397,17 +418,7 @@ const Input: FC<InputProps> = ({
                                     }}
                                 />
                                 <img src="/icons/add_file.svg" alt="add" />
-                                <div>
-                                    <p className="text fz16 gray">
-                                        Форматы: PDF, DOCX, PNG, JPG, JPEG
-                                    </p>
-                                    <p className="text fz16 gray">
-                                        Максимальный вес: 5МБ
-                                    </p>
-                                    <p className="text fz16 gray">
-                                        Максимальное количество файлов: 5
-                                    </p>
-                                </div>
+                                {fileTipContent}
                             </div>
 
                             <p

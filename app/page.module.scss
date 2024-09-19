@@ -35,6 +35,12 @@
         transform: translateY(-50%);
     }
 
+    @media screen and (max-width: 1900px) {
+        .heroImage {
+            top: 30%;
+        }
+    }
+
     @media screen and (max-width: 1200px) {
         .heroImage {
             opacity: 0.5;
@@ -48,9 +54,9 @@
     }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 505px) {
     .hero {
-        padding: 58px 10px;
+        padding: 250px 10px 20px;
         margin: 0;
     }
 
@@ -196,6 +202,7 @@
         position: relative;
 
         .keyword {
+            white-space: nowrap;
             background-color: rgba(var(--white), 1);
             position: absolute;
             color: rgba(var(--black), 1);
@@ -370,9 +377,11 @@
             .keyword {
                 margin: 0;
                 padding: 10px 10px;
+
                 &2 {
                     top: 60%;
                 }
+
                 &3 {
                     left: 20%;
                     top: 35%;

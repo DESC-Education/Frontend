@@ -9,6 +9,31 @@ import { yearsOfEducation } from "../_utils/constants";
 import ProfileStatus from "./ProfileStatus/ProfileStatus";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
 import { getBeautifiedPhone } from "../_utils/utils";
+import { IReview } from "../_types";
+import ReviewsItem from "../_components/ReviewsItem/ReviewsItem";
+
+const reviews: IReview[] = [
+    {
+        profile: {
+            companyName: "DESC Education",
+            logoImg: "/icons/hummingbird.svg",
+        },
+        title: "Отличный студент",
+        description:
+            "DESC Education выражает благодарность Ивану Иванову за профессиональный подход и высокое качество выполненного задания. Работа была выполнена в срок и полностью соответствовала нашим ожиданиям. Желаем дальнейших успехов и готовы рекомендовать!",
+        rating: 5,
+    },
+    {
+        profile: {
+            companyName: "Политех",
+            logoImg: "/icons/Politechlogo.png",
+        },
+        title: "Отзыв о компании",
+        description:
+            "Мы благодарим Ивана Ивановича за отличное выполнение задания. Ваша ответственность, внимание к деталям и оперативность сделали сотрудничество с вами приятным и продуктивным. Рекомендуем как надежного исполнителя!",
+        rating: 4,
+    },
+];
 
 export default function Home() {
     const {
@@ -230,7 +255,10 @@ export default function Home() {
                                                 <div
                                                     className={styles.circle}
                                                     style={{
-                                                        background: `conic-gradient(#19282C ${category.percent * 100}%, #e0e0e0 0%)`,
+                                                        background: `conic-gradient(#19282C ${
+                                                            category.percent *
+                                                            100
+                                                        }%, #e0e0e0 0%)`,
                                                     }}
                                                 >
                                                     <span
@@ -239,7 +267,8 @@ export default function Home() {
                                                             "title",
                                                         )}
                                                     >
-                                                        {category.percent * 100}%
+                                                        {category.percent * 100}
+                                                        %
                                                     </span>
                                                 </div>
                                                 <p className="text fw500">
@@ -251,6 +280,12 @@ export default function Home() {
                             </div>
                         </div>
                     )}
+
+                    <div className={styles.reviews}>
+                        {reviews.map((review, index) => (
+                            <ReviewsItem review={review} key={index} />
+                        ))}
+                    </div>
 
                     {/* <div className={styles.tips}>
                         <TipCard
@@ -350,8 +385,7 @@ export default function Home() {
                             <div className={styles.contact}>
                                 <Link
                                     href={
-                                        "https:/vk.com/" +
-                                        companyProfile.vkLink
+                                        "https:/vk.com/" + companyProfile.vkLink
                                     }
                                     className={styles.contact}
                                 >
@@ -388,7 +422,7 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-                    {companyProfile.leadTaskCategories?.length && (
+                    {!!companyProfile.leadTaskCategories?.length && (
                         <div className={styles.rubrics}>
                             <p
                                 className={classNames(
@@ -409,16 +443,20 @@ export default function Home() {
                                                 <div
                                                     className={styles.circle}
                                                     style={{
-                                                        background: `conic-gradient(#19282C ${category.percent * 100}%, #e0e0e0 0%)`,
+                                                        background: `conic-gradient(#19282C ${
+                                                            category.percent *
+                                                            100
+                                                        }%, #e0e0e0 0%)`,
                                                     }}
                                                 >
                                                     <span
                                                         className={classNames(
                                                             styles.percentage,
-                                                            "title",
+                                                            "text fw500",
                                                         )}
                                                     >
-                                                        {category.percent * 100}%
+                                                        {category.percent * 100}
+                                                        %
                                                     </span>
                                                 </div>
                                                 <p className="text fw500">

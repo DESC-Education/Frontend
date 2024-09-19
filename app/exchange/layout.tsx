@@ -18,14 +18,8 @@ export default function RootLayout({
 
     useEffect(() => {
         const asyncFunc = async () => {
-            const tasks = await getTasks(1, 5);
             const categories = await getCategories();
 
-            console.log("tasks", tasks);
-
-            if (tasks.status === 200) {
-                dispatch(updateTasks({ tasks: tasks.tasks! }));
-            }
             if (categories.status === 200) {
                 dispatch(
                     updateCategories({ categories: categories.categories! }),

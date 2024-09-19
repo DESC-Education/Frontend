@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type TaskInterface = {
     tasks: ITask[] | null;
     categories: ICategory[] | null;
+    currentTask: ITask | null;
 };
 
 const initialState: TaskInterface = {
@@ -20,16 +21,12 @@ const initialState: TaskInterface = {
             isVerified: false,
             isSuspicious: false,
             isVisible: false,
-<<<<<<< Updated upstream
             files: [],
-=======
-            // files: [],
-            file: "",
             solutions: [],
->>>>>>> Stashed changes
         },
     ],
     categories: null,
+    currentTask: null,
 };
 
 export const taskSlice = createSlice({
@@ -44,6 +41,9 @@ export const taskSlice = createSlice({
             action: PayloadAction<{ categories: ICategory[] }>,
         ) {
             state.categories = action.payload.categories;
+        },
+        updateCurrentTask(state, action: PayloadAction<ITask | null>) {
+            state.currentTask = action.payload;
         },
     },
 });

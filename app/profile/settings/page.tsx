@@ -172,7 +172,7 @@ const SettingsPage = () => {
     }, []);
 
     const [logo, setLogo] = useState<File | null>(null);
-    const [studentCard, setStudentCard] = useState<File | null>(null);
+    const [studentCard, setStudentCard] = useState<File[] | null>([]);
     const [verFiles, setVerFiles] = useState<File[] | null>([]);
     const isChanged = useRef<number>(0);
     // const [isChanged, setIsChanged] = useState<number>(0);
@@ -267,7 +267,10 @@ const SettingsPage = () => {
         if (Object.keys(errorsTemp).length === 0) {
             const formdata = new FormData();
 
-            formdata.append("files", studentCard!, studentCard!.name);
+            studentCard!.forEach((el, i) => {
+                formdata.append(`files`, el, el.name);
+            });
+            // formdata.append("files", studentCard!, studentCard!.name);
             formdata.append("firstName", studentProfile.firstName);
             formdata.append("lastName", studentProfile.lastName);
             formdata.append("city", studentProfile.city!.id);
@@ -920,11 +923,39 @@ const SettingsPage = () => {
                                             Студенческий билет
                                         </p>
                                         <Input
-                                            type="file"
+                                            multiple
+                                            maxFiles={2}
+                                            type="file_multiple"
                                             setFile={setStudentCard}
                                             file={studentCard}
                                             errorText={errors.studentCard}
+                                            fileTipContent={
+                                                <div>
+                                                    <p className="text fz16 gray">
+                                                        Форматы: PNG, JPG, JPEG
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальный вес: 5МБ
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Данные студенческого
+                                                        билета и ваше лицо
+                                                        должно быть четко
+                                                        различимы
+                                                    </p>
+                                                </div>
+                                            }
                                         />
+                                        <p
+                                            className={classNames(
+                                                styles.title,
+                                                "text fz20",
+                                            )}
+                                        >
+                                            Прикрепите 2 фотографии: четкого
+                                            изображения студенческого билета и
+                                            вашу фотографию с ним
+                                        </p>
                                     </div>
                                     <div className={styles.rowSettings}>
                                         <div
@@ -1099,12 +1130,13 @@ const SettingsPage = () => {
                                                 "text fz20",
                                             )}
                                         >
-                                            Введите сферу деятельности, которая Вам
-                                            максимально близка. Примеры:
+                                            Введите сферу деятельности, которая
+                                            Вам максимально близка. Примеры:
                                             "Веб-разработчик", "Системный
                                             администратор", "Дизайнер", "AI
                                             инженер", "React Middle разработчик"
-                                            и пр.
+                                            и пр. Сфера деятельности будет
+                                            отображаться в шапке вашего профиля!
                                         </p>
                                         <Input
                                             placeholder="Flask разработчик"
@@ -1532,6 +1564,21 @@ const SettingsPage = () => {
                                             setFile={setVerFiles}
                                             file={verFiles}
                                             errorText={errors.verFiles}
+                                            fileTipContent={
+                                                <div>
+                                                    <p className="text fz16 gray">
+                                                        Форматы: PDF, DOCX, PNG,
+                                                        JPG, JPEG
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальный вес: 5МБ
+                                                    </p>
+                                                    <p className="text fz16 gray">
+                                                        Максимальное количество
+                                                        файлов: {5}
+                                                    </p>
+                                                </div>
+                                            }
                                         />
                                     </div>
                                     <p

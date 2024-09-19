@@ -4,30 +4,12 @@ import styles from "./TaskCard.module.scss";
 import Image from "next/image";
 import classNames from "classnames";
 import Button from "../ui/Button/Button";
-<<<<<<< Updated upstream
-import { ITask } from "@/app/_types";
-=======
 import { IFile, ISolution, ITask } from "@/app/_types";
->>>>>>> Stashed changes
 import { getRemainingTime } from "@/app/_utils/time";
 import Moment from "react-moment";
 import { use, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "moment/locale/ru";
-<<<<<<< Updated upstream
-
-type TaskCardProps = {
-    task: ITask;
-    viewer?:
-        | "student"
-        | "company"
-        | "moderator"
-        | "institute_moderator"
-        | "admin";
-};
-
-const TaskCard: React.FC<TaskCardProps> = ({ task, viewer = "student" }) => {
-=======
 import DownloadItem from "../ui/DownloadItem/DownloadItem";
 import Input from "../ui/Input/Input";
 import { createSolvingTask } from "@/app/_http/API/tasksApi";
@@ -52,7 +34,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
     isSolvingPage = false,
     isSolutionsPage = false,
 }) => {
->>>>>>> Stashed changes
     const [dayTitle, setDayTitle] = useState<string>("");
     const { user } = useTypesSelector((state) => state.userReducer);
 
@@ -76,44 +57,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
         setDayTitle(getDayTitle(daysRef.current.state.content));
     }, [daysRef.current, task.title]);
 
-<<<<<<< Updated upstream
-    return (
-        <div className={styles.taskCard}>
-            {/* <button
-                onClick={() =>
-                    console.log(
-                        new Date(task.deadline),
-                        new Date(task.createdAt),
-                    )
-                }
-            >
-                test
-            </button> */}
-            {/* <div
-                className={classNames(
-                    "text gray fz20",
-                    styles.isViewed,
-                    isViewed && styles.viewed,
-                )}
-            >
-                Просмотрено
-            </div> */}
-            <div className={styles.wrapper}>
-                <div className={styles.taskContent}>
-                    <div className={styles.companyInfo}>
-                        <div className={styles.companyLogo}>
-                            <Image
-                                src={
-                                    task.profile?.logoImg
-                                        ? process.env.PUBLIC_URL +
-                                          task.profile?.logoImg
-                                        : "/images/avatar.png"
-                                }
-                                alt={task.profile?.companyName}
-                                width={60}
-                                height={60}
-                            />
-=======
     const [solutionFiles, setSolutionFiles] = useState<IFile[]>([]);
     const [solutionText, setSolutionText] = useState<string>("");
     const [textLength, setTextLength] = useState(solutionText.length || 0);
@@ -232,7 +175,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                     </div>
                                 )}
                             </div>
->>>>>>> Stashed changes
                         </div>
                     </div>
                     <div className={styles.taskFooter}>
@@ -333,66 +275,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                 1. Укажите, как именно вы собираетесь выполнять
                                 это задание. Опишите ключевые моменты.
                             </p>
-<<<<<<< Updated upstream
-                            <Link
-                                href={`/tasks/${task.id}`}
-                                className={classNames(
-                                    styles.showMore,
-                                    "text green fz24 under pointer",
-                                )}
-                            >
-                                Показать полностью
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className={styles.taskFooter}>
-                    <div className={styles.deadlineAndTime}>
-                        <span
-                            className={classNames(
-                                styles.deadline,
-                                "text fw500",
-                            )}
-                        >
-                            Срок выполнения:{" "}
-                            <Moment
-                                ref={daysRef}
-                                diff={task.createdAt}
-                                unit="days"
-                                locale="ru"
-                            >
-                                {task.deadline}
-                            </Moment>{" "}
-                            {dayTitle}
-                        </span>
-                        <span
-                            className={classNames(
-                                styles.timeLeft,
-                                "text fw500 fz20",
-                            )}
-                        >
-                            осталось:{" "}
-                            <Moment locale="ru" toNow ago>
-                                {task.deadline}
-                            </Moment>
-                        </span>
-                    </div>
-                    <Link
-                        href={`/tasks/${task.id}`}
-                        className={classNames(
-                            styles.showMore,
-                            styles.proposeButton,
-                            "text green fz24 under pointer",
-                        )}
-                    >
-                        <Button type="secondary">
-                            {viewer === "student"
-                                ? "Предложить решение"
-                                : "Просмотреть решения"}
-                        </Button>
-                    </Link>
-                </div>
-=======
                             <p className="text fz20">
                                 2. Составляйте уникальные отклики, которые
                                 покажут вашу компетентность и заинтересованность
@@ -689,7 +571,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
                     //     )}
                     // </div>
                 )}
->>>>>>> Stashed changes
             </div>
         </div>
     );

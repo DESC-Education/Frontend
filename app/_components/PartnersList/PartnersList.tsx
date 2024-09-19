@@ -53,7 +53,7 @@ const PartnersList: FC<PartnersListProps> = ({ partners }) => {
                                 <img src={partner.logo} alt={partner.name} />
                             </div>
                             <div className={styles.partnerInfo}>
-                                <p className="title fz48">{partner.name}</p>
+                                <p className={classNames("title fz48", styles.partnerName)}>{partner.name}</p>
                                 <p className="text">{partner.description}</p>
                             </div>
                         </SwiperSlide>

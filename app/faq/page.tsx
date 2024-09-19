@@ -1,19 +1,49 @@
-import classNames from 'classnames';
-import Accordion from '../_components/ui/Accordion/Accordion';
-import styles from './page.module.scss';
+import classNames from "classnames";
+import Accordion from "../_components/ui/Accordion/Accordion";
+import styles from "./page.module.scss";
 
-
-
-
+const faqs = [
+    {
+        question: "Что такое DESC-Education?",
+        answer:
+            "DESC-Education – это образовательная платформа, направленная на предоставление студентам IT-специальностей доступа к реальным практическим кейсам от компаний. Студенты выполняют задания, получают опыт работы и формируют профессиональное портфолио, что улучшает их шансы на рынке труда",
+    },
+    {
+        question: "Какая цель проекта?",
+        answer:
+            "Главная цель проекта – помочь студентам IT-направлений приобрести практический опыт, необходимый для успешного трудоустройства, и укрепить сотрудничество между учебными заведениями и компаниями.",
+    },
+    {
+        question: "Кто может участвовать в проекте?",
+        answer:
+            "Участниками проекта могут стать студенты вузов, проходящие подготовку по IT-направлениям, а также компании, которые ищут перспективных молодых специалистов для решения своих задач.",
+    },
+    {
+        question: "Какие компании участвуют в проекте?",
+        answer:
+            "В проекте участвуют компании из различных отраслей, в том числе технологические стартапы, IT-компании и научно-исследовательские организации. Их число будет увеличиваться по мере привлечения новых партнеров.",
+    },
+    {
+        question: "Как стать участником проекта?",
+        answer: `Чтобы присоединиться к проекту, студентам нужно зарегистрироваться на платформе DESC-Education. Компании могут также зарегистрироваться, через раздел "Компании" на сайте.`,
+    },
+];
 
 const Page = () => {
     return (
         <div className={classNames(styles.container, "container")}>
-            <div className={classNames(styles.title, "title")}>Вопросы и ответы</div>
+            <div className={classNames(styles.title, "title")}>
+                Вопросы и ответы
+            </div>
             <div className={styles.accordions}>
-                <Accordion index={1} title={"Какие услуги предоставляет веб-студия?"} content={"Timperdiet gravida scelerisque odio nunc. Eget felis, odio bibendum quis eget sit lorem donec diam. Volutpat sed orci turpis sit dolor est a pretium eget. Vitae turpis orci vel tellus cursus lorem vestibulum quis eu. Ut commodo, eget lorem venenatis urna."} />
-                <Accordion index={2} title={"Как заказать услугу?"} content={"Timperdiet gravida scelerisque odio nunc. Eget felis, odio bibendum quis eget sit lorem donec diam. Volutpat sed orci turpis sit dolor est a pretium eget. Vitae turpis orci vel tellus cursus lorem vestibulum quis eu. Ut commodo, eget lorem venenatis urna."} />
-                <Accordion index={3} title={"Как?"} content={"Timperdiet gravida scelerisque odio nunc. Eget felis, odio bibendum quis eget sit lorem donec diam. Volutpat sed orci turpis sit dolor est a pretium eget. Vitae turpis orci vel tellus cursus lorem vestibulum quis eu. Ut commodo, eget lorem venenatis urna."} />
+                {faqs.map((i, index) => (
+                    <Accordion
+                        key={index}
+                        index={index}
+                        title={i.question}
+                        content={i.answer}
+                    />
+                ))}
             </div>
         </div>
     );

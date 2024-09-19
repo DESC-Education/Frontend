@@ -50,8 +50,6 @@ const InfoIcon: FC<InfoIconProps> = ({
         }
     }, [toggleContentWidthRef]);
 
-    console.log(toggleContentWidth, tooltipWidth);
-
     return (
         <div
             className={classNames(styles.container, className, {

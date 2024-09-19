@@ -42,7 +42,7 @@ export default function ExchangePage() {
     const { updateTasks } = taskSlice.actions;
     const [isLoading, setIsLoading] = useState(tasks?.length === 0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(false);
 
     const listRef = useRef<any>(null);
 
@@ -134,8 +134,6 @@ export default function ExchangePage() {
         }
     };
 
-<<<<<<< Updated upstream
-=======
     useEffect(() => {
         const asyncFunc = async () => {
             const tasks = await getTasks(1, 5);
@@ -150,7 +148,6 @@ export default function ExchangePage() {
         asyncFunc();
     }, []);
 
->>>>>>> Stashed changes
     const getTasksByFiltersAndSort = async (
         sortingBy: "createdAt" | "-createdAt" = "createdAt",
     ) => {

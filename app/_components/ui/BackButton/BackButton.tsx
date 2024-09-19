@@ -8,13 +8,14 @@ import { FC } from "react";
 
 type BackButtonProps = {
     title?: string;
+    forceUrl?: string;
 };
 
-const BackButton: FC<BackButtonProps> = ({ title = "Назад" }) => {
+const BackButton: FC<BackButtonProps> = ({ title = "Назад", forceUrl }) => {
     const router = useRouter();
 
     return (
-        <div onClick={() => router.back()} className={styles.backButton}>
+        <div onClick={() => forceUrl ? router.push(forceUrl) : router.back()} className={styles.backButton}>
             <Image
                 src="/icons/backIcon.svg"
                 width={15}
