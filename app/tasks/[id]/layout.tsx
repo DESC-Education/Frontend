@@ -1,11 +1,12 @@
 "use client";
 
+import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { getTask } from "@/app/_http/API/tasksApi";
 import { taskSlice } from "@/app/_store/reducers/taskSlice";
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function RootLayout({
     children,
@@ -14,43 +15,45 @@ export default function RootLayout({
 }>) {
     const { id } = useParams();
 
-    const { tasks } = useTypesSelector((state) => state.taskReducer);
+    const { currentTask } = useTypesSelector((state) => state.taskReducer);
     const { updateCurrentTask } = taskSlice.actions;
     const dispatch = useTypesDispatch();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const router = useRouter();
 
     useEffect(() => {
-        const asyncFunc = async () => {
-            // if (tasks && tasks.length > 0) {
-            //     if (tasks.find((item) => item.id === id)) {
-            //         dispatch(
-            //             updateCurrentTask(
-            //                 tasks.find((item) => item.id === id)!,
-            //             ),
-            //         );
-            //     } else {
-            //         if (typeof id === "string") {
-            //             const res = await getTask(id);
+        setIsLoading(true);
 
-            //             console.log(res);
+        if (!currentTask?.id || currentTask.id !== id) {
+            // setIsLoading(true);
 
-            //             if (res.status === 200) {
-            //                 dispatch(updateCurrentTask(res.task!));
-            //             }
-            //         }
-            //     }
-            // }
-            if (typeof id === "string") {
-                const res = await getTask(id);
+            const asyncFunc = async () => {
+                if (typeof id === "string") {
+                    const res = await getTask(id);
 
-                console.log(res);
+                    console.log("currentTask res is", res);
 
-                if (res.status === 200) {
-                    dispatch(updateCurrentTask(res.task!));
+                    if (res.status === 200) {
+                        dispatch(updateCurrentTask(res.task!));
+                    } else {
+                        router.replace("/exchange");
+                    }
                 }
-            }
-        };
-        asyncFunc();
-    }, []);
+            };
+            asyncFunc();
+        }
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 200);
+    }, [id]);
+
+    if (isLoading)
+        return (
+            <div className="centerContent">
+                <CustomOval />
+            </div>
+        );
 
     return children;
 }

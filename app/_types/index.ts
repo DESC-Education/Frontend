@@ -135,15 +135,30 @@ export type ITask = {
     isVerified: boolean;
     isSuspicious: boolean;
     isVisible: boolean;
-    // files: IFile[];
+    files: IFile[];
+    solutions: ISolution[];
+};
+
+export type ISolution = {
+    id: string;
+    user: string;
+    description: string;
     file: string;
+    userProfile: {
+        firstName: string;
+        lastName: string;
+        logoImg: string;
+    };
+    companyComment: string;
+    status: "completed" | "failed" | "pending";
+    createdAt: string;
+    files: IFile[];
 };
 
 export type IFile = {
-    id: string;
     name: string;
     path: string;
-    type: string;
+    extension: string;
 };
 
 export type ICategory = {

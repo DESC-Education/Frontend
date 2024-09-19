@@ -63,3 +63,9 @@ export const sortingOptions = [
     { name: "Сначала старые", value: "-createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
 ]
+
+export const solutionStatuses = [
+    { name: "На оценке", value: "pending" },
+    { name: "Выполнено", value: "completed" },
+    { name: "Не выполнено", value: "failed" },
+]

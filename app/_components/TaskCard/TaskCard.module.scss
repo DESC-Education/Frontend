@@ -1,9 +1,14 @@
 .taskCard {
+    padding-bottom: 30px;
     .isViewed {
         visibility: hidden;
         width: min-content;
         padding: 0;
         margin: 0;
+    }
+
+    .hasSolutions {
+        margin-top: 20px;
     }
 
     .viewed {
@@ -16,13 +21,26 @@
     }
 
     .wrapper {
-        background-color: rgba(var(--white), 1);
-        padding: 30px;
+        transition: .3s;
+        padding: 30px 30px;
         gap: 20px;
-        margin-bottom: 20px;
+        // margin-bottom: 20px;
         border-radius: 50px;
+        // background: rgba(var(--gray3), 1);
+        background: white;
         border: 2px solid rgba(var(--gray2), 1);
         display: flex;
+        flex-direction: column;
+
+        &:hover {
+            // background-color: rgba(var(--gray3), 1);
+        }
+
+        .taskBody {
+            display: flex;
+            gap: 50px;
+            justify-content: space-between;
+        }
 
         .proposeButton {
             white-space: nowrap;
@@ -52,6 +70,11 @@
                     margin-bottom: 20px;
                 }
 
+                .descriptionBlock {
+                    display: flex;
+                    flex-direction: column;
+                }
+
                 .description {
                     display: -webkit-box;
                     -webkit-line-clamp: 3;
@@ -79,6 +102,7 @@
 
                 .deadline {
                     margin-bottom: 10px;
+                    white-space: nowrap;
                 }
 
                 .timeLeft {
@@ -88,11 +112,13 @@
         }
     }
 
-    &.extended {
+  &.extended {
         .wrapper {
+
             .taskDescription {
                 .description {
                     display: inline;
+                    max-width: unset;
                 }
 
                 .showMore {
@@ -101,6 +127,7 @@
 
                 .downloadItem {
                     margin-top: 15px;
+                    margin-right: auto;
                 }
             }
         }
@@ -108,6 +135,7 @@
 
     &.solution {
         border: 2px solid rgba(var(--gray2), 1);
+        background: rgba(var(--gray3), 1);
         border-radius: 50px;
 
         .wrapper {
@@ -125,6 +153,7 @@
 
                 .downloadItem {
                     margin-top: 15px;
+                    margin-right: auto;
                 }
             }
 
@@ -146,20 +175,22 @@
         }
 
         .solutionContent {
-            padding: 30px;
+            padding: 30px 45px;
 
             background-color: rgba(var(--gray3), 1);
             border-radius: 50px;
-            // margin: 0 15px 30px;
+            margin: 0 -30px -30px;
 
             .solutionTitle {
                 background-color: rgba(var(--white), 1);
                 border-radius: 100px;
                 padding: 25px 30px;
+                margin: 0 -30px;
+                font-weight: 500;
             }
 
             .solutionDescription {
-                margin: 40px 30px;
+                margin: 40px 0;
 
                 p {
                     margin: 10px 0;
