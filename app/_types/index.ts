@@ -135,7 +135,28 @@ export type ITask = {
     isVerified: boolean;
     isSuspicious: boolean;
     isVisible: boolean;
+<<<<<<< Updated upstream
     files: IFile[];
+=======
+    // files: IFile[];
+    file: string;
+    solutions: ISolution[];
+};
+
+export type ISolution = {
+    id: string;
+    user: string;
+    description: string;
+    file: string;
+    userProfile: {
+        firstName: string;
+        lastName: string;
+        logoImg: string;
+    };
+    companyComment: string;
+    status: "completed" | "failed" | "pending";
+    createdAt: string;
+>>>>>>> Stashed changes
 };
 
 export type IFile = {

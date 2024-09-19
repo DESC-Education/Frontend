@@ -12,6 +12,7 @@ import { ModalContext } from "@/app/_context/ModalContext";
 import { AlertContext } from "@/app/_context/AlertContext";
 import { read } from "fs";
 import { changeLogo } from "@/app/_http/API/profileApi";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
 
 const studentPages = [
     {
@@ -50,6 +51,8 @@ const ProfileNavMenu = () => {
         companyProfile,
         studentProfile,
     } = useTypesSelector((state) => state.userReducer);
+    const { isLoading } = useTypesSelector((state) => state.contentReducer);
+    const { updateIsLoading } = contentSlice.actions;
     const dispatch = useTypesDispatch();
     const {
         logoutUser,
@@ -193,6 +196,7 @@ const ProfileNavMenu = () => {
             </div>
             <p
                 onClick={() => {
+                    dispatch(updateIsLoading(true));
                     dispatch(logoutUser());
                     showAlert("Вы вышли из аккаунта!", "success");
                 }}

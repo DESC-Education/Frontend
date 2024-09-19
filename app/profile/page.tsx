@@ -40,7 +40,8 @@ export default function Home() {
                         >
                             {studentProfile.profession}
                         </div>
-                        <div
+                        <Link
+                            href={`/levels/`}
                             className={classNames(
                                 styles.level,
                                 `level${studentProfile.level.value}`,
@@ -49,7 +50,7 @@ export default function Home() {
                             <p className="text fw500">
                                 {studentProfile.level.name}
                             </p>
-                        </div>
+                        </Link>
                     </div>
                     <div className={styles.description}>
                         <p

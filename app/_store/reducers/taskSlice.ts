@@ -20,7 +20,13 @@ const initialState: TaskInterface = {
             isVerified: false,
             isSuspicious: false,
             isVisible: false,
+<<<<<<< Updated upstream
             files: [],
+=======
+            // files: [],
+            file: "",
+            solutions: [],
+>>>>>>> Stashed changes
         },
     ],
     categories: null,

@@ -34,6 +34,7 @@ import { userSlice } from "@/app/_store/reducers/userSlice";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import { TIMER_TIME } from "@/app/_utils/constants";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
 
 // export const PasswordSchema = z.string();
 
@@ -200,6 +201,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { authUser } = userSlice.actions;
+    const { updateIsLoading } = contentSlice.actions;
     const dispatch = useTypesDispatch();
 
     const [state, authDispatch] = useReducer(reducer, initState);
@@ -300,6 +302,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
 
         if (res.status === 200) {
             showAlert!("Вы успешно вошли в аккаунт!", "success");
+            dispatch(updateIsLoading(true));
             dispatch(authUser({ user: res.user!, tokens: res.tokens! }));
             closeModal();
         } else if (res.status === 406) {

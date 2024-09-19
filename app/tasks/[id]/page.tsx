@@ -70,6 +70,7 @@ const TasksPage = () => {
         <div className={classNames(styles.container, "container")}>
             <BackButton />
             <div className={styles.content}>
+<<<<<<< Updated upstream
                 <div className={styles.header}>
                     <div className={styles.company}>
                         <img src={task.profile.logoImg} alt="logo" />
@@ -88,6 +89,10 @@ const TasksPage = () => {
                             {dayTitle}
                         </p>
                     </div>
+=======
+                <div className={styles.currentTask}>
+                    <TaskCard task={currentTask} isTaskPage />
+>>>>>>> Stashed changes
                 </div>
             </div>
         </div>

@@ -157,6 +157,11 @@ const Header = () => {
                                             className={classNames(
                                                 styles.link,
                                                 "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname ===
+                                                        "/exchange",
+                                                },
                                             )}
                                             href="/exchange"
                                         >
@@ -387,6 +392,31 @@ const Header = () => {
                                             }
                                             action="tooltip"
                                         />
+<<<<<<< Updated upstream
+=======
+                                    ) : (
+                                        <Link
+                                            style={{
+                                                pointerEvents:
+                                                    profileVerification.status ===
+                                                    "verified"
+                                                        ? "all"
+                                                        : "none",
+                                            }}
+                                            className={classNames(
+                                                styles.link,
+                                                "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname ===
+                                                        "/exchange",
+                                                },
+                                            )}
+                                            href="/exchange"
+                                        >
+                                            Биржа
+                                        </Link>
+>>>>>>> Stashed changes
                                     )}
                                 </div>
                                 <div className={styles.linkContainer}>

@@ -46,14 +46,20 @@ export const formsOfEducation = [
     { name: "Заочное", value: "part_full_time" },
 ];
 
-export const levels = [
-    { name: "Начинающий", value: 0 },
-    { name: "Средний", value: 1 },
-    { name: "Продвинутый", value: 2 },
-]
+// export const levels = [
+//     { name: "Начинающий", value: 0 },
+//     { name: "Средний", value: 1 },
+//     { name: "Продвинутый", value: 2 },
+// ]
 
 export const sortingOptions = [
     { name: "Сначала новые", value: "createdAt" },
     { name: "Сначала старые", value: "-createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
+]
+
+export const solutionStatuses = [
+    { name: "На оценке", value: "pending" },
+    { name: "Выполнено", value: "completed" },
+    { name: "Не выполнено", value: "failed" },
 ]
