@@ -138,7 +138,7 @@ export default function ExchangePage() {
         const asyncFunc = async () => {
             const tasks = await getTasks(1, 5);
 
-            console.log("tasks", tasks);
+            // console.log("tasks", tasks, tasks.tasks!.map((item) => item.category));
 
             if (tasks.status === 200) {
                 dispatch(updateTasks({ tasks: tasks.tasks! }));
@@ -164,14 +164,6 @@ export default function ExchangePage() {
             sortingBy ? sortingBy : sorting,
         );
 
-        console.log(
-            "in getTasksByFiltersAndSort",
-            selectedFilters,
-            Object.keys(selectedFilters).map((key) => selectedFilters[key]),
-            Object.keys(selectedFilters)
-                .map((key) => selectedFilters[key])
-                .flat(),
-        );
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: res.tasks! }));
             setHasMore(res.pageCount! > 1);
@@ -194,15 +186,15 @@ export default function ExchangePage() {
             sorting,
         );
 
-        console.log(
-            "in getMoreTasks",
-            tasks,
-            currentPage,
-            sorting,
-            hasMore,
-            res.pageCount! > currentPage,
-            res,
-        );
+        // console.log(
+        //     "in getMoreTasks",
+        //     tasks,
+        //     currentPage,
+        //     sorting,
+        //     hasMore,
+        //     res.pageCount! > currentPage,
+        //     res,
+        // );
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: [...tasks!, ...res.tasks!] }));
             setHasMore(res.pageCount! > currentPage + 1);
@@ -220,14 +212,17 @@ export default function ExchangePage() {
             </div>
         );
 
-    console.log(
-        hasMore,
-        tasks,
-        currentPage,
-        sorting,
-        selectedCategory,
-        selectedFilters,
-    );
+        console.log(tasks, tasks.map(i => i.solutions));
+        
+
+    // console.log(
+    //     hasMore,
+    //     tasks,
+    //     currentPage,
+    //     sorting,
+    //     selectedCategory,
+    //     selectedFilters,
+    // );
 
     return (
         <div className="container">
@@ -454,6 +449,7 @@ export default function ExchangePage() {
                                     </div>
                                     <InfiniteScroll
                                         dataLength={tasks.length}
+                                        className={styles.tasksList}
                                         next={getMoreTasks}
                                         hasMore={hasMore}
                                         loader={

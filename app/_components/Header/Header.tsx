@@ -157,6 +157,11 @@ const Header = () => {
                                             className={classNames(
                                                 styles.link,
                                                 "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname ===
+                                                        "/exchange",
+                                                },
                                             )}
                                             href="/exchange"
                                         >
@@ -399,6 +404,11 @@ const Header = () => {
                                             className={classNames(
                                                 styles.link,
                                                 "text fz24 fw500",
+                                                {
+                                                    [styles.active]:
+                                                        pathname ===
+                                                        "/exchange",
+                                                },
                                             )}
                                             href="/exchange"
                                         >

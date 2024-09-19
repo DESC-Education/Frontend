@@ -1,6 +1,6 @@
 import axios from "axios";
 import { $authHost, $host } from "..";
-import { ICategory, ITask } from "@/app/_types";
+import { ICategory, ISolution, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
 export const getTask = async (id: string) => {
@@ -170,6 +170,69 @@ const getPatterns = async (q: string) => {
         return {
             status: 200,
             patterns: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const createSolvingTask = async (dto: FormData) => {
+    try {
+        const { data } = await $authHost.post<{
+            message: string;
+        }>("/api/v1/tasks/solution", dto, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        return { status: 200, message: data.message };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const getSolutions = async (
+    task_id: string,
+    ordering: "createdAt" | "-createdAt" = "createdAt",
+    status: "completed" | "failed" | "pending" = "pending",
+    page: number = 1,
+    page_size: number = 10,
+) => {
+    console.log(task_id, ordering, status, page, page_size);
+    
+    try {
+        const { data } = await $authHost.get<{
+            results: ISolution[];
+            numPages: number;
+        }>(
+            `/api/v1/tasks/solution-list/${task_id}?ordering=${ordering}&status=${status}&page=${page}&page_size=${page_size}`,
+        );
+
+        return {
+            status: 200,
+            solutions: data.results,
+            pageCount: data.numPages,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

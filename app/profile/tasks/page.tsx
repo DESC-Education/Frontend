@@ -48,7 +48,11 @@ export default function JobsPage() {
     };
 
     useEffect(() => {
+        // console.log("ASDN", myTasks);
+        
         if (!user.id) return;
+        // if (myTasks.length > 0) return;
+
         const asyncFunc = async () => {
             const activeTasks = await getMyTasks({
                 page: 1,
@@ -58,7 +62,7 @@ export default function JobsPage() {
                 status: "active",
             });
 
-            // console.log("tasks", tasks);
+            console.log("activeTasks", activeTasks); 
 
             if (activeTasks.status === 200) {
                 dispatch(updateMyTasks(activeTasks.results!));

@@ -77,7 +77,7 @@ export default function CreateTaskPage() {
 
     const getDayTitle = (day: number): "дней" | "день" | "дня" | "дней" => {
         const number = day;
-        console.log(day);
+        // console.log(day);
 
         if (number > 10 && [11, 12, 13, 14].includes(number % 100))
             return "дней";
@@ -159,6 +159,8 @@ export default function CreateTaskPage() {
     useEffect(() => {
         const asyncFunc = async () => {
             const res = await getCategories("");
+            console.log(res);
+            
 
             if (res.status === 200) {
                 setCategories(
@@ -186,7 +188,7 @@ export default function CreateTaskPage() {
 
     const validateFormTask = async () => {
         const errorsTemp: any = {};
-        console.log(state);
+        // console.log(state);
         
         if (state.title.length < 2) {
             errorsTemp.title = "Введите название задания";
@@ -212,10 +214,12 @@ export default function CreateTaskPage() {
         setErrors(errorsTemp);
 
         if (Object.keys(errorsTemp).length === 0) {
+            console.log(state.filters);
+            
             const formData = new FormData();
 
             const dedlineAsDate = addDaysAndFormat(new Date(), state.deadline);
-            console.log(dedlineAsDate);
+            // console.log(dedlineAsDate);
 
             formData.append("title", state.title);
             formData.append("description", state.description);
@@ -318,6 +322,19 @@ export default function CreateTaskPage() {
                                 containerClassName={styles.file}
                                 setFile={setFiles}
                                 file={files}
+                                fileTipContent={
+                                    <div>
+                                        <p className="text fz16 gray">
+                                            Форматы: PDF, DOCX, PNG, JPG, JPEG
+                                        </p>
+                                        <p className="text fz16 gray">
+                                            Максимальный вес: 5МБ
+                                        </p>
+                                        <p className="text fz16 gray">
+                                            Максимальное количество файлов: 5
+                                        </p>
+                                    </div>
+                                }
                             />
                         </div>
                         <div className={styles.selects}>
