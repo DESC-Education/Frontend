@@ -233,3 +233,27 @@ export type IReview = {
     rating: number;
     description: string;
 };
+
+export type IVerificationStudentRequest = {
+    id: string,
+    createdAt: string,
+    status: "pending" | "approved" | "rejected",
+    comment: string,
+    admin: string,
+    profile: IStudentProfile,
+    verificationFiles: [
+        string
+    ]
+}
+
+export type IVerificationCompanyRequest = {
+    id: string,
+    createdAt: string,
+    status: "pending" | "approved" | "rejected",
+    comment: string,
+    admin: string,
+    profile: ICompanyProfile,
+    verificationFiles: [
+        string
+    ]
+}

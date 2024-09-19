@@ -46,11 +46,17 @@ export const formsOfEducation = [
     { name: "Заочное", value: "part_full_time" },
 ];
 
-// export const levels = [
-//     { name: "Начинающий", value: 0 },
-//     { name: "Средний", value: 1 },
-//     { name: "Продвинутый", value: 2 },
-// ]
+export const typeOfSpeciality = [
+    { name: "Бакалавриат", value: "bachelor" },
+    { name: "Специалитет", value: "specialty" },
+    { name: "Магистратура", value: "magister" },
+];
+
+export const levels = [
+    { name: "Начинающий", value: 0 },
+    { name: "Средний", value: 1 },
+    { name: "Продвинутый", value: 2 },
+]
 
 export const sortingOptions = [
     { name: "Сначала новые", value: "createdAt" },
