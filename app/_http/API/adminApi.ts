@@ -1,17 +1,21 @@
 import axios from "axios";
 import { $authHost } from "..";
 import { dt } from "framer-motion/client";
+import { IVerificationResult } from "@/app/_types";
 
 
 export const getRequests = async (
     status: "pending" | "approved" | "rejected",
+    role: "student" | "company",
+    q?: string,
 ) => {
     try {
         const { data } = await $authHost.get<{
-            results: any[];
+            results: IVerificationResult[];
             status: "pending" | "approved" | "rejected",
-        }>(`/api/v1/admins/profile/requests?status=${status}`);
-
+            role: "student" | "company",
+            q: "",
+        }>(`/api/v1/admins/profile/requests?status=${status}&role=${role}&search=${q}`);
         return {
             status: 200,
             requests: data.results,

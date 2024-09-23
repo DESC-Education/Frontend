@@ -257,3 +257,15 @@ export type IVerificationCompanyRequest = {
         string
     ]
 }
+
+export type IVerificationResult = {
+    admin: string,
+    comment: string,
+    createdAt: string,
+    email: string,
+    firstName: string,
+    id: string,
+    lastName: string,
+    requestStatus: "pending" | "approved" | "rejected",
+    userType: "student" | "company",
+}
