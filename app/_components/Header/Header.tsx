@@ -354,8 +354,8 @@ const Header = () => {
                     ),
                     ref: createRef(),
                 };
-            //case "company":
-            case "institute_moderator":
+            case "company":
+            // case "institute_moderator":
                 return {
                     content: (
                         <>
@@ -606,8 +606,8 @@ const Header = () => {
                     ),
                     ref: createRef(),
                 };
-            case "company":
-                // case "institute_moderator":
+            // case "company":
+                case "institute_moderator":
                 return {
                     content: (
                         <>

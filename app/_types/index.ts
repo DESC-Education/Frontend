@@ -126,6 +126,7 @@ export type IMessage = {
 export type ITask = {
     id: string;
     profile: ICompanyProfile;
+    user: string; // id
     title: string;
     description: string;
     deadline: string;
@@ -137,6 +138,7 @@ export type ITask = {
     isVisible: boolean;
     files: IFile[];
     solutions: ISolution[];
+    solutionsCount: number;
 };
 
 export type ISolution = {

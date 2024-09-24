@@ -24,7 +24,6 @@ export default function RootLayout({
         companyProfile,
         isProfileLoading,
     } = useTypesSelector((state) => state.userReducer);
-    const { updateProfile, updateIsProfileLoading } = userSlice.actions;
 
     const dispatch = useTypesDispatch();
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
@@ -38,35 +37,31 @@ export default function RootLayout({
         }
     }, [isLoading, isAuth]);
 
-    useEffect(() => {
-        const asyncFunc = async () => {
-            if (isAuth) {
-                if (!studentProfile.id || !companyProfile) {
-                    const profile = await getProfile();
+    // useEffect(() => {
+    //     const asyncFunc = async () => {
+    //         if (isAuth) {
+    //             if (!studentProfile.id || !companyProfile) {
+    //                 const profile = await getProfile();
 
-                    console.log("profile in layout", profile);
-
-                    if (profile.status === 200) {
-                        console.log("УБРАТЬ КОСТЫЛЬНЫЙ level", profile);
-                        dispatch(
-                            updateProfile({
-                                ...profile.profile!,
-                                telegramLink: profile.profile!.telegramLink
-                                    ? profile.profile!.telegramLink.slice(13)
-                                    : undefined,
-                                vkLink: profile.profile!.vkLink
-                                    ? profile.profile!.vkLink.slice(15)
-                                    : undefined,
-                            }),
-                        );
-                    }
-                    dispatch(updateIsProfileLoading(false));
-                }
-            }
-        };
-        asyncFunc();
-        // console.log("studentProfile", studentProfile);
-    }, [isAuth]);
+    //                 if (profile.status === 200) {
+    //                     dispatch(
+    //                         updateProfile({
+    //                             ...profile.profile!,
+    //                             telegramLink: profile.profile!.telegramLink
+    //                                 ? profile.profile!.telegramLink.slice(13)
+    //                                 : undefined,
+    //                             vkLink: profile.profile!.vkLink
+    //                                 ? profile.profile!.vkLink.slice(15)
+    //                                 : undefined,
+    //                         }),
+    //                     );
+    //                 }
+    //                 dispatch(updateIsProfileLoading(false));
+    //             }
+    //         }
+    //     };
+    //     asyncFunc();
+    // }, [isAuth]);
 
     
     return (

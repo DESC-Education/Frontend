@@ -48,7 +48,7 @@ const initProfileStudent: IStudentProfile = {
     leadTaskCategories: [],
     level: { value: 0, name: "Начинающий" },
     replyCount: 0,
-    replyReloadDate: ""
+    replyReloadDate: "",
 };
 
 const initProfileCompany: ICompanyProfile = {
@@ -90,6 +90,8 @@ export const userSlice = createSlice({
         ) {
             state.user = action.payload.user;
             state.isAuth = true;
+            state.isProfileLoading = true;
+
             if (action.payload.tokens) {
                 LocalStorage.setTokens(
                     action.payload.tokens.accessToken,

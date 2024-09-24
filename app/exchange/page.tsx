@@ -28,7 +28,7 @@ import { sortingOptions } from "../_utils/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AlertContext } from "../_context/AlertContext";
 
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = 10;
 
 export default function ExchangePage() {
     const { tasks, categories } = useTypesSelector(
@@ -40,7 +40,7 @@ export default function ExchangePage() {
     );
     const dispatch = useTypesDispatch();
     const { updateTasks } = taskSlice.actions;
-    const [isLoading, setIsLoading] = useState(tasks?.length === 0);
+    const [isLoading, setIsLoading] = useState(tasks?.length !== 0);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
 
@@ -56,60 +56,8 @@ export default function ExchangePage() {
         "createdAt",
     );
     const { showAlert } = useContext(AlertContext);
-    // const selectedCategory = null
 
-    // const tasks: ITask[] = [
-    //     {
-    //         name: "Заказ1",
-    //         deadline: "10.03.2024",
-    //         description: "asdasd",
-    //         id: "1",
-    //         company: {
-    //             id: "1",
-    //             logoImg: "/images/userImage2.png",
-    //             linkToCompany: "",
-    //             description: "",
-    //             phone: "",
-    //             emailVisibility: false,
-    //             phoneVisibility: false,
-    //             timezone: 0,
-    //             city: {
-    //                 id: "1",
-    //                 name: "Moscow",
-    //                 region: "Россия",
-    //             },
-    //             skills: [],
-    //             companyName: "",
-    //             firstName: "",
-    //             lastName: "",
-    //             verification: { status: "verified" },
-    //             leadTaskCategories: [],
-    //             telegramLink: "",
-    //             vkLink: "",
-    //         },
-    //         category: {
-    //             id: "1",
-    //             name: "Категория1",
-    //             value: "sadads",
-    //             filterCategories: [
-    //                 {
-    //                     id: "1",
-    //                     name: "Категория1",
-    //                     filters: [
-    //                         { id: "1", name: "Фильтр1" },
-    //                         { id: "1", name: "Фильтр2" },
-    //                     ],
-    //                 },
-    //             ],
-    //         },
-    //         filtersId: [],
-    //         isVisible: true,
-    //         createdAt: "10.03.2024",
-    //         files: [],
-    //         isSuspicious: false,
-    //         isVerified: true,
-    //     },
-    // ];
+    const [isTasksFetched, setIsTasksFetched] = useState(false);
 
     const handleSelectFilter = (
         filterCategoryId: string,
@@ -135,18 +83,47 @@ export default function ExchangePage() {
     };
 
     useEffect(() => {
-        const asyncFunc = async () => {
-            const tasks = await getTasks(1, 5);
+        setIsTasksFetched(false);
+    }, [selectedCategory, selectedFilters, sorting]);
 
-            // console.log("tasks", tasks, tasks.tasks!.map((item) => item.category));
+    useEffect(() => {
+        if (tasks) {
+            setIsLoading(false);
+            return;
+        }
+
+        const asyncFunc = async () => {
+            const tasks = await getTasks(1, POSTS_PER_PAGE);
 
             if (tasks.status === 200) {
                 dispatch(updateTasks({ tasks: tasks.tasks! }));
                 setHasMore(tasks.pageCount! > 1);
+                setIsTasksFetched(true);
+                setIsLoading(false);
             }
         };
         asyncFunc();
-    }, []);
+    }, [tasks]);
+
+    const clearTasks = async () => {
+        setIsLoading(true);
+        setHasMore(false);
+        setCurrentPage(1);
+
+        setSelectedCategory(null);
+        setSelectedFilters({});
+
+        const res = await getTasks(1, POSTS_PER_PAGE, "", [], "createdAt");
+
+        if (res.status === 200) {
+            dispatch(updateTasks({ tasks: res.tasks! }));
+            setHasMore(res.pageCount! > 1);
+            setIsTasksFetched(true);
+        } else {
+            showAlert(res.message);
+        }
+        setIsLoading(false);
+    };
 
     const getTasksByFiltersAndSort = async (
         sortingBy: "createdAt" | "-createdAt" = "createdAt",
@@ -167,6 +144,7 @@ export default function ExchangePage() {
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: res.tasks! }));
             setHasMore(res.pageCount! > 1);
+            setIsTasksFetched(true);
         } else {
             showAlert(res.message);
         }
@@ -186,65 +164,29 @@ export default function ExchangePage() {
             sorting,
         );
 
-        // console.log(
-        //     "in getMoreTasks",
-        //     tasks,
-        //     currentPage,
-        //     sorting,
-        //     hasMore,
-        //     res.pageCount! > currentPage,
-        //     res,
-        // );
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: [...tasks!, ...res.tasks!] }));
             setHasMore(res.pageCount! > currentPage + 1);
             setCurrentPage((prev) => prev + 1);
+            setIsTasksFetched(true);
         } else {
             showAlert(res.message);
         }
         setIsLoading(false);
     };
 
-    if (!tasks || !categories)
+    if (tasks === null)
         return (
             <div className="centerContent">
                 <CustomOval />
             </div>
         );
 
-        console.log(tasks, tasks.map(i => i.solutions));
-        
-
-    // console.log(
-    //     hasMore,
-    //     tasks,
-    //     currentPage,
-    //     sorting,
-    //     selectedCategory,
-    //     selectedFilters,
-    // );
-
     return (
         <div className="container">
             <h2 className={classNames(styles.exchangeTitle, "title fz32")}>
                 Биржа заданий
             </h2>
-            {/* <button
-                onClick={() =>
-                    console.log(
-                        "selectedCategory",
-                        selectedCategory,
-                        "selectedFilters",
-                        selectedFilters,
-                        "tasks",
-                        tasks,
-                        replyCount,
-                        sorting,
-                    )
-                }
-            >
-                test
-            </button> */}
             <div className={styles.mainContainer}>
                 <aside className={styles.sidebar}>
                     <div className={styles.filters}>
@@ -264,7 +206,7 @@ export default function ExchangePage() {
                                     className={styles.filterLabel}
                                 >
                                     <Input
-                                        type="checkbox"
+                                        type="radio"
                                         checked={
                                             selectedCategory?.id === category.id
                                         }
@@ -346,6 +288,7 @@ export default function ExchangePage() {
                         )}
                         <div className={styles.buttons}>
                             <Button
+                                disabled={isTasksFetched}
                                 type="secondary"
                                 onClick={() => getTasksByFiltersAndSort()}
                                 className={styles.applyButton}
@@ -355,13 +298,7 @@ export default function ExchangePage() {
                             <Button
                                 type="primary"
                                 className={styles.clearButton}
-                                onClick={() => {
-                                    setSelectedCategory(null);
-                                    setSelectedFilters({});
-                                    setTimeout(() => {
-                                        getTasksByFiltersAndSort();
-                                    }, 100);
-                                }}
+                                onClick={() => clearTasks()}
                             >
                                 Очистить
                             </Button>
@@ -418,6 +355,11 @@ export default function ExchangePage() {
                             />
                         </div>
                     </div>
+                    {/* {isLoading ? (
+                        <div className="centerContent">
+                            <CustomOval />
+                        </div>
+                    ) : ( */}
                     <CSSTransition
                         nodeRef={listRef}
                         in={!isLoading}
@@ -430,7 +372,7 @@ export default function ExchangePage() {
                                 [styles.loading]: isLoading,
                             })}
                         >
-                            {tasks.length === 0 ? (
+                            {tasks?.length === 0 ? (
                                 <div className="centerContent">
                                     <img src="/images/questions.png" />
                                     <p
@@ -448,7 +390,7 @@ export default function ExchangePage() {
                                         <CustomOval />
                                     </div>
                                     <InfiniteScroll
-                                        dataLength={tasks.length}
+                                        dataLength={tasks!.length}
                                         className={styles.tasksList}
                                         next={getMoreTasks}
                                         hasMore={hasMore}
@@ -457,20 +399,31 @@ export default function ExchangePage() {
                                                 <CustomOval />
                                             </div>
                                         }
-                                        endMessage={
-                                            <p className="text fz24 fw500 center">
-                                                Больше заданий нет!
-                                            </p>
-                                        }
+                                        // endMessage={
+                                        //     <p className="text fz24 fw500 center">
+                                        //         Больше заданий нет!
+                                        //     </p>
+                                        // }
                                     >
-                                        {tasks.map((task, index) => (
+                                        {tasks!.map((task, index) => (
                                             <TaskCard key={index} task={task} />
                                         ))}
                                     </InfiniteScroll>
+                                    {hasMore && (
+                                        <div
+                                            className={styles.loadMore}
+                                            onClick={() => getMoreTasks()}
+                                        >
+                                            <p className="text fz24 fw500">
+                                                Загрузить еще
+                                            </p>
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>
                     </CSSTransition>
+                    {/* )} */}
                 </main>
             </div>
         </div>

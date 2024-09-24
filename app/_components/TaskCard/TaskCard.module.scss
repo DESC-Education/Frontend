@@ -173,56 +173,5 @@
                 }
             }
         }
-
-        .solutionContent {
-            padding: 30px 45px;
-
-            background-color: rgba(var(--gray3), 1);
-            border-radius: 50px;
-            margin: 0 -30px -30px;
-
-            .solutionTitle {
-                background-color: rgba(var(--white), 1);
-                border-radius: 100px;
-                padding: 25px 30px;
-                margin: 0 -30px;
-                font-weight: 500;
-            }
-
-            .solutionDescription {
-                margin: 40px 0;
-
-                p {
-                    margin: 10px 0;
-                }
-            }
-
-            .solution {
-                p {
-                    margin: 0 30px;
-                }
-
-                .textarea {
-                    margin: 20px 0 10px;
-
-                    textarea {
-                        height: 400px;
-                    }
-                }
-
-                .underdescription {
-                    .length {
-                        display: flex;
-                        justify-content: flex-end;
-                    }
-                }
-
-            }
-
-            .applyButton {
-                width: 100%;
-                margin-top: 40px;
-            }
-        }
     }
 }

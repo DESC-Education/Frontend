@@ -8,23 +8,7 @@ type TaskInterface = {
 };
 
 const initialState: TaskInterface = {
-    tasks: [
-        {
-            id: "",
-            profile: { companyName: "", logoImg: "" } as any,
-            title: "",
-            description: "",
-            deadline: "",
-            createdAt: "",
-            category: {} as ICategory,
-            filtersId: [],
-            isVerified: false,
-            isSuspicious: false,
-            isVisible: false,
-            files: [],
-            solutions: [],
-        },
-    ],
+    tasks: null,
     categories: null,
     currentTask: null,
 };

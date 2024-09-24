@@ -7,7 +7,7 @@ import { auth } from "@/app/_http/API/userApi";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import LocalStorage from "@/app/_utils/LocalStorage";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 
 type ClientRootLayoutProps = {
     children: React.ReactNode;
@@ -21,13 +21,17 @@ declare global {
 
 const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const dispatch = useTypesDispatch();
-    const { isAuth } = useTypesSelector((state) => state.userReducer);
+    const { isAuth, isProfileLoading } = useTypesSelector(
+        (state) => state.userReducer,
+    );
     const {
         authUser,
         updateProfile,
         updateIsProfileLoading,
     } = userSlice.actions;
     const { updateIsLoading, updateIsMobileDevice } = contentSlice.actions;
+
+    const [isInitialRun, setIsInitialRun] = useState(true);
 
     useEffect(() => {
         const isMobile = () => {
@@ -50,23 +54,18 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        
+        if (!isInitialRun) return;
+
         const asyncFunc = async () => {
             const token = LocalStorage.getAccessToken();
-            // console.log(token, "OSAMDOASMDOASDM");
 
-            if (token) {
+            if (token && !isAuth) {
                 const res = await auth();
-
-                // console.log("res for auth", res);
 
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
 
                     const profile = await getProfile();
-
-                    // console.log("profile in auth", profile);
-
                     if (profile.status === 200) {
                         dispatch(
                             updateProfile({
@@ -84,9 +83,38 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                 }
             }
             dispatch(updateIsLoading(false));
+            setIsInitialRun(false);
         };
         asyncFunc();
-    }, [isAuth]);
+    }, [isInitialRun]);
+
+    useEffect(() => {
+        if (isInitialRun || (isAuth && !isProfileLoading)) return;
+
+        const asyncFunc = async () => {
+            const token = LocalStorage.getAccessToken();
+
+            if (token && isAuth) {
+                const profile = await getProfile();
+                if (profile.status === 200) {
+                    dispatch(
+                        updateProfile({
+                            ...profile.profile!,
+                            telegramLink: profile.profile!.telegramLink
+                                ? profile.profile!.telegramLink.slice(13)
+                                : undefined,
+                            vkLink: profile.profile!.vkLink
+                                ? profile.profile!.vkLink.slice(15)
+                                : undefined,
+                        }),
+                    );
+                }
+                dispatch(updateIsProfileLoading(false));
+            }
+            dispatch(updateIsLoading(false));
+        };
+        asyncFunc();
+    }, [isAuth, isInitialRun, isProfileLoading]);
 
     return children;
 };

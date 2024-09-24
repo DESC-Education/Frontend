@@ -1,0 +1,23 @@
+.solutions {
+    &-enter {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    &-enter-active {
+        opacity: 1;
+        transform: translateX(0);
+        transition: opacity 300ms ease-in, transform 300ms ease-in;
+    }
+
+    &-exit {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    &-exit-active {
+        opacity: 0;
+        transform: translateX(10px);
+        transition: opacity 300ms ease-in, transform 300ms ease-in;
+    }
+}

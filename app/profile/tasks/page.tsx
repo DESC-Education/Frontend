@@ -48,11 +48,13 @@ export default function JobsPage() {
     };
 
     useEffect(() => {
-        // console.log("ASDN", myTasks);
-        
         if (!user.id) return;
-        // if (myTasks.length > 0) return;
 
+        if (myTasks) {
+            setIsLoading(false);
+            return;
+        }
+        
         const asyncFunc = async () => {
             const activeTasks = await getMyTasks({
                 page: 1,
@@ -61,8 +63,6 @@ export default function JobsPage() {
                 role: user.role,
                 status: "active",
             });
-
-            console.log("activeTasks", activeTasks); 
 
             if (activeTasks.status === 200) {
                 dispatch(updateMyTasks(activeTasks.results!));
@@ -77,8 +77,6 @@ export default function JobsPage() {
                 status: "archived",
             });
 
-            console.log("archivedTasks", archivedTasks);
-
             if (archivedTasks.status === 200) {
                 dispatch(updateMyArchivedTasks(archivedTasks.results!));
             }
@@ -86,7 +84,7 @@ export default function JobsPage() {
             setIsLoading(false);
         };
         asyncFunc();
-    }, [user.role]);
+    }, [user.role, myTasks]);
 
     const getJobsPageContent = useCallback(
         (
@@ -97,19 +95,13 @@ export default function JobsPage() {
         } => {
             switch (jobsPage) {
                 case "current":
-                    console.log(user, myTasks);
-
                     return {
                         content: (
                             <div className={styles.content}>
-                                {myTasks.length > 0 ? (
+                                {myTasks && myTasks.length > 0 ? (
                                     <div>
                                         {myTasks.map((task, index) => (
-                                            <TaskCard
-                                                viewer={user.role}
-                                                key={index}
-                                                task={task}
-                                            />
+                                            <TaskCard key={index} task={task} />
                                         ))}
                                     </div>
                                 ) : (
@@ -136,14 +128,10 @@ export default function JobsPage() {
                     return {
                         content: (
                             <div className={styles.content}>
-                                {myArchivedTasks.length > 0 ? (
+                                {myArchivedTasks && myArchivedTasks.length > 0 ? (
                                     <div>
                                         {myArchivedTasks.map((task, index) => (
-                                            <TaskCard
-                                                viewer={user.role}
-                                                key={index}
-                                                task={task}
-                                            />
+                                            <TaskCard key={index} task={task} />
                                         ))}
                                     </div>
                                 ) : (

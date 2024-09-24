@@ -8,8 +8,8 @@ type UserInterface = {
     isMobileDevice: boolean;
     replyCount: number;
     chats: IChat[];
-    myTasks: ITask[];
-    myArchivedTasks: ITask[];
+    myTasks: ITask[] | null;
+    myArchivedTasks: ITask[] | null;
 };
 
 const initialState: UserInterface = {
@@ -17,8 +17,8 @@ const initialState: UserInterface = {
     isMobileDevice: false,
     replyCount: 30,
     chats: [],
-    myTasks: [],
-    myArchivedTasks: [],
+    myTasks: null,
+    myArchivedTasks: null,
 };
 
 export const contentSlice = createSlice({
@@ -39,6 +39,14 @@ export const contentSlice = createSlice({
         },
         updateIsMobileDevice(state, action: PayloadAction<boolean>) {
             state.isMobileDevice = action.payload;
+        },
+        logoutContent(state) {
+            state.isLoading = true;
+            state.isMobileDevice = false;
+            state.replyCount = 30;
+            state.chats = [];
+            state.myTasks = null;
+            state.myArchivedTasks = null;
         },
     },
 });

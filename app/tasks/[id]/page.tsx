@@ -13,21 +13,14 @@ import { getTask } from "@/app/_http/API/tasksApi";
 import TaskCard from "@/app/_components/TaskCard/TaskCard";
 
 const TasksPage = () => {
-    const { id } = useParams();
-
-    // const { tasks } = useTypesSelector((state) => state.taskReducer);
     const { currentTask } = useTypesSelector((state) => state.taskReducer);
 
-    const [task, setTask] = useState<ITask | null>(null);
-
-    if (!task)
+    if (!currentTask)
         return (
             <div className="centerContent">
                 <CustomOval />
             </div>
         );
-
-    console.log(task);
 
     return (
         <div className={classNames(styles.container, "container")}>

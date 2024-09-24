@@ -19,6 +19,47 @@
     svg {
         width: 27px;
     }
+
+    .check,
+    .unCheck {
+        position: relative;
+        top: 0;
+        left: 0px;
+        display: block;
+        width: 26px;
+        height: 26px;
+        border: 1px solid rgba(var(--gray2), .7);
+        border-radius: 5px;
+        background-color: rgba(var(--white), 1);
+        transition: .3s;
+    }
+
+    .check {
+        >div {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: -1px;
+            left: -1px;
+            display: block;
+            width: 26px;
+            height: 26px;
+            transition: .3s;
+            border-radius: 5px;
+            background: rgba(var(--black), 1);
+        }
+    }
+
+    &.radioWrapper {
+        .check, .unCheck {
+            border-radius: 50%;
+        }
+
+        .check >div {
+            border-radius: 50%;
+        }
+    }
 }
 
 .userImage {
@@ -130,6 +171,7 @@
             align-items: center;
         }
 
+
         +label+label {
             cursor: pointer;
             margin-left: 3px;
@@ -141,31 +183,8 @@
                 margin: -1px 0 0 10px;
             }
 
-            // &:after {
-            //     content: "";
-            //     position: absolute;
-            //     top: 4px;
-            //     left: 4px;
-            //     width: 14px;
-            //     height: 14px;
-            //     transition: .3s;
-            //     border-radius: 3px;
-            //     background: rgba(var(--white), 1);
-            // }
+            // &:after 
 
-            // &:before {
-            //     content: "";
-            //     position: absolute;
-            //     top: 0;
-            //     left: 0px;
-            //     display: block;
-            //     width: 20px;
-            //     height: 20px;
-            //     border: 1px solid rgba(var(--gray2), .7);
-            //     border-radius: 3px;
-            //     background-color: rgba(var(--white), 1);
-            //     transition: .3s;
-            // }
         }
 
         &:checked+label:after {

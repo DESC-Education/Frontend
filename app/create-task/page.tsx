@@ -193,6 +193,10 @@ export default function CreateTaskPage() {
         if (state.title.length < 2) {
             errorsTemp.title = "Введите название задания";
         }
+        
+        if (state.description.length < minLength) {
+            errorsTemp.description = "Введите описание задания (" + minLength + " символов или больше)";
+        }
 
         if (state.categoryId === "") {
             errorsTemp.categoryId = "Выберите категорию";
@@ -231,7 +235,7 @@ export default function CreateTaskPage() {
 
             files!.forEach((el: any, i) => {
                 // ???????
-                formData.append(`file`, el, el.name);
+                formData.append(`files_list`, el, el.name);
             });
 
             const res = await createTask(formData);
@@ -299,6 +303,7 @@ export default function CreateTaskPage() {
                             placeholder="Опишите что именно вам нужно. Включите в описание важные аспекты."
                             containerClassName={styles.textarea}
                             value={state.description}
+                            errorText={errors.description}
                             onChange={handleTextChange}
                             max={maxLength}
                         />

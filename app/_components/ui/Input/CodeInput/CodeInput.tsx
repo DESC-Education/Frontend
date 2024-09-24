@@ -18,8 +18,6 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
     );
 
     const changeValue = (char: string, value: string) => {
-        console.log("in changeValue", char, value);
-
         if (char === "Backspace") {
             // Delete last char
             setValue((prev) => {
@@ -91,21 +89,11 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
         }
     };
 
-    console.log("val is", value);
-
     if (isMobileDevice)
         return (
             <input
                 value={value}
                 onChange={(e) => {
-                    console.log(
-                        "helo?",
-                        e.target.value,
-                        value,
-                        e.target.value.length,
-                        value.length,
-                    );
-
                     if (e.target.value.length < value.length) {
                         changeValue("Backspace", value);
                     } else {

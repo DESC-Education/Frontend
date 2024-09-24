@@ -1,19 +1,22 @@
 "use client";
 
 import styles from "./SolutionsLogic.module.scss";
+import "./SolutionsLogic.scss";
 import Link from "next/link";
 import Button from "../../ui/Button/Button";
 import classNames from "classnames";
 import CustomSearch from "../../ui/CustomSearch/CustomSearch";
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { solutionStatuses } from "@/app/_utils/constants";
 import { ISolution } from "@/app/_types";
 import { getSolutions } from "@/app/_http/API/tasksApi";
 import { AlertContext } from "@/app/_context/AlertContext";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CustomOval from "../../ui/CustomOval/CustomOval";
+import usePagination from "@/app/_hooks/usePagination";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 
-const POSTS_PER_PAGE = 1;
+const POSTS_PER_PAGE = 3;
 
 const filters = [
     { name: "Выполненные", value: "completed" },
@@ -37,10 +40,6 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
     role,
     studnetSolutions,
 }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
-
     const { showAlert } = useContext(AlertContext);
 
     const [sorting, setSorting] = useState<"createdAt" | "-createdAt">(
@@ -50,61 +49,24 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
         "pending",
     );
 
-    const [currentCompanySolutions, setCurrentCompanySolutions] = useState<
-        ISolution[]
-    >([]);
+    const [
+        currentCompanySolutions,
+        totalPages,
+        page,
+        setPage,
+        loading,
+        fetchData,
+    ] = usePagination<ISolution>(
+        getSolutions,
+        {
+            task_id: taskId,
+            ordering: sorting,
+            status: filter,
+        },
+        POSTS_PER_PAGE,
+    );
 
-    useEffect(() => {
-        getSolutionsByFiltersAndSort();
-    }, [])
-
-    // const get
-
-    const getSolutionsByFiltersAndSort = async () => {
-        setIsLoading(true);
-        setCurrentPage(1);
-
-        const res = await getSolutions(
-            taskId,
-            sorting,
-            filter,
-            currentPage,
-            POSTS_PER_PAGE,
-        );
-
-        console.log("getSolutionsByFiltersAndSort res", res);
-
-        if (res.status === 200) {
-            setCurrentCompanySolutions(res.solutions!);
-            setHasMore(res.pageCount! > 1);
-        } else {
-            showAlert(res.message);
-        }
-        setIsLoading(false);
-    };
-
-    const getMoreSolutions = async () => {
-        setIsLoading(true);
-
-        const res = await getSolutions(
-            taskId,
-            sorting,
-            filter,
-            currentPage,
-            POSTS_PER_PAGE,
-        );
-
-        console.log("getMoreTasks res", res);
-
-        if (res.status === 200) {
-            setCurrentCompanySolutions((prev) => [...prev, ...res.solutions!]);
-            setHasMore(res.pageCount! > currentPage + 1);
-            setCurrentPage((prev) => prev + 1);
-        } else {
-            showAlert(res.message);
-        }
-        setIsLoading(false);
-    };
+    const nodeRef = useRef<HTMLDivElement>(null);
 
     return (
         <div className={styles.solutions}>
@@ -172,29 +134,34 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                 <>
                     <div className={styles.solutionsFilters}>
                         <div>
-                            <p className="title fz24 gray fw500">Фильтр</p>
-                            <CustomSearch
-                                options={filters}
-                                value={filter}
-                                onChange={(e) => {
-                                    setFilter(e);
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <p className="title fz24 gray fw500">Сортировка</p>
-                            <CustomSearch
-                                options={sortings}
-                                value={sorting}
-                                onChange={(e) => {
-                                    setSorting(e);
-                                }}
-                            />
+                            <div>
+                                <p className="title fz24 gray fw500">Фильтр:</p>
+                                <CustomSearch
+                                    options={filters}
+                                    value={filter}
+                                    onChange={(e) => {
+                                        setFilter(e);
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <p className="title fz24 gray fw500">
+                                    Сортировка:
+                                </p>
+                                <CustomSearch
+                                    options={sortings}
+                                    value={sorting}
+                                    onChange={(e) => {
+                                        setSorting(e);
+                                    }}
+                                />
+                            </div>
                         </div>
                         <div>
                             <Button
-                                type="primary"
-                                onClick={() => getSolutionsByFiltersAndSort()}
+                                type="secondary"
+                                // onClick={() => getSolutionsByFiltersAndSort()}
+                                onClick={() => fetchData()}
                             >
                                 Применить
                             </Button>
@@ -211,88 +178,143 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                             <p className="title fz24 gray fw500">Статус</p>
                         </div>
                     </div>
-                    <InfiniteScroll
-                        dataLength={currentCompanySolutions.length}
-                        className={classNames(
-                            styles.solutionsList,
-                            styles.company,
-                        )}
-                        next={getMoreSolutions}
-                        hasMore={hasMore}
-                        loader={
-                            <div className="centerContent">
-                                <CustomOval />
-                            </div>
-                        }
-                        // endMessage={
-                        //     <p className="text fz24 fw500 center">
-                        //         Больше заданий нет!
-                        //     </p>
-                        // }
-                    >
-                        {currentCompanySolutions.map((solution, index) => (
-                            <div
-                                className={classNames(
-                                    styles.solutionItem,
-                                    styles.company,
+                    <SwitchTransition>
+                        <CSSTransition
+                            key={loading ? "Goodbye, world!" : "Hello, world!"}
+                            nodeRef={nodeRef}
+                            timeout={200}
+                            classNames="solutions"
+                        >
+                            <div ref={nodeRef}>
+                                {loading ? (
+                                    <div className={styles.centerContent}>
+                                        <CustomOval />
+                                    </div>
+                                ) : currentCompanySolutions.length > 0 ? (
+                                    <div className={styles.solutionsList}>
+                                        {currentCompanySolutions.map(
+                                            (solution, index) => (
+                                                <div
+                                                    className={classNames(
+                                                        styles.solutionItem,
+                                                        styles.company,
+                                                    )}
+                                                    key={index}
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.solutionUser
+                                                        }
+                                                    >
+                                                        <img
+                                                            src={
+                                                                solution
+                                                                    .userProfile
+                                                                    .logoImg
+                                                                    ? process
+                                                                          .env
+                                                                          .NEXT_PUBLIC_ASSETS_PATH +
+                                                                      solution
+                                                                          .userProfile
+                                                                          .logoImg
+                                                                    : "/images/avatar.png"
+                                                            }
+                                                            alt="logo"
+                                                            width={40}
+                                                            height={40}
+                                                        />
+                                                        <p className="text fz24">
+                                                            {solution
+                                                                .userProfile
+                                                                .firstName +
+                                                                " " +
+                                                                solution
+                                                                    .userProfile
+                                                                    .lastName}
+                                                            {solution
+                                                                .userProfile
+                                                                .firstName +
+                                                                " " +
+                                                                solution
+                                                                    .userProfile
+                                                                    .lastName}
+                                                        </p>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.solutionDescription
+                                                        }
+                                                    >
+                                                        <p className="text fz20">
+                                                            {
+                                                                solution.description
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    <p
+                                                        className={classNames(
+                                                            "text fz28 fw500",
+                                                            styles.status,
+                                                            styles[
+                                                                solution.status
+                                                            ],
+                                                        )}
+                                                    >
+                                                        {
+                                                            solutionStatuses.find(
+                                                                (i) =>
+                                                                    i.value ===
+                                                                    solution.status,
+                                                            )?.name
+                                                        }
+                                                    </p>
+                                                    <Link
+                                                        href={`/tasks/${taskId}/solutions/${solution.id}`}
+                                                        className={
+                                                            styles.button
+                                                        }
+                                                    >
+                                                        <Button
+                                                            type="secondary"
+                                                            className={
+                                                                styles.solutionTitle
+                                                            }
+                                                        >
+                                                            Перейти к решению
+                                                        </Button>
+                                                    </Link>
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className={styles.centerContent}>
+                                        <p className="text fz24 fw500">
+                                            Решений с такими фильтрами нет!
+                                        </p>
+                                    </div>
                                 )}
-                                key={index}
+                            </div>
+                        </CSSTransition>
+                    </SwitchTransition>
+                </>
+            )}
+            {totalPages > 1 && (
+                <div className={styles.pagination}>
+                    {Array(totalPages)
+                        .fill(0)
+                        .map((i, ind) => (
+                            <div
+                                className={classNames(styles.paginationItem, {
+                                    [styles.active]: page === ind + 1,
+                                })}
+                                key={ind}
+                                onClick={() => setPage(ind + 1)}
                             >
-                                <div className={styles.solutionUser}>
-                                    <img
-                                        src={
-                                            solution.userProfile.logoImg
-                                                ? process.env
-                                                      .NEXT_PUBLIC_ASSETS_PATH +
-                                                  solution.userProfile.logoImg
-                                                : "/images/avatar.png"
-                                        }
-                                        alt="logo"
-                                        width={40}
-                                        height={40}
-                                    />
-                                    <p className="text fz24">
-                                        {solution.userProfile.firstName +
-                                            " " +
-                                            solution.userProfile.lastName}
-                                        {solution.userProfile.firstName +
-                                            " " +
-                                            solution.userProfile.lastName}
-                                    </p>
-                                </div>
-                                <div className={styles.solutionDescription}>
-                                    <p className="text fz20">
-                                        {solution.description}
-                                    </p>
-                                </div>
-                                <p
-                                    className={classNames(
-                                        "text fz28 fw500",
-                                        styles.status,
-                                        styles[solution.status],
-                                    )}
-                                >
-                                    {
-                                        solutionStatuses.find(
-                                            (i) => i.value === solution.status,
-                                        )?.name
-                                    }
-                                </p>
-                                <Link
-                                    href={`/tasks/${taskId}/solutions/${solution.id}`}
-                                    className={styles.button}
-                                >
-                                    <Button
-                                        type="secondary"
-                                        className={styles.solutionTitle}
-                                    >
-                                        Перейти к решению
-                                    </Button>
-                                </Link>
+                                <div>{ind + 1}</div>
                             </div>
                         ))}
-                    </InfiniteScroll>
-                </>
+                </div>
             )}
         </div>
     );

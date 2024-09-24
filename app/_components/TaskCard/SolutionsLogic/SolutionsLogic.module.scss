@@ -22,10 +22,30 @@
         }
     }
 
+    .centerContent {
+        padding: 80px 0;
+        display: flex;
+        justify-content: center;
+    }
+
     .solutionsFilters {
         display: flex;
-        gap: 20px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
         margin-bottom: 20px;
+
+        >div {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+
+            >div {
+                gap: 15px;
+                display: flex;
+                align-items: center;
+            }
+        }
     }
 
     .solutionDescription {
@@ -129,4 +149,53 @@
         }
     }
 
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+
+        .paginationItem {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(var(--gray1), 1);
+            cursor: pointer;
+            transition: .3s;
+
+            div {
+                font-size: 18px;
+                color: rgba(var(--gray1), 1);
+            }
+
+            &:hover {
+                border: 2px solid rgba(var(--green), 1);
+
+                div {
+                    color: rgba(var(--green), 1);
+                }
+            }
+
+            &.active {
+                border: 2px solid rgba(var(--green), 1);
+
+                div {
+                    color: rgba(var(--green), 1);
+                }
+
+                &:hover {
+                    cursor: default;
+
+                    border: 2px solid rgba(var(--green), 1);
+
+                    div {
+                        color: rgba(var(--green), 1);
+                    }
+                }
+            }
+        }
+
+    }
 }

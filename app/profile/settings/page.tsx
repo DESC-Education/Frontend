@@ -51,6 +51,7 @@ import { set } from "zod";
 import ChangeCredsModal from "@/app/_components/modals/ChangeCredsModal/ChangeCredsModal";
 import { ModalContext } from "@/app/_context/ModalContext";
 import { getBeautifiedPhone } from "@/app/_utils/utils";
+import useEffectDebugger from "@/app/_hooks/useEffectDebugger";
 
 type SettingsState = "personal_data" | "profile" | "verification";
 
@@ -174,19 +175,53 @@ const SettingsPage = () => {
     const [logo, setLogo] = useState<File | null>(null);
     const [studentCard, setStudentCard] = useState<File[] | null>([]);
     const [verFiles, setVerFiles] = useState<File[] | null>([]);
-    const isChanged = useRef<number>(0);
-    // const [isChanged, setIsChanged] = useState<number>(0);
+    const isChanged = useRef<boolean>(false);
 
     useEffect(() => {
         setErrors({});
         setErrorsExist(false);
     }, [studentProfile, studentCard, companyProfile, logo, verFiles]);
 
-    useEffect(() => {
-        if (isProfileLoading || isChanged.current === undefined) return;
+    useEffectDebugger(() => {
+        console.log(
+            studentProfile.id,
+            companyProfile.id,
+            isProfileLoading,
+            isChanged.current,
+            undefined,
+            profileVerification.status,
+        );
 
-        isChanged.current = isChanged.current + 1;
-    }, [studentProfile, companyProfile, isProfileLoading]);
+        if (
+            (!studentProfile.id && !companyProfile.id) ||
+            isProfileLoading ||
+            isChanged.current === undefined ||
+            profileVerification.status !== "verified"
+        )
+            return;
+
+        console.log("helo brow");
+
+        // isChanged.current = isChanged.current + 1;
+    }, [
+        studentProfile.description,
+        studentProfile.phoneVisibility,
+        studentProfile.emailVisibility,
+        studentProfile.telegramLink,
+        studentProfile.vkLink,
+        studentProfile.skills.length,
+
+        companyProfile.description,
+        companyProfile.phoneVisibility,
+        companyProfile.emailVisibility,
+        companyProfile.telegramLink,
+        companyProfile.vkLink,
+        companyProfile.linkToCompany,
+        companyProfile.skills.length,
+
+        isProfileLoading,
+        profileVerification,
+    ]);
 
     const [errors, setErrors] = useState<any>({});
     const [errorsExist, setErrorsExist] = useState<boolean>(false);
@@ -196,8 +231,6 @@ const SettingsPage = () => {
     const validateFormStudent = async () => {
         setIsLoading(true);
         const errorsTemp: any = {};
-
-        console.log(studentProfile);
 
         if (
             !studentProfile.profession ||
@@ -262,8 +295,6 @@ const SettingsPage = () => {
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
-        console.log(errorsTemp);
-
         if (Object.keys(errorsTemp).length === 0) {
             const formdata = new FormData();
 
@@ -304,7 +335,6 @@ const SettingsPage = () => {
             });
 
             const res = await createProfileStudent(formdata);
-            console.log("createProfileStudent res", res);
 
             if (res.status === 200) {
                 dispatch(
@@ -324,8 +354,6 @@ const SettingsPage = () => {
     const validateFormCompany = async () => {
         setIsLoading(true);
         const errorsTemp: any = {};
-
-        console.log(companyProfile);
 
         if (!companyProfile.firstName) {
             errorsTemp.firstName = "Введите имя";
@@ -370,8 +398,6 @@ const SettingsPage = () => {
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
-        console.log(errorsTemp);
-
         if (Object.keys(errorsTemp).length === 0) {
             const formdata = new FormData();
 
@@ -405,7 +431,6 @@ const SettingsPage = () => {
             });
 
             const res = await createProfileStudent(formdata);
-            console.log("createProfileCompany res", res);
 
             if (res.status === 200) {
                 dispatch(
@@ -425,8 +450,6 @@ const SettingsPage = () => {
     const validateEditProfileStudent = async () => {
         setIsLoading(true);
         const errorsTemp: any = {};
-
-        console.log("studentProfile", studentProfile);
 
         if (
             studentProfile.description !== null &&
@@ -450,8 +473,6 @@ const SettingsPage = () => {
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
-        console.log("errorsTemp", errorsTemp);
-
         if (Object.keys(errorsTemp).length === 0) {
             const res = await editStudentProfile({
                 description: studentProfile.description ?? "",
@@ -467,9 +488,8 @@ const SettingsPage = () => {
                 profession: studentProfile.profession,
             });
 
-            console.log("edit res", res);
             if (res.status === 200) {
-                isChanged.current = 0;
+                isChanged.current = false;
                 showAlert("Профиль успешно обновлен", "success");
             }
             setIsLoading(false);
@@ -481,8 +501,6 @@ const SettingsPage = () => {
     const validateEditProfileCompany = async () => {
         setIsLoading(true);
         const errorsTemp: any = {};
-
-        console.log("caompanyProfile", companyProfile);
 
         if (
             companyProfile.description !== null &&
@@ -506,8 +524,6 @@ const SettingsPage = () => {
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
-        console.log("erroresTemp", errorsTemp);
-
         if (Object.keys(errorsTemp).length === 0) {
             const res = await editCompanyProfile({
                 description: companyProfile.description ?? "",
@@ -523,10 +539,8 @@ const SettingsPage = () => {
                 skills: companyProfile.skills.map((i) => i.id),
             });
 
-            // console.log("edit res", res);
-
             if (res.status === 200) {
-                isChanged.current = 0;
+                isChanged.current = false;
                 showAlert("Профиль успешно обновлен", "success");
             }
 
@@ -664,11 +678,6 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                {/* <button
-                                    onClick={() => console.log(studentProfile)}
-                                >
-                                    test
-                                </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div className={styles.rowSettings}>
                                         <div
@@ -1233,11 +1242,6 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                {/* <button
-                                    onClick={() => console.log(companyProfile)}
-                                >
-                                    test
-                                </button> */}
                                 <div
                                     className={classNames(
                                         styles.nameSettings,
@@ -1611,11 +1615,6 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                {/* <button
-                                    onClick={() => console.log(studentProfile)}
-                                >
-                                    test
-                                </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div
                                         className={styles.generalSettingsBlock}
@@ -1776,7 +1775,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
-                                    disabled={isChanged.current < 2}
+                                    disabled={isChanged.current}
                                     onClick={() => validateEditProfileStudent()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -1790,11 +1789,6 @@ const SettingsPage = () => {
                                 onSubmit={(e) => e.preventDefault()}
                                 className={styles.content}
                             >
-                                {/* <button
-                                    onClick={() => console.log(companyProfile)}
-                                >
-                                    test
-                                </button> */}
                                 <div className={styles.settingsBlock}>
                                     <div
                                         className={styles.generalSettingsBlock}
@@ -1985,7 +1979,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
-                                    disabled={isChanged.current < 2}
+                                    disabled={isChanged.current}
                                     onClick={() => validateEditProfileCompany()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -2021,53 +2015,19 @@ const SettingsPage = () => {
         });
     }, [profileVerification.status]);
 
-    // const isChangesExist = useCallback(() => {
-    //     console.log("HELO!!", isChanged);
-
-    //     return isChanged.current > 2;
-    // }, [activeTab, isChanged.current]);
-
-    // console.log(isChangesExist(), isChanged);
-
-    // console.log(isChangesExist());
     useEffect(() => {
         return () => {
-            if (isChanged.current > 2) {
+            if (isChanged.current) {
                 showAlert("Изменения не сохранены!", "warning");
             }
-            // console.log("helo x", isChanged.current);
         };
-        // console.log(isChanged, activeTab, "helo");
     }, []);
 
     useEffect(() => {
-        if (isChanged.current > 2 && activeTab === "personal_data") {
+        if (isChanged.current && activeTab === "personal_data") {
             showAlert("Изменения не сохранены!", "warning");
         }
     }, [activeTab]);
-
-    // useEffect(() => {
-    //     console.log(isChanged, activeTab, "helo");
-
-    //     if (isChanged > 2 && activeTab === "profile") {
-    //         showAlert("Изменения не сохранены!", "warning");
-    //     }
-    //     return () => {
-    //         console.log("helo x 2", isChanged, activeTab);
-
-    //         if (isChanged > 2 && activeTab === "profile") {
-    //             showAlert("Изменения не сохранены!", "warning");
-    //         }
-    //         // if (activeTab === "personal_data") {
-    //             // showAlert("Изменения не сохранены!", "warning");
-    //             // dispatch(updateStudentProfile({ ...studentProfile,  }))
-    //         // }
-    //         // showAlert("Изменения не сохранены!", "warning");
-    //         // dispatch(updateStudentProfile({ ...studentProfile,  }))
-    //     }
-    // }, [activeTab, isChanged])
-
-    // console.log(activeTab, profileVerification.status);
 
     const getTabsContent = (): ReactNode => {
         switch (profileVerification.status) {

@@ -52,7 +52,7 @@ const ProfileNavMenu = () => {
         studentProfile,
     } = useTypesSelector((state) => state.userReducer);
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
-    const { updateIsLoading } = contentSlice.actions;
+    const { logoutContent } = contentSlice.actions;
     const dispatch = useTypesDispatch();
     const {
         logoutUser,
@@ -196,7 +196,7 @@ const ProfileNavMenu = () => {
             </div>
             <p
                 onClick={() => {
-                    dispatch(updateIsLoading(true));
+                    dispatch(logoutContent());
                     dispatch(logoutUser());
                     showAlert("Вы вышли из аккаунта!", "success");
                 }}
