@@ -10,21 +10,3 @@
     flex-direction: column;
     margin-bottom: auto;
 }
-
-
-.search {
-    position: sticky;
-    top: 0;
-    margin-bottom: 20px;
-
-    input {
-        width: 100%;
-        padding: 10px 15px;
-        border: 1px solid rgba(var(--gray2), 1);
-        border-radius: 30px;
-
-        &::placeholder {
-            color: rgba(var(--gray2), 1);
-        }
-    }
-}

@@ -1,11 +1,11 @@
-import { IStudentProfile, IVerificationCompanyRequest, IVerificationStudentRequest } from "@/app/_types"
+import { IStudentProfile, IVerificationCompanyRequest, IVerificationResult, IVerificationStudentRequest } from "@/app/_types"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 
 type ProfileVerifyInterface = {
-    studentsVerifications: any[] | null;
-    companiesVerifications: any[] | null;
+    studentsVerifications: IVerificationResult[] | null;
+    companiesVerifications: IVerificationResult[] | null;
 }
 
 const initialState: ProfileVerifyInterface = {
@@ -13,10 +13,10 @@ const initialState: ProfileVerifyInterface = {
         {
             id: "",
             createdAt: "",
-            requestStatus: "",
+            requestStatus: "pending",
             comment: "",
             admin: "",
-            userType: "",
+            userType: "student",
             firstName: "",
             lastName: "",
             email: ""
@@ -26,10 +26,10 @@ const initialState: ProfileVerifyInterface = {
         {
             id: "",
             createdAt: "",
-            requestStatus: "",
+            requestStatus: "pending",
             comment: "",
             admin: "",
-            userType: "",
+            userType: "company",
             firstName: "",
             lastName: "",
             email: ""
@@ -41,7 +41,7 @@ export const profileVerifySlice = createSlice({
     name: "profileVerify",
     initialState,
     reducers: {
-        updateStudentsVerifications(state, action: PayloadAction<{ profiles: IVerificationStudentRequest[] }>) {
+        updateStudentsVerifications(state, action: PayloadAction<{ profiles: IVerificationResult[] }>) {
             state.studentsVerifications = action.payload.profiles;
         },
 
@@ -51,8 +51,14 @@ export const profileVerifySlice = createSlice({
             )!;
         },
 
-        updateCompaniesVerifications(state, action: PayloadAction<{ profiles: IVerificationCompanyRequest[] }>) {
+        updateCompaniesVerifications(state, action: PayloadAction<{ profiles: IVerificationResult[] }>) {
             state.companiesVerifications = action.payload.profiles;
+        },
+
+        removeCompanyVerification(state, action: PayloadAction<{ companyId: string }>) {
+            state.companiesVerifications = state.companiesVerifications?.filter(
+                (company) => company.id !== action.payload.companyId
+            )!;
         },
     },
 });

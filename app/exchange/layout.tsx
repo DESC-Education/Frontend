@@ -19,7 +19,6 @@ export default function RootLayout({
     useEffect(() => {
         const asyncFunc = async () => {
             const categories = await getCategories();
-
             if (categories.status === 200) {
                 dispatch(
                     updateCategories({ categories: categories.categories! }),

@@ -1,8 +1,19 @@
+"use client"
+
+
 import SideBar from '@/app/_components/SideBar/SideBar';
 import styles from './layout.module.scss';
 import Link from 'next/link';
 import Image from 'next/image';
 import classNames from 'classnames';
+import { useTypesSelector } from '@/app/_hooks/useTypesSelector';
+import { profileVerifySlice } from '@/app/_store/reducers/profileVerifySlice';
+import { useTypesDispatch } from '@/app/_hooks/useTypesDispatch';
+import { getRequests } from '@/app/_http/API/adminApi';
+import { useEffect, useState } from 'react';
+import { Oval } from 'react-loader-spinner';
+import Input from '@/app/_components/ui/Input/Input';
+import Button from '@/app/_components/ui/Button/Button';
 
 
 export default function RootLayout({
@@ -11,26 +22,50 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
 
-    const companies = [
-        { linktoCompany: "1", companyName: "Гугл", firstName: "Петя", lastName: "Иванов", id: "1", isVerified: true, logoImg: "/images/userIcon.png", description: "Описание", vkLink: "https://vk.com/joinchat/123456789", telegramLink: "https://t.me/joinchat/123456789", timezone: "Europe/Moscow", city: { id: "1", name: "Москва", region: "Россия" }, phone: "123456789", emailVisibility: true, phoneVisibility: true },
-        { linktoCompany: "2", companyName: "Яндекс", firstName: "Вася", lastName: "Васильев", id: "2", isVerified: true, logoImg: "/images/userIcon.png", description: "Описание", vkLink: "https://vk.com/joinchat/123456789", telegramLink: "https://t.me/joinchat/123456789", timezone: "Europe/Moscow", city: { id: "1", name: "Москва", region: "Россия" }, phone: "123456789", emailVisibility: true, phoneVisibility: true },
-    ]
+    const { companiesVerifications } = useTypesSelector((state) => state.profileVerifyReducer);
+    const { updateCompaniesVerifications } = profileVerifySlice.actions;
+
+    const dispatch = useTypesDispatch();
+
+    const updateProfiles = async (q?: string) => {
+        //setSearch("");
+        const profiles = await getRequests("pending", "company", q || "");
+        if (profiles.status === 200) {
+            dispatch(updateCompaniesVerifications({ profiles: profiles.requests! }));
+        }
+    }
+
+    useEffect(() => {
+        updateProfiles();
+    }, []);
+
+    const [search, setSearch] = useState<string>("");
+
+
+    if (!companiesVerifications) return (<div className={styles.loading}><Oval /></div>);
 
     return (
         <div className="container">
             <div className='selectLayout'>
                 <SideBar>
+                    <div className={styles.search}>
+                        <Input
+                            type="text"
+                            placeholder="Поиск компаний"
+                            value={search}
+                            onChange={(e) => setSearch(e)}
+                            containerClassName={styles.input}
+                        />
+                        <Button type="primary" onClick={() => updateProfiles(search)} className={styles.searchIcon}><img src="/icons/searchIcon.svg" alt="search" /></Button>
+                    </div>
                     <div className={styles.companiesList}>
-                        {companies.map((company, index) => (
-                            <Link href={`/admin-panel/verification/companies/${index}`} key={index} className={styles.companyItem}>
+                        {companiesVerifications.map((company, index) => (
+                            <Link href={`/admin-panel/verification/companies/${company.id}`} key={index} className={styles.companyItem}>
                                 <div className={styles.companyItem} key={index}>
                                     <div className={styles.mainInfo}>
-                                        <Image src={company.logoImg} alt={company.logoImg} width={70} height={70} />
                                         <div className={styles.info}>
-                                            <div className={classNames("text fw500", styles.companyName)}>{company.companyName}</div>
-                                            <div className={styles.city}>
-                                                {company.city.name + ", " + company.city.region}
-                                            </div>
+                                            <div className={classNames("text fw500", styles.companyName)}>{company.firstName} {company.lastName} { }</div>
+
                                         </div>
                                     </div>
                                 </div>
