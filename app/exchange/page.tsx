@@ -30,7 +30,7 @@ import { AlertContext } from "../_context/AlertContext";
 import { div } from "framer-motion/client";
 import CustomSearch from "../_components/ui/CustomSearch/CustomSearch";
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 5;
 
 export default function ExchangePage() {
     const { tasks, categories } = useTypesSelector(
@@ -59,11 +59,22 @@ export default function ExchangePage() {
     );
     const { showAlert } = useContext(AlertContext);
 
-<<<<<<< HEAD
     const [isTasksFetched, setIsTasksFetched] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
-=======
->>>>>>> c0c4e451ff995b24c76ca95e391e6508d008ca59
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 1024);
+        };
+
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const handleSelectFilter = (
         filterCategoryId: string,
         filterId: string,
@@ -187,364 +198,277 @@ export default function ExchangePage() {
             </div>
         );
 
-<<<<<<< HEAD
-=======
-    console.log(tasks, tasks.map(i => i.solutions));
-
-
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth <= 1024);
-        };
-
-        handleResize();
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const [isMobile, setIsMobile] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-
-    // console.log(
-    //     hasMore,
-    //     tasks,
-    //     currentPage,
-    //     sorting,
-    //     selectedCategory,
-    //     selectedFilters,
-    // );
-
->>>>>>> c0c4e451ff995b24c76ca95e391e6508d008ca59
     return (
         <div className="container">
             <h2 className={classNames(styles.exchangeTitle, "title fz32")}>
                 Биржа заданий
             </h2>
             <div className={styles.mainContainer}>
-<<<<<<< HEAD
-                <aside className={styles.sidebar}>
-                    <div className={styles.filters}>
-                        <h3 className="title fz28 fw500">Фильтры</h3>
-                        <div className={styles.filterGroup}>
-                            <p
-                                className={classNames(
-                                    "text gray fz20",
-                                    styles.filterTitle,
-                                )}
-                            >
-                                Категории
-                            </p>
-                            {categories?.map((category, index) => (
-                                <label
-                                    key={index}
-                                    className={styles.filterLabel}
+                {isMobile && (
+                    <div
+                        className={classNames(styles.filtersMenu, {
+                            [styles.open]: isOpen,
+                        })}
+                    >
+                        <div className={styles.filters}>
+                            <h3 className="title fz28 fw500">Фильтры</h3>
+                            <div className={styles.filterGroup}>
+                                <p
+                                    className={classNames(
+                                        "text gray fz20",
+                                        styles.filterTitle,
+                                    )}
                                 >
-                                    <Input
-                                        type="radio"
-                                        checked={
-                                            selectedCategory?.id === category.id
-                                        }
-                                        onCheck={(e) =>
-                                            setSelectedCategory(
-                                                categories.find(
-                                                    (item) =>
-                                                        item.id === category.id,
-                                                )!,
-                                            )
-                                        }
-                                    />
-                                    <p className="text fw500 fz20">
-                                        {category.name}
-=======
-                {isMobile &&
-                    (
-                        <div className={classNames(
-                            styles.filtersMenu,
-                            {
-                                [styles.open]: isOpen,
-                            },
-                        )}>
-                            <div className={styles.filters}>
-                                <h3 className="title fz28 fw500">Фильтры</h3>
-                                <div className={styles.filterGroup}>
-                                    <p
-                                        className={classNames(
-                                            "text gray fz20",
-                                            styles.filterTitle,
-                                        )}
+                                    Категории
+                                </p>
+                                {categories?.map((category, index) => (
+                                    <label
+                                        key={index}
+                                        className={styles.filterLabel}
                                     >
-                                        Категории
->>>>>>> c0c4e451ff995b24c76ca95e391e6508d008ca59
-                                    </p>
-                                    {categories?.map((category, index) => (
-                                        <label
-                                            key={index}
-                                            className={styles.filterLabel}
-                                        >
-                                            <Input
-                                                type="checkbox"
-                                                checked={
-                                                    selectedCategory?.id === category.id
-                                                }
-                                                onCheck={(e) =>
-                                                    setSelectedCategory(
-                                                        categories.find(
-                                                            (item) =>
-                                                                item.id === category.id,
-                                                        )!,
-                                                    )
-                                                }
-                                            />
-                                            <p className="text fw500 fz20">
-                                                {category.name}
-                                            </p>
-                                        </label>
-                                    ))}
-                                </div>
-                                {selectedCategory ? (
-                                    <TransitionGroup>
-                                        {selectedCategory.filterCategories.map(
-                                            (filterCategory, catIndex) => (
-                                                <CSSTransition
-                                                    key={catIndex}
-                                                    timeout={200}
-                                                    classNames="filterGroup"
-                                                >
-                                                    <div
-                                                        key={catIndex}
-                                                        className={styles.filterGroup}
-                                                    >
-                                                        <h4 className="text gray fz20">
-                                                            {filterCategory.name}
-                                                        </h4>
-                                                        {filterCategory.filters.map(
-                                                            (filter, filIndex) => (
-                                                                <label
-                                                                    key={filIndex}
-                                                                    className={
-                                                                        styles.filterLabel
-                                                                    }
-                                                                >
-                                                                    <Input
-                                                                        type="checkbox"
-                                                                        onCheck={(e) =>
-                                                                            handleSelectFilter(
-                                                                                filterCategory.id,
-                                                                                filter.id,
-                                                                                e,
-                                                                            )
-                                                                        }
-                                                                        checked={selectedFilters[
-                                                                            filterCategory
-                                                                                .id
-                                                                        ]?.includes(
-                                                                            filter.id,
-                                                                        )}
-                                                                    />
-                                                                    <p className="text fw500 fz20">
-                                                                        {filter.name}
-                                                                    </p>
-                                                                </label>
-                                                            ),
-                                                        )}
-                                                    </div>
-                                                </CSSTransition>
-                                            ),
-                                        )}
-                                    </TransitionGroup>
-                                ) : (
-                                    <p
-                                        className={classNames(
-                                            "text center fz20",
-                                            styles.selectText,
-                                        )}
-                                    >
-                                        Выберите категорию
-                                    </p>
-                                )}
-<<<<<<< HEAD
-                            </TransitionGroup>
-                        ) : (
-                            <p
-                                className={classNames(
-                                    "text center fz20",
-                                    styles.selectText,
-                                )}
-                            >
-                                Выберите категорию
-                            </p>
-                        )}
-                        <div className={styles.buttons}>
-                            <Button
-                                disabled={isTasksFetched}
-                                type="secondary"
-                                onClick={() => getTasksByFiltersAndSort()}
-                                className={styles.applyButton}
-                            >
-                                Применить
-                            </Button>
-                            <Button
-                                type="primary"
-                                className={styles.clearButton}
-                                onClick={() => clearTasks()}
-                            >
-                                Очистить
-                            </Button>
-=======
-                                <div className={styles.buttons}>
-                                    <Button
-                                        type="secondary"
-                                        onClick={() => getTasksByFiltersAndSort()}
-                                        className={styles.applyButton}
-                                    >
-                                        Применить
-                                    </Button>
-                                    <Button
-                                        type="primary"
-                                        className={styles.clearButton}
-                                        onClick={() => {
-                                            setSelectedCategory(null);
-                                            setSelectedFilters({});
-                                            setTimeout(() => {
-                                                getTasksByFiltersAndSort();
-                                            }, 100);
-                                        }}
-                                    >
-                                        Очистить
-                                    </Button>
-                                </div>
+                                        <Input
+                                            type="checkbox"
+                                            checked={
+                                                selectedCategory?.id ===
+                                                category.id
+                                            }
+                                            onCheck={(e) =>
+                                                setSelectedCategory(
+                                                    categories.find(
+                                                        (item) =>
+                                                            item.id ===
+                                                            category.id,
+                                                    )!,
+                                                )
+                                            }
+                                        />
+                                        <p className="text fw500 fz20">
+                                            {category.name}
+                                        </p>
+                                    </label>
+                                ))}
                             </div>
->>>>>>> c0c4e451ff995b24c76ca95e391e6508d008ca59
-                        </div>
-                    )
-                }
-                {!isMobile &&
-                    (
-                        <div className={styles.sidebar}>
-                            <div className={styles.filters}>
-                                <h3 className="title fz28 fw500">Фильтры</h3>
-                                <div className={styles.filterGroup}>
-                                    <p
-                                        className={classNames(
-                                            "text gray fz20",
-                                            styles.filterTitle,
-                                        )}
-                                    >
-                                        Категории
-                                    </p>
-                                    {categories?.map((category, index) => (
-                                        <label
-                                            key={index}
-                                            className={styles.filterLabel}
-                                        >
-                                            <Input
-                                                type="checkbox"
-                                                checked={
-                                                    selectedCategory?.id === category.id
-                                                }
-                                                onCheck={(e) =>
-                                                    setSelectedCategory(
-                                                        categories.find(
-                                                            (item) =>
-                                                                item.id === category.id,
-                                                        )!,
-                                                    )
-                                                }
-                                            />
-                                            <p className="text fw500 fz20">
-                                                {category.name}
-                                            </p>
-                                        </label>
-                                    ))}
-                                </div>
-                                {selectedCategory ? (
-                                    <TransitionGroup>
-                                        {selectedCategory.filterCategories.map(
-                                            (filterCategory, catIndex) => (
-                                                <CSSTransition
+                            {selectedCategory ? (
+                                <TransitionGroup>
+                                    {selectedCategory.filterCategories.map(
+                                        (filterCategory, catIndex) => (
+                                            <CSSTransition
+                                                key={catIndex}
+                                                timeout={200}
+                                                classNames="filterGroup"
+                                            >
+                                                <div
                                                     key={catIndex}
-                                                    timeout={200}
-                                                    classNames="filterGroup"
+                                                    className={
+                                                        styles.filterGroup
+                                                    }
                                                 >
-                                                    <div
-                                                        key={catIndex}
-                                                        className={styles.filterGroup}
-                                                    >
-                                                        <h4 className="text gray fz20">
-                                                            {filterCategory.name}
-                                                        </h4>
-                                                        {filterCategory.filters.map(
-                                                            (filter, filIndex) => (
-                                                                <label
-                                                                    key={filIndex}
-                                                                    className={
-                                                                        styles.filterLabel
-                                                                    }
-                                                                >
-                                                                    <Input
-                                                                        type="checkbox"
-                                                                        onCheck={(e) =>
-                                                                            handleSelectFilter(
-                                                                                filterCategory.id,
-                                                                                filter.id,
-                                                                                e,
-                                                                            )
-                                                                        }
-                                                                        checked={selectedFilters[
-                                                                            filterCategory
-                                                                                .id
-                                                                        ]?.includes(
+                                                    <h4 className="text gray fz20">
+                                                        {filterCategory.name}
+                                                    </h4>
+                                                    {filterCategory.filters.map(
+                                                        (filter, filIndex) => (
+                                                            <label
+                                                                key={filIndex}
+                                                                className={
+                                                                    styles.filterLabel
+                                                                }
+                                                            >
+                                                                <Input
+                                                                    type="checkbox"
+                                                                    onCheck={(
+                                                                        e,
+                                                                    ) =>
+                                                                        handleSelectFilter(
+                                                                            filterCategory.id,
                                                                             filter.id,
-                                                                        )}
-                                                                    />
-                                                                    <p className="text fw500 fz20">
-                                                                        {filter.name}
-                                                                    </p>
-                                                                </label>
-                                                            ),
-                                                        )}
-                                                    </div>
-                                                </CSSTransition>
-                                            ),
-                                        )}
-                                    </TransitionGroup>
-                                ) : (
-                                    <p
-                                        className={classNames(
-                                            "text center fz20",
-                                            styles.selectText,
-                                        )}
-                                    >
-                                        Выберите категорию
-                                    </p>
-                                )}
-                                <div className={styles.buttons}>
-                                    <Button
-                                        type="secondary"
-                                        onClick={() => getTasksByFiltersAndSort()}
-                                        className={styles.applyButton}
-                                    >
-                                        Применить
-                                    </Button>
-                                    <Button
-                                        type="primary"
-                                        className={styles.clearButton}
-                                        onClick={() => {
-                                            setSelectedCategory(null);
-                                            setSelectedFilters({});
-                                            setTimeout(() => {
-                                                getTasksByFiltersAndSort();
-                                            }, 100);
-                                        }}
-                                    >
-                                        Очистить
-                                    </Button>
-                                </div>
+                                                                            e,
+                                                                        )
+                                                                    }
+                                                                    checked={selectedFilters[
+                                                                        filterCategory
+                                                                            .id
+                                                                    ]?.includes(
+                                                                        filter.id,
+                                                                    )}
+                                                                />
+                                                                <p className="text fw500 fz20">
+                                                                    {
+                                                                        filter.name
+                                                                    }
+                                                                </p>
+                                                            </label>
+                                                        ),
+                                                    )}
+                                                </div>
+                                            </CSSTransition>
+                                        ),
+                                    )}
+                                </TransitionGroup>
+                            ) : (
+                                <p
+                                    className={classNames(
+                                        "text center fz20",
+                                        styles.selectText,
+                                    )}
+                                >
+                                    Выберите категорию
+                                </p>
+                            )}
+                            <div className={styles.buttons}>
+                                <Button
+                                    disabled={isTasksFetched}
+                                    type="secondary"
+                                    onClick={() => getTasksByFiltersAndSort()}
+                                    className={styles.applyButton}
+                                >
+                                    Применить
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    className={styles.clearButton}
+                                    onClick={() => {
+                                        clearTasks();
+                                    }}
+                                >
+                                    Очистить
+                                </Button>
                             </div>
                         </div>
-                    )
-                }
+                    </div>
+                )}
+                {!isMobile && (
+                    <div className={styles.sidebar}>
+                        <div className={styles.filters}>
+                            <h3 className="title fz28 fw500">Фильтры</h3>
+                            <div className={styles.filterGroup}>
+                                <p
+                                    className={classNames(
+                                        "text gray fz20",
+                                        styles.filterTitle,
+                                    )}
+                                >
+                                    Категории
+                                </p>
+                                {categories?.map((category, index) => (
+                                    <label
+                                        key={index}
+                                        className={styles.filterLabel}
+                                    >
+                                        <Input
+                                            type="checkbox"
+                                            checked={
+                                                selectedCategory?.id ===
+                                                category.id
+                                            }
+                                            onCheck={(e) =>
+                                                setSelectedCategory(
+                                                    categories.find(
+                                                        (item) =>
+                                                            item.id ===
+                                                            category.id,
+                                                    )!,
+                                                )
+                                            }
+                                        />
+                                        <p className="text fw500 fz20">
+                                            {category.name}
+                                        </p>
+                                    </label>
+                                ))}
+                            </div>
+                            {selectedCategory ? (
+                                <TransitionGroup>
+                                    {selectedCategory.filterCategories.map(
+                                        (filterCategory, catIndex) => (
+                                            <CSSTransition
+                                                key={catIndex}
+                                                timeout={200}
+                                                classNames="filterGroup"
+                                            >
+                                                <div
+                                                    key={catIndex}
+                                                    className={
+                                                        styles.filterGroup
+                                                    }
+                                                >
+                                                    <h4 className="text gray fz20">
+                                                        {filterCategory.name}
+                                                    </h4>
+                                                    {filterCategory.filters.map(
+                                                        (filter, filIndex) => (
+                                                            <label
+                                                                key={filIndex}
+                                                                className={
+                                                                    styles.filterLabel
+                                                                }
+                                                            >
+                                                                <Input
+                                                                    type="checkbox"
+                                                                    onCheck={(
+                                                                        e,
+                                                                    ) =>
+                                                                        handleSelectFilter(
+                                                                            filterCategory.id,
+                                                                            filter.id,
+                                                                            e,
+                                                                        )
+                                                                    }
+                                                                    checked={selectedFilters[
+                                                                        filterCategory
+                                                                            .id
+                                                                    ]?.includes(
+                                                                        filter.id,
+                                                                    )}
+                                                                />
+                                                                <p className="text fw500 fz20">
+                                                                    {
+                                                                        filter.name
+                                                                    }
+                                                                </p>
+                                                            </label>
+                                                        ),
+                                                    )}
+                                                </div>
+                                            </CSSTransition>
+                                        ),
+                                    )}
+                                </TransitionGroup>
+                            ) : (
+                                <p
+                                    className={classNames(
+                                        "text center fz20",
+                                        styles.selectText,
+                                    )}
+                                >
+                                    Выберите категорию
+                                </p>
+                            )}
+                            <div className={styles.buttons}>
+                                <Button
+                                    type="secondary"
+                                    onClick={() => getTasksByFiltersAndSort()}
+                                    className={styles.applyButton}
+                                >
+                                    Применить
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    className={styles.clearButton}
+                                    onClick={() => {
+                                        setSelectedCategory(null);
+                                        setSelectedFilters({});
+                                        setTimeout(() => {
+                                            getTasksByFiltersAndSort();
+                                        }, 100);
+                                    }}
+                                >
+                                    Очистить
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <main className={styles.mainContent}>
                     <div className={styles.topPanel}>
                         {!!(user.role === "student") && (
@@ -563,7 +487,7 @@ export default function ExchangePage() {
                                                 width:
                                                     (studentProfile.replyCount /
                                                         replyCount) *
-                                                    100 +
+                                                        100 +
                                                     "%",
                                             }}
                                             className={styles.barProgress}
@@ -595,27 +519,26 @@ export default function ExchangePage() {
                                     options={sortingOptions}
                                 />
                             </div>
-                            {isMobile &&
-                                (
-                                    <button className={
-                                        classNames(
-                                            styles.filters,
+                            {isMobile && (
+                                <button
+                                    className={classNames(styles.filters, {
+                                        [styles.open]: isOpen,
+                                    })}
+                                    onClick={() => setIsOpen(!isOpen)}
+                                >
+                                    <div
+                                        className={classNames(
+                                            styles.filterButton,
                                             { [styles.open]: isOpen },
-                                        )
-                                    }
-                                        onClick={() => setIsOpen(!isOpen)}
+                                        )}
                                     >
-                                        <div className={classNames(styles.filterButton, {[styles.open]: isOpen})}>
-                                            1
-                                        </div>
-                                        <div className="title fz28 fw500">
-                                            Фильтры
-                                        </div>
-
-                                    </button>
-                                )
-
-                            }
+                                        1
+                                    </div>
+                                    <div className="title fz28 fw500">
+                                        Фильтры
+                                    </div>
+                                </button>
+                            )}
                         </div>
                     </div>
                     {/* {isLoading ? (
@@ -689,6 +612,6 @@ export default function ExchangePage() {
                     {/* )} */}
                 </main>
             </div>
-        </div >
+        </div>
     );
 }
