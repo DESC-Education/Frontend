@@ -1,5 +1,6 @@
 @import "select-search";
 
+
 :root {
     --white: 255, 255, 255;
     --black: 25, 40, 44;
@@ -10,6 +11,9 @@
     --blue: 110, 148, 206;
     --red: 221, 101, 101;
     --yellow: 253, 245, 169;
+
+    scrollbar-color: rgba(var(--black), 1) rgba(var(--gray3), 1);
+    scrollbar-width: thin;
 }
 
 * {
@@ -53,7 +57,7 @@ input {
 
 .modal-opened {
     overflow: hidden;
-    padding-right: 20px;
+    padding-right: 10px;
     // transition: .3s;
 }
 
@@ -191,8 +195,9 @@ a {
 
     &.under {
         text-decoration: underline;
-  }
-      &.fw500 {
+    }
+
+    &.fw500 {
         font-weight: 500;
     }
 }
@@ -205,7 +210,8 @@ a {
         &.fz20 {
             font-size: 18px;
             line-height: 22px;
-        }        
+        }
+
         &.fz16 {
             font-size: 15px;
             line-height: 18px;
@@ -220,10 +226,12 @@ a {
             font-size: 26px;
             line-height: 42px;
         }
+
         &.fz36 {
             font-size: 34px;
             line-height: 32px;
         }
+
         &.fz48 {
             font-size: 46px;
             line-height: 42px;
@@ -239,7 +247,8 @@ a {
         &.fz20 {
             font-size: 16px;
             line-height: 18px;
-        }        
+        }
+
         &.fz16 {
             font-size: 14px;
             line-height: 17px;
@@ -254,10 +263,12 @@ a {
             font-size: 22px;
             line-height: 38px;
         }
+
         &.fz36 {
             font-size: 30px;
             line-height: 28px;
         }
+
         &.fz48 {
             font-size: 42px;
             line-height: 38px;
@@ -273,7 +284,8 @@ a {
         &.fz20 {
             font-size: 16px;
             line-height: 18px;
-        }        
+        }
+
         &.fz16 {
             font-size: 13px;
             line-height: 15px;
@@ -288,10 +300,12 @@ a {
             font-size: 18px;
             line-height: 34px;
         }
+
         &.fz36 {
             font-size: 26px;
             line-height: 24px;
         }
+
         &.fz48 {
             font-size: 38px;
             line-height: 34px;
@@ -308,6 +322,7 @@ a {
             font-size: 14px;
             line-height: 16px;
         }
+
         &.fz16 {
             font-size: 12px;
             line-height: 14px;
@@ -322,10 +337,12 @@ a {
             font-size: 16px;
             line-height: 32px;
         }
+
         &.fz36 {
             font-size: 24px;
             line-height: 22px;
         }
+
         &.fz48 {
             font-size: 32px;
             line-height: 32px;

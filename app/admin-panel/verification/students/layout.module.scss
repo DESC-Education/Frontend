@@ -1,3 +1,29 @@
+.search {
+    position: sticky;
+    top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+
+    .input {
+        width: 100%;
+        padding: 10px 15px;
+
+        &::placeholder {
+            color: rgba(var(--gray2), 1);
+        }
+    }
+
+    .searchIcon {
+        padding: 10px;
+        border-radius: 30px;
+        border: none !important;
+        &:hover {
+            background-color: rgba(var(--gray2), 1);
+        }
+    }
+}
+
 .loading {
     display: flex;
     flex-direction: column;
