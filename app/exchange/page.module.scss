@@ -62,16 +62,50 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    gap: 10px;
 }
 
 .sorting {
     margin-left: auto;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
-    span {
-        margin-right: 10px;
+
+    .filters {
+        display: flex;
+        background-color: rgba(var(--white), 1);
+        align-items: center;
+        border: none;
+        gap: 5px;
+        position: relative;
+
+        .filterButton {
+            display: flex;
+            align-items: center;
+            transition: all .3s ease;
+
+            &.open {
+                transform: rotate(180deg);
+            }
+        }
+
     }
+
+
+
+    .sort {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    // span {
+    //     margin-right: 10px;
+    // }
+
+
 }
 
 .noTasks {
@@ -166,4 +200,114 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+.filtersMenu {
+    position: fixed;
+    opacity: 0;
+    left: 0;
+    top: 20%;
+    // right: 0;
+    max-width: 60%;
+    max-height: 60%;
+    width: 40%;
+    padding: 20px;
+    margin-left: 10px;
+    overflow: auto;
+    z-index: 10;
+    background-color: rgba(var(--white), 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    transform: translateX(-100%);
+    transition: all 0.3s ease;
+
+    border: 2px solid rgba(var(--gray2), 1);
+    border-radius: 50px;
+
+    &.open {
+        opacity: 1;
+        left: 0;
+        top: 20%;
+        width: 40%;
+        transform: translateX(0%);
+    }
+}
+
+@media (max-width: 1400px) {
+    .topPanel {
+        gap: 10px;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sorting {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 1200px) {}
+
+@media (max-width: 1024px) {}
+
+@media (max-width: 650px) {
+
+    .replayCount {
+        .bar {
+            padding: 10px 0;
+        }
+    }
+
+    .replayCount {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+
+        .date {
+            flex-direction: row;
+            padding: 10px;
+            gap: 5px;
+        }
+    }
+
+    .filtersMenu {
+        width: 50%;
+
+        &.open {
+            width: 50%;
+        }
+    }
+
+}
+
+@media (max-width: 500px) {
+    .replayCount {
+        .bar {
+            .barContent {
+                min-width: 300px;
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media (max-width: 425px) {
+    .filtersMenu {
+        width: 60%;
+
+        &.open {
+            width: 60%;
+        }
+    }
+
+    .replayCount {
+        .bar {
+            .barContent {
+                min-width: 200px;
+                width: 100%;
+            }
+        }
+    }
 }
