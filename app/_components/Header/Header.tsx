@@ -31,7 +31,7 @@ import { on } from "events";
 type RoleState =
     | "student"
     | "company"
-    | "institute_moderator"
+    | "u_admin"
     | "moderator"
     | "admin";
 
@@ -355,7 +355,7 @@ const Header = () => {
                     ref: createRef(),
                 };
             case "company":
-            // case "institute_moderator":
+            // case "company":
                 return {
                     content: (
                         <>
@@ -606,8 +606,8 @@ const Header = () => {
                     ),
                     ref: createRef(),
                 };
-            // case "company":
-                case "institute_moderator":
+            // case "institute_moderator":  
+                case "u_admin":
                 return {
                     content: (
                         <>

@@ -10,7 +10,7 @@ export type IUser = {
 export type IRole =
     | "student"
     | "company"
-    | "institute_moderator"
+    | "u_admin"
     | "moderator"
     | "admin";
 

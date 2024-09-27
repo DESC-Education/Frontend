@@ -48,3 +48,16 @@
         margin-top: 40px;
     }
 }
+
+@media (max-width: 595px) {
+    .solutionContent {
+        padding: 20px 35px;
+        margin: 0 -20px -20px;
+    }
+}
+
+@media (max-width: 425px) {
+    .solutionContent {
+        border-radius: 20px;
+    }
+}

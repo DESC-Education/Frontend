@@ -207,3 +207,11 @@
         }
     }
 }
+
+@media (max-width: 425px) {
+    .fileInput {
+        >div {
+            flex-direction: column;
+        }
+    }
+}

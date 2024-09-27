@@ -36,3 +36,13 @@
         }
     }
 }
+
+@media (max-width: 425px) {
+    .container {
+        .reviewContent {
+            .reviewProfile {
+                flex-wrap: wrap;
+            }
+        }
+    }
+}

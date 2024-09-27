@@ -191,11 +191,6 @@
 @media (max-width: 500px) {
     .taskCard {
         .wrapper {
-
-            .taskBody {
-                // flex-direction: column;
-                // align-items: flex-start;
-            }
             .taskContent {
                 .taskDescription {
                     .description {
@@ -213,5 +208,50 @@
 }
 
 @media (max-width: 425px) {
-    
+    .taskCard {
+        .wrapper {
+            border-radius: 20px;
+        }
+
+        &.solution {
+            border-radius: 20px;
+        }
+    }
+}
+
+@media (max-width: 375px) {
+    .taskCard {
+        .wrapper {
+
+            .taskContent {
+                .taskDescription {
+                    .description {
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+
+            .taskBody {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .taskFooter {
+                width: 100%;
+                display: flex;
+                align-items: flex-start;
+                .deadlineAndTime {
+                    align-items: flex-start;
+                }
+            }
+
+            .proposeButton {
+                width: 100%;
+
+                button {
+                    width: 100%;
+                }
+            }
+        }
+    }
 }
