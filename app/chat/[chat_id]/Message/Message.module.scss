@@ -11,6 +11,12 @@
         position: relative;
     }
 
+    &.hasFiles {
+        .messageFiles {
+            margin-bottom: 5px;
+        }
+    }
+
     &.incomingMessage {
         background-color: rgba(var(--white), 1);
         align-self: flex-start;
@@ -60,7 +66,7 @@
         align-items: center;
         gap: 10px;
         justify-content: flex-end;
-        margin-bottom: 7px;
+        margin-bottom: 3px;
 
         .checkMark {
             width: 16px;
@@ -73,10 +79,40 @@
 
     .messageFiles {
         display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+
+        .userImage {
+            width: 150px;
+            max-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            p {
+                max-width: 140px;
+                white-space: break-spaces;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: white;
+            }
+        }
 
         img {
-            max-width: 250px;
-            max-height: 250px;
+            max-height: 130px;
+            transition: .3s;
+        }
+
+        .document {
+            &:hover {
+                img {
+                    filter: invert(.2);
+                }
+            }
         }
     }
 }

@@ -7,6 +7,9 @@ import styles from "./Message.module.scss";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useInView } from "react-intersection-observer";
 import { getDateOrTime } from "@/app/_utils/time";
+import Lightbox from "yet-another-react-lightbox";
+import Download from "yet-another-react-lightbox/plugins/download";
+import "yet-another-react-lightbox/styles.css";
 
 type MessageProps = {
     message: IMessage;
@@ -18,6 +21,8 @@ const Message: FC<MessageProps> = ({ message, ws }) => {
     const [messageTime, setMessageTime] = useState<string>("");
 
     const { ref, inView, entry } = useInView();
+
+    const [lightBoxOpened, setLightBoxOpened] = useState<boolean>(false);
 
     useEffect(() => {
         if (
@@ -37,12 +42,12 @@ const Message: FC<MessageProps> = ({ message, ws }) => {
         );
     }, [inView, message.isRead, ws?.readyState]);
 
-    console.log(message.files);
-    
-
     useEffect(() => {
         setMessageTime(getDateOrTime(message.createdAt));
     }, []);
+
+    console.log(message.files);
+    
 
     return (
         <div
@@ -52,12 +57,68 @@ const Message: FC<MessageProps> = ({ message, ws }) => {
                 message.user.id === user.id
                     ? styles.outgoingMessage
                     : styles.incomingMessage,
+                { [styles.hasFiles]: !!message.files.length },
             )}
         >
+            {!!message.files.length && (
+                <Lightbox
+                    controller={{ closeOnBackdropClick: true }}
+                    plugins={[Download]}
+                    open={lightBoxOpened}
+                    close={() => setLightBoxOpened(false)}
+                    slides={message.files
+                        .filter((i) =>
+                            ["png", "jpg", "jpeg"].includes(i.extension),
+                        )
+                        .map((i) => ({
+                            src: process.env.NEXT_PUBLIC_SERVER_PATH + i.path,
+                        }))}
+                />
+            )}
             <div className={classNames(styles.decor)}></div>
             <p className={classNames("text fz20", styles.text)}>
                 {message.message}
             </p>
+            <div className={styles.messageFiles}>
+                {!!message.files.length &&
+                    message.files.map((file, index) =>
+                        ["png", "jpg", "jpeg", "jfif"].includes(
+                            file.extension,
+                        ) ? (
+                            <img
+                                onClick={() => setLightBoxOpened(true)}
+                                key={index}
+                                className={styles.userImage}
+                                src={
+                                    process.env.NEXT_PUBLIC_SERVER_PATH +
+                                    file.path
+                                }
+                                alt="logo"
+                            />
+                        ) : (
+                            <a
+                                key={index}
+                                href={
+                                    process.env.NEXT_PUBLIC_SERVER_PATH +
+                                    file.path
+                                }
+                                download
+                                target="_blank"
+                                rel="noreferrer"
+                                className={classNames(
+                                    styles.userImage,
+                                    styles.document,
+                                )}
+                            >
+                                <img
+                                    className={classNames(styles.imgDocument)}
+                                    src={`/icons/extensions/${file.extension}.png`}
+                                />
+                                <p>{file.name}</p>
+                            </a>
+                        ),
+                    )}
+            </div>
             <div className={styles.footer}>
                 <p className={classNames(styles.changed, "text fz16 gray")}>
                     {message.changedId ? "Изменено" : ""}
@@ -77,23 +138,6 @@ const Message: FC<MessageProps> = ({ message, ws }) => {
                             [styles.checkMarkActive]: message.isRead,
                         })}
                     />
-                )}
-            </div>
-            <div className={styles.messageFiles}>
-                {!!message.files.length && (
-                    <div>
-                        {message.files.map((file, index) => (
-                            <div className={styles.file} key={index}>
-                                <img
-                                    src={
-                                        process.env.NEXT_PUBLIC_SERVER_PATH +
-                                        file.path
-                                    }
-                                    alt="icon"
-                                />
-                            </div>
-                        ))}
-                    </div>
                 )}
             </div>
         </div>

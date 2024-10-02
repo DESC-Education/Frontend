@@ -374,7 +374,6 @@ export default function Page() {
 
                     const newFile = Array.from(files);
 
-                    
                     for (let i = 0; i < newFile.length; i++) {
                         let unsupportedFiles = false;
 
@@ -391,12 +390,16 @@ export default function Page() {
                                 "jpeg",
                             ].includes(item.type.split("/")[1])
                         ) {
-                            showAlert("Формат одного или нескольких файлов не поддерживается");
+                            showAlert(
+                                "Формат одного или нескольких файлов не поддерживается",
+                            );
                             unsupportedFiles = true;
                         }
 
                         if (item.size > 5e6) {
-                            showAlert("Один или несколько файлов слишким большие"); 
+                            showAlert(
+                                "Один или несколько файлов слишким большие",
+                            );
                             unsupportedFiles = true;
                         }
 
@@ -479,6 +482,7 @@ export default function Page() {
                                 file.file.name.split(".").slice(-1)[0],
                             ) ? (
                                 <img
+                                    key={index}
                                     className={styles.userImage}
                                     src={URL.createObjectURL(file.file)}
                                     alt="logo"
@@ -486,6 +490,7 @@ export default function Page() {
                             ) : (
                                 <>
                                     <img
+                                        key={index}
                                         className={classNames(
                                             styles.userImage,
                                             styles.imgDocument,
