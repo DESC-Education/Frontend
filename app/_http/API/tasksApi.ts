@@ -188,15 +188,17 @@ const getPatterns = async (q: string) => {
 
 export const createSolvingTask = async (dto: FormData) => {
     try {
-        const { data } = await $authHost.post<{
-            message: string;
-        }>("/api/v1/tasks/solution", dto, {
-            headers: {
-                "Content-Type": "multipart/form-data",
+        const { data } = await $authHost.post<ISolution>(
+            "/api/v1/tasks/solution",
+            dto,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             },
-        });
+        );
 
-        return { status: 200, message: data.message };
+        return { status: 200, solution: data };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {

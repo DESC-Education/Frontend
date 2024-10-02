@@ -31,6 +31,7 @@ type InputProps = {
         | "number"
         | "file"
         | "file_multiple"
+        | "file_multiple_chat"
         | "textarea";
     containerClassName?: string;
     onChange?: (val: string) => void;
@@ -421,7 +422,7 @@ const Input: FC<InputProps> = ({
         case "file_multiple":
             return (
                 <>
-                    {Boolean(file!.length) && (
+                    {Boolean(file?.length) && (
                         <div className={styles.filesContainer}>
                             {file.map((file: File, index: number) => {
                                 return (
@@ -484,6 +485,42 @@ const Input: FC<InputProps> = ({
                                     }}
                                 />
                                 <img src="/icons/add_file.svg" alt="add" />
+                                {fileTipContent}
+                            </div>
+
+                            <p
+                                className={classNames(
+                                    "text fz20",
+                                    styles.errorText,
+                                )}
+                            >
+                                {errorText}
+                            </p>
+                        </label>
+                    )}
+                </>
+            );
+        case "file_multiple_chat":
+            return (
+                <>
+                    {file!.length < maxFiles && (
+                        <label htmlFor={uniqueId} className={classNames(styles.fileInput, styles.fileInputChat)}>
+                            <div>
+                                <input
+                                    id={uniqueId}
+                                    accept={accept}
+                                    type="file"
+                                    multiple
+                                    onChange={async (e) => {
+                                        if (!e.target.files) return;
+
+                                        addFileHandler!(
+                                            e.target.files,
+                                            setFile!,
+                                        );
+                                    }}
+                                />
+                                <img src="/icons/paper-clip.svg" alt="add" />
                                 {fileTipContent}
                             </div>
 

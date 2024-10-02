@@ -120,16 +120,16 @@ export const editCompanyProfile = async (
     }
 };
 
-export const getProfile = async (dto?: {
-    user_id?: string;
-}): Promise<{
+export const getProfile = async (
+    user_id?: string,
+): Promise<{
     status: number;
     message: string;
     profile?: any;
 }> => {
     try {
         const { data } = await $authHost.get<any>(
-            `/api/v1/profiles/profile/${dto?.user_id ? dto.user_id : "my"}`,
+            `/api/v1/profiles/profile/${user_id ? user_id : "my"}`,
         );
 
         return {
@@ -321,7 +321,10 @@ export const sendPhoneVerificationCode = async (dto: {
     try {
         console.log(dto);
 
-        const { data } = await $authHost.post("/api/v1/profiles/phone/code", dto);
+        const { data } = await $authHost.post(
+            "/api/v1/profiles/phone/code",
+            dto,
+        );
 
         return { status: 200, message: data.message };
     } catch (error) {
@@ -346,7 +349,10 @@ export const verifyPhone = async (dto: {
     try {
         console.log("verifyPhone", dto);
 
-        const { data } = await $authHost.post<{ phone?: string }>("/api/v1/profiles/phone", dto);
+        const { data } = await $authHost.post<{ phone?: string }>(
+            "/api/v1/profiles/phone",
+            dto,
+        );
 
         return { status: 200, message: "Успешно", phone: data.phone };
     } catch (error) {

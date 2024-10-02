@@ -1,4 +1,4 @@
-import { ICategory, IFile, IFilter, ITask } from "@/app/_types";
+import { ICategory, IFile, IFilter, ISolution, ITask } from "@/app/_types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type TaskInterface = {
@@ -28,6 +28,11 @@ export const taskSlice = createSlice({
         },
         updateCurrentTask(state, action: PayloadAction<ITask | null>) {
             state.currentTask = action.payload;
+        },
+        addCurrentTaskSolution(state, action: PayloadAction<ISolution>) {
+            if (state.currentTask) {
+                state.currentTask.solutions.push(action.payload);
+            }
         },
     },
 });

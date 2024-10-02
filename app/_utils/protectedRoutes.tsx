@@ -17,14 +17,10 @@ export const ProfileRoute: FC<RouteProps> = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        // console.log(isLoading, isAuth, isProfileLoading, profileVerification, "___", typeof window !== "undefined" && !isLoading, !isAuth, isAuth &&
-        //     !isProfileLoading &&
-        //     profileVerification.status !== "verified");
-        
         if (typeof window !== "undefined" && !isLoading) {
             if (!isAuth) {
                 router.replace("/");
-                return
+                return;
             }
             if (
                 isAuth &&
@@ -32,7 +28,7 @@ export const ProfileRoute: FC<RouteProps> = ({ children }) => {
                 profileVerification.status !== "verified"
             ) {
                 router.replace("/profile");
-                return
+                return;
             }
         }
     }, [isLoading, isAuth, isProfileLoading, profileVerification]);
@@ -49,13 +45,13 @@ export const ProfileRoute: FC<RouteProps> = ({ children }) => {
 };
 
 export const AuthRoute: FC<RouteProps> = ({ children }) => {
-    const { isAuth } = useTypesSelector((state) => state.userReducer);
+    const { isAuth, user } = useTypesSelector((state) => state.userReducer);
     const { isLoading } = useTypesSelector((state) => state.contentReducer);
     const router = useRouter();
 
     useEffect(() => {
         if (typeof window !== "undefined" && !isLoading) {
-            if (!isAuth) {
+            if (!isAuth || !["student", "company"].includes(user.role)) {
                 router.replace("/");
                 return;
             }

@@ -99,11 +99,11 @@ a {
 .selectLayout {
     display: flex;
     margin: 40px 0;
-    max-height: 700px;
+    max-height: 70vh;
     background-color: rgba(var(--white), 1);
     border: 2px solid rgba(var(--gray2), 1);
     border-radius: 40px;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 
@@ -224,17 +224,17 @@ a {
 
         &.fz28 {
             font-size: 26px;
-            line-height: 42px;
+            line-height: 30px;
         }
 
         &.fz36 {
             font-size: 34px;
-            line-height: 32px;
+            line-height: 40px;
         }
 
         &.fz48 {
             font-size: 46px;
-            line-height: 42px;
+            line-height: 48px;
         }
     }
 }

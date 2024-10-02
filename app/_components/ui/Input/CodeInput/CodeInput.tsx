@@ -65,15 +65,26 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
     useEffect(() => {
         if (isMobileDevice) return;
 
-        const listener = (e: KeyboardEvent) => {
+        const listenerKeyDown = (e: KeyboardEvent) => {
             if ("1234567890".includes(e.key) || e.key === "Backspace") {
                 changeValue(e.key, value);
             }
         };
-        window.addEventListener("keydown", listener);
+        const listenerPaste = (e: ClipboardEvent) => {
+            if (e.clipboardData) {
+                const pastedText = e.clipboardData.getData("text");
+
+                if (/^\d{4}$/.test(pastedText)) {
+                    setValue(pastedText);
+                }
+            }
+        };
+        window.addEventListener("keydown", listenerKeyDown);
+        window.addEventListener("paste", listenerPaste);
 
         return () => {
-            window.removeEventListener("keydown", listener);
+            window.removeEventListener("keydown", listenerKeyDown);
+            window.removeEventListener("paste", listenerPaste);
         };
     }, [value, isMobileDevice]);
 
@@ -97,16 +108,16 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
                     if (e.target.value.length < value.length) {
                         changeValue("Backspace", value);
                     } else {
-                        if (!!e.target.value.match(/_/g) && e.target.value.match(/_/g)!.length === 4) {
+                        if (
+                            !!e.target.value.match(/_/g) &&
+                            e.target.value.match(/_/g)!.length === 4
+                        ) {
                             changeValue(
                                 e.target.value.replaceAll("_", "")[0],
                                 value,
                             );
                         } else {
-                            changeValue(
-                                e.target.value[4],
-                                value,
-                            );
+                            changeValue(e.target.value[4], value);
                         }
                     }
                 }}

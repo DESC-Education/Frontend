@@ -1,16 +1,16 @@
 "use client";
 
-import classNames from "classnames";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
 import styles from "./layout.module.scss";
 import ProfileNavMenu from "./ProfileNavMenu/ProfileNavMenu";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import LoadingScreen from "../_components/LoadingScreen/LoadingScreen";
-import { use, useEffect, useRef, useState } from "react";
-import Header from "../_components/Header/Header";
-import { getProfile } from "../_http/API/profileApi";
+import { useContext, useEffect, useState } from "react";
 import { useTypesDispatch } from "../_hooks/useTypesDispatch";
-import { userSlice } from "../_store/reducers/userSlice";
+import { contentSlice } from "../_store/reducers/contentSlice";
+import { AlertContext } from "../_context/AlertContext";
+import { AuthRoute } from "../_utils/protectedRoutes";
+import useEffectDebugger from "../_hooks/useEffectDebugger";
 
 export default function RootLayout({
     children,
@@ -18,64 +18,89 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const {
-        user,
         isAuth,
         studentProfile,
         companyProfile,
         isProfileLoading,
+        profileVerification,
     } = useTypesSelector((state) => state.userReducer);
 
     const dispatch = useTypesDispatch();
-    const { isLoading } = useTypesSelector((state) => state.contentReducer);
+    const { isLoading, isProfileInfoChanged } = useTypesSelector(
+        (state) => state.contentReducer,
+    );
     const router = useRouter();
 
+    const { showAlert } = useContext(AlertContext);
+
+    const { updateIsProfileInfoChanged } = contentSlice.actions;
+
+    const pathname = usePathname();
+    const [oldPathname, setOldPathname] = useState<string>("");
+
     useEffect(() => {
-        if (!isLoading && !isAuth) {
-            if (typeof window !== "undefined") {
-                router.replace("/");
-            }
+        if (
+            pathname !== "/profile/settings" &&
+            isProfileInfoChanged?.current &&
+            oldPathname === "profile"
+        ) {
+            showAlert("Изменения не сохранены!", "warning");
         }
-    }, [isLoading, isAuth]);
+        return () => {
+            setOldPathname(pathname);
+        };
+    }, [pathname]);
 
-    // useEffect(() => {
-    //     const asyncFunc = async () => {
-    //         if (isAuth) {
-    //             if (!studentProfile.id || !companyProfile) {
-    //                 const profile = await getProfile();
+    useEffect(() => {
+        if (
+            (!studentProfile.id && !companyProfile.id) ||
+            isProfileLoading ||
+            isProfileInfoChanged?.current === undefined ||
+            profileVerification.status !== "verified"
+        ) {
+            dispatch(updateIsProfileInfoChanged(false));
+            return;
+        }
 
-    //                 if (profile.status === 200) {
-    //                     dispatch(
-    //                         updateProfile({
-    //                             ...profile.profile!,
-    //                             telegramLink: profile.profile!.telegramLink
-    //                                 ? profile.profile!.telegramLink.slice(13)
-    //                                 : undefined,
-    //                             vkLink: profile.profile!.vkLink
-    //                                 ? profile.profile!.vkLink.slice(15)
-    //                                 : undefined,
-    //                         }),
-    //                     );
-    //                 }
-    //                 dispatch(updateIsProfileLoading(false));
-    //             }
-    //         }
-    //     };
-    //     asyncFunc();
-    // }, [isAuth]);
+        dispatch(updateIsProfileInfoChanged(true));
 
-    
+        return () => {
+            dispatch(updateIsProfileInfoChanged(undefined));
+        };
+    }, [
+        studentProfile.description,
+        studentProfile.phoneVisibility,
+        studentProfile.emailVisibility,
+        studentProfile.telegramLink,
+        studentProfile.vkLink,
+        studentProfile.skills.length,
+        studentProfile.profession,
+
+        companyProfile.description,
+        companyProfile.phoneVisibility,
+        companyProfile.emailVisibility,
+        companyProfile.telegramLink,
+        companyProfile.vkLink,
+        companyProfile.linkToCompany,
+        companyProfile.skills.length,
+
+        isProfileLoading,
+        profileVerification,
+    ]);
+
     return (
-        <div className="container">
-            <div className={styles.container}>
+        <AuthRoute>
+            <div className="container">
+                <div className={styles.container}>
+                    <ProfileNavMenu />
 
-                <ProfileNavMenu />
-
-                {isProfileLoading ? (
-                    <LoadingScreen />
-                ) : (
-                    <div className={styles.profileContent}>{children}</div>
-                )}
+                    {isProfileLoading ? (
+                        <LoadingScreen />
+                    ) : (
+                        <div className={styles.profileContent}>{children}</div>
+                    )}
+                </div>
             </div>
-        </div>
+        </AuthRoute>
     );
 }

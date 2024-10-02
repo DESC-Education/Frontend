@@ -7,11 +7,22 @@
     transition: .3s;
     cursor: pointer;
     border: none;
+    height: 50px;
     // font-family: '__gilroy_a5be43';
 
     &.disabled {
         cursor: default;
         opacity: .6;
+    }
+
+    &.loading {
+        height: 52px;
+        width: 190px;
+        transition: 0s !important;
+        padding: 10px 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     &.primary {

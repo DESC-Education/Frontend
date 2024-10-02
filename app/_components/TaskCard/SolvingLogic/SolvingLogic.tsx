@@ -6,6 +6,8 @@ import { FC, useContext, useEffect, useState } from "react";
 import { IFile } from "@/app/_types";
 import { createSolvingTask } from "@/app/_http/API/tasksApi";
 import { AlertContext } from "@/app/_context/AlertContext";
+import { taskSlice } from "@/app/_store/reducers/taskSlice";
+import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 
 const MAX_LENGTH = 2000;
 const MIN_LENGTH = 50;
@@ -18,6 +20,9 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
     const [solutionFiles, setSolutionFiles] = useState<IFile[]>([]);
     const [solutionText, setSolutionText] = useState<string>("");
     const [textLength, setTextLength] = useState(solutionText.length || 0);
+
+    const { addCurrentTaskSolution } = taskSlice.actions;
+    const dispatch = useTypesDispatch();
 
     const { showAlert } = useContext(AlertContext);
 
@@ -33,7 +38,7 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
         const formdata = new FormData();
 
         solutionFiles.forEach((el: any, i) => {
-            formdata.append(`file`, el, el.name);
+            formdata.append(`files_list`, el, el.name);
         });
         formdata.append("description", solutionText);
         formdata.append("taskId", taskId);
@@ -43,8 +48,9 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
         console.log("createSolvingTask res", res);
 
         if (res.status === 200) {
-            showAlert("Задание успешно создано!", "success");
+            showAlert("Решение успешно загружено!", "success");
             setSolutionText("");
+            dispatch(addCurrentTaskSolution(res.solution!));
             setSolutionFiles([]);
         } else {
             showAlert(res.message);

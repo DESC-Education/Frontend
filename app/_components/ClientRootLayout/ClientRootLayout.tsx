@@ -7,7 +7,7 @@ import { auth } from "@/app/_http/API/userApi";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import LocalStorage from "@/app/_utils/LocalStorage";
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type ClientRootLayoutProps = {
     children: React.ReactNode;
@@ -29,9 +29,11 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         updateProfile,
         updateIsProfileLoading,
     } = userSlice.actions;
-    const { updateIsLoading, updateIsMobileDevice } = contentSlice.actions;
+    const { updateIsLoading, updateIsMobileDevice, updateIsProfileInfoChanged } = contentSlice.actions;
 
     const [isInitialRun, setIsInitialRun] = useState(true);
+
+    const isChanged = useRef<boolean>();
 
     useEffect(() => {
         const isMobile = () => {
@@ -50,6 +52,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
             return check;
         };
 
+        dispatch(updateIsProfileInfoChanged(isChanged));
         dispatch(updateIsMobileDevice(isMobile()));
     }, []);
 

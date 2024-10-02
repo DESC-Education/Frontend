@@ -48,6 +48,19 @@ export default function Home() {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
 
+    const getCurrentCourse = (start: number, end: number): string => {
+        const currentYear = new Date().getFullYear();
+
+        console.log(currentYear, start, end);
+
+        if (start <= currentYear && currentYear <= end) {
+            return "Выпускник";
+        } else if (start > currentYear) {
+            return `${currentYear - start} курс`;
+        }
+        return "Выпускник";
+    };
+
     return (
         <div
             className={classNames(styles.userContainer, {
@@ -185,7 +198,14 @@ export default function Home() {
                                     yearsOfEducation[
                                         studentProfile.specialty.type
                                     ]}{" "}
-                                гг.
+                                гг.{" "}
+                                    {getCurrentCourse(
+                                        studentProfile.admissionYear!,
+                                        studentProfile.admissionYear! +
+                                            yearsOfEducation[
+                                                studentProfile.specialty.type
+                                            ],
+                                    )}
                             </p>
                             <p
                                 className={classNames(

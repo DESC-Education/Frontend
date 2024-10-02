@@ -10,6 +10,8 @@ type ButtonProps = {
     onClick?: () => void;
     disabled?: boolean;
     htmlType?: "button" | "submit" | "reset";
+    loading?: boolean;
+    loadingWidth?: number;
 };
 
 const Button: FC<ButtonProps> = ({
@@ -20,14 +22,20 @@ const Button: FC<ButtonProps> = ({
     onClick,
     disabled,
     htmlType,
+    loading = false,
+    loadingWidth = 190,
 }) => {
     return (
         <button
             type={htmlType}
             onClick={onClick}
             disabled={disabled}
+            style={{
+                width: loading && loadingWidth ? loadingWidth : undefined,
+            }}
             className={classNames(className, styles.button, styles[type], {
                 [styles.disabled]: disabled,
+                [styles.loading]: loading,
             })}
         >
             {icon && <img src={icon} alt="icon" />}

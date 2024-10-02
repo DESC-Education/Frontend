@@ -2,23 +2,24 @@ import { Tokens } from "@/app/_http/types";
 import { IChat, ITask, IUser } from "@/app/_types";
 import LocalStorage from "@/app/_utils/LocalStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RefObject } from "react";
 
 type UserInterface = {
     isLoading: boolean;
     isMobileDevice: boolean;
     replyCount: number;
-    chats: IChat[];
     myTasks: ITask[] | null;
     myArchivedTasks: ITask[] | null;
+    isProfileInfoChanged: RefObject<boolean> | undefined;
 };
 
 const initialState: UserInterface = {
     isLoading: true,
     isMobileDevice: false,
     replyCount: 30,
-    chats: [],
     myTasks: null,
     myArchivedTasks: null,
+    isProfileInfoChanged: undefined,
 };
 
 export const contentSlice = createSlice({
@@ -27,9 +28,6 @@ export const contentSlice = createSlice({
     reducers: {
         updateIsLoading(state, action: PayloadAction<boolean>) {
             state.isLoading = action.payload;
-        },
-        updateChats(state, action: PayloadAction<IChat[]>) {
-            state.chats = action.payload;
         },
         updateMyTasks(state, action: PayloadAction<ITask[]>) {
             state.myTasks = action.payload;
@@ -44,9 +42,15 @@ export const contentSlice = createSlice({
             state.isLoading = true;
             state.isMobileDevice = false;
             state.replyCount = 30;
-            state.chats = [];
             state.myTasks = null;
             state.myArchivedTasks = null;
+        },
+        updateIsProfileInfoChanged(state, action: PayloadAction<any>) {
+            if (state.isProfileInfoChanged) {
+                state.isProfileInfoChanged.current = action.payload;
+            } else {
+                state.isProfileInfoChanged = action.payload;
+            }
         },
     },
 });

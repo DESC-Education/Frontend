@@ -13,7 +13,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
 
     const { currentTask } = useTypesSelector((state) => state.taskReducer);
     const { updateCurrentTask } = taskSlice.actions;
@@ -26,19 +26,15 @@ export default function RootLayout({
         setIsLoading(true);
 
         if (!currentTask?.id || currentTask.id !== id) {
-            // setIsLoading(true);
-
             const asyncFunc = async () => {
-                if (typeof id === "string") {
-                    const res = await getTask(id);
+                const res = await getTask(id);
 
-                    console.log("currentTask res is", res);
+                console.log("currentTask res is", res);
 
-                    if (res.status === 200) {
-                        dispatch(updateCurrentTask(res.task!));
-                    } else {
-                        router.replace("/exchange");
-                    }
+                if (res.status === 200) {
+                    dispatch(updateCurrentTask(res.task!));
+                } else {
+                    router.replace("/exchange");
                 }
             };
             asyncFunc();

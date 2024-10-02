@@ -66,7 +66,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
         POSTS_PER_PAGE,
     );
 
-    const nodeRef = useRef<HTMLDivElement>(null);
+    const nodeRef = useRef<HTMLDivElement>(null);    
 
     return (
         <div className={styles.solutions}>
@@ -201,7 +201,8 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                     )}
                                                     key={index}
                                                 >
-                                                    <div
+                                                    <Link
+                                                        href={`/profile/student/${solution.user}`}
                                                         className={
                                                             styles.solutionUser
                                                         }
@@ -213,7 +214,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                                     .logoImg
                                                                     ? process
                                                                           .env
-                                                                          .NEXT_PUBLIC_ASSETS_PATH +
+                                                                          .NEXT_PUBLIC_SERVER_PATH +
                                                                       solution
                                                                           .userProfile
                                                                           .logoImg
@@ -231,15 +232,8 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                                 solution
                                                                     .userProfile
                                                                     .lastName}
-                                                            {solution
-                                                                .userProfile
-                                                                .firstName +
-                                                                " " +
-                                                                solution
-                                                                    .userProfile
-                                                                    .lastName}
                                                         </p>
-                                                    </div>
+                                                    </Link>
                                                     <div
                                                         className={
                                                             styles.solutionDescription

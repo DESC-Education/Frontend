@@ -101,7 +101,7 @@ export default function JobsPage() {
                                 {myTasks && myTasks.length > 0 ? (
                                     <div>
                                         {myTasks.map((task, index) => (
-                                            <TaskCard key={index} task={task} />
+                                            <TaskCard isMyTask key={index} task={task} />
                                         ))}
                                     </div>
                                 ) : (
@@ -131,7 +131,7 @@ export default function JobsPage() {
                                 {myArchivedTasks && myArchivedTasks.length > 0 ? (
                                     <div>
                                         {myArchivedTasks.map((task, index) => (
-                                            <TaskCard key={index} task={task} />
+                                            <TaskCard isMyTask key={index} task={task} />
                                         ))}
                                     </div>
                                 ) : (

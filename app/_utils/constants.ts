@@ -3,7 +3,7 @@ export const TIMER_TIME = 60;
 export const yearsOfEducation = {
     bachelor: 4,
     specialty: 5,
-    magister: 2,
+    magistracy: 2,
 };
 
 export const timezones = [
@@ -56,16 +56,16 @@ export const levels = [
     { name: "Начинающий", value: 0 },
     { name: "Средний", value: 1 },
     { name: "Продвинутый", value: 2 },
-]
+];
 
 export const sortingOptions = [
     { name: "Сначала новые", value: "createdAt" },
     { name: "Сначала старые", value: "-createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
-]
+];
 
 export const solutionStatuses = [
-    { name: "На оценке", value: "pending" },
-    { name: "Выполнено", value: "completed" },
-    { name: "Не выполнено", value: "failed" },
-]
+    { name: "На оценке", value: "pending", color: "#FDF5A9", textColor: "black" },
+    { name: "Выполнено", value: "completed", color: "#D0F5CD", textColor: "black" },
+    { name: "Не выполнено", value: "failed", color: "#DD6565", textColor: "white" },
+];

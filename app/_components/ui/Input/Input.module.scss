@@ -52,11 +52,13 @@
     }
 
     &.radioWrapper {
-        .check, .unCheck {
+
+        .check,
+        .unCheck {
             border-radius: 50%;
         }
 
-        .check >div {
+        .check>div {
             border-radius: 50%;
         }
     }
@@ -135,6 +137,19 @@
             text-align: center;
             margin: auto;
         }
+    }
+}
+
+.fileInputChat {
+    margin: 0;
+    transition: .3s;
+
+    &:hover {
+        filter: brightness(1.15);
+    }
+
+    img {
+        width: 40px;
     }
 }
 

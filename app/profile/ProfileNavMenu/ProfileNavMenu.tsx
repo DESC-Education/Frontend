@@ -4,7 +4,7 @@ import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import styles from "./ProfileNavMenu.module.scss";
 import classNames from "classnames";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import { useContext, useMemo, useState } from "react";
@@ -65,6 +65,8 @@ const ProfileNavMenu = () => {
 
     const pathname = usePathname();
 
+    const { id } = useParams<{ id: string }>();
+
     const changeLogoHandler = () => {
         if (profileVerification.status !== "verified") return;
 
@@ -121,6 +123,8 @@ const ProfileNavMenu = () => {
         profileVerification.status,
     ]);
 
+    if (id) return null;
+
     return (
         <div className={styles.container}>
             <div
@@ -134,7 +138,7 @@ const ProfileNavMenu = () => {
                     className={classNames(styles.avatarImg)}
                     src={
                         activeProfile.logoImg
-                            ? process.env.NEXT_PUBLIC_ASSETS_PATH +
+                            ? process.env.NEXT_PUBLIC_SERVER_PATH +
                               activeProfile.logoImg
                             : "/images/avatar.png"
                     }
