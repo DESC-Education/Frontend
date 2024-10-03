@@ -25,6 +25,7 @@ import LocalStorage from "@/app/_utils/LocalStorage";
 import Input from "@/app/_components/ui/Input/Input";
 import { AlertContext } from "@/app/_context/AlertContext";
 import Button from "@/app/_components/ui/Button/Button";
+import Link from "next/link";
 
 export default function Page() {
     const { chat_id } = useParams<{ chat_id: string }>();
@@ -35,6 +36,7 @@ export default function Page() {
 
     const router = useRouter();
 
+    const { user } = useTypesSelector((state) => state.userReducer);
     const { chats, currentChat } = useTypesSelector(
         (state) => state.chatReducer,
     );
@@ -49,7 +51,6 @@ export default function Page() {
         return new WebSocket(
             process.env.NEXT_PUBLIC_WS_ADDRESS! +
                 `/ws/chat/${chat_id}/?token=${LocalStorage.getAccessToken()}`,
-            // LocalStorage.getAccessToken(),
         );
     }, [chat_id]);
 
@@ -258,13 +259,11 @@ export default function Page() {
                 behavior: "instant",
             });
         }, 140);
-    }, [currentChat?.messages, dummyRef.current?.offsetHeight]);
+    }, [currentChat?.messages.length, dummyRef.current?.offsetHeight]);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        console.log("what abaout out?");
-
         if (!textareaRef.current) return;
 
         if (textareaRef.current) {
@@ -318,7 +317,14 @@ export default function Page() {
     return (
         <div className={styles.container} ref={containerRef}>
             <div className={styles.chatHeader}>
-                <div className={styles.userInfo}>
+                <Link
+                    href={
+                        user.role === "company"
+                            ? `/profile/student/${currentChat.companion.id}`
+                            : `/profile/company/${currentChat.companion.id}`
+                    }
+                    className={styles.userInfo}
+                >
                     <img
                         src={
                             currentChat.companion.avatar
@@ -335,7 +341,7 @@ export default function Page() {
                         </h4>
                         {/* <span className={styles.userStatus}>в сети</span> */}
                     </div>
-                </div>
+                </Link>
                 <div className={styles.chatActions}>
                     <img
                         src="/icons/searchIcon.svg"

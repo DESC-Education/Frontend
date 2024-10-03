@@ -1,4 +1,4 @@
-import { IChat, IMessage } from "@/app/_types";
+import { IChat, IMessage, ISolution } from "@/app/_types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ChatState = {
@@ -47,6 +47,23 @@ export const chatSlice = createSlice({
                         }
                     },
                 );
+            }
+        },
+        updateChatFavourite: (
+            state,
+            action: PayloadAction<{ chat: string; isFavorite: boolean }>,
+        ) => {
+            if (state.chats) {
+                state.chats = state.chats.map((item) => {
+                    if (item.id === action.payload.chat) {
+                        return {
+                            ...item,
+                            isFavorite: action.payload.isFavorite,
+                        };
+                    } else {
+                        return item;
+                    }
+                });
             }
         },
         updateChatMessage: (state, action: PayloadAction<IMessage>) => {

@@ -102,6 +102,7 @@ export type IChat = {
     createdAt: string;
     taskId: string;
     isSupport: boolean;
+    isFavorite: boolean;
     isSuspicious: boolean;
     lastMessage: IMessage;
     messages: IMessage[];
@@ -201,9 +202,11 @@ export type IFilter = {
 export type ISpecialty = {
     id: string;
     name: string;
-    type: "bachelor" | "specialty" | "magistracy";
+    type: ISpecialtyType;
     code: string;
 };
+
+export type ISpecialtyType = "bachelor" | "specialty" | "magistracy";
 
 export type ISkill = {
     id: string;
@@ -256,7 +259,7 @@ export type IReview = {
 export type IVerificationStudentRequest = {
     id: string;
     createdAt: string;
-    status: "pending" | "approved" | "rejected";
+    status: IVerificationStatus;
     comment: string;
     admin: string;
     profile: IStudentProfile;
@@ -266,7 +269,7 @@ export type IVerificationStudentRequest = {
 export type IVerificationCompanyRequest = {
     id: string;
     createdAt: string;
-    status: "pending" | "approved" | "rejected";
+    status: IVerificationStatus;
     comment: string;
     admin: string;
     profile: ICompanyProfile;
@@ -281,6 +284,9 @@ export type IVerificationResult = {
     firstName: string;
     id: string;
     lastName: string;
-    requestStatus: "pending" | "approved" | "rejected";
+    requestStatus: IVerificationStatus;
     userType: "student" | "company";
 };
+
+export type ISolutionStatus = "completed" | "failed" | "pending"; 
+export type IVerificationStatus = "pending" | "approved" | "rejected";

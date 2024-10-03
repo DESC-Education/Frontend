@@ -1,10 +1,10 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import styles from "./SolutionLogic.module.scss";
 import classNames from "classnames";
 import { ISolution } from "@/app/_types";
-import { getSolution } from "@/app/_http/API/tasksApi";
+import { evaluateTaskSolution, getSolution } from "@/app/_http/API/tasksApi";
 import { useRouter } from "next/navigation";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import { solutionStatuses } from "@/app/_utils/constants";
@@ -13,6 +13,8 @@ import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import Button from "../../ui/Button/Button";
 import Link from "next/link";
+import Input from "../../ui/Input/Input";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 type SolutionLogicProps = {
     solutionId: string;
@@ -23,13 +25,37 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
     const [solution, setSolution] = useState<ISolution | null>(null);
     const { user } = useTypesSelector((state) => state.userReducer);
 
-    const dispatch = useTypesDispatch();
+    const { showAlert } = useContext(AlertContext);
+
+    const [verdict, setVerdict] = useState<"completed" | "failed">("completed");
+    const [comment, setComment] = useState<string>("");
+
+    console.log(solution);
+
+    const evaluateTask = async () => {
+        const res = await evaluateTaskSolution({
+            id: solutionId,
+            status: verdict,
+            companyComment: comment,
+        });
+
+        if (res.status === 200) {
+            setSolution((prev) => ({
+                ...prev!,
+                status: verdict,
+                companyComment: comment,
+            }));
+            showAlert("Решение успешно оценено!", "success");
+        } else {
+            showAlert("Произошла ошибка");
+        }
+
+        console.log("evaluateTaskSolution res", res);
+    };
 
     const router = useRouter();
 
     useEffect(() => {
-        console.log(solutionId);
-
         setIsLoading(true);
 
         const asyncFunc = async () => {
@@ -44,9 +70,7 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
             }
         };
         asyncFunc();
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 200);
+        setIsLoading(false);
     }, [solutionId]);
 
     if (!solution)
@@ -59,7 +83,10 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
     return (
         <div className={styles.solutionContent}>
             <div className={classNames(styles.solutionTitle, "title fz24")}>
-                <Link href={`/profile/student/${solution.user}`} className={styles.avatar}>
+                <Link
+                    href={`/profile/student/${solution.user}`}
+                    className={styles.avatar}
+                >
                     <img
                         src={
                             solution.userProfile.logoImg
@@ -118,10 +145,55 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
                         </div>
                     ))}
             </div>
-            {user.role === "company" && (
-                <div className={styles.controls}>
-                    <Button type="primary">ыфв</Button>
-                    <Button type="secondary">ыфв</Button>
+            {user.role === "company" && solution.status === "pending" && (
+                <div
+                    className={classNames(styles.controls, {
+                        [styles.loading]: isLoading,
+                    })}
+                >
+                    <p className="text fz24 fw500">Выберите вердикт:</p>
+                    <div className={styles.verdicts}>
+                        <div
+                            onClick={() => setVerdict("completed")}
+                            className={classNames(styles.success, {
+                                [styles.active]: verdict === "completed",
+                            })}
+                        >
+                            <p className="text fz20">Выполнил</p>
+                        </div>
+                        <div
+                            onClick={() => setVerdict("failed")}
+                            className={classNames(styles.failure, {
+                                [styles.active]: verdict === "failed",
+                            })}
+                        >
+                            <p className="text fz20">Не выполнил</p>
+                        </div>
+                    </div>
+                    <div
+                        className={classNames(styles.comment, {
+                            [styles.active]: verdict === "failed",
+                        })}
+                    >
+                        <Input
+                            value={comment}
+                            onChange={(e) => {
+                                setComment(e);
+                            }}
+                            type="textarea"
+                            placeholder="Оставьте свой комментарий..."
+                        />
+                    </div>
+                    <Button type="secondary" onClick={() => evaluateTask()}>
+                        Подтвердить
+                    </Button>
+                </div>
+            )}
+            {user.role === "company" && solution.status === "failed" && (
+                <div className={styles.comment}>
+                    <p className="text fz24">
+                        <i>Ваш комментарий к решению:</i> {solution.companyComment}
+                    </p>
                 </div>
             )}
         </div>

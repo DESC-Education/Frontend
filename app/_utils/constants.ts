@@ -1,3 +1,5 @@
+import { ISolutionStatus, ISpecialtyType } from "../_types";
+
 export const TIMER_TIME = 60;
 
 export const yearsOfEducation = {
@@ -46,10 +48,10 @@ export const formsOfEducation = [
     { name: "Заочное", value: "part_full_time" },
 ];
 
-export const typeOfSpeciality = [
+export const typeOfSpeciality: { name: string; value: ISpecialtyType }[] = [
     { name: "Бакалавриат", value: "bachelor" },
     { name: "Специалитет", value: "specialty" },
-    { name: "Магистратура", value: "magister" },
+    { name: "Магистратура", value: "magistracy" },
 ];
 
 export const levels = [
@@ -64,8 +66,28 @@ export const sortingOptions = [
     // { name: "Сначала рекомендуемые", value: "relevant" },
 ];
 
-export const solutionStatuses = [
-    { name: "На оценке", value: "pending", color: "#FDF5A9", textColor: "black" },
-    { name: "Выполнено", value: "completed", color: "#D0F5CD", textColor: "black" },
-    { name: "Не выполнено", value: "failed", color: "#DD6565", textColor: "white" },
+export const solutionStatuses: {
+    name: string;
+    value: ISolutionStatus;
+    color: string;
+    textColor: string;
+}[] = [
+    {
+        name: "На оценке",
+        value: "pending",
+        color: "#FDF5A9",
+        textColor: "black",
+    },
+    {
+        name: "Выполнено",
+        value: "completed",
+        color: "#D0F5CD",
+        textColor: "black",
+    },
+    {
+        name: "Не выполнено",
+        value: "failed",
+        color: "#DD6565",
+        textColor: "white",
+    },
 ];

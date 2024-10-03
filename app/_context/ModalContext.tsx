@@ -72,16 +72,15 @@ const ModalState = ({ children }: Partial<ModalStateProps>) => {
     const closeModal = () => {
         setTimeout(() => {
             document.body.classList.remove("modal-opened");
+            setCurrContent("");
         }, 300);
 
         if (onCloseFunction) {
             setIsOpened(false);
-            setCurrContent("");
             onClose!();
             return;
         }
         setIsOpened(false);
-        setCurrContent("");
     };
 
     return (

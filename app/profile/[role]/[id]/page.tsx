@@ -104,7 +104,7 @@ const ProfilePage = () => {
                 [styles.loading]: isLoading,
             })}
         >
-            <BackButton />
+            <BackButton className={styles.backButton} />
             {role === "student" && studentProfile ? (
                 <div className={styles.content}>
                     <div className={styles.contactInfo}>

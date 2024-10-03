@@ -35,7 +35,7 @@ export const createChat = async (dto: {
 export const getChats = async (
     dto: { page: number; page_size: number; q: string } = {
         page: 1,
-        page_size: 30,
+        page_size: 50,
         q: "",
     },
 ) => {
@@ -43,7 +43,7 @@ export const getChats = async (
         const { data } = await $authHost.get<{
             results: IChat[];
             count: number;
-            numPages: number
+            numPages: number;
         }>(
             `/api/v1/chats/chats?page=${dto.page}&page_size=${dto.page_size}&search=${dto.q}`,
         );
@@ -105,12 +105,37 @@ export const createFile = async (dto: FormData) => {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
-            }
+            },
         );
 
         return {
             status: 200,
             file: data,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const changeFavouriteChat = async (id: string) => {
+    try {
+        const { data } = await $authHost.get<{ results: IChat[] }>(
+            `/api/v1/chats/chat/${id}/favorite`,
+        );
+
+        return {
+            status: 200,
+            chats: data.results,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

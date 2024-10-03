@@ -145,6 +145,7 @@ export default function ExchangePage() {
         sortingBy: "createdAt" | "-createdAt" = "createdAt",
     ) => {
         setIsLoading(true);
+        setSorting(sortingBy);
         setCurrentPage(1);
 
         const res = await getTasks(

@@ -8,6 +8,14 @@ import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import LocalStorage from "@/app/_utils/LocalStorage";
 import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { $authHost } from "@/app/_http";
+import {
+    SSEEvents,
+    SSENewMessagePayload,
+    SSENotificationPayload,
+    SSEResponse,
+} from "@/app/_http/types";
 
 type ClientRootLayoutProps = {
     children: React.ReactNode;
@@ -29,11 +37,82 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         updateProfile,
         updateIsProfileLoading,
     } = userSlice.actions;
-    const { updateIsLoading, updateIsMobileDevice, updateIsProfileInfoChanged } = contentSlice.actions;
+    const {
+        updateIsLoading,
+        updateIsMobileDevice,
+        updateIsProfileInfoChanged,
+    } = contentSlice.actions;
 
     const [isInitialRun, setIsInitialRun] = useState(true);
 
     const isChanged = useRef<boolean>();
+
+    useEffect(() => {
+        const asyncFunc = async () => {
+            $authHost
+                .get("/api/v1/notifications/events", {
+                    headers: {
+                        Accept: "text/event-stream",
+                    },
+                    responseType: "stream",
+                    adapter: "fetch",
+                })
+                .then(async (response) => {
+                    const stream = response.data;
+
+                    const reader = stream
+                        .pipeThrough(new TextDecoderStream())
+                        .getReader();
+
+                    while (true) {
+                        const {
+                            value,
+                            done,
+                        }: {
+                            value: string;
+                            done: boolean;
+                        } = await reader.read();
+
+                        try {
+                            const lines = value.trim().split("\n");
+
+                            console.log("lines", lines);
+
+                            const result: SSEResponse = {} as SSEResponse;
+
+                            lines.forEach((line) => {
+                                const semIndex = line.indexOf(":");
+                                const [key, value] = [
+                                    line.slice(0, semIndex).trim(),
+                                    line.slice(semIndex + 1).trim(),
+                                ];
+                                if (key && value) {
+                                    if (key === "data") {
+                                        result[key] = JSON.parse(value) as
+                                            | SSENotificationPayload
+                                            | SSENewMessagePayload;
+                                    } else if (key === "event") {
+                                        result[key] = value as SSEEvents;
+                                    }
+                                }
+                            });
+
+                            switch (result.event) {
+                                case "notification":
+                                    console.log("notification", result.data);
+                                    break;
+                                case "newMessage":
+                                    console.log("newMessage", result.data);
+                                    break;
+                            }
+                        } catch (error) {}
+
+                        if (done) break;
+                    }
+                });
+        };
+        asyncFunc();
+    }, []);
 
     useEffect(() => {
         const isMobile = () => {

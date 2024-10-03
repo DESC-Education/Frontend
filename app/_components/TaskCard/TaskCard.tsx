@@ -7,7 +7,7 @@ import Button from "../ui/Button/Button";
 import { IFile, ISolution, ITask } from "@/app/_types";
 import { getRemainingTime } from "@/app/_utils/time";
 import Moment from "react-moment";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "moment/locale/ru";
 import DownloadItem from "../ui/DownloadItem/DownloadItem";
@@ -24,6 +24,8 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { chatSlice } from "@/app/_store/reducers/chatSlice";
 import { useRouter } from "next/navigation";
 import CustomOval from "../ui/CustomOval/CustomOval";
+import ConfirmModal from "../modals/ConfirmModal/ConfirmModal";
+import { ModalContext } from "@/app/_context/ModalContext";
 
 type TaskCardProps = {
     task: ITask;
@@ -54,6 +56,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
     const dispatch = useTypesDispatch();
     const { updateCurrentChat } = chatSlice.actions;
 
+    const { showModal, closeModal } = useContext(ModalContext);
+
     const router = useRouter();
 
     const getDayTitle = (day: number): "дней" | "день" | "дня" | "дней" => {
@@ -71,6 +75,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
     const daysRef = useRef<any>(null);
 
     const handlerStartChat = async () => {
+        closeModal();
         setIsChatLoading(true);
 
         const res = await createChat({
@@ -231,6 +236,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                         </div>
                         <div className={styles.taskButtons}>
                             {user.role === "student" &&
+                                isTaskPage &&
                                 (isChatLoading ? (
                                     <Button
                                         type="secondary"
@@ -246,7 +252,27 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                     </Button>
                                 ) : (
                                     <Button
-                                        onClick={() => handlerStartChat()}
+                                        className={styles.startChat}
+                                        onClick={() =>
+                                            showModal({
+                                                content: (
+                                                    <ConfirmModal
+                                                        text={
+                                                            <p className="text fz24">
+                                                                Вы уверены, что
+                                                                хотите начать
+                                                                чат по данному
+                                                                заданию?
+                                                            </p>
+                                                        }
+                                                        onConfirm={() =>
+                                                            handlerStartChat()
+                                                        }
+                                                        buttonText="Начать чат"
+                                                    />
+                                                ),
+                                            })
+                                        }
                                         type="secondary"
                                     >
                                         Задать вопрос по заданию

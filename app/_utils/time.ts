@@ -40,6 +40,6 @@ export const getDateOrTime = (dateString: string) => {
     if (deltaHours < 24) {
         return date.format("HH:mm");
     } else {
-        return date.format("DD MMM");
+        return date.format("DD.MM.YY");
     }
 };

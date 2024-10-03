@@ -63,4 +63,90 @@
         padding: 25px 30px;
         white-space: break-spaces;
     }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 20px;
+
+        &:before {
+            content: "";
+            width: 100%;
+            position: absolute;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 10px;
+            opacity: 0;
+            z-index: -10;
+            background: rgba(var(--gray1), 1);
+            transition: .3s;
+        }
+
+        &.loading {
+            &:before {
+                opacity: 1;
+                z-index: 10;
+            }
+        }
+
+        .verdicts {
+            display: flex;
+            gap: 20px;
+
+            >div {
+                cursor: pointer;
+                filter: grayscale(.8);
+                transition: .3s;
+
+                &.active {
+                    filter: grayscale(0);
+                }
+            }
+
+            .success {
+                background-color: rgba(var(--green), 1);
+                border-radius: 50px;
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(var(--white), 1);
+            }
+
+            .failure {
+                background-color: rgba(var(--red), 1);
+                border-radius: 50px;
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(var(--white), 1);
+            }
+        }
+
+        .comment {
+            height: 0;
+            overflow: hidden;
+            transition: .3s;
+            width: 500px;
+
+            >div {
+                height: 100%;
+            }
+
+            &.active {
+                height: 150px;
+            }
+        }
+    }
+
+    .comment {
+        background: rgba(var(--white), 1);
+        padding: 20px 15px;
+        border-radius: 20px;
+        margin: 0 -25px;
+    }
 }

@@ -59,7 +59,6 @@ export type EditCompanyDTO = {
     skills: string[];
 };
 
-
 export type CreateTaskDTO = {
     title: string;
     description: string;
@@ -68,5 +67,34 @@ export type CreateTaskDTO = {
     //files: File[];
     category: ICategory[];
     filters: string;
+};
 
-}
+export type SSEResponse = {
+    event: SSEEvents;
+    data: SSENotificationPayload | SSENewMessagePayload;
+};
+
+export type SSEEvents = "notification" | "newMessage";
+
+export type SSENotificationTypes =
+    | "verification"
+    | "evaluation" // payload: solutionId
+    | "level"
+    | "review" // payload: reviewId
+    | "countReset"
+    | "solution"; // payload: solutionId
+
+export type SSENotificationPayload = {
+    type: SSENotificationTypes;
+    id: string;
+    title: string;
+    message: string;
+    payload: string;
+};
+
+export type SSENewMessagePayload = {
+    chatId: string;
+    message: string;
+    createdAt: string;
+    unreadCount: number;
+};

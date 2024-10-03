@@ -38,7 +38,7 @@ export default function RootLayout({
         const asyncFunc = async () => {
             const res = await getChats();
 
-            // console.log("GET CHATS RES", res);
+            console.log("GET CHATS RES", res);
 
             if (res.status === 200) {
                 dispatch(updateChats(res.results!));
@@ -50,7 +50,10 @@ export default function RootLayout({
 
     return (
         <ProfileRoute>
-            <div suppressHydrationWarning className={classNames("container", styles.chatContainer)}>
+            <div
+                suppressHydrationWarning
+                className={classNames("container", styles.chatContainer)}
+            >
                 <div className="selectLayout">
                     <SideBar>
                         {isChatsLoading ? (
@@ -69,8 +72,9 @@ export default function RootLayout({
                                             className={styles.chatLink}
                                         >
                                             <ChatItem
+                                                id={chat.id}
                                                 name={chat.companion.name}
-                                                // name={chat.companion.role === "student" ? chat.companion.mail + " " + chat.companion.mail : chat.companion.mail}
+                                                isFavourited={chat.isFavorite}
                                                 avatar={chat.companion.avatar}
                                                 lastMessage={chat.lastMessage}
                                             />

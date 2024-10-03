@@ -3,7 +3,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    max-height: calc(100% - 1px);
+    height: calc(100% - 1px);
 }
 
 .chatContainer {
@@ -30,6 +30,13 @@
     .userInfo {
         display: flex;
         align-items: center;
+        padding: 7px 12px;
+        border-radius: 10px;
+        transition: .3s;
+
+        &:hover {
+            background: rgba(var(--gray2), .7);
+        }
 
         .avatar {
             width: 50px;

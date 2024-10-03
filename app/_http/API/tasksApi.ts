@@ -1,6 +1,6 @@
 import axios from "axios";
 import { $authHost, $host } from "..";
-import { ICategory, ISolution, ITask } from "@/app/_types";
+import { ICategory, ISolution, ISolutionStatus, ITask } from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
 export const getTask = async (id: string) => {
@@ -261,6 +261,36 @@ export const getSolution = async (id: string) => {
             status: 200,
             solution: data,
         };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const evaluateTaskSolution = async (dto: {
+    id: string;
+    status: ISolutionStatus;
+    companyComment: string;
+}) => {
+    try {
+        const { data } = await $authHost.post<{ status: ISolutionStatus }>(
+            `/api/v1/tasks/task/evaluate/${dto.id}`,
+            {
+                status: dto.status,
+                companyComment: dto.companyComment,
+            },
+        );
+
+        return { status: 200, solutionStatus: data.status };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {

@@ -46,9 +46,6 @@ const Message: FC<MessageProps> = ({ message, ws }) => {
         setMessageTime(getDateOrTime(message.createdAt));
     }, []);
 
-    console.log(message.files);
-    
-
     return (
         <div
             ref={ref}
