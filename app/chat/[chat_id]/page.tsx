@@ -61,11 +61,7 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
-        // console.log("in useEffect ws", ws, ws?.readyState);
-
         if (ws?.readyState !== WebSocket.OPEN) return;
-
-        // console.log("ws is open");
 
         ws.onmessage = (event) => {
             const parsedData = JSON.parse(event.data);
@@ -73,23 +69,9 @@ export default function Page() {
 
             switch (parsedData.type) {
                 case "message":
-                    // const data = JSON.parse(event.data);
-                    // const parsedPayload: IMessage = JSON.parse(data.payload);
-
                     dispatch(addChatMessage(parsedPayload));
-
-                    // console.log(
-                    //     "I GOT MESSAGE, parsedPayload is",
-                    //     parsedPayload,
-                    // );
-
                     break;
                 case "viewed":
-                    // console.log(
-                    //     "I GOT VIEWED, parsedPayload is",
-                    //     parsedPayload,
-                    // );
-
                     dispatch(updateIsRead(parsedPayload));
                     break;
             }
@@ -100,13 +82,10 @@ export default function Page() {
         };
 
         ws.onclose = (e) => {
-            console.log("closed ws, trying to create new one", e);
-
             setWs(createWsInstance());
         };
 
         return () => {
-            console.log("I KILLED SOCKET", ws);
             ws?.close();
         };
     }, [chat_id, ws?.readyState]);
@@ -119,15 +98,11 @@ export default function Page() {
     const [messageText, setMessageText] = useState<string>("");
 
     const sendFile = async () => {
-        // console.log("sendFile", attachedFilesModified);
-
         if (!attachedFilesModified.length) return;
 
         const formdata = new FormData();
 
         for (const file of attachedFilesModified) {
-            console.log("file in sendFile", file);
-
             if (file.isSent) continue;
 
             formdata.append("file", file.file);
@@ -136,8 +111,6 @@ export default function Page() {
             const res = await createFile(formdata);
 
             if (res.status === 200) {
-                // console.log("file, createFile res", file, res);
-
                 setAttachedFilesModified((prev) => {
                     return prev.map((i) => {
                         if (i.file.size === file.file.size) {
@@ -154,14 +127,6 @@ export default function Page() {
 
     const sendMessage = async () => {
         if (!ws) return;
-
-        console.log("sendMessage", {
-            message: messageText
-                .replace(/\n{3,}/g, "\n\n")
-                .trim()
-                .replace(/^\n+|\n+$/g, ""),
-            files: attachedFilesModified,
-        });
 
         ws.send(
             JSON.stringify({
@@ -185,8 +150,6 @@ export default function Page() {
         const asyncFunc = async () => {
             if (!currentChat?.messages || currentChat.id !== chat_id) {
                 const res = await getChat(chat_id);
-
-                // console.log("getChat res", res);
 
                 if (res.status === 200) {
                     dispatch(
@@ -366,8 +329,6 @@ export default function Page() {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    console.log("onDrop", e, e.dataTransfer.files);
-
                     if (dragOverTimeoutRef.current) {
                         clearTimeout(dragOverTimeoutRef.current);
                     }
@@ -384,8 +345,6 @@ export default function Page() {
                         let unsupportedFiles = false;
 
                         const item = newFile[i];
-
-                        console.log("item", item);
 
                         if (
                             ![
@@ -409,11 +368,7 @@ export default function Page() {
                             unsupportedFiles = true;
                         }
 
-                        console.log("unsupportedFiles", unsupportedFiles);
-
                         if (unsupportedFiles) continue;
-
-                        console.log(item);
 
                         setAttachedFiles((prev: any) => {
                             if (!prev) return newFile;

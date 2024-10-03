@@ -319,8 +319,6 @@ export const sendPhoneVerificationCode = async (dto: {
     phone: string;
 }): Promise<{ status: number; message: string }> => {
     try {
-        console.log(dto);
-
         const { data } = await $authHost.post(
             "/api/v1/profiles/phone/code",
             dto,
@@ -347,8 +345,6 @@ export const verifyPhone = async (dto: {
     code: number;
 }): Promise<{ status: number; message?: string; phone?: string }> => {
     try {
-        console.log("verifyPhone", dto);
-
         const { data } = await $authHost.post<{ phone?: string }>(
             "/api/v1/profiles/phone",
             dto,

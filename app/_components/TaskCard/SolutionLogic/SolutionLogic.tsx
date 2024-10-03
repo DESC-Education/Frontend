@@ -30,8 +30,6 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
     const [verdict, setVerdict] = useState<"completed" | "failed">("completed");
     const [comment, setComment] = useState<string>("");
 
-    console.log(solution);
-
     const evaluateTask = async () => {
         const res = await evaluateTaskSolution({
             id: solutionId,
@@ -49,8 +47,6 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
         } else {
             showAlert("Произошла ошибка");
         }
-
-        console.log("evaluateTaskSolution res", res);
     };
 
     const router = useRouter();
@@ -60,8 +56,6 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
 
         const asyncFunc = async () => {
             const res = await getSolution(solutionId);
-
-            console.log("getSolution res is", res);
 
             if (res.status === 200) {
                 setSolution(res.solution!);

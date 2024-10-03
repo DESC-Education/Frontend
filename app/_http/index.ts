@@ -47,7 +47,6 @@ $authHost.interceptors.response.use(
                         !LocalStorage.getAccessToken() ||
                         times >= 3
                     ) {
-                        // || times >= 3
                         return;
                     }
 
@@ -59,18 +58,6 @@ $authHost.interceptors.response.use(
                     );
 
                     const token = res.data.access;
-                    // console.log(
-                    //     "in http index.ts __ local_refresh_token __",
-                    //     LocalStorage.getRefreshToken(),
-                    //     " __ local_access_token __ ",
-                    //     LocalStorage.getAccessToken(),
-                    //     " __ res given as a response from /refresh __",
-                    //     res,
-                    //     " __ originalConfig __",
-                    //     originalConfig,
-                    //     " __ err.response __",
-                    //     err.response,
-                    // );
 
                     LocalStorage.setAccessToken(token);
 

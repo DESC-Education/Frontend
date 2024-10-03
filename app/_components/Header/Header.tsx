@@ -75,8 +75,6 @@ const Header = () => {
     ]
 
     const changeMenuVisibility = (val?: boolean) => {
-        console.log("in change", val, document.body.classList);
-
         if (val === undefined) {
             setIsOpen((prev) => !prev);
 

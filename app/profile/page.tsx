@@ -51,8 +51,6 @@ export default function Home() {
     const getCurrentCourse = (start: number, end: number): string => {
         const currentYear = new Date().getFullYear();
 
-        console.log(currentYear, start, end);
-
         if (start <= currentYear && currentYear <= end) {
             return "Выпускник";
         } else if (start > currentYear) {

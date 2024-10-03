@@ -58,15 +58,12 @@ const ProfilePage = () => {
             }
 
             setIsLoading(false);
-            console.log(res);
         };
         asyncFunc();
     }, []);
 
     const getCurrentCourse = (start: number, end: number): string => {
         const currentYear = new Date().getFullYear();
-
-        console.log(currentYear, start, end);
 
         if (start <= currentYear && currentYear <= end) {
             return "Выпускник";
@@ -81,8 +78,6 @@ const ProfilePage = () => {
         const res = await createChat({
             companionId: id,
         });
-
-        console.log("CREATE CHAT RES", res);
 
         if (res.status === 200) {
             router.push(`/chat/${res.chat!.id}`);

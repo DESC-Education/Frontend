@@ -18,8 +18,6 @@ const SolutionPage = () => {
     useEffect(() => {
         const asyncFunc = async () => {
             const res = await getSolution(solutionId);
-
-            console.log(res);
         };
         asyncFunc();
     }, []);

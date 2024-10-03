@@ -31,10 +31,6 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
     }, [solutionText]);
 
     const handleCreateSolution = async () => {
-        console.log("in handleCreateSolution");
-
-        // if (!solutionFiles.length) return;
-
         const formdata = new FormData();
 
         solutionFiles.forEach((el: any, i) => {
@@ -44,8 +40,6 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
         formdata.append("taskId", taskId);
 
         const res = await createSolvingTask(formdata);
-
-        console.log("createSolvingTask res", res);
 
         if (res.status === 200) {
             showAlert("Решение успешно загружено!", "success");

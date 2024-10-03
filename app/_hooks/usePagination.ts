@@ -23,8 +23,6 @@ const usePagination = <T>(
             return;
         } else {
             setData(res.results!);
-            console.log(res.results);
-            
             setTotalPages(res.numPages!);
         }
 

@@ -84,8 +84,6 @@ export const registerUser = async (dto: {
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log("reg error", error);
-
             return {
                 status: error.response!.status,
                 message: error.response!.data.message,

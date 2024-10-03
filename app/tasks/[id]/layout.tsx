@@ -29,8 +29,6 @@ export default function RootLayout({
             const asyncFunc = async () => {
                 const res = await getTask(id);
 
-                console.log("currentTask res is", res);
-
                 if (res.status === 200) {
                     dispatch(updateCurrentTask(res.task!));
                 } else {

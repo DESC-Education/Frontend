@@ -76,8 +76,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                         try {
                             const lines = value.trim().split("\n");
 
-                            console.log("lines", lines);
-
                             const result: SSEResponse = {} as SSEResponse;
 
                             lines.forEach((line) => {

@@ -38,8 +38,6 @@ const CustomSearch: FC<CustomSelectProps> = ({
         search,
     });
 
-    // console.log(snapshot.options, value);
-
     const currOptions = useMemo(() => {
         if (isFirstOptionBlank && snapshot.search === "") {
             return snapshot.options.slice(1);

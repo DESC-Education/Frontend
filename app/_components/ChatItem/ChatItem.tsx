@@ -45,8 +45,6 @@ const ChatUser: React.FC<ChatUserProps> = ({
 
         dispatch(updateChatFavourite({ chat: id, isFavorite: !prevFav }));
 
-        console.log(res);
-
         if (res.status === 200) {
             dispatch(updateChats(res.chats!));
         } else {
@@ -55,18 +53,11 @@ const ChatUser: React.FC<ChatUserProps> = ({
         }
     };
 
-    console.log(
-        name,
-        lastMessage?.createdAt && getDateOrTime(lastMessage?.createdAt),
-    );
-
     useEffect(() => {
         if (!lastMessage) return;
 
         setLastMessageTime(getDateOrTime(lastMessage.createdAt));
     }, [lastMessage?.createdAt]);
-
-    console.log(isFavourited);
 
     return (
         <div className={styles.chatItem}>

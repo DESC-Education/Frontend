@@ -38,8 +38,6 @@ export default function RootLayout({
         const asyncFunc = async () => {
             const res = await getChats();
 
-            console.log("GET CHATS RES", res);
-
             if (res.status === 200) {
                 dispatch(updateChats(res.results!));
             }
