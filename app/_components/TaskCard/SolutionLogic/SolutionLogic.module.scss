@@ -143,10 +143,13 @@
         }
     }
 
-    .comment {
+    .companyComment {
         background: rgba(var(--white), 1);
         padding: 20px 15px;
         border-radius: 20px;
         margin: 0 -25px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 }

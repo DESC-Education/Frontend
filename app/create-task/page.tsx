@@ -20,6 +20,9 @@ import { set } from "zod";
 import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
 import { AlertContext } from "@/app/_context/AlertContext";
 import BackButton from "../_components/ui/BackButton/BackButton";
+import { useTypesSelector } from "../_hooks/useTypesSelector";
+import { contentSlice } from "../_store/reducers/contentSlice";
+import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 
 const maxLength = 2000;
 const minLength = 5;
@@ -66,6 +69,11 @@ const initState: TaskState = {
 
 export default function CreateTaskPage() {
     const { showAlert } = useContext(AlertContext);
+
+    const { myTasks } = useTypesSelector((state) => state.contentReducer);
+    const { updateMyTasks } = contentSlice.actions;
+
+    const dispatch = useTypesDispatch();
 
     const templates = [
         "Веб-разработка",
@@ -186,9 +194,12 @@ export default function CreateTaskPage() {
         if (state.title.length < 2) {
             errorsTemp.title = "Введите название задания";
         }
-        
+
         if (state.description.length < minLength) {
-            errorsTemp.description = "Введите описание задания (" + minLength + " символов или больше)";
+            errorsTemp.description =
+                "Введите описание задания (" +
+                minLength +
+                " символов или больше)";
         }
 
         if (state.categoryId === "") {
@@ -234,6 +245,7 @@ export default function CreateTaskPage() {
                 taskDispatch({
                     type: "clear",
                 });
+                dispatch(updateMyTasks([...myTasks!, res.task!]));
                 setFiles([]);
             } else {
                 showAlert(res.message);

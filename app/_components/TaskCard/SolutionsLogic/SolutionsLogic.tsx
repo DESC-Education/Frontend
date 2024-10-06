@@ -48,7 +48,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
     const [filter, setFilter] = useState<"completed" | "failed" | "pending">(
         "pending",
     );
-
+    
     const [
         currentCompanySolutions,
         totalPages,
@@ -66,7 +66,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
         POSTS_PER_PAGE,
     );
 
-    const nodeRef = useRef<HTMLDivElement>(null);    
+    const nodeRef = useRef<HTMLDivElement>(null);
 
     return (
         <div className={styles.solutions}>

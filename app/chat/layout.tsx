@@ -10,11 +10,11 @@ import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 import { useEffect, useState } from "react";
 import Header from "../_components/Header/Header";
 import SideBar from "../_components/SideBar/SideBar";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ProfileRoute } from "../_utils/protectedRoutes";
 import { contentSlice } from "../_store/reducers/contentSlice";
 import "./page.scss";
-import { getChats } from "../_http/API/chatsApi";
+import { getChat, getChats } from "../_http/API/chatsApi";
 import CustomOval from "../_components/ui/CustomOval/CustomOval";
 import { chatSlice } from "../_store/reducers/chatSlice";
 import classNames from "classnames";
@@ -24,21 +24,42 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { chats } = useTypesSelector((state) => state.chatReducer);
+    const { chats, currentChat } = useTypesSelector(
+        (state) => state.chatReducer,
+    );
     const { user } = useTypesSelector((state) => state.userReducer);
     const dispatch = useTypesDispatch();
-    const { updateChats } = chatSlice.actions;
+    const { updateChats, tryToAddChat } = chatSlice.actions;
+    const { chat_id } = useParams<{ chat_id: string }>();
 
     const [isChatsLoading, setIsChatsLoading] = useState<boolean>(false);
 
     useEffect(() => {
+        console.log("in layout");
+
         if (chats) return;
 
         setIsChatsLoading(true);
         const asyncFunc = async () => {
             const res = await getChats();
 
+            // console.log("getChats res", res);
+
             if (res.status === 200) {
+                if (res.results?.filter((i) => i.id === chat_id).length === 0) {
+                    const getChatRes = await getChat(chat_id);
+
+                    // console.log("getChatRes", getChatRes);
+
+                    if (getChatRes.status === 200) {
+                        res.results?.push(getChatRes.chat!);
+                        // dispatch(
+                        // tryToAddChat({ ...getChatRes.chat!, id: chat_id }),
+                        // );
+                    }
+                }
+                // console.log("updating chats...");
+
                 dispatch(updateChats(res.results!));
             }
             setIsChatsLoading(false);
@@ -70,6 +91,10 @@ export default function RootLayout({
                                             className={styles.chatLink}
                                         >
                                             <ChatItem
+                                                unreadCount={chat.unreadCount}
+                                                active={
+                                                    chat.id === currentChat?.id
+                                                }
                                                 id={chat.id}
                                                 name={chat.companion.name}
                                                 isFavourited={chat.isFavorite}

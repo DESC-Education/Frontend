@@ -106,6 +106,7 @@ export type IChat = {
     isSuspicious: boolean;
     lastMessage: IMessage;
     messages: IMessage[];
+    unreadCount: number;
 };
 
 export type IMiniChat = {

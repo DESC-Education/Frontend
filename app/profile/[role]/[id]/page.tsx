@@ -79,6 +79,8 @@ const ProfilePage = () => {
             companionId: id,
         });
 
+        console.log("createChat res", res);
+        
         if (res.status === 200) {
             router.push(`/chat/${res.chat!.id}`);
         }

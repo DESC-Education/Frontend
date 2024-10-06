@@ -16,6 +16,7 @@ import {
     SSENotificationPayload,
     SSEResponse,
 } from "@/app/_http/types";
+import { chatSlice } from "@/app/_store/reducers/chatSlice";
 
 type ClientRootLayoutProps = {
     children: React.ReactNode;
@@ -41,11 +42,83 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         updateIsLoading,
         updateIsMobileDevice,
         updateIsProfileInfoChanged,
+        updateUnreadChatsCount,
+        addNotification,
+        updateNotifications,
     } = contentSlice.actions;
+    const { updateLastMessage, updateChatUnread } = chatSlice.actions;
 
     const [isInitialRun, setIsInitialRun] = useState(true);
 
     const isChanged = useRef<boolean>();
+
+    useEffect(() => {
+        dispatch(
+            updateNotifications([
+                {
+                    id: "1",
+                    title: "Verify Account",
+                    message: "Please confirm your email.",
+                    payload: { solutionId: "sdf", taskId: "asdasd" },
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-09-01T00:00:00Z",
+                },
+                {
+                    id: "2",
+                    title: "Action Required",
+                    message: "Update your profile now.",
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-09-05T00:00:00Z",
+                },
+                {
+                    id: "3",
+                    title: "Confirm Registration",
+                    message: "Activate your account.",
+                    payload: { solutionId: "sdf", taskId: "asdasd" },
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-09-10T00:00:00Z",
+                },
+                {
+                    id: "4",
+                    title: "Security Alert",
+                    message: "New login detected.",
+                    payload: { solutionId: "sdf", taskId: "asdasd" },
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-09-15T00:00:00Z",
+                },
+                {
+                    id: "5",
+                    title: "Password Change",
+                    message: "Your password has been reset.",
+                    payload: { solutionId: "sdf", taskId: "asdasd" },
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-09-20T00:00:00Z",
+                },
+                {
+                    id: "6",
+                    title: "Email Verification",
+                    message: "Verify your email address.",
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-09-25T00:00:00Z",
+                },
+                {
+                    id: "7",
+                    title: "Account Update",
+                    message: "Your details have been updated.",
+                    payload: { solutionId: "sdf", taskId: "asdasd" },
+                    isRead: false,
+                    type: "verification",
+                    createdAt: "2024-10-01T00:00:00Z",
+                },
+            ]),
+        );
+    }, []);
 
     useEffect(() => {
         const asyncFunc = async () => {
@@ -76,7 +149,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                         try {
                             const lines = value.trim().split("\n");
 
-                            const result: SSEResponse = {} as SSEResponse;
+                            const result: any = {} as SSEResponse;
 
                             lines.forEach((line) => {
                                 const semIndex = line.indexOf(":");
@@ -97,10 +170,54 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
 
                             switch (result.event) {
                                 case "notification":
+                                    // payload:
+                                    // type: SSENotificationTypes;
+                                    // id: string;
+                                    // title: string;
+                                    // message: string;
+                                    // payload: string;
+                                    dispatch(
+                                        addNotification({
+                                            ...result.data,
+                                            isRead: false,
+                                        }),
+                                    );
                                     console.log("notification", result.data);
                                     break;
                                 case "newMessage":
+                                    // payload:
+                                    // chat: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
+                                    // createdAt: "2024-10-03T17:39:03.961803"
+                                    // message: "sdvdfvdf"
+                                    // unreadChatsCount: 1
+                                    // unreadCount: 1
+                                    dispatch(
+                                        updateLastMessage({
+                                            chatId: result.data.chat,
+                                            message: {
+                                                ...result.data,
+                                                message: result.data.message,
+                                                createdAt:
+                                                    result.data.createdAt,
+                                            },
+                                            myMessage: false,
+                                        }),
+                                    );
+                                    dispatch(
+                                        updateChatUnread({
+                                            chatId: result.data.chat,
+                                            count: result.data.unreadCount,
+                                        }),
+                                    );
+                                    dispatch(
+                                        updateUnreadChatsCount(
+                                            result.data.unreadChatsCount,
+                                        ),
+                                    );
                                     console.log("newMessage", result.data);
+                                    break;
+                                case "newChat":
+                                    console.log("newChat", result.data);
                                     break;
                             }
                         } catch (error) {}
@@ -146,7 +263,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                     dispatch(authUser({ user: res.user! }));
 
                     const profile = await getProfile();
+
                     if (profile.status === 200) {
+                        if (profile.profile.verification.status !== "not_verified") {
+                        
                         dispatch(
                             updateProfile({
                                 ...profile.profile!,
@@ -158,6 +278,8 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     : undefined,
                             }),
                         );
+                    }
+
                     }
                     dispatch(updateIsProfileLoading(false));
                 }

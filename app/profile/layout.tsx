@@ -39,6 +39,14 @@ export default function RootLayout({
     const [oldPathname, setOldPathname] = useState<string>("");
 
     useEffect(() => {
+        dispatch(updateIsProfileInfoChanged(undefined));
+
+        return () => {
+            dispatch(updateIsProfileInfoChanged(undefined));
+        };
+    }, []);
+
+    useEffect(() => {
         if (
             pathname !== "/profile/settings" &&
             isProfileInfoChanged?.current &&
@@ -61,7 +69,6 @@ export default function RootLayout({
             dispatch(updateIsProfileInfoChanged(false));
             return;
         }
-
         dispatch(updateIsProfileInfoChanged(true));
 
         return () => {

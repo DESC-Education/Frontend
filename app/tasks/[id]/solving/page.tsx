@@ -36,7 +36,7 @@ const TaskSolutionPage = () => {
 
     return (
         <div className={classNames(styles.container, "container")}>
-            <BackButton forceUrl="/exchange" />
+            <BackButton />
             <div className={styles.content}>
                 <div className={styles.task}>
                     <TaskCard task={currentTask} isTaskPage isSolvingPage />

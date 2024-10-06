@@ -30,6 +30,10 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
     const [verdict, setVerdict] = useState<"completed" | "failed">("completed");
     const [comment, setComment] = useState<string>("");
 
+    const [isReview, setIsReview] = useState<boolean>(false);
+    const [reviewText, setReviewText] = useState<string>("");
+    const [reviewRating, setReviewRating] = useState<number>(0);
+
     const evaluateTask = async () => {
         const res = await evaluateTaskSolution({
             id: solutionId,
@@ -183,11 +187,39 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
                     </Button>
                 </div>
             )}
+            {user.role === "company" && solution.status === "completed" && (
+                <div className={styles.review}>
+                    {isReview ? (
+                        <div className={styles.reviewText}>
+                            <p className="text fz24">
+                                <i>Ваш рейтинг:</i> {reviewRating}
+                            </p>
+                            <p className="text fz24">{reviewText}</p>
+                        </div>
+                    ) : (
+                        <Button
+                            type="primary"
+                            onClick={() => setIsReview(true)}
+                        >
+                            Оставить отзыв
+                        </Button>
+                    )}
+                </div>
+            )}
             {user.role === "company" && solution.status === "failed" && (
-                <div className={styles.comment}>
-                    <p className="text fz24">
-                        <i>Ваш комментарий к решению:</i> {solution.companyComment}
+                <div className={styles.companyComment}>
+                    <p className="text fz24 fw500">
+                        Ваш комментарий к решению:
                     </p>
+                    <p className="text fz24">{solution.companyComment}</p>
+                </div>
+            )}
+            {user.role === "student" && solution.status === "failed" && (
+                <div className={styles.companyComment}>
+                    <p className="text fz24 fw500">
+                        Комментарий компании к решению:
+                    </p>
+                    <p className="text fz24">{solution.companyComment}</p>
                 </div>
             )}
         </div>

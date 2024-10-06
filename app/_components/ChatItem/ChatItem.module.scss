@@ -1,13 +1,18 @@
 .chatItem {
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
     display: grid;
     grid-template-columns: 5fr 1fr;
-    padding: 10px 20px;
+    padding: 10px 30px 10px 20px;
     border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    &.active {
+        background-color: rgba(var(--gray2), .7);
+    }
+
+    &.unread {
+        background-color: rgba(var(--gray2), .4);
+    }
 
     &:hover {
         background-color: rgba(var(--gray2), 1);
@@ -38,7 +43,7 @@
             }
 
             .lastMessage {
-                max-width: 300px;
+                max-width: 260px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -52,25 +57,42 @@
     }
 
     .chatMeta {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-        gap: 7px;
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: center;
+        // align-items: flex-end;
+        // gap: 1px;
+        display: grid;
+        grid-template-columns: 1fr;
 
         &.noLastMessage {
-            justify-content: flex-start;
+            display: flex;
+            justify-content: flex-end;
             padding-top: 8px;
+
+            .metaHeader {
+                width: 22px;
+                height: 22px;
+                margin: 0;
+            }
         }
 
         .date {
             color: rgba(var(--gray1), 1);
         }
 
-        .metaHeader {
+        .metaHeader,
+        .metaFooter {
+            height: 28px;
+            width: 100%;
+            margin: auto;
             display: flex;
             align-items: center;
-            gap: 7px;
+            justify-content: space-between;
+        }
+
+        .metaHeader {
+            margin-bottom: -5px;
 
             img {
                 margin-bottom: 4px;
@@ -80,6 +102,35 @@
                 &:hover {
                     cursor: pointer;
                     filter: brightness(1.15);
+                }
+            }
+        }
+
+        .metaFooter {
+            padding-left: 3px;
+            
+            .unreadCount {
+                width: 24px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                background: rgba(var(--gray1), 1);
+                transition: opacity .3s;
+                color: white;
+
+                &.hide {
+                    opacity: 0;
+                    z-index: -10;
+                    width: 0;
+                    overflow: hidden;
+                }
+
+                p {
+                    color: white;
+                    font-size: 16px;
+                    line-height: 16px;
                 }
             }
         }

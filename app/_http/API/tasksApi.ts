@@ -31,7 +31,7 @@ export const getTasks = async (
     limit: number = 15,
     category: string = "",
     filters: string[] = [],
-    ordering: "createdAt" | "-createdAt" | "relevance" = "createdAt",
+    ordering: "createdAt" | "-createdAt" | "relevance" = "-createdAt",
 ) => {
     try {
         const filtersString =
@@ -110,15 +110,17 @@ export const getMyTasks = async (
 
 export const createTask = async (dto: FormData) => {
     try {
-        const { data } = await $authHost.post<{
-            message: string;
-        }>("/api/v1/tasks/task", dto, {
-            headers: {
-                "Content-Type": "multipart/form-data",
+        const { data } = await $authHost.post<ITask>(
+            "/api/v1/tasks/task",
+            dto,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             },
-        });
+        );
 
-        return { status: 200, message: data.message };
+        return { status: 200, message: "Задание успешно создано!", task: data };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {

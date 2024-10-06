@@ -5,6 +5,10 @@
     gap: 4px;
 }
 
+.required {
+    color: rgba(var(--red), 1);
+}
+
 .textareaWrapper {
     textarea {
         resize: none;

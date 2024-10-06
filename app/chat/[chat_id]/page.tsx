@@ -45,33 +45,55 @@ export default function Page() {
         updateCurrentChat,
         addChatMessage,
         updateIsRead,
+        tryToAddChat,
+        updateLastMessage,
     } = chatSlice.actions;
 
     const createWsInstance = useCallback(() => {
-        return new WebSocket(
+        const newWs = new WebSocket(
             process.env.NEXT_PUBLIC_WS_ADDRESS! +
                 `/ws/chat/${chat_id}/?token=${LocalStorage.getAccessToken()}`,
         );
+        // console.log("newWs", newWs);
+
+        return newWs;
     }, [chat_id]);
 
     const [ws, setWs] = useState<WebSocket | null>(null);
+    const [wsReadyState, setWsReadyState] = useState<number>(0);
 
     useLayoutEffect(() => {
         setWs(createWsInstance());
     }, []);
 
     useEffect(() => {
-        if (ws?.readyState !== WebSocket.OPEN) return;
+        if (!ws) return;
+
+        ws.onopen = (e) => {
+            setWsReadyState(WebSocket.OPEN);
+        };
 
         ws.onmessage = (event) => {
             const parsedData = JSON.parse(event.data);
-            const parsedPayload = JSON.parse(parsedData.payload);
+            const parsedPayload: any = JSON.parse(parsedData.payload);
 
             switch (parsedData.type) {
                 case "message":
                     dispatch(addChatMessage(parsedPayload));
+
+                    if (parsedPayload.user.id === user.id) {
+                        dispatch(
+                            updateLastMessage({
+                                chatId: chat_id,
+                                message: parsedPayload,
+                                myMessage: true,
+                            }),
+                        );
+                    }
                     break;
                 case "viewed":
+                    console.log("viewed", parsedPayload, event);
+
                     dispatch(updateIsRead(parsedPayload));
                     break;
             }
@@ -82,13 +104,16 @@ export default function Page() {
         };
 
         ws.onclose = (e) => {
-            setWs(createWsInstance());
+            // setWsReadyState(WebSocket.CLOSED);
+            // setWs(createWsInstance());
         };
 
         return () => {
             ws?.close();
         };
-    }, [chat_id, ws?.readyState]);
+    }, [chat_id, ws]);
+
+    // console.log("CURR WS IS ", ws);
 
     const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
     const [attachedFilesModified, setAttachedFilesModified] = useState<
@@ -145,9 +170,13 @@ export default function Page() {
         setAttachedFiles([]);
     };
 
+    // console.log("currentChat", currentChat);
+
     useEffect(() => {
+        console.log("in chat_id page, chats ", chats, chat_id);
         setIsChatLoading(true);
         const asyncFunc = async () => {
+
             if (!currentChat?.messages || currentChat.id !== chat_id) {
                 const res = await getChat(chat_id);
 
@@ -155,6 +184,7 @@ export default function Page() {
                     dispatch(
                         updateCurrentChat({
                             ...res.chat!,
+                            id: chat_id,
                             messages: res.chat!.messages.reverse(),
                         }),
                     );
@@ -320,7 +350,12 @@ export default function Page() {
             </div>
             <div className={styles.chatMessages}>
                 {currentChat.messages.map((message, index) => (
-                    <Message message={message} key={index} ws={ws} />
+                    <Message
+                        message={message}
+                        key={index}
+                        ws={ws}
+                        wsStatus={wsReadyState}
+                    />
                 ))}
                 <div ref={dummyRef}></div>
             </div>

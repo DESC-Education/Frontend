@@ -2,7 +2,7 @@
 
 import { IMessage } from "@/app/_types";
 import classNames from "classnames";
-import { FC, useEffect, useState } from "react";
+import { FC, use, useEffect, useState } from "react";
 import styles from "./Message.module.scss";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useInView } from "react-intersection-observer";
@@ -10,25 +10,42 @@ import { getDateOrTime } from "@/app/_utils/time";
 import Lightbox from "yet-another-react-lightbox";
 import Download from "yet-another-react-lightbox/plugins/download";
 import "yet-another-react-lightbox/styles.css";
+import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import { useParams } from "next/navigation";
+import { chatSlice } from "@/app/_store/reducers/chatSlice";
 
 type MessageProps = {
     message: IMessage;
     ws: WebSocket | null;
+    wsStatus: number;
 };
 
-const Message: FC<MessageProps> = ({ message, ws }) => {
+const Message: FC<MessageProps> = ({ message, ws, wsStatus }) => {
     const { user } = useTypesSelector((state) => state.userReducer);
     const [messageTime, setMessageTime] = useState<string>("");
+
+    const { chat_id } = useParams<{ chat_id: string }>();
+
+    const { updateChatUnread } = chatSlice.actions;
+    const dispatch = useTypesDispatch();
 
     const { ref, inView, entry } = useInView();
 
     const [lightBoxOpened, setLightBoxOpened] = useState<boolean>(false);
 
     useEffect(() => {
+        // console.log(
+        //     !ws,
+        //     message.isRead,
+        //     wsStatus !== 1,
+        //     !inView,
+        //     message.user.id === user.id,
+        // );
+
         if (
             !ws ||
             message.isRead ||
-            ws.readyState !== 1 ||
+            wsStatus !== 1 ||
             !inView ||
             message.user.id === user.id
         )
@@ -40,7 +57,9 @@ const Message: FC<MessageProps> = ({ message, ws }) => {
                 payload: message.id,
             }),
         );
-    }, [inView, message.isRead, ws?.readyState]);
+
+        dispatch(updateChatUnread({ chatId: chat_id, count: 1 }));
+    }, [inView, message.isRead, wsStatus]);
 
     useEffect(() => {
         setMessageTime(getDateOrTime(message.createdAt));

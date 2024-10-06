@@ -1,4 +1,4 @@
-import { Tokens } from "@/app/_http/types";
+import { SSENotificationPayload, Tokens } from "@/app/_http/types";
 import { IChat, ITask, IUser } from "@/app/_types";
 import LocalStorage from "@/app/_utils/LocalStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -11,6 +11,8 @@ type UserInterface = {
     myTasks: ITask[] | null;
     myArchivedTasks: ITask[] | null;
     isProfileInfoChanged: RefObject<boolean> | undefined;
+    unreadChatsCount: number;
+    notifications: SSENotificationPayload[] | null;
 };
 
 const initialState: UserInterface = {
@@ -20,6 +22,8 @@ const initialState: UserInterface = {
     myTasks: null,
     myArchivedTasks: null,
     isProfileInfoChanged: undefined,
+    notifications: null,
+    unreadChatsCount: 0,
 };
 
 export const contentSlice = createSlice({
@@ -51,6 +55,41 @@ export const contentSlice = createSlice({
             } else {
                 state.isProfileInfoChanged = action.payload;
             }
+        },
+        updateUnreadChatsCount(state, action: PayloadAction<number>) {
+            state.unreadChatsCount = action.payload;
+        },
+        updateNotifications(
+            state,
+            action: PayloadAction<SSENotificationPayload[]>,
+        ) {
+            state.notifications = action.payload;
+        },
+        sortNotifications(state) {
+            if (!state.notifications) return;
+
+            state.notifications = state.notifications.sort((a, b) => {
+                if (a.isRead && !b.isRead) return 1;
+                if (!a.isRead && b.isRead) return -1;
+                return 0;
+            });
+        },
+        addNotification(state, action: PayloadAction<SSENotificationPayload>) {
+            if (!state.notifications) return;
+            state.notifications.push(action.payload);
+        },
+        updateNotificationRead(state, action: PayloadAction<string>) {
+            if (!state.notifications) return;
+            state.notifications = state.notifications.map((item) => {
+                if (item.id === action.payload) {
+                    return {
+                        ...item,
+                        isRead: true,
+                    };
+                } else {
+                    return item;
+                }
+            });
         },
     },
 });

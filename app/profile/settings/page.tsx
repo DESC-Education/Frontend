@@ -26,13 +26,7 @@ import {
     getUniversities,
 } from "@/app/_http/API/profileApi";
 import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
-import {
-    ICity,
-    IFaculty,
-    ISkill,
-    ISpecialty,
-    IUniversity,
-} from "@/app/_types";
+import { ICity, IFaculty, ISkill, ISpecialty, IUniversity } from "@/app/_types";
 import SelectSkills from "@/app/_components/SelectSkills/SelectSkills";
 import { AlertContext } from "@/app/_context/AlertContext";
 import { formsOfEducation, timezones } from "@/app/_utils/constants";
@@ -225,7 +219,7 @@ const SettingsPage = () => {
         if (!studentCard) {
             errorsTemp.studentCard = "Прикрепите студенческий билет";
         }
-        
+
         if (studentCard?.length !== 2) {
             errorsTemp.studentCard = "Прикрепите две фотографии";
         }
@@ -459,6 +453,9 @@ const SettingsPage = () => {
         }
     };
 
+    console.log(studentProfile);
+    
+
     const validateEditProfileCompany = async () => {
         setIsLoading(true);
         const errorsTemp: any = {};
@@ -654,9 +651,10 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Имя
+                                                Имя{" "}<span className={styles.required}>*</span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.firstName}
                                                 type="text"
                                                 value={studentProfile.firstName}
@@ -682,9 +680,10 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Фамилия
+                                                Фамилия{" "}<span className={styles.required}>*</span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.lastName}
                                                 type="text"
                                                 value={studentProfile.lastName}
@@ -711,7 +710,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Часовой пояс
+                                            Часовой пояс{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             isFirstOptionBlank
@@ -748,7 +750,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Город
+                                            Город{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             errorText={errors.city}
@@ -784,7 +789,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            ВУЗ
+                                            ВУЗ{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             errorText={errors.university}
@@ -822,7 +830,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Факультет (институт)
+                                            Факультет (институт){" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             errorText={errors.faculty}
@@ -861,7 +872,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Специальность
+                                            Специальность{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             errorText={errors.specialty}
@@ -891,14 +905,19 @@ const SettingsPage = () => {
                                         className={styles.generalSettingsBlock}
                                     >
                                         <p className="text fz24 fw500">
-                                            Студенческий билет
+                                            Студенческий билет{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
+                                            required
                                             multiple
                                             maxFiles={2}
                                             type="file_multiple"
                                             setFile={setStudentCard}
                                             file={studentCard}
+                                            accept="image/*"
                                             errorText={errors.studentCard}
                                             fileTipContent={
                                                 <div>
@@ -940,7 +959,12 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Форма обучения
+                                                Форма обучения{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <CustomSearch
                                                 errorText={
@@ -974,7 +998,12 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Год поступления
+                                                Год поступления{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <CustomSearch
                                                 isFirstOptionBlank
@@ -993,7 +1022,7 @@ const SettingsPage = () => {
                                                         ? undefined
                                                         : studentProfile.admissionYear
                                                 }
-                                                errorText={errors.timezone}
+                                                errorText={errors.admissionYear}
                                                 search
                                                 options={[
                                                     { name: "", value: 0 },
@@ -1093,7 +1122,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Сфера деятельности
+                                            Сфера деятельности{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <p
                                             className={classNames(
@@ -1110,6 +1142,7 @@ const SettingsPage = () => {
                                             отображаться в шапке вашего профиля!
                                         </p>
                                         <Input
+                                            required
                                             placeholder="Flask разработчик"
                                             errorText={errors.profession}
                                             type="text"
@@ -1165,6 +1198,7 @@ const SettingsPage = () => {
                                             maxItems={15}
                                             options={skills}
                                             title="Выберите навыки"
+                                            required
                                             selectValues={(e) => {
                                                 dispatch(
                                                     updateStudentProfile({
@@ -1219,6 +1253,7 @@ const SettingsPage = () => {
                                         Название компании
                                     </p>
                                     <Input
+                                        required
                                         errorText={errors.companyName}
                                         type="text"
                                         value={companyProfile.companyName}
@@ -1246,9 +1281,10 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Имя представителя
+                                                Имя представителя{" "}<span className={styles.required}>*</span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.firstName}
                                                 type="text"
                                                 value={companyProfile.firstName}
@@ -1274,9 +1310,10 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Фамилия представителя
+                                                Фамилия представителя{" "}<span className={styles.required}>*</span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.lastName}
                                                 type="text"
                                                 value={companyProfile.lastName}
@@ -1303,7 +1340,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Часовой пояс
+                                            Часовой пояс{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             isFirstOptionBlank
@@ -1340,7 +1380,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Город
+                                            Город{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
                                             errorText={errors.city}
@@ -1376,7 +1419,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Ссылка на сайт компании
+                                            Ссылка на сайт компании{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
                                             errorText={errors.linkToCompany}
@@ -1472,7 +1518,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            О компании
+                                            О компании{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
                                             errorText={errors.description}
@@ -1520,7 +1569,10 @@ const SettingsPage = () => {
                                         <p className="text fz24 fw500">
                                             Копии документов, подтверждающие
                                             регистрацию, легитимность и
-                                            надежность компании
+                                            надежность компании{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
                                             accept="application/pdf, application/msword, .docx, image/png, image/jpeg, image/jpg"

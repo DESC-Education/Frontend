@@ -1,3 +1,4 @@
+import { SSENotificationTypes } from "../_http/types";
 import { ISolutionStatus, ISpecialtyType } from "../_types";
 
 export const TIMER_TIME = 60;
@@ -61,8 +62,8 @@ export const levels = [
 ];
 
 export const sortingOptions = [
-    { name: "Сначала новые", value: "createdAt" },
-    { name: "Сначала старые", value: "-createdAt" },
+    { name: "Сначала новые", value: "-createdAt" },
+    { name: "Сначала старые", value: "createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
 ];
 
@@ -91,3 +92,26 @@ export const solutionStatuses: {
         textColor: "white",
     },
 ];
+
+// export const getMotificationRoute = (
+//     type: SSENotificationTypes,
+//     payload: { solutionId: string; taskId: string },
+// ) => {
+//     switch (type) {
+//         case "evaluation":
+//             return `/tasks/${payload.taskId}/solutions/${payload.solutionId}`;
+//         case "review":
+//             return `/tasks/${payload.taskId}/solutions/${payload.solutionId}`;
+//         case "solution":
+//             return `/tasks/${payload.taskId}/solutions/${payload.solutionId}`;
+//     }
+// };
+
+// export const notificationTitles = {
+//     verification: "Результат верификации",
+//     evaluation: "Оценка решения",
+//     level: "Изменение уровеня аккаунта",
+//     review: "Рецензия на решение",
+//     countReset: "Пополнение количества откликов",
+//     solution: "Новое решение задания",
+// }

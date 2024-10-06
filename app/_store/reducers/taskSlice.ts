@@ -34,6 +34,11 @@ export const taskSlice = createSlice({
                 state.currentTask.solutions.push(action.payload);
             }
         },
+        logoutTask(state) {
+            state.tasks = null;
+            state.categories = null;
+            state.currentTask = null;
+        },
     },
 });
 

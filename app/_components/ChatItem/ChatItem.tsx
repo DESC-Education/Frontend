@@ -15,11 +15,14 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { chatSlice } from "@/app/_store/reducers/chatSlice";
 import { changeFavouriteChat } from "@/app/_http/API/chatsApi";
 import { AlertContext } from "@/app/_context/AlertContext";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 
 type ChatUserProps = {
     id: string;
     name: string;
+    unreadCount: number;
     avatar: string;
+    active: boolean;
     isFavourited: boolean;
     lastMessage?: IMessage;
 };
@@ -28,10 +31,13 @@ const ChatUser: React.FC<ChatUserProps> = ({
     id,
     name,
     avatar,
+    active,
+    unreadCount,
     isFavourited,
     lastMessage,
 }) => {
     const [lastMessageTime, setLastMessageTime] = useState<string>("");
+    const { user } = useTypesSelector((state) => state.userReducer);
 
     const { showAlert } = useContext(AlertContext);
 
@@ -60,7 +66,12 @@ const ChatUser: React.FC<ChatUserProps> = ({
     }, [lastMessage?.createdAt]);
 
     return (
-        <div className={styles.chatItem}>
+        <div
+            className={classNames(styles.chatItem, {
+                [styles.active]: active,
+                [styles.unread]: unreadCount > 0,
+            })}
+        >
             <div className={styles.chatInfo}>
                 <img
                     src={
@@ -122,23 +133,36 @@ const ChatUser: React.FC<ChatUserProps> = ({
                             className={styles.star}
                         />
                     </div>
-                    {lastMessage.isRead === false ? (
-                        <Image
-                            src="/icons/isReadFalse.svg"
-                            alt=""
-                            className={styles.checkMark}
-                            width={14}
-                            height={24}
-                        />
-                    ) : (
-                        <Image
-                            src="/icons/isReadTrue.svg"
-                            alt=""
-                            className={styles.checkMark}
-                            width={24}
-                            height={24}
-                        />
-                    )}
+                    <div className={styles.metaFooter}>
+                        {lastMessage.user.id === user.id &&
+                            (lastMessage.isRead === false ? (
+                                <Image
+                                    src="/icons/isReadFalse.svg"
+                                    alt=""
+                                    className={styles.checkMark}
+                                    width={14}
+                                    height={24}
+                                />
+                            ) : (
+                                <Image
+                                    src="/icons/isReadTrue.svg"
+                                    alt=""
+                                    className={styles.checkMark}
+                                    width={24}
+                                    height={24}
+                                />
+                            ))}
+                        <div
+                            className={classNames(styles.unreadCount, {
+                                [styles.hide]: !unreadCount,
+                            })}
+                        >
+                            {unreadCount}
+                        </div>
+                        {/* <div className={classNames(styles.unreadCount)}>
+                            {1}
+                        </div> */}
+                    </div>
                 </div>
             ) : (
                 <div

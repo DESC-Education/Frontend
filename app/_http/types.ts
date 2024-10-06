@@ -1,4 +1,4 @@
-import { ICategory, IFile, ISkill } from "../_types";
+import { ICategory, IChat, IFile, ISkill } from "../_types";
 
 export type Tokens = {
     accessToken: string;
@@ -71,10 +71,10 @@ export type CreateTaskDTO = {
 
 export type SSEResponse = {
     event: SSEEvents;
-    data: SSENotificationPayload | SSENewMessagePayload;
+    data: SSENotificationPayload | SSENewMessagePayload | SSENewChatPayload;
 };
 
-export type SSEEvents = "notification" | "newMessage";
+export type SSEEvents = "notification" | "newMessage" | "newChat";
 
 export type SSENotificationTypes =
     | "verification"
@@ -89,12 +89,19 @@ export type SSENotificationPayload = {
     id: string;
     title: string;
     message: string;
-    payload: string;
+    isRead: boolean;
+    createdAt: string;
+    payload?: { solutionId: string; taskId: string };
 };
 
 export type SSENewMessagePayload = {
     chatId: string;
     message: string;
     createdAt: string;
-    unreadCount: number;
+    unreadCount: number; // unread messages in chatId chat
+    unreadChatsCount: number; // total unread chats
+};
+
+export type SSENewChatPayload = {
+    chat: IChat;
 };

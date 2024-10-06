@@ -27,6 +27,12 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import { get } from "http";
 import { on } from "events";
+import { profileVerifySlice } from "@/app/_store/reducers/profileVerifySlice";
+import { chatSlice } from "@/app/_store/reducers/chatSlice";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
+import { taskSlice } from "@/app/_store/reducers/taskSlice";
+import NotificationsModal from "../modals/NotificationsModal/NotificationsModal";
+import UserContent from "./UserContent/UserContent";
 
 type RoleState =
     | "student"
@@ -43,6 +49,7 @@ const Header = () => {
     const { user, isProfileLoading, profileVerification } = useTypesSelector(
         (user) => user.userReducer,
     );
+    const { notifications } = useTypesSelector((state) => state.contentReducer);
 
     const pathname = usePathname();
 
@@ -72,7 +79,7 @@ const Header = () => {
             value: "students",
             href: "/admin-panel/verification/students",
         },
-    ]
+    ];
 
     const changeMenuVisibility = (val?: boolean) => {
         if (val === undefined) {
@@ -109,503 +116,28 @@ const Header = () => {
             case "student":
                 return {
                     content: (
-                        <>
-                            <div className={styles.navigation}>
-                                <div className={styles.linkContainer}>
-                                    {profileVerification.status !==
-                                        "verified" ? (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <div
-                                                    className={
-                                                        styles.tooltipContent
-                                                    }
-                                                >
-                                                    Для доступа к бирже
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </div>
-                                            }
-                                            toggleContent={
-                                                <Link
-                                                    style={{
-                                                        pointerEvents: "none",
-                                                    }}
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname ===
-                                                                "/exchange",
-                                                        },
-                                                    )}
-                                                    href="/exchange"
-                                                >
-                                                    Биржа
-                                                </Link>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    ) : (
-                                        <Link
-                                            style={{
-                                                pointerEvents:
-                                                    profileVerification.status ===
-                                                        "verified"
-                                                        ? "all"
-                                                        : "none",
-                                            }}
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname ===
-                                                        "/exchange",
-                                                },
-                                            )}
-                                            href="/exchange"
-                                        >
-                                            Биржа
-                                        </Link>
-                                    )}
-                                </div>
-                                <div className={styles.linkContainer}>
-                                    {profileVerification.status !==
-                                        "verified" ? (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <div
-                                                    className={
-                                                        styles.tooltipContent
-                                                    }
-                                                >
-                                                    Для доступа к сообщениям
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </div>
-                                            }
-                                            toggleContent={
-                                                <Link
-                                                    style={{
-                                                        pointerEvents: "none",
-                                                    }}
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                    )}
-                                                    href="/chat"
-                                                >
-                                                    Сообщения
-                                                </Link>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    ) : (
-                                        <Link
-                                            style={{
-                                                pointerEvents:
-                                                    profileVerification.status ===
-                                                        "verified"
-                                                        ? "all"
-                                                        : "none",
-                                            }}
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/chat",
-                                                    [styles.disabled]:
-                                                        profileVerification.status !==
-                                                        "verified",
-                                                },
-                                            )}
-                                            href="/chat"
-                                        >
-                                            Сообщения
-                                        </Link>
-                                    )}
-                                </div>
-                                <div className={styles.linkContainer}>
-                                    <Link
-                                        className={classNames(
-                                            styles.link,
-                                            "text fz24 fw500",
-                                            {
-                                                [styles.active]:
-                                                    pathname === "/faq",
-                                            },
-                                        )}
-                                        href="/faq"
-                                    >
-                                        FAQ
-                                    </Link>
-                                </div>
-                            </div>
-                            {isMobile ? (
-                                <>
-                                    <div className={styles.linkContainer}>
-                                        <Link
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/faq",
-                                                },
-                                            )}
-                                            href="/profile"
-                                        >
-                                            Профиль
-                                        </Link>
-                                    </div>
-                                    <div
-                                        className={classNames(
-                                            styles.linkContainer,
-                                            styles.subLinkContainer,
-                                        )}
-                                    >
-                                        <Link
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/faq",
-                                                },
-                                            )}
-                                            href="/profile/settings"
-                                        >
-                                            Настройки
-                                        </Link>
-                                    </div>
-                                    <div
-                                        className={classNames(
-                                            styles.linkContainer,
-                                            styles.subLinkContainer,
-                                            styles.lastSubLinkContainer,
-                                        )}
-                                    >
-                                        <Link
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/faq",
-                                                },
-                                            )}
-                                            href="/profile/tasks"
-                                        >
-                                            История заданий
-                                        </Link>
-                                    </div>
-                                    <div className={styles.linkContainer}>
-                                        <p
-                                            onClick={() => {
-                                                dispatch(logoutUser());
-                                                showAlert(
-                                                    "Вы вышли из аккаунта!",
-                                                    "success",
-                                                );
-                                            }}
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500 under",
-                                            )}
-                                        >
-                                            Выход
-                                        </p>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className={styles.icons}>
-                                    <Link href="/profile">
-                                        <Image
-                                            width={45}
-                                            height={45}
-                                            src="/icons/profile.svg"
-                                            alt="profile"
-                                        />
-                                    </Link>
-                                    <span>
-                                        <Image
-                                            width={45}
-                                            height={45}
-                                            src="/icons/notification.svg"
-                                            alt="notification"
-                                        />
-                                    </span>
-                                </div>
-                            )}
-                        </>
+                        <UserContent
+                            isMobile={isMobile}
+                            logout={logout}
+                            profileVerification={profileVerification}
+                        />
                     ),
                     ref: createRef(),
                 };
             case "company":
-            // case "institute_moderator":
+                // case "institute_moderator":
                 return {
                     content: (
-                        <>
-                            <div className={styles.navigation}>
-                                <div className={styles.linkContainer}>
-                                    {profileVerification.status !==
-                                        "verified" ? (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <div
-                                                    className={
-                                                        styles.tooltipContent
-                                                    }
-                                                >
-                                                    Для доступа к бирже
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </div>
-                                            }
-                                            toggleContent={
-                                                <Link
-                                                    style={{
-                                                        pointerEvents: "none",
-                                                    }}
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                        {
-                                                            [styles.active]:
-                                                                pathname ===
-                                                                "/exchange",
-                                                        },
-                                                    )}
-                                                    href="/exchange"
-                                                >
-                                                    Биржа
-                                                </Link>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    ) : (
-                                        <Link
-                                            style={{
-                                                pointerEvents:
-                                                    profileVerification.status ===
-                                                        "verified"
-                                                        ? "all"
-                                                        : "none",
-                                            }}
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname ===
-                                                        "/exchange",
-                                                },
-                                            )}
-                                            href="/exchange"
-                                        >
-                                            Биржа
-                                        </Link>
-                                    )}
-                                </div>
-                                <div className={styles.linkContainer}>
-                                    {profileVerification.status !==
-                                        "verified" ? (
-                                        <InfoIcon
-                                            className={styles.infoIcon}
-                                            tooltipContent={
-                                                <div
-                                                    className={
-                                                        styles.tooltipContent
-                                                    }
-                                                >
-                                                    Для доступа к сообщениям
-                                                    необходимо подтвердить
-                                                    профиль
-                                                    <Button type="primary">
-                                                        Инструкция
-                                                    </Button>
-                                                </div>
-                                            }
-                                            toggleContent={
-                                                <Link
-                                                    style={{
-                                                        pointerEvents: "none",
-                                                    }}
-                                                    className={classNames(
-                                                        styles.link,
-                                                        "text fz24 fw500",
-                                                    )}
-                                                    href="/chat"
-                                                >
-                                                    Сообщения
-                                                </Link>
-                                            }
-                                            action="tooltip"
-                                        />
-                                    ) : (
-                                        <Link
-                                            style={{
-                                                pointerEvents:
-                                                    profileVerification.status ===
-                                                        "verified"
-                                                        ? "all"
-                                                        : "none",
-                                            }}
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/chat",
-                                                    [styles.disabled]:
-                                                        profileVerification.status !==
-                                                        "verified",
-                                                },
-                                            )}
-                                            href="/chat"
-                                        >
-                                            Сообщения
-                                        </Link>
-                                    )}
-                                </div>
-                                <div className={styles.linkContainer}>
-                                    <Link
-                                        className={classNames(
-                                            styles.link,
-                                            "text fz24 fw500",
-                                            {
-                                                [styles.active]:
-                                                    pathname === "/faq",
-                                            },
-                                        )}
-                                        href="/faq"
-                                    >
-                                        FAQ
-                                    </Link>
-                                </div>
-                            </div>
-                            {isMobile ? (
-                                <>
-                                    <div
-                                        className={classNames(
-                                            styles.linkContainer,
-                                            styles.linkGroupHeader,
-                                        )}
-                                    >
-                                        <Link
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/faq",
-                                                },
-                                            )}
-                                            href="/profile"
-                                        >
-                                            Профиль
-                                        </Link>
-                                    </div>
-                                    <div
-                                        className={classNames(
-                                            styles.linkContainer,
-                                            styles.subLinkContainer,
-                                        )}
-                                    >
-                                        <Link
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/faq",
-                                                },
-                                            )}
-                                            href="/profile/settings"
-                                        >
-                                            Настройки
-                                        </Link>
-                                    </div>
-                                    <div
-                                        className={classNames(
-                                            styles.linkContainer,
-                                            styles.subLinkContainer,
-                                            styles.lastSubLinkContainer,
-                                        )}
-                                    >
-                                        <Link
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500",
-                                                {
-                                                    [styles.active]:
-                                                        pathname === "/faq",
-                                                },
-                                            )}
-                                            href="/profile/tasks"
-                                        >
-                                            Мои задания
-                                        </Link>
-                                    </div>
-                                    <div className={styles.linkContainer}>
-                                        <p
-                                            onClick={() => {
-                                                dispatch(logoutUser());
-                                                showAlert(
-                                                    "Вы вышли из аккаунта!",
-                                                    "success",
-                                                );
-                                            }}
-                                            className={classNames(
-                                                styles.link,
-                                                "text fz24 fw500 under",
-                                            )}
-                                        >
-                                            Выход
-                                        </p>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className={styles.icons}>
-                                    <Link href="/profile">
-                                        <Image
-                                            width={45}
-                                            height={45}
-                                            src="/icons/profile.svg"
-                                            alt="profile"
-                                        />
-                                    </Link>
-                                    <span>
-                                        <Image
-                                            width={45}
-                                            height={45}
-                                            src="/icons/notification.svg"
-                                            alt="notification"
-                                        />
-                                    </span>
-                                </div>
-                            )}
-                        </>
+                        <UserContent
+                            isMobile={isMobile}
+                            logout={logout}
+                            profileVerification={profileVerification}
+                        />
                     ),
                     ref: createRef(),
                 };
             // case "company":
-                case "institute_moderator":
+            case "institute_moderator":
                 return {
                     content: (
                         <>
@@ -639,12 +171,14 @@ const Header = () => {
                                     Статистика
                                 </Link>
                                 <Link
-                                    className={classNames(styles.link, {
-                                        [styles.active]: pathname.startsWith(
-                                            "/admin-panel/verification",
-                                        ),
-                                    },
-                                        "text fz24 fw500"
+                                    className={classNames(
+                                        styles.link,
+                                        {
+                                            [styles.active]: pathname.startsWith(
+                                                "/admin-panel/verification",
+                                            ),
+                                        },
+                                        "text fz24 fw500",
                                     )}
                                     href="/admin-panel/verification/students"
                                 >
@@ -816,6 +350,18 @@ const Header = () => {
     const { showAlert } = useContext(AlertContext);
     const dispatch = useTypesDispatch();
     const { logoutUser } = userSlice.actions;
+    const { logoutTask } = taskSlice.actions;
+    const { logoutContent } = contentSlice.actions;
+    const { logoutProfileVerify } = profileVerifySlice.actions;
+    const { logoutChats } = chatSlice.actions;
+
+    const logout = () => {
+        dispatch(logoutUser());
+        dispatch(logoutTask());
+        dispatch(logoutContent());
+        dispatch(logoutProfileVerify());
+        dispatch(logoutChats());
+    };
 
     if (!getHeaderContent(activeState)) setActiveState("student");
 

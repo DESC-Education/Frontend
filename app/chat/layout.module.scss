@@ -12,3 +12,9 @@
 .chatContainer {
     margin-top: -40px;
 }
+
+.chatList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}

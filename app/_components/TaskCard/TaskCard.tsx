@@ -7,7 +7,7 @@ import Button from "../ui/Button/Button";
 import { IFile, ISolution, ITask } from "@/app/_types";
 import { getRemainingTime } from "@/app/_utils/time";
 import Moment from "react-moment";
-import { use, useContext, useEffect, useRef, useState } from "react";
+import { use, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import "moment/locale/ru";
 import DownloadItem from "../ui/DownloadItem/DownloadItem";
@@ -54,7 +54,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
     const [isChatLoading, setIsChatLoading] = useState<boolean>(false);
 
     const dispatch = useTypesDispatch();
-    const { updateCurrentChat } = chatSlice.actions;
+    const { updateCurrentChat, tryToAddChat } = chatSlice.actions;
 
     const { showModal, closeModal } = useContext(ModalContext);
 
@@ -82,6 +82,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             companionId: task.user,
             taskId: task.id,
         });
+        console.log("createChat res", res);
 
         if (res.status === 200) {
             dispatch(updateCurrentChat({ ...res.chat!, messages: [] }));
@@ -97,10 +98,15 @@ const TaskCard: React.FC<TaskCardProps> = ({
         setDayTitle(getDayTitle(daysRef.current.state.content));
     }, [daysRef.current, task.title]);
 
-    const isTaksHasSolutions =
-        task.solutions &&
-        task.solutions.length > 0 &&
-        task.solutions.filter((i) => i.status === "pending").length > 0;
+    const isTaskHasSolutions = useMemo(() => {
+        return task.solutions && task.solutions.length > 0;
+    }, [task.solutions]);
+
+    const isTaskHasPendingSolutions = useMemo(() => {
+        return task.solutions
+            ? task.solutions.filter((i) => i.status === "pending").length > 0
+            : false;
+    }, [task.solutions]);
 
     return (
         <div
@@ -302,13 +308,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                             "text green fz24 under pointer",
                                         )}
                                         href={
-                                            isTaksHasSolutions
+                                            isTaskHasSolutions
                                                 ? `/tasks/${task.id}/solutions`
                                                 : `/tasks/${task.id}/solving`
                                         }
                                     >
                                         <Button type="primary">
-                                            {isTaksHasSolutions
+                                            {isTaskHasSolutions
                                                 ? "Мои решения"
                                                 : "Предложить решение"}
                                         </Button>
@@ -330,6 +336,22 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                         </Link>
                                     )
                                 ))}
+                            {isTaskPage &&
+                                isSolutionsPage &&
+                                !isTaskHasPendingSolutions && (
+                                    <Link
+                                        className={classNames(
+                                            styles.showMore,
+                                            styles.proposeButton,
+                                            "text green fz24 under pointer",
+                                        )}
+                                        href={`/tasks/${task.id}/solving`}
+                                    >
+                                        <Button type="primary">
+                                            Предложить решение
+                                        </Button>
+                                    </Link>
+                                )}
                         </div>
                     </div>
                 </div>
