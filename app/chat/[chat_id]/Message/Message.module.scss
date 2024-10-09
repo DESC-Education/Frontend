@@ -4,11 +4,17 @@
 
     &.incomingMessage,
     &.outgoingMessage {
-        padding: 10px 15px 5px;
+        padding: 2px 10px 5px;
         border-radius: 10px;
         max-width: 60%;
         font-size: 14px;
         position: relative;
+    }
+
+    &.hasFiles {
+        .messageFiles {
+            margin-bottom: 5px;
+        }
     }
 
     &.incomingMessage {
@@ -49,14 +55,65 @@
         position: absolute;
     }
 
+    .text {
+        padding: 7px 0;
+        word-wrap: break-word;
+        white-space: break-spaces;
+    }
+
     .footer {
         display: flex;
         align-items: center;
         gap: 10px;
         justify-content: flex-end;
+        margin-bottom: 3px;
 
         .checkMark {
-            width: 24px;
+            width: 16px;
+
+            &.checkMarkActive {
+                width: 24px;
+            }
+        }
+    }
+
+    .messageFiles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+
+        .userImage {
+            width: 150px;
+            max-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+
+            p {
+                max-width: 140px;
+                white-space: break-spaces;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: white;
+            }
+        }
+
+        img {
+            max-height: 130px;
+            transition: .3s;
+        }
+
+        .document {
+            &:hover {
+                img {
+                    filter: invert(.2);
+                }
+            }
         }
     }
 }

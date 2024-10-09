@@ -1,7 +1,7 @@
 import axios from "axios";
 import { $authHost, $host } from "..";
 import { IUser } from "@/app/_types";
-import { Tokens } from "../types";
+import { SSENotificationPayload, Tokens } from "../types";
 
 export const sendVerificationCode = async (dto: {
     type: "RG" | "PW" | "EM";
@@ -84,8 +84,6 @@ export const registerUser = async (dto: {
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log("reg error", error);
-
             return {
                 status: error.response!.status,
                 message: error.response!.data.message,
@@ -135,18 +133,21 @@ export const loginUser = async (dto: {
     }
 };
 
-export const auth = async (): Promise<{
-    status: number;
-    message: string;
-    user?: IUser;
-}> => {
+export const auth = async () => {
     try {
-        const { data } = await $authHost.get("/api/v1/users/auth");
+        const { data } = await $authHost.get<
+            IUser & {
+                notifications: SSENotificationPayload[];
+                unreadChatsCount: number;
+            }
+        >("/api/v1/users/auth");
 
         return {
             status: 200,
             message: "Успешно",
             user: data,
+            unreadChatsCount: data.unreadChatsCount,
+            notifications: data.notifications,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -219,7 +220,10 @@ export const verifyEmailChange = async (dto: {
     code: number;
 }): Promise<{ status: number; message?: string }> => {
     try {
-        const { data } = await $authHost.post("/api/v1/users/change_email", dto);
+        const { data } = await $authHost.post(
+            "/api/v1/users/change_email",
+            dto,
+        );
 
         return { status: 200, message: "Успешно" };
     } catch (error) {

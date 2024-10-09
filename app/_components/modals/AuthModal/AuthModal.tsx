@@ -267,6 +267,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
 
         if (res.status === 200) {
             showAlert!("Код отправлен", "success");
+            setModalState("recoverCode")
         } else {
             showAlert!(res.message);
         }

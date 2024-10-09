@@ -7,7 +7,18 @@ import { auth } from "@/app/_http/API/userApi";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { userSlice } from "@/app/_store/reducers/userSlice";
 import LocalStorage from "@/app/_utils/LocalStorage";
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { $authHost } from "@/app/_http";
+import {
+    SSEEvents,
+    SSENewMessagePayload,
+    SSENotificationPayload,
+    SSEResponse,
+} from "@/app/_http/types";
+import { chatSlice } from "@/app/_store/reducers/chatSlice";
+import { taskSlice } from "@/app/_store/reducers/taskSlice";
+import { MAX_REPLY_COUNT } from "@/app/_utils/constants";
 
 type ClientRootLayoutProps = {
     children: React.ReactNode;
@@ -28,11 +39,233 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         authUser,
         updateProfile,
         updateIsProfileLoading,
+        updateStudentProfileLevel,
     } = userSlice.actions;
-    const { updateIsLoading, updateIsMobileDevice } = contentSlice.actions;
+    const {
+        updateIsLoading,
+        updateIsMobileDevice,
+        updateIsProfileInfoChanged,
+        addNotification,
+        updateNotifications,
+        updateReplyCount,
+    } = contentSlice.actions;
+    const {
+        updateLastMessage,
+        updateChatUnread,
+        updateUnreadChatsCount,
+        tryToAddChat,
+    } = chatSlice.actions;
+    const {
+        updateCurrentTaskSolution,
+        addCurrentTaskSolution,
+    } = taskSlice.actions;
 
     const [isInitialRun, setIsInitialRun] = useState(true);
 
+    const isChanged = useRef<boolean>();
+
+    // SSE Setup
+    useEffect(() => {
+        const asyncFunc = async () => {
+            $authHost
+                .get("/api/v1/notifications/events", {
+                    headers: {
+                        Accept: "text/event-stream",
+                    },
+                    responseType: "stream",
+                    adapter: "fetch",
+                })
+                .then(async (response) => {
+                    if (!response?.data) return;
+
+                    const stream = response.data;
+
+                    const reader = stream
+                        .pipeThrough(new TextDecoderStream())
+                        .getReader();
+
+                    while (true) {
+                        const {
+                            value,
+                            done,
+                        }: {
+                            value: string;
+                            done: boolean;
+                        } = await reader.read();
+
+                        try {
+                            const lines = value.trim().split("\n");
+
+                            const result: any = {} as SSEResponse;
+
+                            lines.forEach((line) => {
+                                const semIndex = line.indexOf(":");
+                                const [key, value] = [
+                                    line.slice(0, semIndex).trim(),
+                                    line.slice(semIndex + 1).trim(),
+                                ];
+                                if (key && value) {
+                                    if (key === "data") {
+                                        result[key] = JSON.parse(value) as
+                                            | SSENotificationPayload
+                                            | SSENewMessagePayload;
+                                    } else if (key === "event") {
+                                        result[key] = value as SSEEvents;
+                                    }
+                                }
+                            });
+
+                            switch (result.event) {
+                                case "notification":
+                                    // payload:
+                                    // type: SSENotificationTypes;
+                                    // id: string;
+                                    // title: string;
+                                    // message: string;
+                                    // payload: string;
+                                    console.log(
+                                        "new notification with data",
+                                        result.data,
+                                    );
+                                    dispatch(
+                                        addNotification({
+                                            ...result.data,
+                                            isRead: false,
+                                        }),
+                                    );
+                                    switch (result.data.type) {
+                                        case "verification": {
+                                            const profileRes = await getProfile();
+
+                                            if (profileRes.status === 200) {
+                                                dispatch(
+                                                    updateProfile({
+                                                        ...profileRes.profile!,
+                                                        telegramLink: profileRes.profile!
+                                                            .telegramLink
+                                                            ? profileRes.profile!.telegramLink.slice(
+                                                                  13,
+                                                              )
+                                                            : undefined,
+                                                        vkLink: profileRes.profile!
+                                                            .vkLink
+                                                            ? profileRes.profile!.vkLink.slice(
+                                                                  15,
+                                                              )
+                                                            : undefined,
+                                                    }),
+                                                );
+                                            }
+                                            break;
+                                        }
+                                        case "evaluation": {
+                                            console.log(
+                                                "evaluation",
+                                                result.data,
+                                            );
+
+                                            dispatch(
+                                                updateCurrentTaskSolution(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "solution": {
+                                            console.log(
+                                                "solution",
+                                                result.data,
+                                            );
+
+                                            dispatch(
+                                                addCurrentTaskSolution(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "review": {
+                                            console.log("review", result.data);
+
+                                            dispatch(
+                                                updateCurrentTaskSolution(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "countReset": {
+                                            dispatch(
+                                                updateReplyCount(
+                                                    MAX_REPLY_COUNT,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "level": {
+                                            console.log(
+                                                "level",
+                                                result.data.payload,
+                                            );
+
+                                            dispatch(
+                                                updateStudentProfileLevel(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                    }
+                                    console.log("notification", result.data);
+                                    break;
+                                case "newMessage":
+                                    // payload:
+                                    // chat: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
+                                    // createdAt: "2024-10-03T17:39:03.961803"
+                                    // message: "sdvdfvdf"
+                                    // unreadChatsCount: 1
+                                    // unreadCount: 1
+                                    dispatch(
+                                        updateLastMessage({
+                                            chatId: result.data.chat,
+                                            message: {
+                                                ...result.data,
+                                                message: result.data.message,
+                                                createdAt:
+                                                    result.data.createdAt,
+                                            },
+                                            myMessage: false,
+                                        }),
+                                    );
+                                    dispatch(
+                                        updateChatUnread({
+                                            chatId: result.data.chat,
+                                            count: result.data.unreadCount,
+                                        }),
+                                    );
+                                    dispatch(
+                                        updateUnreadChatsCount({
+                                            number:
+                                                result.data.unreadChatsCount,
+                                        }),
+                                    );
+                                    console.log("newMessage", result.data);
+                                    break;
+                                case "newChat":
+                                    dispatch(tryToAddChat(result.data));
+                                    console.log("newChat", result.data);
+                                    break;
+                            }
+                        } catch (error) {}
+
+                        if (done) break;
+                    }
+                });
+        };
+        asyncFunc();
+    }, []);
+
+    // Setting "isMobile" flag
     useEffect(() => {
         const isMobile = () => {
             let check = false;
@@ -51,8 +284,12 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         };
 
         dispatch(updateIsMobileDevice(isMobile()));
+
+        // Changes not saved logic
+        dispatch(updateIsProfileInfoChanged(isChanged));
     }, []);
 
+    // Auth Setup
     useEffect(() => {
         if (!isInitialRun) return;
 
@@ -65,19 +302,35 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
 
+                    dispatch(updateNotifications(res.notifications!));
+                    dispatch(
+                        updateUnreadChatsCount({
+                            number: res.unreadChatsCount!,
+                        }),
+                    );
+
                     const profile = await getProfile();
+
+                    // Profile Setup
                     if (profile.status === 200) {
-                        dispatch(
-                            updateProfile({
-                                ...profile.profile!,
-                                telegramLink: profile.profile!.telegramLink
-                                    ? profile.profile!.telegramLink.slice(13)
-                                    : undefined,
-                                vkLink: profile.profile!.vkLink
-                                    ? profile.profile!.vkLink.slice(15)
-                                    : undefined,
-                            }),
-                        );
+                        if (
+                            profile.profile.verification.status !==
+                            "not_verified"
+                        ) {
+                            dispatch(
+                                updateProfile({
+                                    ...profile.profile!,
+                                    telegramLink: profile.profile!.telegramLink
+                                        ? profile.profile!.telegramLink.slice(
+                                              13,
+                                          )
+                                        : undefined,
+                                    vkLink: profile.profile!.vkLink
+                                        ? profile.profile!.vkLink.slice(15)
+                                        : undefined,
+                                }),
+                            );
+                        }
                     }
                     dispatch(updateIsProfileLoading(false));
                 }

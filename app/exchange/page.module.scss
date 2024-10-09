@@ -8,6 +8,12 @@
     padding: 0 0 50px;
 }
 
+.createTask {
+    button {
+        white-space: nowrap;
+    }
+}
+
 .sidebar {
     width: 400px;
     background-color: rgba(var(--white), 1);
@@ -94,8 +100,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-
 
     .filters {
         display: flex;

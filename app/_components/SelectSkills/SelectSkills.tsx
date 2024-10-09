@@ -16,6 +16,7 @@ type SelectSkillsProps = {
     selectValues: (values: ISkill[]) => void;
     errorText?: string;
     onInput?: (search: string) => void;
+    required?: boolean;
 };
 
 const SelectSkills: React.FC<SelectSkillsProps> = ({
@@ -26,6 +27,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
     selectValues,
     errorText,
     onInput = () => {},
+    required = false,
 }) => {
     const [queryText, setQueryText] = useState("");
     const [mockQueryText, setMockQueryText] = useState("");
@@ -71,7 +73,8 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
         >
             <p className="text fz24 fw500">
                 {title}{" "}
-                {values.length > maxItems - 1 && `(максимум ${maxItems})`}
+                {values.length > maxItems - 1 && `(максимум ${maxItems})`}{" "}
+                {required && <span className={styles.required}>*</span>}
             </p>
             <div className={styles.values}>
                 <CSSTransition

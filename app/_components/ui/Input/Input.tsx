@@ -31,6 +31,7 @@ type InputProps = {
         | "number"
         | "file"
         | "file_multiple"
+        | "file_multiple_chat"
         | "textarea";
     containerClassName?: string;
     onChange?: (val: string) => void;
@@ -53,6 +54,7 @@ type InputProps = {
     maxFiles?: number;
     maxFileSize?: number;
     fileTipContent?: ReactNode | string;
+    required?: boolean;
 };
 
 const Input: FC<InputProps> = ({
@@ -78,6 +80,7 @@ const Input: FC<InputProps> = ({
     maxFiles = 5,
     maxFileSize = 5e6,
     fileTipContent = "",
+    required = false,
 }) => {
     const [uniqueId, setUniqueId] = useState<string>();
 
@@ -167,6 +170,7 @@ const Input: FC<InputProps> = ({
                     )}
                 >
                     <input
+                        required={required}
                         id={uniqueId}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, styles.checkbox)}
@@ -249,6 +253,7 @@ const Input: FC<InputProps> = ({
                     )}
                 >
                     <input
+                        required={required}
                         id={uniqueId}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, styles.checkbox)}
@@ -320,8 +325,16 @@ const Input: FC<InputProps> = ({
                         containerClassName,
                     )}
                 >
-                    {title && <p className="text fz20 fw500">{title}</p>}
+                    {title && (
+                        <p className="text fz20 fw500">
+                            {title}{" "}
+                            {required && (
+                                <span className={styles.required}>*</span>
+                            )}
+                        </p>
+                    )}
                     <InputMask
+                        required={required}
                         onKeyUp={onKeyUp}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, {
@@ -345,8 +358,16 @@ const Input: FC<InputProps> = ({
                         containerClassName,
                     )}
                 >
-                    {title && <p className="text fz20 fw500">{title}</p>}
+                    {title && (
+                        <p className="text fz20 fw500">
+                            {title}{" "}
+                            {required && (
+                                <span className={styles.required}>*</span>
+                            )}
+                        </p>
+                    )}
                     <textarea
+                        required={required}
                         placeholder={placeholder}
                         autoComplete={autoComplete}
                         className={classNames(styles.input, {
@@ -380,6 +401,7 @@ const Input: FC<InputProps> = ({
                 <label className={styles.fileInput}>
                     <div>
                         <input
+                            required={required}
                             accept={accept}
                             type="file"
                             onChange={async (e) => {
@@ -421,7 +443,7 @@ const Input: FC<InputProps> = ({
         case "file_multiple":
             return (
                 <>
-                    {Boolean(file!.length) && (
+                    {Boolean(file?.length) && (
                         <div className={styles.filesContainer}>
                             {file.map((file: File, index: number) => {
                                 return (
@@ -499,6 +521,48 @@ const Input: FC<InputProps> = ({
                     )}
                 </>
             );
+        case "file_multiple_chat":
+            return (
+                <>
+                    {file!.length < maxFiles && (
+                        <label
+                            htmlFor={uniqueId}
+                            className={classNames(
+                                styles.fileInput,
+                                styles.fileInputChat,
+                            )}
+                        >
+                            <div>
+                                <input
+                                    id={uniqueId}
+                                    accept={accept}
+                                    type="file"
+                                    multiple
+                                    onChange={async (e) => {
+                                        if (!e.target.files) return;
+
+                                        addFileHandler!(
+                                            e.target.files,
+                                            setFile!,
+                                        );
+                                    }}
+                                />
+                                <img src="/icons/paper-clip.svg" alt="add" />
+                                {fileTipContent}
+                            </div>
+
+                            <p
+                                className={classNames(
+                                    "text fz20",
+                                    styles.errorText,
+                                )}
+                            >
+                                {errorText}
+                            </p>
+                        </label>
+                    )}
+                </>
+            );
         default:
             return (
                 <div
@@ -507,7 +571,14 @@ const Input: FC<InputProps> = ({
                         containerClassName,
                     )}
                 >
-                    {title && <p className="text fz20 fw500">{title}</p>}
+                    {title && (
+                        <p className="text fz20 fw500">
+                            {title}{" "}
+                            {required && (
+                                <span className={styles.required}>*</span>
+                            )}
+                        </p>
+                    )}
                     <input
                         max={max}
                         placeholder={placeholder}

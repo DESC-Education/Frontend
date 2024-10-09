@@ -1,0 +1,200 @@
+.solutionContent {
+    padding: 30px 45px;
+
+    background-color: rgba(var(--gray3), 1);
+    border-radius: 50px;
+    margin: 0 -30px -30px;
+
+    .solutionTitle {
+        background-color: rgba(var(--white), 1);
+        border-radius: 100px;
+        padding: 10px 20px;
+        margin: 0 -30px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .avatar {
+            align-items: center;
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            margin-right: auto;
+            border-radius: 10px;
+            transition: .3s;
+            cursor: pointer;
+
+            &:hover {
+                background: rgba(var(--gray3), 1);
+            }
+        }
+
+        >div {
+            display: flex;
+            align-items: center;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status {
+            padding: 10px 30px;
+            border-radius: 30px;
+        }
+    }
+
+    .solutionDescription {
+        margin: 40px 0;
+
+        p {
+            margin: 10px 0;
+        }
+    }
+
+    .description {
+        margin: 20px -30px;
+        background: white;
+        border-radius: 35px;
+        padding: 25px 30px;
+        white-space: break-spaces;
+        word-wrap: break-word;
+    }
+
+    .files {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        margin-bottom: 15px;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 20px;
+
+        &:before {
+            content: "";
+            width: 100%;
+            position: absolute;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 10px;
+            opacity: 0;
+            z-index: -10;
+            background: rgba(var(--gray1), 1);
+            transition: .3s;
+        }
+
+        &.loading {
+            &:before {
+                opacity: 1;
+                z-index: 10;
+            }
+        }
+
+        .verdicts {
+            display: flex;
+            gap: 20px;
+
+            >div {
+                cursor: pointer;
+                filter: grayscale(.8);
+                transition: .3s;
+
+                &.active {
+                    filter: grayscale(0);
+                }
+            }
+
+            .success {
+                background-color: rgba(var(--green), 1);
+                border-radius: 50px;
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(var(--white), 1);
+            }
+
+            .failure {
+                background-color: rgba(var(--red), 1);
+                border-radius: 50px;
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(var(--white), 1);
+            }
+        }
+
+        .comment {
+            height: 0;
+            overflow: hidden;
+            transition: .3s;
+            width: 500px;
+
+            >div {
+                height: 100%;
+            }
+
+            &.active {
+                height: 150px;
+            }
+        }
+    }
+
+    .companyComment {
+        background: rgba(var(--white), 1);
+        padding: 20px 15px;
+        border-radius: 20px;
+        margin: 0 -25px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .review {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0 -25px;
+
+        .body {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+            width: 80%;
+
+            .stars {
+                margin: 10px 0;
+                display: flex;
+
+                img {
+                    cursor: pointer;
+                    transition: .2s;
+                    padding: 0 3px;
+
+                    &.active {
+                        opacity: .5;
+                        // background: black;
+                    }
+                }
+            }
+
+            .reviewTextarea {
+                width: 70%;
+            }
+        }
+    }
+}

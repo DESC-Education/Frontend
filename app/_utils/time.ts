@@ -1,3 +1,6 @@
+import moment from "moment";
+import "moment-timezone";
+
 export const correctTime = (time: string | number): string => {
     return time.toString().length === 1 ? `0${time}` : String(time);
 };
@@ -25,4 +28,18 @@ export const getDateAndMonth = (date: Date) => {
     const day = String(date.getDate()).padStart(2, "0");
 
     return `${day} ${month}`;
+};
+
+export const getDateOrTime = (dateString: string) => {
+    const date = moment.utc(dateString).local();
+
+    const now = moment().local();
+
+    const deltaHours = now.diff(date, "hours");
+
+    if (deltaHours < 24) {
+        return date.format("HH:mm");
+    } else {
+        return date.format("DD.MM.YY");
+    }
 };

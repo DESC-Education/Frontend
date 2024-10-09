@@ -24,54 +24,6 @@
         display: flex;
         margin-bottom: 8px;
 
-        // .link {
-        //     padding: 15px 30px;
-        //     display: flex;
-        //     justify-content: center;
-        //     align-items: center;
-        //     position: relative;
-        //     min-width: 90px;
-
-        //     &:hover {
-        //         &:before {
-        //             background: rgba(var(--gray2), .3);
-        //         }
-        //     }
-
-        //     &:before {
-        //         bottom: 2px;
-        //         content: "";
-        //         position: absolute;
-        //         width: 90px;
-        //         background: rgba(var(--white), 1);
-        //         height: 8px;
-        //         transition: .3s;
-        //         clip-path: polygon(0% 60%, 0% 60%, 0.064% 50.268%, 0.249% 41.035%, 0.544% 32.427%, 0.941% 24.565%, 1.429% 17.574%, 1.997% 11.577%, 2.636% 6.697%, 3.336% 3.059%, 4.087% 0.785%, 4.878% 0%, 95.122% 0%, 95.122% 0%, 95.913% 0.785%, 96.664% 3.059%, 97.364% 6.697%, 98.003% 11.577%, 98.571% 17.574%, 99.059% 24.565%, 99.456% 32.427%, 99.751% 41.035%, 99.936% 50.268%, 100% 60%, 100% 100%, 0% 100%, 0% 60%);
-        //     }
-
-        //     &.active {
-        //         &:before {
-        //             background: rgba(var(--gray2), 1);
-        //         }
-        //     }
-        // }
-
-        // .linkContainer {
-        //     position: relative;
-        //     display: flex;
-        //     align-items: center;
-
-        //     .infoIcon {
-        //         position: absolute;
-        //         right: 7px;
-        //         top: 7px;
-
-        //         >div {
-        //             padding: 12px;
-        //         }
-        //     }
-        // }
-
         .userInfo {
             display: flex;
             align-items: center;
@@ -177,10 +129,22 @@
                 box-shadow: 0px 0px 2px 4px rgba(var(--gray2), .9);
             }
         }
+
+        .notification {
+            position: relative;
+
+            .unread {
+                position: absolute;
+                top: -6px;
+                right: -6px;
+                padding: 4px 9px;
+                border-radius: 50%;
+                background: rgba(var(--red), 1);
+                color: rgba(var(--white), 1);
+                font-size: 16px;
+            }
+        }
     }
-
-
-
 }
 
 

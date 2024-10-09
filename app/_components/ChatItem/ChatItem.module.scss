@@ -1,11 +1,18 @@
 .chatItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    padding: 10px 30px 10px 20px;
     border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    &.active {
+        background-color: rgba(var(--gray2), .7);
+    }
+
+    &.unread {
+        background-color: rgba(var(--gray2), .4);
+    }
 
     &:hover {
         background-color: rgba(var(--gray2), 1);
@@ -20,12 +27,13 @@
             object-fit: cover;
             height: 70px;
             border-radius: 50%;
-            margin-right: 30px;
+            margin-right: 20px;
         }
 
         .userInfo {
             display: flex;
             flex-wrap: wrap;
+            gap: 7px;
 
             .mainInfo {
                 width: 100%;
@@ -35,10 +43,11 @@
             }
 
             .lastMessage {
-                max-width: 200px;
+                max-width: 260px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                padding-right: 20px;
             }
 
             p {
@@ -48,12 +57,83 @@
     }
 
     .chatMeta {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+        display: grid;
+        grid-template-columns: 1fr;
+
+        &.notMyMessage {
+            .metaFooter {
+                justify-content: flex-end;
+            }
+        }
+
+        &.noLastMessage {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 8px;
+
+            .metaHeader {
+                width: 22px;
+                height: 22px;
+                margin: 0;
+            }
+        }
 
         .date {
             color: rgba(var(--gray1), 1);
+        }
+
+        .metaHeader,
+        .metaFooter {
+            height: 28px;
+            width: 100%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metaHeader {
+            margin-bottom: -5px;
+
+            img {
+                margin-bottom: 4px;
+                width: 20px;
+                transition: .3s;
+
+                &:hover {
+                    cursor: pointer;
+                    filter: brightness(1.15);
+                }
+            }
+        }
+
+        .metaFooter {
+            padding-left: 3px;
+
+            .unreadCount {
+                width: 24px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                background: rgba(var(--gray1), 1);
+                transition: opacity .3s;
+                color: white;
+
+                &.hide {
+                    opacity: 0;
+                    z-index: -10;
+                    width: 0;
+                    overflow: hidden;
+                }
+
+                p {
+                    color: white;
+                    font-size: 16px;
+                    line-height: 16px;
+                }
+            }
         }
     }
 }

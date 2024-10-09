@@ -1,0 +1,484 @@
+[    
+    {
+        "id": "c8ce70d4-6d74-460e-935a-2ae229e633c9",
+        "name": "Анимация",
+        "filterCategories": [
+            {
+                "id": "b338787a-6286-4d69-ab93-e7ca5d0c3e7c",
+                "name": "Уровни сложности",
+                "filters": [
+                    {
+                        "id": "f5d3963b-b6ea-441b-af46-6b03853dc613",
+                        "name": "Cредний"
+                    },
+                    {
+                        "id": "bbc7fe9b-edd1-474b-9fbe-7bd431f415af",
+                        "name": "Начинающий"
+                    },
+                    {
+                        "id": "615210b7-ee8a-492b-8ef8-a335d203fe32",
+                        "name": "Продвинутый"
+                    }
+                ]
+            },
+            {
+                "id": "b2b14635-3e06-445e-aa6a-db36f9dcbc0a",
+                "name": "Назначение",
+                "filters": [
+                    {
+                        "id": "f699e2ff-822b-434d-8aff-a6a551239b2a",
+                        "name": "Игра"
+                    },
+                    {
+                        "id": "97e07834-d5b9-4676-9cb5-5eb35ec87c4d",
+                        "name": "Сайт"
+                    },
+                    {
+                        "id": "939d57ff-4106-4f67-9237-900535efb73d",
+                        "name": "Мобильное приложение"
+                    },
+                    {
+                        "id": "3dc81242-08c7-48df-8138-368401154418",
+                        "name": "Анимационное видео"
+                    }
+                ]
+            },
+            {
+                "id": "712c1bc8-41f6-4524-aeee-c36e91e7e36f",
+                "name": "Инструментарий",
+                "filters": [
+                    {
+                        "id": "bb86e3be-9871-4f72-9cd8-6f2cd6719035",
+                        "name": "Blender"
+                    },
+                    {
+                        "id": "906a14a1-9e1d-4711-954e-ad54fade0b60",
+                        "name": "Adobe"
+                    },
+                    {
+                        "id": "75da17dd-1c1a-469c-b182-ba1d0ff15a0e",
+                        "name": "Unreal Engine"
+                    },
+                    {
+                        "id": "75da17dd-1c1a-469c-b182-ba1d0ff15a0e",
+                        "name": "Unity"
+                    }
+                ]
+            },
+            {
+                "id": "f9d313f3-abe0-44af-bcbb-a5ec7b934e77",
+                "name": "Тип анимации",
+                "filters": [
+                    {
+                        "id": "3c818930-d0b9-4c44-ae4b-1f639a5089cf",
+                        "name": "2D"
+                    },
+                    {
+                        "id": "fabb42b9-091a-4d15-9dd5-7e733dabcdbb",
+                        "name": "3D"
+                    },
+                    {
+                        "id": "e1d9e66d-7b4d-4182-bb6b-19e0f88e1545",
+                        "name": "Моушн-дизайн"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "bedab601-bbb2-4f64-9690-0bd246a73016",
+        "name": "Дизайн",
+        "filterCategories": [
+            {
+                "id": "b338787a-6286-4d69-ab93-e7ca5d0c3e7c",
+                "name": "Уровни сложности",
+                "filters": [
+                    {
+                        "id": "f5d3963b-b6ea-441b-af46-6b03853dc613",
+                        "name": "Cредний"
+                    },
+                    {
+                        "id": "bbc7fe9b-edd1-474b-9fbe-7bd431f415af",
+                        "name": "Начинающий"
+                    },
+                    {
+                        "id": "615210b7-ee8a-492b-8ef8-a335d203fe32",
+                        "name": "Продвинутый"
+                    }
+                ]
+            },
+            {
+                "id": "b2b14635-3e06-445e-aa6a-db36f9dcbc0a",
+                "name": "Назначение",
+                "filters": [
+                    {
+                        "id": "f699e2ff-822b-434d-8aff-a6a551239b2a",
+                        "name": "Сайт / Мобильное приложение"
+                    },
+                    {
+                        "id": "97e07834-d5b9-4676-9cb5-5eb35ec87c4d",
+                        "name": "Одежда"
+                    },
+                    {
+                        "id": "939d57ff-4106-4f67-9237-900535efb73d",
+                        "name": "Арты"
+                    }
+                ]
+            },
+            {
+                "id": "712c1bc8-41f6-4524-aeee-c36e91e7e36f",
+                "name": "Рабочее пространство",
+                "filters": [
+                    {
+                        "id": "bb86e3be-9871-4f72-9cd8-6f2cd6719035",
+                        "name": "Photoshop"
+                    },
+                    {
+                        "id": "906a14a1-9e1d-4711-954e-ad54fade0b60",
+                        "name": "Figma"
+                    },
+                    {
+                        "id": "75da17dd-1c1a-469c-b182-ba1d0ff15a0e",
+                        "name": "Adobe Illustrator"
+                    },
+                    {
+                        "id": "63da27d2-151a-479c-2182-aa1d0ff15a0e",
+                        "name": "Другое"
+                    }
+                ]
+            },
+            {
+                "id": "0f35d6c3-196d-4f2e-ae67-7a03b1c3411e",
+                "name": "Тип дизайна",
+                "filters": [
+                    {
+                        "id": "27dff66d-792b-4d1e-b3b6-e391a3e4d00d",
+                        "name": "UI/UX дизайн"
+                    },
+                    {
+                        "id": "bc14f720-4b4d-4d0e-b96c-91fb7bdb44df",
+                        "name": "Графический дизайн"
+                    },
+                    {
+                        "id": "f61cdd6e-92c8-418a-9e93-519e2099d5bc",
+                        "name": "Дизайн интерьера"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "a7ab9087-ec21-4b7c-9f2a-c6158e8d52ee",
+        "name": "Веб-разработка",
+        "filterCategories": [
+            {
+                "id": "b338787a-6286-4d69-ab93-e7ca5d0c3e7c",
+                "name": "Уровни сложности",
+                "filters": [
+                    {
+                        "id": "f5d3963b-b6ea-441b-af46-6b03853dc613",
+                        "name": "Cредний"
+                    },
+                    {
+                        "id": "bbc7fe9b-edd1-474b-9fbe-7bd431f415af",
+                        "name": "Начинающий"
+                    },
+                    {
+                        "id": "615210b7-ee8a-492b-8ef8-a335d203fe32",
+                        "name": "Продвинутый"
+                    }
+                ]
+            },
+            {
+                "id": "b2b14635-3e06-445e-aa6a-db36f9dcbc0a",
+                "name": "Технология",
+                "filters": [
+                    {
+                        "id": "f699e2ff-822b-434d-8aff-a6a551239b2a",
+                        "name": "HTML + CSS + JS"
+                    },
+                    {
+                        "id": "97e07834-d5b9-4676-9cb5-5eb35ec87c4d",
+                        "name": "ReactJS"
+                    },
+                    {
+                        "id": "939d57ff-4106-4f67-9237-900535efb73d",
+                        "name": "VueJS"
+                    },
+                    {
+                        "id": "3dc81242-08c7-48df-8138-368401154418",
+                        "name": "Angular"
+                    }
+                ]
+            },
+            {
+                "id": "712c1bc8-41f6-4524-aeee-c36e91e7e36f",
+                "name": "Вид контента",
+                "filters": [
+                    {
+                        "id": "bb86e3be-9871-4f72-9cd8-6f2cd6719035",
+                        "name": "Статический"
+                    },
+                    {
+                        "id": "906a14a1-9e1d-4711-954e-ad54fade0b60",
+                        "name": "Динамический"
+                    }
+                ]
+            },
+            {
+                "id": "0d504811-ae8c-47d3-acb8-7309ddcf5b3d",
+                "name": "SEO-оптимизация",
+                "filters": [
+                    {
+                        "id": "b7b0e533-36d5-433f-a174-bb1b9d19675f",
+                        "name": "Не требуется"
+                    },
+                    {
+                        "id": "0fc0a219-ab83-4a3a-a785-d16420adde6d",
+                        "name": "Базовая"
+                    },
+                    {
+                        "id": "0fc0a219-ab83-4a3a-a785-d16420adde6d",
+                        "name": "Продвинутая"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "f52d35fc-52b8-48fd-8b60-74b6f5a68cd8",
+        "name": "Мобильная разработка",
+        "filterCategories": [
+            {
+                "id": "b338787a-6286-4d69-ab93-e7ca5d0c3e7c",
+                "name": "Уровни сложности",
+                "filters": [
+                    {
+                        "id": "f5d3963b-b6ea-441b-af46-6b03853dc613",
+                        "name": "Cредний"
+                    },
+                    {
+                        "id": "bbc7fe9b-edd1-474b-9fbe-7bd431f415af",
+                        "name": "Начинающий"
+                    },
+                    {
+                        "id": "615210b7-ee8a-492b-8ef8-a335d203fe32",
+                        "name": "Продвинутый"
+                    }
+                ]
+            },
+            {
+                "id": "f1f4c8d3-12d7-4b88-93c9-8d9efef20621",
+                "name": "Операционная система",
+                "filters": [
+                    {
+                        "id": "d6e8b77b-65e7-4a18-9e75-3d356edfd973",
+                        "name": "Android"
+                    },
+                    {
+                        "id": "d4654532-73d9-44d9-bfae-6579795911cd",
+                        "name": "iOS"
+                    },
+                    {
+                        "id": "ab5a3c9a-4954-4e5e-a9b9-7f7e01c5eb24",
+                        "name": "Кроссплатформенная"
+                    }
+                ]
+            },
+            {
+                "id": "2c8b79ef-62e7-4cc6-8c9f-22a68b9e9c33",
+                "name": "Языки программирования",
+                "filters": [
+                    {
+                        "id": "7d72817d-91f3-4d28-8156-eac95bfeccac",
+                        "name": "Kotlin"
+                    },
+                    {
+                        "id": "4b4db2fc-3917-4f8b-8a24-07e9e04c55cd",
+                        "name": "Swift"
+                    },
+                    {
+                        "id": "9cd3e7a7-4321-4b0c-bd29-31b1e7554dbb",
+                        "name": "Flutter (Dart)"
+                    },
+                    {
+                        "id": "e7c3d0b7-82cd-4a02-92ed-8ddf326c1c7c",
+                        "name": "React Native (JavaScript)"
+                    }
+                ]
+            },
+            {
+                "id": "b2b14635-3e06-445e-aa6a-db36f9dcbc0a",
+                "name": "Фреймворки",
+                "filters": [
+                    {
+                        "id": "f699e2ff-822b-434d-8aff-a6a551239b2a",
+                        "name": "React Native"
+                    },
+                    {
+                        "id": "97e07834-d5b9-4676-9cb5-5eb35ec87c4d",
+                        "name": "Flutter"
+                    },
+                    {
+                        "id": "939d57ff-4106-4f67-9237-900535efb73d",
+                        "name": "Xamarin"
+                    },
+                    {
+                        "id": "3dc81242-08c7-48df-8138-368401154418",
+                        "name": "Cordova"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "ce5e11fd-f9c3-4a4d-8b4d-dc5e9b9a4c9d",
+        "name": "Серверная разработка",
+        "filterCategories": [
+            {
+                "id": "b338787a-6286-4d69-ab93-e7ca5d0c3e7c",
+                "name": "Уровни сложности",
+                "filters": [
+                    {
+                        "id": "f5d3963b-b6ea-441b-af46-6b03853dc613",
+                        "name": "Cредний"
+                    },
+                    {
+                        "id": "bbc7fe9b-edd1-474b-9fbe-7bd431f415af",
+                        "name": "Начинающий"
+                    },
+                    {
+                        "id": "615210b7-ee8a-492b-8ef8-a335d203fe32",
+                        "name": "Продвинутый"
+                    }
+                ]
+            },
+            {
+                "id": "b2b14635-3e06-445e-aa6a-db36f9dcbc0a",
+                "name": "Языки программирования",
+                "filters": [
+                    {
+                        "id": "97e07834-d5b9-4676-9cb5-5eb35ec87c4d",
+                        "name": "Python"
+                    },
+                    {
+                        "id": "e7c3d0b7-82cd-4a02-92ed-8ddf326c1c7c",
+                        "name": "Java"
+                    },
+                    {
+                        "id": "f699e2ff-822b-434d-8aff-a6a551239b2a",
+                        "name": "Node.js (JavaScript)"
+                    },
+                    {
+                        "id": "939d57ff-4106-4f67-9237-900535efb73d",
+                        "name": "PHP"
+                    },
+                    {
+                        "id": "3dc81242-08c7-48df-8138-368401154418",
+                        "name": "Ruby"
+                    }
+                ]
+            },
+            {
+                "id": "712c1bc8-41f6-4524-aeee-c36e91e7e36f",
+                "name": "Фреймворки",
+                "filters": [
+                    {
+                        "id": "bb86e3be-9871-4f72-9cd8-6f2cd6719035",
+                        "name": "Express.js"
+                    },
+                    {
+                        "id": "906a14a1-9e1d-4711-954e-ad54fade0b60",
+                        "name": "Django"
+                    },
+                    {
+                        "id": "75da17dd-1c1a-469c-b182-ba1d0ff15a0e",
+                        "name": "Laravel"
+                    },
+                    {
+                        "id": "e7c3d0b7-82cd-4a02-92ed-8ddf326c1c7c",
+                        "name": "Rails"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "f84e15be-2f74-4524-b02b-53bbd52e9e68",
+        "name": "Искусственный интеллект",
+        "filterCategories": [
+            {
+                "id": "b338787a-6286-4d69-ab93-e7ca5d0c3e7c",
+                "name": "Уровни сложности",
+                "filters": [
+                    {
+                        "id": "f5d3963b-b6ea-441b-af46-6b03853dc613",
+                        "name": "Cредний"
+                    },
+                    {
+                        "id": "bbc7fe9b-edd1-474b-9fbe-7bd431f415af",
+                        "name": "Начинающий"
+                    },
+                    {
+                        "id": "615210b7-ee8a-492b-8ef8-a335d203fe32",
+                        "name": "Продвинутый"
+                    }
+                ]
+            },
+            {
+                "id": "34df24d9-4f97-42e8-8d25-5a91d3fd6d13",
+                "name": "Подразделы",
+                "filters": [
+                    {
+                        "id": "d6e8b77b-65e7-4a18-9e75-3d356edfd973",
+                        "name": "Машинное обучение"
+                    },
+                    {
+                        "id": "d4654532-73d9-44d9-bfae-6579795911cd",
+                        "name": "Нейронные сети"
+                    },
+                    {
+                        "id": "ab5a3c9a-4954-4e5e-a9b9-7f7e01c5eb24",
+                        "name": "Глубокое обучение"
+                    }
+                ]
+            },
+            {
+                "id": "f1f4c8d3-12d7-4b88-93c9-8d9efef20621",
+                "name": "Языки программирования",
+                "filters": [
+                    {
+                        "id": "7d72817d-91f3-4d28-8156-eac95bfeccac",
+                        "name": "Python"
+                    },
+                    {
+                        "id": "4b4db2fc-3917-4f8b-8a24-07e9e04c55cd",
+                        "name": "R"
+                    },
+                    {
+                        "id": "9cd3e7a7-4321-4b0c-bd29-31b1e7554dbb",
+                        "name": "Julia"
+                    }
+                ]
+            },
+            {
+                "id": "b2b14635-3e06-445e-aa6a-db36f9dcbc0a",
+                "name": "Библиотеки",
+                "filters": [
+                    {
+                        "id": "f699e2ff-822b-434d-8aff-a6a551239b2a",
+                        "name": "TensorFlow"
+                    },
+                    {
+                        "id": "97e07834-d5b9-4676-9cb5-5eb35ec87c4d",
+                        "name": "PyTorch"
+                    },
+                    {
+                        "id": "939d57ff-4106-4f67-9237-900535efb73d",
+                        "name": "Keras"
+                    }
+                ]
+            }
+        ]
+    }
+]

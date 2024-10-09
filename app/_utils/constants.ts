@@ -1,9 +1,16 @@
+import { SSENotificationTypes } from "../_http/types";
+import { ISolutionStatus, ISpecialtyType } from "../_types";
+
 export const TIMER_TIME = 60;
+
+export const MAX_LENGTH = 2000;
+export const MIN_LENGTH = 5;
+export const MAX_REPLY_COUNT = 30;
 
 export const yearsOfEducation = {
     bachelor: 4,
     specialty: 5,
-    magister: 2,
+    magistracy: 2,
 };
 
 export const timezones = [
@@ -46,26 +53,69 @@ export const formsOfEducation = [
     { name: "Заочное", value: "part_full_time" },
 ];
 
-export const typeOfSpeciality = [
+export const typeOfSpeciality: { name: string; value: ISpecialtyType }[] = [
     { name: "Бакалавриат", value: "bachelor" },
     { name: "Специалитет", value: "specialty" },
-    { name: "Магистратура", value: "magister" },
+    { name: "Магистратура", value: "magistracy" },
 ];
 
 export const levels = [
     { name: "Начинающий", value: 0 },
     { name: "Средний", value: 1 },
     { name: "Продвинутый", value: 2 },
-]
+];
 
 export const sortingOptions = [
-    { name: "Сначала новые", value: "createdAt" },
-    { name: "Сначала старые", value: "-createdAt" },
+    { name: "Сначала новые", value: "-createdAt" },
+    { name: "Сначала старые", value: "createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
-]
+];
 
-export const solutionStatuses = [
-    { name: "На оценке", value: "pending" },
-    { name: "Выполнено", value: "completed" },
-    { name: "Не выполнено", value: "failed" },
-]
+export const solutionStatuses: {
+    name: string;
+    value: ISolutionStatus;
+    color: string;
+    textColor: string;
+}[] = [
+    {
+        name: "На оценке",
+        value: "pending",
+        color: "#FDF5A9",
+        textColor: "black",
+    },
+    {
+        name: "Выполнено",
+        value: "completed",
+        color: "#D0F5CD",
+        textColor: "black",
+    },
+    {
+        name: "Не выполнено",
+        value: "failed",
+        color: "#DD6565",
+        textColor: "white",
+    },
+];
+
+// export const getMotificationRoute = (
+//     type: SSENotificationTypes,
+//     payload: { solutionId: string; taskId: string },
+// ) => {
+//     switch (type) {
+//         case "evaluation":
+//             return `/tasks/${payload.taskId}/solutions/${payload.solutionId}`;
+//         case "review":
+//             return `/tasks/${payload.taskId}/solutions/${payload.solutionId}`;
+//         case "solution":
+//             return `/tasks/${payload.taskId}/solutions/${payload.solutionId}`;
+//     }
+// };
+
+// export const notificationTitles = {
+//     verification: "Результат верификации",
+//     evaluation: "Оценка решения",
+//     level: "Изменение уровеня аккаунта",
+//     review: "Рецензия на решение",
+//     countReset: "Пополнение количества откликов",
+//     solution: "Новое решение задания",
+// }

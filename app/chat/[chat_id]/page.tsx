@@ -1,29 +1,312 @@
 "use client";
 
 import styles from "./page.module.scss";
-import { IChat, IMessage } from "../../_types/index";
-import { useEffect, useState } from "react";
+import { IChat, IFile, IMessage } from "../../_types/index";
+import {
+    createRef,
+    useCallback,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import Image from "next/image";
 import classNames from "classnames";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
 import Message from "./Message/Message";
+import { createFile, getChat } from "@/app/_http/API/chatsApi";
+import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import { chatSlice } from "@/app/_store/reducers/chatSlice";
+import LocalStorage from "@/app/_utils/LocalStorage";
+import Input from "@/app/_components/ui/Input/Input";
+import { AlertContext } from "@/app/_context/AlertContext";
+import Button from "@/app/_components/ui/Button/Button";
+import Link from "next/link";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
 
 export default function Page() {
-    const { chat_id } = useParams();
+    const { chat_id } = useParams<{ chat_id: string }>();
 
-    const { chats } = useTypesSelector((state) => state.contentReducer);
+    const { showAlert } = useContext(AlertContext);
 
-    const [chat, setChat] = useState<IChat>({} as IChat);
+    const [isChatLoading, setIsChatLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        setChat(chats.find((item) => item.id === chat_id)!);
+    const router = useRouter();
+
+    const { user } = useTypesSelector((state) => state.userReducer);
+    const { chats, currentChat } = useTypesSelector(
+        (state) => state.chatReducer,
+    );
+    const dispatch = useTypesDispatch();
+    const {
+        updateCurrentChat,
+        addChatMessage,
+        updateIsRead,
+        updateChatUnread,
+        updateLastMessage,
+        updateLastMessageViewed,
+        updateUnreadChatsCount,
+    } = chatSlice.actions;
+
+    const createWsInstance = useCallback(() => {
+        const newWs = new WebSocket(
+            process.env.NEXT_PUBLIC_WS_ADDRESS! +
+                `/ws/chat/${chat_id}/?token=${LocalStorage.getAccessToken()}`,
+        );
+        // console.log("newWs", newWs);
+
+        return newWs;
     }, [chat_id]);
 
-    console.log(chat, chats, chat_id);
+    const [ws, setWs] = useState<WebSocket | null>(null);
+    const [wsReadyState, setWsReadyState] = useState<number>(0);
 
-    if (!chat || !chat?.companion)
+    useLayoutEffect(() => {
+        setWs(createWsInstance());
+    }, []);
+
+    useEffect(() => {
+        if (!ws) return;
+
+        ws.onopen = (e) => {
+            setWsReadyState(WebSocket.OPEN);
+        };
+
+        ws.onmessage = (event) => {
+            const parsedData = JSON.parse(event.data);
+            const parsedPayload: any = JSON.parse(parsedData.payload);
+
+            switch (parsedData.type) {
+                case "message":
+                    dispatch(addChatMessage(parsedPayload));
+
+                    if (parsedPayload.user.id === user.id) {
+                        dispatch(
+                            updateLastMessage({
+                                chatId: chat_id,
+                                message: parsedPayload,
+                                myMessage: true,
+                            }),
+                        );
+                    }
+                    break;
+                case "viewed":
+                    console.log("viewed", parsedPayload, event);
+                    dispatch(updateChatUnread({ chatId: chat_id, count: 0 }));
+                    dispatch(updateUnreadChatsCount({ chat_id }));
+                    dispatch(updateLastMessageViewed(chat_id));
+                    dispatch(updateIsRead(parsedPayload));
+                    break;
+            }
+        };
+
+        ws.onerror = (e) => {
+            showAlert("Ошибка при загрузке чата");
+        };
+
+        ws.onclose = (e) => {
+            // setWsReadyState(WebSocket.CLOSED);
+            // setWs(createWsInstance());
+        };
+
+        return () => {
+            ws?.close();
+        };
+    }, [chat_id, ws]);
+
+    // console.log("CURR WS IS ", ws);
+
+    const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+    const [attachedFilesModified, setAttachedFilesModified] = useState<
+        { file: File; isSent: boolean; id?: string }[]
+    >([]);
+
+    const [messageText, setMessageText] = useState<string>("");
+
+    const sendFile = async () => {
+        if (!attachedFilesModified.length) return;
+
+        const formdata = new FormData();
+
+        for (const file of attachedFilesModified) {
+            if (file.isSent) continue;
+
+            formdata.append("file", file.file);
+            formdata.append("chat", chat_id);
+
+            const res = await createFile(formdata);
+
+            if (res.status === 200) {
+                setAttachedFilesModified((prev) => {
+                    return prev.map((i) => {
+                        if (i.file.size === file.file.size) {
+                            return { ...i, isSent: true, id: res.file!.id };
+                        }
+                        return i;
+                    });
+                });
+            } else if (res.status !== 401) {
+                showAlert("Произошла ошибка при загрузке файла!");
+            }
+        }
+    };
+
+    const sendMessage = async () => {
+        if (!ws) return;
+
+        ws.send(
+            JSON.stringify({
+                type: "message",
+                payload: {
+                    message: messageText
+                        .replace(/\n{3,}/g, "\n\n")
+                        .trim()
+                        .replace(/^\n+|\n+$/g, ""),
+                    files: attachedFilesModified.map((i) => i.id),
+                },
+            }),
+        );
+
+        setMessageText("");
+        setAttachedFiles([]);
+    };
+
+    // console.log("currentChat", currentChat);
+
+    useEffect(() => {
+        console.log("in chat_id page, chats ", chats, chat_id);
+        setIsChatLoading(true);
+        const asyncFunc = async () => {
+            // if (currentChat && currentChat.id !== chat_id) {
+            const res = await getChat(chat_id);
+
+            console.log("???");
+
+            if (res.status === 200) {
+                dispatch(
+                    updateCurrentChat({
+                        ...res.chat!,
+                        id: chat_id,
+                        messages: res.chat!.messages.reverse(),
+                    }),
+                );
+            } else {
+                router.replace("/chat");
+            }
+            // }
+            setIsChatLoading(false);
+        };
+        asyncFunc();
+    }, []);
+
+    useEffect(() => {
+        setAttachedFilesModified(
+            attachedFiles.map((i) => ({ file: i, isSent: false })),
+        );
+    }, [attachedFiles]);
+
+    useEffect(() => {
+        if (!attachedFiles?.length) {
+            return;
+        }
+
+        sendFile();
+    }, [attachedFilesModified]);
+
+    useEffect(() => {
+        const listener = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                if (e.shiftKey) {
+                    return;
+                } else {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (
+                        messageText.replaceAll("\n", "").replaceAll(" ", "")
+                            .length > 0 ||
+                        attachedFilesModified.length > 0
+                    ) {
+                        sendMessage();
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("keydown", listener);
+
+        return () => {
+            window.removeEventListener("keydown", listener);
+        };
+    }, [messageText.length, attachedFilesModified.length]);
+
+    const dummyRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!currentChat?.messages.length || !dummyRef.current) return;
+
+        dummyRef.current?.scrollIntoView({
+            behavior: "instant",
+        });
+
+        setTimeout(() => {
+            dummyRef.current?.scrollIntoView({
+                behavior: "instant",
+            });
+        }, 140);
+    }, [currentChat?.messages.length, dummyRef.current?.offsetHeight]);
+
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        if (!textareaRef.current) return;
+
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [textareaRef.current, messageText]);
+
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const dragOverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const listenerDragEnter = (e: any) => {
+            e.preventDefault();
+
+            setIsDragging(true);
+        };
+
+        const listenerDragOver = (e: any) => {
+            e.preventDefault();
+
+            if (dragOverTimeoutRef.current) {
+                clearTimeout(dragOverTimeoutRef.current);
+            }
+
+            dragOverTimeoutRef.current = setTimeout(() => {
+                setIsDragging(false);
+            }, 120);
+        };
+
+        window.addEventListener("dragenter", listenerDragEnter);
+        window.addEventListener("dragover", listenerDragOver);
+
+        return () => {
+            window.removeEventListener("dragenter", listenerDragEnter);
+            window.removeEventListener("dragover", listenerDragOver);
+        };
+    }, []);
+
+    if (!currentChat || !currentChat?.companion || isChatLoading)
         return (
             <div className="centerContent">
                 <CustomOval />
@@ -31,47 +314,221 @@ export default function Page() {
         );
 
     return (
-        <>
+        <div className={styles.container} ref={containerRef}>
             <div className={styles.chatHeader}>
-                <div className={styles.userInfo}>
+                <div>
+                    <Link
+                        href={
+                            user.role === "company"
+                                ? `/profile/student/${currentChat.companion.id}`
+                                : `/profile/company/${currentChat.companion.id}`
+                        }
+                        className={styles.userInfo}
+                    >
+                        <img
+                            src={
+                                currentChat.companion.avatar
+                                    ? process.env.NEXT_PUBLIC_SERVER_PATH +
+                                      currentChat.companion.avatar
+                                    : "/images/avatar.png"
+                            }
+                            alt="Аватар"
+                            className={styles.avatar}
+                        />
+                        <div>
+                            <h4 className={styles.userName}>
+                                {currentChat.companion.name}
+                            </h4>
+                            {/* <span className={styles.userStatus}>в сети</span> */}
+                        </div>
+                    </Link>
+                    {/* <div className={styles.chatActions}>
                     <img
-                        src={chat.companion.avatar}
-                        alt="Аватар"
-                        className={styles.avatar}
-                    />
-                    <div>
-                        <h4 className={styles.userName}>
-                            {chat.companion.name}
-                        </h4>
-                        {/* <span className={styles.userStatus}>в сети</span> */}
-                    </div>
-                </div>
-                <div className={styles.chatActions}>
-                    <Image
                         src="/icons/searchIcon.svg"
-                        alt=""
+                        alt="search"
                         className={styles.searchIcon}
-                        width={35}
-                        height={35}
                     />
-                    <Image
+                    <img
                         src="/icons/extraIcon.svg"
-                        alt=""
+                        alt="search"
                         className={styles.pinIcon}
-                        width={35}
-                        height={35}
                     />
+                </div> */}
                 </div>
+                {!!currentChat.task?.title && (
+                    <Link
+                        href={`/tasks/${currentChat.task.id}`}
+                        className={classNames(styles.title, "text fz20")}
+                    >
+                        Чат по заданию: {currentChat.task.title}
+                    </Link>
+                )}
+                <div></div>
             </div>
             <div className={styles.chatMessages}>
-                {chat.messages.map((message, index) => (
-                    <Message message={message} key={index} />
-                ))}
+                {currentChat.messages.length > 0 ? (
+                    currentChat.messages.map((message, index) => (
+                        <Message
+                            message={message}
+                            key={index}
+                            ws={ws}
+                            wsStatus={wsReadyState}
+                        />
+                    ))
+                ) : (
+                    <div className="centerContent">
+                        <p className="text fz28 fw500 gray center">
+                            Тут пока нет сообщений!
+                        </p>
+                    </div>
+                )}
+                <div ref={dummyRef}></div>
             </div>
-            <div className={styles.messageInput}>
-                <input type="text" placeholder="Напишите сообщение..." />
-                <div className={styles.inputActions}></div>
+            <div
+                onDrop={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (dragOverTimeoutRef.current) {
+                        clearTimeout(dragOverTimeoutRef.current);
+                    }
+
+                    setIsDragging(false);
+
+                    const files = e.dataTransfer.files;
+
+                    if (!files.length) return;
+
+                    const newFile = Array.from(files);
+
+                    for (let i = 0; i < newFile.length; i++) {
+                        let unsupportedFiles = false;
+
+                        const item = newFile[i];
+
+                        if (
+                            ![
+                                "pdf",
+                                "vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                "png",
+                                "jpg",
+                                "jpeg",
+                            ].includes(item.type.split("/")[1])
+                        ) {
+                            showAlert(
+                                "Формат одного или нескольких файлов не поддерживается",
+                            );
+                            unsupportedFiles = true;
+                        }
+
+                        if (item.size > 5e6) {
+                            showAlert(
+                                "Один или несколько файлов слишким большие",
+                            );
+                            unsupportedFiles = true;
+                        }
+
+                        if (unsupportedFiles) continue;
+
+                        setAttachedFiles((prev: any) => {
+                            if (!prev) return newFile;
+                            return [...prev, item].slice(0, 5);
+                        });
+                    }
+
+                    // setAttachedFiles(Array.from(files));
+                }}
+                className={classNames(styles.messageInput, {
+                    [styles.dragging]: isDragging,
+                })}
+            >
+                <div className={styles.dragOverlay}>
+                    <div className={styles.dragOverlayText}>
+                        Перетащите файлы сюда
+                    </div>
+                </div>
+                <Input
+                    type="file_multiple_chat"
+                    file={attachedFiles}
+                    setFile={setAttachedFiles}
+                    multiple
+                />
+                <textarea
+                    rows={1}
+                    ref={textareaRef}
+                    style={{
+                        height: `${textareaRef.current?.scrollHeight}px`,
+                    }}
+                    placeholder="Напишите сообщение..."
+                    value={messageText}
+                    onChange={(e) => {
+                        setMessageText(e.target.value);
+                    }}
+                />
+                <div
+                    onClick={() => {
+                        if (
+                            messageText.replaceAll("\n", "").replaceAll(" ", "")
+                                .length > 0 ||
+                            attachedFilesModified.length > 0
+                        ) {
+                            sendMessage();
+                        }
+                    }}
+                    className={classNames(styles.send, {
+                        [styles.disabled]:
+                            messageText.replaceAll("\n", "").replaceAll(" ", "")
+                                .length === 0 &&
+                            attachedFilesModified.length === 0,
+                    })}
+                >
+                    <img src="/icons/send.svg" alt="send" />
+                </div>
             </div>
-        </>
+            {attachedFilesModified.length > 0 && (
+                <div className={styles.attachedFiles}>
+                    {attachedFilesModified.map((file, index) => (
+                        <div className={styles.file} key={index}>
+                            <img
+                                className={styles.delete}
+                                src="/icons/cross.png"
+                                alt="delete"
+                                onClick={() =>
+                                    setAttachedFilesModified((prev) =>
+                                        prev.filter((i) => i.id !== file.id),
+                                    )
+                                }
+                            />
+                            {["png", "jpg", "jpeg", "jfif"].includes(
+                                file.file.name.split(".").slice(-1)[0],
+                            ) ? (
+                                <img
+                                    key={index}
+                                    className={styles.userImage}
+                                    src={URL.createObjectURL(file.file)}
+                                    alt="logo"
+                                />
+                            ) : (
+                                <>
+                                    <img
+                                        key={index}
+                                        className={classNames(
+                                            styles.userImage,
+                                            styles.imgDocument,
+                                        )}
+                                        src={`/icons/extensions/${
+                                            file.file.name
+                                                .split(".")
+                                                .slice(-1)[0]
+                                        }.png`}
+                                    />
+                                    <p>{file.file.name}</p>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }

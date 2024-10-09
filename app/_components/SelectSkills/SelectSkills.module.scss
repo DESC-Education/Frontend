@@ -4,6 +4,10 @@
     gap: 20px;
     width: 100%;
 
+    .required {
+        color: rgba(var(--red), 1);
+    }
+
     .values {
         >div {
             display: flex;

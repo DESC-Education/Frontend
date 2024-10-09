@@ -20,6 +20,9 @@ import { set } from "zod";
 import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
 import { AlertContext } from "@/app/_context/AlertContext";
 import BackButton from "../_components/ui/BackButton/BackButton";
+import { useTypesSelector } from "../_hooks/useTypesSelector";
+import { contentSlice } from "../_store/reducers/contentSlice";
+import { useTypesDispatch } from "../_hooks/useTypesDispatch";
 
 const maxLength = 2000;
 const minLength = 5;
@@ -67,6 +70,11 @@ const initState: TaskState = {
 export default function CreateTaskPage() {
     const { showAlert } = useContext(AlertContext);
 
+    const { myTasks } = useTypesSelector((state) => state.contentReducer);
+    const { updateMyTasks } = contentSlice.actions;
+
+    const dispatch = useTypesDispatch();
+
     const templates = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -77,8 +85,6 @@ export default function CreateTaskPage() {
 
     const getDayTitle = (day: number): "дней" | "день" | "дня" | "дней" => {
         const number = day;
-        // console.log(day);
-
         if (number > 10 && [11, 12, 13, 14].includes(number % 100))
             return "дней";
         const last_num = number % 10;
@@ -88,7 +94,7 @@ export default function CreateTaskPage() {
         return "дней";
     };
 
-    const reduser = (state: TaskState, action: TaskAction): TaskState => {
+    const reducer = (state: TaskState, action: TaskAction): TaskState => {
         switch (action.type) {
             case "change_title": {
                 return {
@@ -138,7 +144,7 @@ export default function CreateTaskPage() {
         }
     };
 
-    const [state, taskDispatch] = useReducer(reduser, initState);
+    const [state, taskDispatch] = useReducer(reducer, initState);
 
     const [textLength, setTextLength] = useState(state.description.length || 0);
 
@@ -159,9 +165,6 @@ export default function CreateTaskPage() {
     useEffect(() => {
         const asyncFunc = async () => {
             const res = await getCategories("");
-            console.log(res);
-            
-
             if (res.status === 200) {
                 setCategories(
                     res.categories!.map((item) => ({
@@ -188,14 +191,15 @@ export default function CreateTaskPage() {
 
     const validateFormTask = async () => {
         const errorsTemp: any = {};
-        // console.log(state);
-        
         if (state.title.length < 2) {
             errorsTemp.title = "Введите название задания";
         }
-        
+
         if (state.description.length < minLength) {
-            errorsTemp.description = "Введите описание задания (" + minLength + " символов или больше)";
+            errorsTemp.description =
+                "Введите описание задания (" +
+                minLength +
+                " символов или больше)";
         }
 
         if (state.categoryId === "") {
@@ -218,13 +222,9 @@ export default function CreateTaskPage() {
         setErrors(errorsTemp);
 
         if (Object.keys(errorsTemp).length === 0) {
-            console.log(state.filters);
-            
             const formData = new FormData();
 
             const dedlineAsDate = addDaysAndFormat(new Date(), state.deadline);
-            // console.log(dedlineAsDate);
-
             formData.append("title", state.title);
             formData.append("description", state.description);
             formData.append("deadline", `${dedlineAsDate}`);
@@ -245,11 +245,11 @@ export default function CreateTaskPage() {
                 taskDispatch({
                     type: "clear",
                 });
+                dispatch(updateMyTasks([...myTasks!, res.task!]));
                 setFiles([]);
             } else {
                 showAlert(res.message);
             }
-            console.log("createTask res", res);
         }
     };
 
@@ -493,7 +493,7 @@ export default function CreateTaskPage() {
                                 type="primary"
                                 className={styles.submitButton}
                                 onClick={() => validateFormTask()}
-                                disabled={textLength < minLength}
+                                // disabled={textLength < minLength}
                             >
                                 Сохранить
                             </Button>

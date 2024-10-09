@@ -29,6 +29,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { AlertContext } from "../_context/AlertContext";
 import { div } from "framer-motion/client";
 import CustomSearch from "../_components/ui/CustomSearch/CustomSearch";
+import Link from "next/link";
 
 const POSTS_PER_PAGE = 5;
 
@@ -51,11 +52,13 @@ export default function ExchangePage() {
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
         null,
     );
+    
     const [selectedFilters, setSelectedFilters] = useState<{
         [key: string]: string[];
     }>({});
+
     const [sorting, setSorting] = useState<"createdAt" | "-createdAt">(
-        "createdAt",
+        "-createdAt",
     );
     const { showAlert } = useContext(AlertContext);
 
@@ -142,9 +145,10 @@ export default function ExchangePage() {
     };
 
     const getTasksByFiltersAndSort = async (
-        sortingBy: "createdAt" | "-createdAt" = "createdAt",
+        sortingBy: "createdAt" | "-createdAt" = "-createdAt",
     ) => {
         setIsLoading(true);
+        setSorting(sortingBy);
         setCurrentPage(1);
 
         const res = await getTasks(
@@ -471,7 +475,7 @@ export default function ExchangePage() {
                 )}
                 <main className={styles.mainContent}>
                     <div className={styles.topPanel}>
-                        {!!(user.role === "student") && (
+                        {!!(user.role === "student") ? (
                             <div className={styles.replayCount}>
                                 <div className={styles.bar}>
                                     <div className={styles.barText}>
@@ -504,6 +508,13 @@ export default function ExchangePage() {
                                     </p>
                                 </div>
                             </div>
+                        ) : (
+                            <Link
+                                className={styles.createTask}
+                                href="/create-task"
+                            >
+                                <Button type="primary">Создать задание</Button>
+                            </Link>
                         )}
                         <div className={styles.sorting}>
                             <div className={styles.sort}>
