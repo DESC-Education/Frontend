@@ -3,6 +3,10 @@ import { ISolutionStatus, ISpecialtyType } from "../_types";
 
 export const TIMER_TIME = 60;
 
+export const MAX_LENGTH = 2000;
+export const MIN_LENGTH = 5;
+export const MAX_REPLY_COUNT = 30;
+
 export const yearsOfEducation = {
     bachelor: 4,
     specialty: 5,

@@ -42,6 +42,8 @@ $authHost.interceptors.response.use(
                 try {
                     times++;
 
+                    // console.log(originalConfig);
+
                     if (
                         !LocalStorage.getRefreshToken() ||
                         !LocalStorage.getAccessToken() ||

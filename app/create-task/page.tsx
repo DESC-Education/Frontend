@@ -94,7 +94,7 @@ export default function CreateTaskPage() {
         return "дней";
     };
 
-    const reduser = (state: TaskState, action: TaskAction): TaskState => {
+    const reducer = (state: TaskState, action: TaskAction): TaskState => {
         switch (action.type) {
             case "change_title": {
                 return {
@@ -144,7 +144,7 @@ export default function CreateTaskPage() {
         }
     };
 
-    const [state, taskDispatch] = useReducer(reduser, initState);
+    const [state, taskDispatch] = useReducer(reducer, initState);
 
     const [textLength, setTextLength] = useState(state.description.length || 0);
 
@@ -493,7 +493,7 @@ export default function CreateTaskPage() {
                                 type="primary"
                                 className={styles.submitButton}
                                 onClick={() => validateFormTask()}
-                                disabled={textLength < minLength}
+                                // disabled={textLength < minLength}
                             >
                                 Сохранить
                             </Button>

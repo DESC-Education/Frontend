@@ -32,6 +32,7 @@ const UserContent: FC<UserContentProps> = ({
         string | undefined
     >();
     const { notifications } = useTypesSelector((state) => state.contentReducer);
+    const { unreadChatsCount } = useTypesSelector((state) => state.chatReducer);
 
     const { showAlert } = useContext(AlertContext);
 
@@ -164,6 +165,7 @@ const UserContent: FC<UserContentProps> = ({
                             }}
                             className={classNames(
                                 styles.link,
+                                styles.messages,
                                 "text fz24 fw500",
                                 {
                                     [styles.active]: pathname === "/chat",
@@ -175,6 +177,11 @@ const UserContent: FC<UserContentProps> = ({
                             href="/chat"
                         >
                             Сообщения
+                            {unreadChatsCount > 0 && (
+                                <span className={styles.unread}>
+                                    {unreadChatsCount}
+                                </span>
+                            )}
                         </Link>
                     )}
                 </div>
@@ -303,7 +310,9 @@ const UserContent: FC<UserContentProps> = ({
                         <NotificationsModal
                             active={activeNotification}
                             setActive={setActiveNotification}
-                            closeModal={() => setIsShowNotificationsModal(false)}
+                            closeModal={() =>
+                                setIsShowNotificationsModal(false)
+                            }
                         />
                     </div>
                 </div>

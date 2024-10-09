@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 const usePagination = <T>(
     getData: (
         args: any,
-        page: number,
-        page_size: number,
     ) => Promise<{ results?: T[]; numPages?: number; status: number }>,
     args: any,
     pageSize: number = 10,
@@ -16,7 +14,7 @@ const usePagination = <T>(
 
     const fetchData = async () => {
         setLoading(true);
-        const res = await getData(args, page, pageSize);
+        const res = await getData({ ...args, page, pageSize });
 
         if (res.status !== 200) {
             setLoading(false);

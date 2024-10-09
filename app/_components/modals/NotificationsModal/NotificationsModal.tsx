@@ -2,7 +2,7 @@
 
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import styles from "./NotificationsModal.module.scss";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import classNames from "classnames";
@@ -10,6 +10,8 @@ import Link from "next/link";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import Image from "next/image";
 import { getDateOrTime } from "@/app/_utils/time";
+import { readNotification } from "@/app/_http/API/notificationApi";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 type NotificationsModalProps = {
     active: string | undefined;
@@ -24,12 +26,25 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
 }) => {
     const { notifications } = useTypesSelector((state) => state.contentReducer);
 
+    const { showAlert } = useContext(AlertContext);
+
     const dispatch = useTypesDispatch();
     const { updateNotificationRead } = contentSlice.actions;
 
-    const readNotification = async (id: string) => {
-        dispatch(updateNotificationRead(id));
+    const readNotificationHandler = async (id: string) => {
         setActive((prev) => (prev && prev === id ? undefined : id));
+
+        if (notifications?.find((i) => i.id === id)?.isRead) {
+            return;
+        }
+
+        const res = await readNotification(id);
+
+        if (res.status !== 200) {
+            showAlert("Произошла ошибка");
+        } else {
+            dispatch(updateNotificationRead(id));
+        }
     };
 
     if (!notifications) {
@@ -50,7 +65,7 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
             >
                 {notifications.map((notification, index) => (
                     <div
-                        onClick={() => readNotification(notification.id)}
+                        onClick={() => readNotificationHandler(notification.id)}
                         key={index}
                         className={classNames(styles.notification, {
                             [styles.active]: active === notification.id,
@@ -78,18 +93,21 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
                             >
                                 {notification.message}
                             </p>
-                            {!!notification.payload && (
-                                <Link
-                                onClick={() => closeModal && closeModal()}
-                                    href={`/tasks/${notification.payload.taskId}/solutions/${notification.payload.solutionId}`}
-                                    className={classNames(
-                                        "text fz20 blue pointer under",
-                                        styles.link,
-                                    )}
-                                >
-                                    Перейти
-                                </Link>
-                            )}
+                            {!!notification.payload &&
+                                notification.type !== "level" && (
+                                    <Link
+                                        onClick={() =>
+                                            closeModal && closeModal()
+                                        }
+                                        href={`/tasks/${notification.payload.task}/solutions/${notification.payload.id}`}
+                                        className={classNames(
+                                            "text fz20 blue pointer under",
+                                            styles.link,
+                                        )}
+                                    >
+                                        Перейти
+                                    </Link>
+                                )}
                         </div>
                     </div>
                 ))}

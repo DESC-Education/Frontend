@@ -100,7 +100,10 @@ export type IChat = {
     id: string;
     companion: IChatCompanion;
     createdAt: string;
-    taskId: string;
+    task: {
+        id: string;
+        title: string;
+    };
     isSupport: boolean;
     isFavorite: boolean;
     isSuspicious: boolean;
@@ -172,6 +175,7 @@ export type ISolution = {
     status: "completed" | "failed" | "pending";
     createdAt: string;
     files: IFile[];
+    review: IReview | null;
 };
 
 export type IFile = {
@@ -246,15 +250,15 @@ export type IProject = {
     name: string;
     avatar: string;
 };
-
+ 
 export type IReview = {
     profile: {
+        id: string;
         companyName: string;
         logoImg: string;
     };
-    title: string;
     rating: number;
-    description: string;
+    text: string;
 };
 
 export type IVerificationStudentRequest = {
@@ -289,5 +293,5 @@ export type IVerificationResult = {
     userType: "student" | "company";
 };
 
-export type ISolutionStatus = "completed" | "failed" | "pending"; 
+export type ISolutionStatus = "completed" | "failed" | "pending";
 export type IVerificationStatus = "pending" | "approved" | "rejected";

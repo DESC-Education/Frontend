@@ -60,7 +60,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
     const router = useRouter();
 
-    const getDayTitle = (day: number): "дней" | "день" | "дня" | "дней" => {
+    const getDayTitle = (day: number): "дней" | "день" | "дня" => {
         const number = day;
 
         if (number > 10 && [11, 12, 13, 14].includes(number % 100))

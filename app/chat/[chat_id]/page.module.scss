@@ -14,23 +14,41 @@
     border-bottom-right-radius: 40px;
     // border-radius: 40px;
     overflow: hidden;
-    padding: 20px;
+    padding: 15px;
     background-color: #f5f5f5;
 }
 
 .chatHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
+    flex-direction: column;
+    padding: 5px 30px;
     margin: -20px -20px 0;
     background-color: #ffffff;
     border-radius: 10px;
 
+    >div {
+        padding-bottom: 3px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .title {
+        width: calc(100% + 60px);
+        padding: 7px 40px;
+        margin: 3px -30px -7px -30px;
+        background: rgba(var(--gray2), .5);
+        transition: .3s;
+
+        &:hover {
+            background: rgba(var(--gray2), 1);
+        }
+    }
+
     .userInfo {
         display: flex;
         align-items: center;
-        padding: 7px 12px;
+        padding: 5px 12px;
         border-radius: 10px;
         transition: .3s;
 

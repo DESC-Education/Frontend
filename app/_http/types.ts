@@ -91,7 +91,7 @@ export type SSENotificationPayload = {
     message: string;
     isRead: boolean;
     createdAt: string;
-    payload?: { solutionId: string; taskId: string };
+    payload?: any;
 };
 
 export type SSENewMessagePayload = {

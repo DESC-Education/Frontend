@@ -124,8 +124,6 @@ export default function ExchangePage() {
         asyncFunc();
     }, [tasks]);
 
-    console.log(sorting);
-    
     const clearTasks = async () => {
         setIsLoading(true);
         setHasMore(false);

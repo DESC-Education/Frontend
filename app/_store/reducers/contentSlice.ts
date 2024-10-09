@@ -1,5 +1,6 @@
 import { SSENotificationPayload, Tokens } from "@/app/_http/types";
 import { IChat, ITask, IUser } from "@/app/_types";
+import { MAX_REPLY_COUNT } from "@/app/_utils/constants";
 import LocalStorage from "@/app/_utils/LocalStorage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RefObject } from "react";
@@ -11,19 +12,19 @@ type UserInterface = {
     myTasks: ITask[] | null;
     myArchivedTasks: ITask[] | null;
     isProfileInfoChanged: RefObject<boolean> | undefined;
-    unreadChatsCount: number;
+    // unreadChatsCount: number;
     notifications: SSENotificationPayload[] | null;
 };
 
 const initialState: UserInterface = {
     isLoading: true,
     isMobileDevice: false,
-    replyCount: 30,
+    replyCount: MAX_REPLY_COUNT,
     myTasks: null,
     myArchivedTasks: null,
     isProfileInfoChanged: undefined,
     notifications: null,
-    unreadChatsCount: 0,
+    // unreadChatsCount: 0,
 };
 
 export const contentSlice = createSlice({
@@ -56,8 +57,8 @@ export const contentSlice = createSlice({
                 state.isProfileInfoChanged = action.payload;
             }
         },
-        updateUnreadChatsCount(state, action: PayloadAction<number>) {
-            state.unreadChatsCount = action.payload;
+        updateReplyCount(state, action: PayloadAction<number>) {
+            state.replyCount = action.payload;
         },
         updateNotifications(
             state,
@@ -69,9 +70,13 @@ export const contentSlice = createSlice({
             if (!state.notifications) return;
 
             state.notifications = state.notifications.sort((a, b) => {
-                if (a.isRead && !b.isRead) return 1;
-                if (!a.isRead && b.isRead) return -1;
-                return 0;
+                if (a.isRead !== b.isRead) {
+                    return Number(a.isRead) - Number(b.isRead);
+                }
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
             });
         },
         addNotification(state, action: PayloadAction<SSENotificationPayload>) {

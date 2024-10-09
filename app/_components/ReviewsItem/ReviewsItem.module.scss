@@ -16,7 +16,7 @@
             align-items: center;
             gap: 20px;
 
-            >img {
+            .logo {
                 border: 1px solid rgba(var(--gray2), 1);
                 width: 50px;
                 height: 50px;
@@ -33,6 +33,19 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+        }
+
+        .avatar {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+            transition: .3s;
+            padding: 3px 7px;
+
+            &:hover {
+                background: white;
+                border-radius: 9px;
+            }
         }
     }
 }

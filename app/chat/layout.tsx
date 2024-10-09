@@ -18,6 +18,7 @@ import { getChat, getChats } from "../_http/API/chatsApi";
 import CustomOval from "../_components/ui/CustomOval/CustomOval";
 import { chatSlice } from "../_store/reducers/chatSlice";
 import classNames from "classnames";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 export default function RootLayout({
     children,
@@ -35,31 +36,26 @@ export default function RootLayout({
     const [isChatsLoading, setIsChatsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log("in layout");
-
-        if (chats) return;
+        // if (chats) return;
 
         setIsChatsLoading(true);
         const asyncFunc = async () => {
             const res = await getChats();
 
-            // console.log("getChats res", res);
-
             if (res.status === 200) {
-                if (res.results?.filter((i) => i.id === chat_id).length === 0) {
+                if (
+                    chat_id &&
+                    res.results?.filter((i) => i.id === chat_id).length === 0
+                ) {
                     const getChatRes = await getChat(chat_id);
-
-                    // console.log("getChatRes", getChatRes);
 
                     if (getChatRes.status === 200) {
                         res.results?.push(getChatRes.chat!);
-                        // dispatch(
-                        // tryToAddChat({ ...getChatRes.chat!, id: chat_id }),
-                        // );
+                        dispatch(
+                            tryToAddChat({ ...getChatRes.chat!, id: chat_id }),
+                        );
                     }
                 }
-                // console.log("updating chats...");
-
                 dispatch(updateChats(res.results!));
             }
             setIsChatsLoading(false);
@@ -80,31 +76,71 @@ export default function RootLayout({
                                 <CustomOval />
                             </div>
                         ) : (
-                            <div className={styles.chatList}>
+                            <TransitionGroup className={styles.chatList}>
                                 {chats?.map((chat, index) => {
                                     if (!chat.companion) return;
-
+                                    
                                     return (
-                                        <Link
-                                            href={`/chat/${chat.id}`}
-                                            key={index}
-                                            className={styles.chatLink}
+                                        <CSSTransition
+                                            key={chat.id}
+                                            timeout={200}
+                                            classNames="item-value"
                                         >
-                                            <ChatItem
-                                                unreadCount={chat.unreadCount}
-                                                active={
-                                                    chat.id === currentChat?.id
-                                                }
-                                                id={chat.id}
-                                                name={chat.companion.name}
-                                                isFavourited={chat.isFavorite}
-                                                avatar={chat.companion.avatar}
-                                                lastMessage={chat.lastMessage}
-                                            />
-                                        </Link>
+                                            <Link
+                                                href={`/chat/${chat.id}`}
+                                                key={index}
+                                                className={styles.chatLink}
+                                            >
+                                                <ChatItem
+                                                    unreadCount={
+                                                        chat.unreadCount
+                                                    }
+                                                    active={
+                                                        chat.id ===
+                                                        currentChat?.id
+                                                    }
+                                                    id={chat.id}
+                                                    name={chat.companion.name}
+                                                    isFavourited={
+                                                        chat.isFavorite
+                                                    }
+                                                    avatar={
+                                                        chat.companion.avatar
+                                                    }
+                                                    lastMessage={
+                                                        chat.lastMessage
+                                                    }
+                                                />
+                                            </Link>
+                                        </CSSTransition>
                                     );
                                 })}
-                            </div>
+                            </TransitionGroup>
+                            // <div className={styles.chatList}>
+                            //     {chats?.map((chat, index) => {
+                            //         if (!chat.companion) return;
+
+                            //         return (
+                            //             <Link
+                            //                 href={`/chat/${chat.id}`}
+                            //                 key={index}
+                            //                 className={styles.chatLink}
+                            //             >
+                            //                 <ChatItem
+                            //                     unreadCount={chat.unreadCount}
+                            //                     active={
+                            //                         chat.id === currentChat?.id
+                            //                     }
+                            //                     id={chat.id}
+                            //                     name={chat.companion.name}
+                            //                     isFavourited={chat.isFavorite}
+                            //                     avatar={chat.companion.avatar}
+                            //                     lastMessage={chat.lastMessage}
+                            //                 />
+                            //             </Link>
+                            //         );
+                            //     })}
+                            // </div>
                         )}
                     </SideBar>
                     {children}

@@ -453,9 +453,6 @@ const SettingsPage = () => {
         }
     };
 
-    console.log(studentProfile);
-    
-
     const validateEditProfileCompany = async () => {
         setIsLoading(true);
         const errorsTemp: any = {};

@@ -4,7 +4,11 @@ import { FC, useContext, useEffect, useState } from "react";
 import styles from "./SolutionLogic.module.scss";
 import classNames from "classnames";
 import { ISolution } from "@/app/_types";
-import { evaluateTaskSolution, getSolution } from "@/app/_http/API/tasksApi";
+import {
+    createReview,
+    evaluateTaskSolution,
+    getSolution,
+} from "@/app/_http/API/tasksApi";
 import { useRouter } from "next/navigation";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import { solutionStatuses } from "@/app/_utils/constants";
@@ -15,6 +19,7 @@ import Button from "../../ui/Button/Button";
 import Link from "next/link";
 import Input from "../../ui/Input/Input";
 import { AlertContext } from "@/app/_context/AlertContext";
+import ReviewsItem from "../../ReviewsItem/ReviewsItem";
 
 type SolutionLogicProps = {
     solutionId: string;
@@ -33,6 +38,7 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
     const [isReview, setIsReview] = useState<boolean>(false);
     const [reviewText, setReviewText] = useState<string>("");
     const [reviewRating, setReviewRating] = useState<number>(0);
+    const [hoveringStars, setHoveringStars] = useState<number>(0);
 
     const evaluateTask = async () => {
         const res = await evaluateTaskSolution({
@@ -53,7 +59,52 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
         }
     };
 
+    const createReviewHandler = async () => {
+        const res = await createReview({
+            solution: solutionId,
+            rating: reviewRating,
+            text: reviewText,
+        });
+
+        if (res.status === 200) {
+            showAlert("Отзыв успешно отправлен!", "success");
+            setSolution((prev) => ({
+                ...prev!,
+                review: res.review,
+                // reviewText: res.text,
+                // reviewRating: res.rating,
+            }));
+        } else {
+            showAlert("Произошла ошибка");
+        }
+    };
+
     const router = useRouter();
+
+    const getStar = (index: number, hoveringStars: number) => {
+        if (hoveringStars) {
+            return `/icons/star${hoveringStars > index ? "" : "_inactive"}.svg`;
+        } else {
+            return `/icons/star${index < reviewRating ? "" : "_inactive"}.svg`;
+        }
+    };
+
+    useEffect(() => {
+        const listener = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                if (verdict === "completed") {
+                    evaluateTask();
+                } else if (comment.length > 0) {
+                    evaluateTask();
+                }
+            }
+        };
+        window.addEventListener("keydown", listener);
+
+        return () => {
+            window.removeEventListener("keydown", listener);
+        };
+    }, []);
 
     useEffect(() => {
         setIsLoading(true);
@@ -187,25 +238,73 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
                     </Button>
                 </div>
             )}
-            {user.role === "company" && solution.status === "completed" && (
-                <div className={styles.review}>
-                    {isReview ? (
-                        <div className={styles.reviewText}>
-                            <p className="text fz24">
-                                <i>Ваш рейтинг:</i> {reviewRating}
-                            </p>
-                            <p className="text fz24">{reviewText}</p>
-                        </div>
-                    ) : (
-                        <Button
-                            type="primary"
-                            onClick={() => setIsReview(true)}
-                        >
-                            Оставить отзыв
-                        </Button>
-                    )}
-                </div>
-            )}
+            {user.role === "company" &&
+                solution.status === "completed" &&
+                !solution.review && (
+                    <div className={styles.review}>
+                        {isReview ? (
+                            <>
+                                <div className={styles.body}>
+                                    <p className="text fz20">Текст отзыва: </p>
+                                    <Input
+                                        containerClassName={
+                                            styles.reviewTextarea
+                                        }
+                                        type="textarea"
+                                        value={reviewText}
+                                        onChange={(e) => setReviewText(e)}
+                                    />
+                                    <p className="text fz20">Ваша оценка: </p>
+                                    <div className={styles.stars}>
+                                        {Array(5)
+                                            .fill(0)
+                                            .map((_, index) => (
+                                                <img
+                                                    className={classNames({
+                                                        [styles.active]:
+                                                            hoveringStars >=
+                                                            index + 1,
+                                                    })}
+                                                    key={index}
+                                                    src={getStar(
+                                                        index,
+                                                        hoveringStars,
+                                                    )}
+                                                    alt="star"
+                                                    onClick={() =>
+                                                        setReviewRating(
+                                                            index + 1,
+                                                        )
+                                                    }
+                                                    onMouseEnter={() =>
+                                                        setHoveringStars(
+                                                            index + 1,
+                                                        )
+                                                    }
+                                                    onMouseLeave={() =>
+                                                        setHoveringStars(0)
+                                                    }
+                                                />
+                                            ))}
+                                    </div>
+                                </div>
+                                <Button
+                                    onClick={() => createReviewHandler()}
+                                    type="primary"
+                                >
+                                    Отправить
+                                </Button>
+                            </>
+                        ) : (
+                            <Button
+                                type="primary"
+                                onClick={() => setIsReview(true)}
+                            >
+                                Оставить отзыв
+                            </Button>
+                        )}
+                    </div>
+                )}
             {user.role === "company" && solution.status === "failed" && (
                 <div className={styles.companyComment}>
                     <p className="text fz24 fw500">
@@ -214,12 +313,24 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
                     <p className="text fz24">{solution.companyComment}</p>
                 </div>
             )}
+            {user.role === "company" && !!solution.review && (
+                <div className={styles.companyComment}>
+                    <p className="text fz24 fw500">Ваш отзыв к решению:</p>
+                    <ReviewsItem review={solution.review} />
+                </div>
+            )}
             {user.role === "student" && solution.status === "failed" && (
                 <div className={styles.companyComment}>
                     <p className="text fz24 fw500">
                         Комментарий компании к решению:
                     </p>
                     <p className="text fz24">{solution.companyComment}</p>
+                </div>
+            )}
+            {user.role === "student" && !!solution.review && (
+                <div className={styles.companyComment}>
+                    <p className="text fz24 fw500">Отзыв компании к решению:</p>
+                    <ReviewsItem review={solution.review} />
                 </div>
             )}
         </div>

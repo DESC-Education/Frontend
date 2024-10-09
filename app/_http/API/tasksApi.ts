@@ -1,6 +1,12 @@
 import axios from "axios";
 import { $authHost, $host } from "..";
-import { ICategory, ISolution, ISolutionStatus, ITask } from "@/app/_types";
+import {
+    ICategory,
+    IReview,
+    ISolution,
+    ISolutionStatus,
+    ITask,
+} from "@/app/_types";
 import { CreateTaskDTO } from "../types";
 
 export const getTask = async (id: string) => {
@@ -221,16 +227,22 @@ export const getSolutions = async (
         task_id: string;
         ordering: "createdAt" | "-createdAt";
         status: "completed" | "failed" | "pending";
+        page: number;
+        page_size: number;
+    } = {
+        ordering: "-createdAt",
+        page: 1,
+        page_size: 10,
+        status: "pending",
+        task_id: "",
     },
-    page: number = 1,
-    page_size: number = 10,
 ) => {
     try {
         const { data } = await $authHost.get<{
             results: ISolution[];
             numPages: number;
         }>(
-            `/api/v1/tasks/solution-list/${dto.task_id}?ordering=${dto.ordering}&status=${dto.status}&page=${page}&page_size=${page_size}`,
+            `/api/v1/tasks/solution-list/${dto.task_id}?ordering=${dto.ordering}&status=${dto.status}&page=${dto.page}&page_size=${dto.page_size}`,
         );
 
         return {
@@ -293,6 +305,69 @@ export const evaluateTaskSolution = async (dto: {
         );
 
         return { status: 200, solutionStatus: data.status };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const createReview = async (dto: {
+    text: string;
+    rating: number;
+    solution: string;
+}) => {
+    try {
+        const { data } = await $authHost.post<any>(
+            `/api/v1/tasks/solution/review`,
+            dto,
+        );
+
+        return {
+            status: 200,
+            message: "Отзыв успешно создан!",
+            review: data,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
+export const getReviews = async (
+    dto: { page: number; page_size: number } = { page: 1, page_size: 10 },
+) => {
+    try {
+        const { data } = await $authHost.get<{
+            count: string;
+            results: IReview[];
+            numPages: number;
+        }>(
+            `/api/v1/tasks/review-list?page=${dto.page}&page_size=${dto.page_size}`,
+        );
+
+        return {
+            status: 200,
+            results: data.results,
+            numPages: data.numPages,
+        };
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return {

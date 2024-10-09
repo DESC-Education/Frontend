@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import styles from "./ChatItem.module.scss";
+import "./ChatItem.scss";
 import classNames from "classnames";
 import Button from "../ui/Button/Button";
 import { IMessage } from "@/app/_types";
@@ -45,11 +46,11 @@ const ChatUser: React.FC<ChatUserProps> = ({
     const { updateChatFavourite, updateChats } = chatSlice.actions;
 
     const changeFavourite = async () => {
+        dispatch(updateChatFavourite({ chat: id, isFavorite: isFavourited }));
+
         const res = await changeFavouriteChat(id);
 
         const prevFav = isFavourited;
-
-        dispatch(updateChatFavourite({ chat: id, isFavorite: !prevFav }));
 
         if (res.status === 200) {
             dispatch(updateChats(res.chats!));
@@ -108,7 +109,11 @@ const ChatUser: React.FC<ChatUserProps> = ({
                 </div>
             </div>
             {lastMessage ? (
-                <div className={styles.chatMeta}>
+                <div
+                    className={classNames(styles.chatMeta, {
+                        [styles.notMyMessage]: lastMessage.user.id !== user.id,
+                    })}
+                >
                     <div className={styles.metaHeader}>
                         <span className={classNames(styles.date, "text fz16")}>
                             {lastMessageTime}

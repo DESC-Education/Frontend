@@ -34,6 +34,19 @@ export const taskSlice = createSlice({
                 state.currentTask.solutions.push(action.payload);
             }
         },
+        updateCurrentTaskSolution(state, action: PayloadAction<ISolution>) {
+            if (state.currentTask) {
+                state.currentTask.solutions = state.currentTask.solutions.map(
+                    (item) => {
+                        if (item.id === action.payload.id) {
+                            return action.payload;
+                        } else {
+                            return item;
+                        }
+                    },
+                );
+            }
+        },
         logoutTask(state) {
             state.tasks = null;
             state.categories = null;

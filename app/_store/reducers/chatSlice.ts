@@ -4,11 +4,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type ChatState = {
     chats: IChat[] | null;
     currentChat: IChat | null;
+    unreadChatsCount: number;
 };
 
 const initialState: ChatState = {
     chats: null,
     currentChat: null,
+    unreadChatsCount: 0,
 };
 
 export const chatSlice = createSlice({
@@ -21,18 +23,44 @@ export const chatSlice = createSlice({
         updateChats: (state, action: PayloadAction<IChat[]>) => {
             state.chats = action.payload;
         },
+        updateUnreadChatsCount(
+            state,
+            action: PayloadAction<{ chat_id?: string; number?: number }>,
+        ) {
+            console.log(action.payload);
+
+            if (action.payload.number !== undefined) {
+                state.unreadChatsCount = action.payload.number;
+                return;
+            }
+
+            if (!state.chats) return;
+
+            state.unreadChatsCount = state.chats?.filter(
+                (i) => i.id !== action.payload.chat_id && i.lastMessage.isRead,
+            ).length;
+        },
         tryToAddChat: (state, action: PayloadAction<IChat>) => {
-            console.log("in slice state.chats", { ...state.chats }, action.payload);
+            console.log(
+                "HELO BROW",
+                state.chats && [...state.chats],
+                !state.chats,
+            );
+
+            if (!state.chats) {
+                state.chats = [action.payload];
+                return;
+            }
 
             if (
                 state.chats?.length &&
-                state.chats.filter((i) => i.id === action.payload.id).length ===
-                    0
-            ) {
-                console.log("adding a chat...");
-                
-                state.chats.push(action.payload);
-            }
+                state.chats.filter((i) => i.id === action.payload.id).length
+            )
+                return;
+
+            console.log("adding a chat...");
+
+            state.chats.push(action.payload);
         },
         addChat: (state, action: PayloadAction<IChat>) => {
             state.chats?.push(action.payload);
@@ -49,12 +77,11 @@ export const chatSlice = createSlice({
                 state.currentChat.messages?.push(action.payload);
             }
         },
-        updateIsRead: (state, action: PayloadAction<IMessage[]>) => {
+        updateIsRead: (state, action: PayloadAction<IMessage>) => {
             if (state.currentChat) {
-                const readIds = action.payload.map((i) => i.id);
                 state.currentChat.messages = state.currentChat.messages.map(
                     (item) => {
-                        if (readIds.includes(item.id)) {
+                        if (item.id === action.payload.id) {
                             return { ...item, isRead: true };
                         } else {
                             return item;
@@ -139,6 +166,20 @@ export const chatSlice = createSlice({
                                 },
                             };
                         }
+                    } else {
+                        return item;
+                    }
+                });
+            }
+        },
+        updateLastMessageViewed: (state, action: PayloadAction<string>) => {
+            if (state.chats) {
+                state.chats = state.chats.map((item) => {
+                    if (item.id === action.payload) {
+                        return {
+                            ...item,
+                            lastMessageViewed: true,
+                        };
                     } else {
                         return item;
                     }

@@ -26,6 +26,7 @@ import Input from "@/app/_components/ui/Input/Input";
 import { AlertContext } from "@/app/_context/AlertContext";
 import Button from "@/app/_components/ui/Button/Button";
 import Link from "next/link";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
 
 export default function Page() {
     const { chat_id } = useParams<{ chat_id: string }>();
@@ -45,8 +46,10 @@ export default function Page() {
         updateCurrentChat,
         addChatMessage,
         updateIsRead,
-        tryToAddChat,
+        updateChatUnread,
         updateLastMessage,
+        updateLastMessageViewed,
+        updateUnreadChatsCount,
     } = chatSlice.actions;
 
     const createWsInstance = useCallback(() => {
@@ -93,14 +96,16 @@ export default function Page() {
                     break;
                 case "viewed":
                     console.log("viewed", parsedPayload, event);
-
+                    dispatch(updateChatUnread({ chatId: chat_id, count: 0 }));
+                    dispatch(updateUnreadChatsCount({ chat_id }));
+                    dispatch(updateLastMessageViewed(chat_id));
                     dispatch(updateIsRead(parsedPayload));
                     break;
             }
         };
 
         ws.onerror = (e) => {
-            showAlert("Ошибка подключения к серверу");
+            showAlert("Ошибка при загрузке чата");
         };
 
         ws.onclose = (e) => {
@@ -176,22 +181,23 @@ export default function Page() {
         console.log("in chat_id page, chats ", chats, chat_id);
         setIsChatLoading(true);
         const asyncFunc = async () => {
+            // if (currentChat && currentChat.id !== chat_id) {
+            const res = await getChat(chat_id);
 
-            if (!currentChat?.messages || currentChat.id !== chat_id) {
-                const res = await getChat(chat_id);
+            console.log("???");
 
-                if (res.status === 200) {
-                    dispatch(
-                        updateCurrentChat({
-                            ...res.chat!,
-                            id: chat_id,
-                            messages: res.chat!.messages.reverse(),
-                        }),
-                    );
-                } else {
-                    router.replace("/chat");
-                }
+            if (res.status === 200) {
+                dispatch(
+                    updateCurrentChat({
+                        ...res.chat!,
+                        id: chat_id,
+                        messages: res.chat!.messages.reverse(),
+                    }),
+                );
+            } else {
+                router.replace("/chat");
             }
+            // }
             setIsChatLoading(false);
         };
         asyncFunc();
@@ -310,32 +316,33 @@ export default function Page() {
     return (
         <div className={styles.container} ref={containerRef}>
             <div className={styles.chatHeader}>
-                <Link
-                    href={
-                        user.role === "company"
-                            ? `/profile/student/${currentChat.companion.id}`
-                            : `/profile/company/${currentChat.companion.id}`
-                    }
-                    className={styles.userInfo}
-                >
-                    <img
-                        src={
-                            currentChat.companion.avatar
-                                ? process.env.NEXT_PUBLIC_SERVER_PATH +
-                                  currentChat.companion.avatar
-                                : "/images/avatar.png"
+                <div>
+                    <Link
+                        href={
+                            user.role === "company"
+                                ? `/profile/student/${currentChat.companion.id}`
+                                : `/profile/company/${currentChat.companion.id}`
                         }
-                        alt="Аватар"
-                        className={styles.avatar}
-                    />
-                    <div>
-                        <h4 className={styles.userName}>
-                            {currentChat.companion.name}
-                        </h4>
-                        {/* <span className={styles.userStatus}>в сети</span> */}
-                    </div>
-                </Link>
-                <div className={styles.chatActions}>
+                        className={styles.userInfo}
+                    >
+                        <img
+                            src={
+                                currentChat.companion.avatar
+                                    ? process.env.NEXT_PUBLIC_SERVER_PATH +
+                                      currentChat.companion.avatar
+                                    : "/images/avatar.png"
+                            }
+                            alt="Аватар"
+                            className={styles.avatar}
+                        />
+                        <div>
+                            <h4 className={styles.userName}>
+                                {currentChat.companion.name}
+                            </h4>
+                            {/* <span className={styles.userStatus}>в сети</span> */}
+                        </div>
+                    </Link>
+                    {/* <div className={styles.chatActions}>
                     <img
                         src="/icons/searchIcon.svg"
                         alt="search"
@@ -346,17 +353,35 @@ export default function Page() {
                         alt="search"
                         className={styles.pinIcon}
                     />
+                </div> */}
                 </div>
+                {!!currentChat.task?.title && (
+                    <Link
+                        href={`/tasks/${currentChat.task.id}`}
+                        className={classNames(styles.title, "text fz20")}
+                    >
+                        Чат по заданию: {currentChat.task.title}
+                    </Link>
+                )}
+                <div></div>
             </div>
             <div className={styles.chatMessages}>
-                {currentChat.messages.map((message, index) => (
-                    <Message
-                        message={message}
-                        key={index}
-                        ws={ws}
-                        wsStatus={wsReadyState}
-                    />
-                ))}
+                {currentChat.messages.length > 0 ? (
+                    currentChat.messages.map((message, index) => (
+                        <Message
+                            message={message}
+                            key={index}
+                            ws={ws}
+                            wsStatus={wsReadyState}
+                        />
+                    ))
+                ) : (
+                    <div className="centerContent">
+                        <p className="text fz28 fw500 gray center">
+                            Тут пока нет сообщений!
+                        </p>
+                    </div>
+                )}
                 <div ref={dummyRef}></div>
             </div>
             <div

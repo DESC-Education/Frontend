@@ -57,13 +57,14 @@
     }
 
     .chatMeta {
-        // display: flex;
-        // flex-direction: column;
-        // justify-content: center;
-        // align-items: flex-end;
-        // gap: 1px;
         display: grid;
         grid-template-columns: 1fr;
+
+        &.notMyMessage {
+            .metaFooter {
+                justify-content: flex-end;
+            }
+        }
 
         &.noLastMessage {
             display: flex;
@@ -108,7 +109,7 @@
 
         .metaFooter {
             padding-left: 3px;
-            
+
             .unreadCount {
                 width: 24px;
                 height: 25px;

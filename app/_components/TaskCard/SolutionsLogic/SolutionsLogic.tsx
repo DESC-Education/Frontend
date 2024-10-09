@@ -16,7 +16,7 @@ import CustomOval from "../../ui/CustomOval/CustomOval";
 import usePagination from "@/app/_hooks/usePagination";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 
-const POSTS_PER_PAGE = 3;
+const POSTS_PER_PAGE = 7;
 
 const filters = [
     { name: "Выполненные", value: "completed" },
@@ -48,7 +48,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
     const [filter, setFilter] = useState<"completed" | "failed" | "pending">(
         "pending",
     );
-    
+
     const [
         currentCompanySolutions,
         totalPages,
@@ -86,20 +86,6 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                 <div className={styles.solutionDescription}>
                                     <p className="text fz20">
                                         {solution.description}
-                                        {solution.description}
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Nihil officiis unde
-                                        quibusdam ratione numquam praesentium
-                                        laboriosam quos. Explicabo, doloremque
-                                        consequuntur. Ducimus, deleniti
-                                        molestiae minus quidem deserunt
-                                        perferendis in blanditiis ipsa amet modi
-                                        dicta officia similique? Corporis
-                                        commodi natus rerum sunt. Lorem ipsum
-                                        dolor sit amet consectetur, adipisicing
-                                        elit. Natus alias aperiam fugiat
-                                        corporis eius nam id veniam ex
-                                        repellendus fuga.
                                     </p>
                                 </div>
                                 <p
@@ -121,7 +107,10 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                 >
                                     <Button
                                         type="secondary"
-                                        className={styles.solutionTitle}
+                                        className={classNames(
+                                            styles.solutionTitle,
+                                            styles.button,
+                                        )}
                                     >
                                         Перейти к решению
                                     </Button>

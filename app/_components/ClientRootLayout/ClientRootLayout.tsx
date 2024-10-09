@@ -17,6 +17,8 @@ import {
     SSEResponse,
 } from "@/app/_http/types";
 import { chatSlice } from "@/app/_store/reducers/chatSlice";
+import { taskSlice } from "@/app/_store/reducers/taskSlice";
+import { MAX_REPLY_COUNT } from "@/app/_utils/constants";
 
 type ClientRootLayoutProps = {
     children: React.ReactNode;
@@ -37,89 +39,32 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         authUser,
         updateProfile,
         updateIsProfileLoading,
+        updateStudentProfileLevel,
     } = userSlice.actions;
     const {
         updateIsLoading,
         updateIsMobileDevice,
         updateIsProfileInfoChanged,
-        updateUnreadChatsCount,
         addNotification,
         updateNotifications,
+        updateReplyCount,
     } = contentSlice.actions;
-    const { updateLastMessage, updateChatUnread } = chatSlice.actions;
+    const {
+        updateLastMessage,
+        updateChatUnread,
+        updateUnreadChatsCount,
+        tryToAddChat,
+    } = chatSlice.actions;
+    const {
+        updateCurrentTaskSolution,
+        addCurrentTaskSolution,
+    } = taskSlice.actions;
 
     const [isInitialRun, setIsInitialRun] = useState(true);
 
     const isChanged = useRef<boolean>();
 
-    useEffect(() => {
-        dispatch(
-            updateNotifications([
-                {
-                    id: "1",
-                    title: "Verify Account",
-                    message: "Please confirm your email.",
-                    payload: { solutionId: "sdf", taskId: "asdasd" },
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-09-01T00:00:00Z",
-                },
-                {
-                    id: "2",
-                    title: "Action Required",
-                    message: "Update your profile now.",
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-09-05T00:00:00Z",
-                },
-                {
-                    id: "3",
-                    title: "Confirm Registration",
-                    message: "Activate your account.",
-                    payload: { solutionId: "sdf", taskId: "asdasd" },
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-09-10T00:00:00Z",
-                },
-                {
-                    id: "4",
-                    title: "Security Alert",
-                    message: "New login detected.",
-                    payload: { solutionId: "sdf", taskId: "asdasd" },
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-09-15T00:00:00Z",
-                },
-                {
-                    id: "5",
-                    title: "Password Change",
-                    message: "Your password has been reset.",
-                    payload: { solutionId: "sdf", taskId: "asdasd" },
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-09-20T00:00:00Z",
-                },
-                {
-                    id: "6",
-                    title: "Email Verification",
-                    message: "Verify your email address.",
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-09-25T00:00:00Z",
-                },
-                {
-                    id: "7",
-                    title: "Account Update",
-                    message: "Your details have been updated.",
-                    payload: { solutionId: "sdf", taskId: "asdasd" },
-                    isRead: false,
-                    type: "verification",
-                    createdAt: "2024-10-01T00:00:00Z",
-                },
-            ]),
-        );
-    }, []);
-
+    // SSE Setup
     useEffect(() => {
         const asyncFunc = async () => {
             $authHost
@@ -131,6 +76,8 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                     adapter: "fetch",
                 })
                 .then(async (response) => {
+                    if (!response?.data) return;
+
                     const stream = response.data;
 
                     const reader = stream
@@ -176,12 +123,99 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     // title: string;
                                     // message: string;
                                     // payload: string;
+                                    console.log(
+                                        "new notification with data",
+                                        result.data,
+                                    );
                                     dispatch(
                                         addNotification({
                                             ...result.data,
                                             isRead: false,
                                         }),
                                     );
+                                    switch (result.data.type) {
+                                        case "verification": {
+                                            const profileRes = await getProfile();
+
+                                            if (profileRes.status === 200) {
+                                                dispatch(
+                                                    updateProfile({
+                                                        ...profileRes.profile!,
+                                                        telegramLink: profileRes.profile!
+                                                            .telegramLink
+                                                            ? profileRes.profile!.telegramLink.slice(
+                                                                  13,
+                                                              )
+                                                            : undefined,
+                                                        vkLink: profileRes.profile!
+                                                            .vkLink
+                                                            ? profileRes.profile!.vkLink.slice(
+                                                                  15,
+                                                              )
+                                                            : undefined,
+                                                    }),
+                                                );
+                                            }
+                                            break;
+                                        }
+                                        case "evaluation": {
+                                            console.log(
+                                                "evaluation",
+                                                result.data,
+                                            );
+
+                                            dispatch(
+                                                updateCurrentTaskSolution(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "solution": {
+                                            console.log(
+                                                "solution",
+                                                result.data,
+                                            );
+
+                                            dispatch(
+                                                addCurrentTaskSolution(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "review": {
+                                            console.log("review", result.data);
+
+                                            dispatch(
+                                                updateCurrentTaskSolution(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "countReset": {
+                                            dispatch(
+                                                updateReplyCount(
+                                                    MAX_REPLY_COUNT,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                        case "level": {
+                                            console.log(
+                                                "level",
+                                                result.data.payload,
+                                            );
+
+                                            dispatch(
+                                                updateStudentProfileLevel(
+                                                    result.data.payload,
+                                                ),
+                                            );
+                                            break;
+                                        }
+                                    }
                                     console.log("notification", result.data);
                                     break;
                                 case "newMessage":
@@ -210,13 +244,15 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                         }),
                                     );
                                     dispatch(
-                                        updateUnreadChatsCount(
-                                            result.data.unreadChatsCount,
-                                        ),
+                                        updateUnreadChatsCount({
+                                            number:
+                                                result.data.unreadChatsCount,
+                                        }),
                                     );
                                     console.log("newMessage", result.data);
                                     break;
                                 case "newChat":
+                                    dispatch(tryToAddChat(result.data));
                                     console.log("newChat", result.data);
                                     break;
                             }
@@ -229,6 +265,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         asyncFunc();
     }, []);
 
+    // Setting "isMobile" flag
     useEffect(() => {
         const isMobile = () => {
             let check = false;
@@ -246,10 +283,13 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
             return check;
         };
 
-        dispatch(updateIsProfileInfoChanged(isChanged));
         dispatch(updateIsMobileDevice(isMobile()));
+
+        // Changes not saved logic
+        dispatch(updateIsProfileInfoChanged(isChanged));
     }, []);
 
+    // Auth Setup
     useEffect(() => {
         if (!isInitialRun) return;
 
@@ -262,24 +302,35 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                 if (res.status === 200) {
                     dispatch(authUser({ user: res.user! }));
 
+                    dispatch(updateNotifications(res.notifications!));
+                    dispatch(
+                        updateUnreadChatsCount({
+                            number: res.unreadChatsCount!,
+                        }),
+                    );
+
                     const profile = await getProfile();
 
+                    // Profile Setup
                     if (profile.status === 200) {
-                        if (profile.profile.verification.status !== "not_verified") {
-                        
-                        dispatch(
-                            updateProfile({
-                                ...profile.profile!,
-                                telegramLink: profile.profile!.telegramLink
-                                    ? profile.profile!.telegramLink.slice(13)
-                                    : undefined,
-                                vkLink: profile.profile!.vkLink
-                                    ? profile.profile!.vkLink.slice(15)
-                                    : undefined,
-                            }),
-                        );
-                    }
-
+                        if (
+                            profile.profile.verification.status !==
+                            "not_verified"
+                        ) {
+                            dispatch(
+                                updateProfile({
+                                    ...profile.profile!,
+                                    telegramLink: profile.profile!.telegramLink
+                                        ? profile.profile!.telegramLink.slice(
+                                              13,
+                                          )
+                                        : undefined,
+                                    vkLink: profile.profile!.vkLink
+                                        ? profile.profile!.vkLink.slice(15)
+                                        : undefined,
+                                }),
+                            );
+                        }
                     }
                     dispatch(updateIsProfileLoading(false));
                 }

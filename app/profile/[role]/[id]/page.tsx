@@ -80,7 +80,7 @@ const ProfilePage = () => {
         });
 
         console.log("createChat res", res);
-        
+
         if (res.status === 200) {
             router.push(`/chat/${res.chat!.id}`);
         }
@@ -116,14 +116,15 @@ const ProfilePage = () => {
                             alt="avatar"
                         />
                         <p className="text fz28">
-                        {studentProfile.firstName[0].toLocaleUpperCase() +
+                            {studentProfile.firstName[0].toLocaleUpperCase() +
                                 studentProfile.firstName.slice(1)}{" "}
                             {studentProfile.lastName[0].toLocaleUpperCase() +
                                 studentProfile.lastName.slice(1)}{" "}
                         </p>
                         {studentProfile.tasksCompleted > 0 && (
                             <p className="text fz20 green">
-                                {studentProfile.tasksCompleted} заданий выполнено
+                                {studentProfile.tasksCompleted} заданий
+                                выполнено
                             </p>
                         )}
                         <div className={styles.sm}>
@@ -369,10 +370,10 @@ const ProfilePage = () => {
                                                             styles.circle
                                                         }
                                                         style={{
-                                                            background: `conic-gradient(#19282C ${
+                                                            background: `conic-gradient(#19282C ${Math.floor(
                                                                 category.percent *
-                                                                100
-                                                            }%, #e0e0e0 0%)`,
+                                                                    100,
+                                                            )}%, #e0e0e0 0%)`,
                                                         }}
                                                     >
                                                         <span
@@ -381,8 +382,10 @@ const ProfilePage = () => {
                                                                 "title",
                                                             )}
                                                         >
-                                                            {category.percent *
-                                                                100}
+                                                            {Math.floor(
+                                                                category.percent *
+                                                                    100,
+                                                            )}
                                                             %
                                                         </span>
                                                     </div>
