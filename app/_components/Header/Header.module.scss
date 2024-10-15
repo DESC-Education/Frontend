@@ -9,6 +9,10 @@
     padding: 15px 0 !important;
     box-shadow: 0px 2px 7px rgba(var(--gray2), 1);
 
+    .logo {
+        width: 125px;
+    }
+
     .container {
         display: flex;
         justify-content: space-between;
@@ -147,7 +151,15 @@
     }
 }
 
+@media screen and (max-width: 1600px) {
+    .header {
+        padding: 12px 0 !important;
 
+        .logo {
+            width: 95px;
+        }
+    }
+}
 
 @media (max-width: 768px) {
 
@@ -155,6 +167,89 @@
         transition: transform 0.3s ease;
         z-index: 20;
         // padding: 3px 0 !important;
+
+        .container {
+            .notifications {
+                margin-right: 20px;
+                margin-left: auto;
+                transition: .3s;
+                opacity: 1;
+
+                &.hide {
+                    z-index: -10;
+                    opacity: 0;
+                }
+
+                img {
+                    cursor: pointer;
+                    transition: .3s;
+                    box-shadow: none;
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+
+                    &:hover {
+                        box-shadow: 0px 0px 2px 4px rgba(var(--gray2), .9);
+                    }
+                }
+            }
+
+            .notificationModal {
+                background: white;
+                opacity: 0;
+                height: 0;
+                right: 0;
+                top: 73px;
+                z-index: -10;
+                overflow: hidden;
+                position: absolute;
+                transition: .3s;
+                border-radius: 20px;
+                border: 1px solid rgba(var(--gray1), .4);
+                padding: 0;
+                
+                &.active {
+                    padding: 15px 5px 15px 20px;
+                    z-index: 20;
+                    opacity: 1;
+                    height: 600px;
+                }
+            }
+
+            .notification {
+                position: relative;
+
+                .unread {
+                    cursor: pointer;
+                    position: absolute;
+                    top: -6px;
+                    right: -6px;
+                    padding: 4px 9px;
+                    border-radius: 50%;
+                    background: rgba(var(--red), 1);
+                    color: rgba(var(--white), 1);
+                    font-size: 16px;
+                }
+            }
+
+            @media screen and (max-width: 768px) {
+                .notificationModal {
+                    top: 88px;
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                .notificationModal {
+                    width: 100%;
+                    border-radius: 0;
+                    
+                    &.active {
+                        padding: 15px 10px;
+                        height: calc(100vh - 85px);
+                    }
+                }
+            }
+        }
 
         .clickItems {
             width: 100%;

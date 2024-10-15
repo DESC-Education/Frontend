@@ -95,9 +95,13 @@ export default function Page() {
                     }
                     break;
                 case "viewed":
-                    console.log("viewed", parsedPayload, event);
+                    console.log("viewed", parsedPayload);
                     dispatch(updateChatUnread({ chatId: chat_id, count: 0 }));
-                    dispatch(updateUnreadChatsCount({ chat_id }));
+                    dispatch(
+                        updateUnreadChatsCount({
+                            number: parsedPayload.unreadChatsCount,
+                        }),
+                    );
                     dispatch(updateLastMessageViewed(chat_id));
                     dispatch(updateIsRead(parsedPayload));
                     break;
@@ -178,13 +182,10 @@ export default function Page() {
     // console.log("currentChat", currentChat);
 
     useEffect(() => {
-        console.log("in chat_id page, chats ", chats, chat_id);
+        // console.log("in chat_id page, chats ", chats, chat_id);
         setIsChatLoading(true);
         const asyncFunc = async () => {
-            // if (currentChat && currentChat.id !== chat_id) {
             const res = await getChat(chat_id);
-
-            console.log("???");
 
             if (res.status === 200) {
                 dispatch(
@@ -272,7 +273,6 @@ export default function Page() {
     }, [textareaRef.current, messageText]);
 
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const containerRef = useRef<HTMLDivElement>(null);
 
     const dragOverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -314,7 +314,7 @@ export default function Page() {
         );
 
     return (
-        <div className={styles.container} ref={containerRef}>
+        <div className={styles.container}>
             <div className={styles.chatHeader}>
                 <div>
                     <Link

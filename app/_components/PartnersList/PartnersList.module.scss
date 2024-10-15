@@ -120,6 +120,10 @@
         .carousel {
             .partnerDetails {
                 .partnerLogo {
+                    min-width: 300px;
+                    min-height: 300px;
+                    max-width: 300px;
+                    max-height: 300px;
                     width: 300px;
                     height: 300px;
                 }
@@ -136,6 +140,10 @@
 
             .partnerDetails {
                 .partnerLogo {
+                    min-width: 200px;
+                    min-height: 200px;
+                    max-width: 200px;
+                    max-height: 200px;
                     width: 200px;
                     height: 200px;
                 }
@@ -150,6 +158,10 @@
             .arrowButton {
                 width: 30px;
                 height: 30px;
+                min-width: 30px;
+                max-width: 30px;
+                min-height: 30px;
+                max-height: 30px;
             }
 
             .partnerDetails {
@@ -170,6 +182,10 @@
                 }
 
                 .partnerLogo {
+                    min-width: 150px;
+                    min-height: 150px;
+                    max-width: 150px;
+                    max-height: 150px;
                     width: 150px;
                     height: 150px;
                 }

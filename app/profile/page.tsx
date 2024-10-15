@@ -15,8 +15,9 @@ import { useEffect, useState } from "react";
 import usePagination from "../_hooks/usePagination";
 import { getReviews } from "../_http/API/tasksApi";
 import CustomOval from "../_components/ui/CustomOval/CustomOval";
+import Pagination from "../_components/ui/Pagination/Pagination";
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 4;
 
 export default function Home() {
     const {
@@ -36,8 +37,6 @@ export default function Home() {
         fetchData,
     ] = usePagination<IReview>(getReviews, null, POSTS_PER_PAGE);
 
-    console.log(currentReviews);
-
     if (profileVerification.status !== "verified") {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
@@ -52,8 +51,6 @@ export default function Home() {
         }
         return "Выпускник";
     };
-
-    console.log(studentProfile.level);
 
     return (
         <div
@@ -91,7 +88,7 @@ export default function Home() {
                                 "title",
                             )}
                         >
-                            О cебе
+                            О себе
                         </p>
                         <p
                             className={classNames(
@@ -99,7 +96,9 @@ export default function Home() {
                                 "text",
                             )}
                         >
-                            {studentProfile?.description}
+                            {studentProfile?.description
+                                ? studentProfile?.description
+                                : "Информации нет"}
                         </p>
                         {studentProfile?.emailVisibility && user.email && (
                             <Link
@@ -306,25 +305,11 @@ export default function Home() {
                             ))
                         )}
                         {totalPages > 1 && (
-                            <div className={styles.pagination}>
-                                {Array(totalPages)
-                                    .fill(0)
-                                    .map((i, ind) => (
-                                        <div
-                                            className={classNames(
-                                                styles.paginationItem,
-                                                {
-                                                    [styles.active]:
-                                                        page === ind + 1,
-                                                },
-                                            )}
-                                            key={ind}
-                                            onClick={() => setPage(ind + 1)}
-                                        >
-                                            <div>{ind + 1}</div>
-                                        </div>
-                                    ))}
-                            </div>
+                            <Pagination
+                                page={page}
+                                setPage={setPage}
+                                totalPages={totalPages}
+                            />
                         )}
                     </div>
 

@@ -1,0 +1,33 @@
+.filterCategories {
+    &-enter {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    &-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 200ms ease-in;
+    }
+
+    &-enter-done {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &-exit {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &-exit-active {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 200ms ease-in;
+    }
+
+    &-exit-done {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}

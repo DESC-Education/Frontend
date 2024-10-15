@@ -166,7 +166,7 @@ export type ISolution = {
     user: string;
     description: string;
     file: string;
-    userProfile: {
+    studentProfile: {
         firstName: string;
         lastName: string;
         logoImg: string;
@@ -252,7 +252,7 @@ export type IProject = {
 };
  
 export type IReview = {
-    profile: {
+    companyProfile: {
         id: string;
         companyName: string;
         logoImg: string;

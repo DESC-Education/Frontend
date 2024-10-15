@@ -32,6 +32,12 @@
         }
     }
 
+    &.error {
+        .input input {
+            border: 1px solid rgba(var(--red), 1);
+        }
+    }
+
     .inputWrapper {
         position: relative;
 
@@ -81,6 +87,12 @@
 
             &:hover {
                 background-color: rgba(var(--gray2), 1);
+            }
+
+            @media screen and (max-width: 1600px) {
+                font-size: 18px;
+                font-weight: 400;
+                padding: 8px 12px;
             }
         }
     }

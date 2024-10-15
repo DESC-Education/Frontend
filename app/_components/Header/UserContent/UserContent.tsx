@@ -272,9 +272,8 @@ const UserContent: FC<UserContentProps> = ({
             ) : (
                 <div className={styles.icons}>
                     <Link href="/profile">
-                        <Image
-                            width={45}
-                            height={45}
+                        <img
+                            className={styles.icon}
                             src="/icons/profile.svg"
                             alt="profile"
                         />
@@ -295,9 +294,8 @@ const UserContent: FC<UserContentProps> = ({
                                     }
                                 </span>
                             )}
-                        <Image
-                            width={45}
-                            height={45}
+                        <img
+                            className={styles.icon}
                             src="/icons/notification.svg"
                             alt="notification"
                         />

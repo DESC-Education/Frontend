@@ -38,6 +38,9 @@ const ProjectsList: FC<ProjectListProps> = ({ projects }) => {
                 320: {
                     slidesPerView: 1,
                 },
+                200: {
+                    slidesPerView: 1,
+                },
             }}
             spaceBetween={15}
             pagination={{ clickable: true, dynamicBullets: true }}

@@ -9,20 +9,24 @@ type ReviewsItemProps = {
 };
 
 const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
+
+    console.log(review);
+    
+
     return (
         <div onClick={() => console.log(review)} className={styles.container}>
             <div className={styles.reviewContent}>
                 <div className={styles.reviewProfile}>
                     <Link
-                        href={`/profile/company/${review.profile.id}`}
+                        href={`/profile/company/${review.companyProfile?.id}`}
                         className={styles.avatar}
                     >
                         <Image
                             className={styles.logo}
                             src={
-                                review.profile.logoImg
+                                review.companyProfile?.logoImg
                                     ? process.env.NEXT_PUBLIC_SERVER_PATH +
-                                      review.profile.logoImg
+                                      review.companyProfile.logoImg
                                     : "/images/avatar.png"
                             }
                             alt="logo"
@@ -30,7 +34,7 @@ const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
                             height={40}
                         />
                         <p className="text fw500">
-                            {review.profile.companyName}
+                            {review.companyProfile?.companyName}
                         </p>
                     </Link>
                     <p className={styles.rating}>

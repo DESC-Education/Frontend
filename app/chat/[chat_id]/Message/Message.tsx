@@ -51,6 +51,8 @@ const Message: FC<MessageProps> = ({ message, ws, wsStatus }) => {
         )
             return;
 
+        console.log("I VIEWED A MESSAGE AND SENT WS", message.message);
+
         ws.send(
             JSON.stringify({
                 type: "viewed",
