@@ -123,24 +123,11 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
             {errorText && <p className="text fz20 fw500 red">{errorText}</p>}
             <div className={styles.inputWrapper}>
                 <Input
-                    // onKeyUp={(e) => e.key === "Enter" && addItem(mockQueryText)}
                     containerClassName={styles.input}
                     type="text"
                     value={mockQueryText}
                     onChange={(val) => setMockQueryText(val)}
                 />
-                {/* <Image
-                    className={classNames(styles.applyIcon, {
-                        [styles.disabled]:
-                            values.length >= maxItems ||
-                            values.some(item => item.name === mockQueryText),
-                    })}
-                    width={50}
-                    height={50}
-                    src="/icons/apply.svg"
-                    alt="apply"
-                    // onClick={() => addItem(mockQueryText)}
-                /> */}
             </div>
             <CSSTransition
                 unmountOnExit
@@ -171,8 +158,8 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                                     <p
                                         onClick={() => addItem(item)}
                                         className={classNames(
+                                            // "text fw500 fz24",  
                                             styles.filteredItem,
-                                            "text fw500 fz24",
                                         )}
                                     >
                                         {item.name}

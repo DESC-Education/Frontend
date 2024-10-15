@@ -15,6 +15,10 @@
     flex-direction: column;
     gap: 25px;
 
+    p {
+        white-space: nowrap;
+    }
+
     .sm {
         display: flex;
         flex-direction: column;

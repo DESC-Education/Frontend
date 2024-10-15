@@ -1,0 +1,242 @@
+.taskCard {
+    .isViewed {
+        visibility: hidden;
+        width: min-content;
+        padding: 0;
+        margin: 0;
+    }
+
+    .hasSolutions {
+        margin-top: 20px;
+    }
+
+    .viewed {
+        visibility: visible;
+        background-color: rgba(var(--white), 1);
+        padding: 10px;
+        margin: 0 0 10px 30px;
+        border-radius: 50px;
+        border: 2px solid rgba(var(--gray2), 1);
+    }
+
+    .wrapper {
+        transition: .3s;
+        padding: 30px 30px;
+        gap: 20px;
+        min-width: 800px;
+        // margin-bottom: 20px;
+        border-radius: 50px;
+        // background: rgba(var(--gray3), 1);
+        background: white;
+        border: 2px solid rgba(var(--gray2), 1);
+        display: flex;
+        flex-direction: column;
+
+        .taskBody {
+            display: flex;
+            gap: 50px;
+            justify-content: space-between;
+        }
+
+        .proposeButton {
+            white-space: nowrap;
+        }
+
+        justify-content: space-between;
+
+        .taskContent {
+            display: flex;
+            flex-direction: column;
+
+            .companyInfo {
+                display: flex;
+                align-items: center;
+                padding: 5px 10px;
+                margin: -5px auto -5px -5px;
+                border-radius: 10px;
+                transition: .3s;
+
+                &:hover {
+                    background: rgba(var(--gray3), 1);
+                }
+            }
+
+
+            .companyLogo {
+                img {
+                    border-radius: 50%;
+                    margin-right: 20px;
+                }
+            }
+
+            .taskDescription {
+                margin: 20px 0 0 0;
+
+                .taskName {
+                    margin-bottom: 20px;
+                }
+
+                .descriptionBlock {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .description {
+                    margin-bottom: 15px;
+                    white-space: break-spaces;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    /* Number of lines */
+                    line-clamp: 3;
+                    /* Number of lines */
+                    -webkit-box-orient: vertical;
+                    max-width: 850px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        .taskButtons {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+
+            .startChat {
+                white-space: nowrap;
+            }
+        }
+
+        .taskFooter {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            .deadlineAndTime {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+
+                .deadline {
+                    margin-bottom: 10px;
+                    white-space: nowrap;
+                }
+
+                .timeLeft {
+                    color: rgba(var(--red), 1);
+                }
+            }
+        }
+    }
+
+    &.extended {
+        .wrapper {
+
+            .taskDescription {
+                .description {
+                    display: inline;
+                    max-width: unset;
+                }
+
+                .showMore {
+                    display: none;
+                }
+
+                .downloadItem {
+                    margin-top: 15px;
+                    margin-right: auto;
+                }
+            }
+        }
+    }
+
+    &.solution {
+        border: 2px solid rgba(var(--gray2), 1);
+        background: rgba(var(--gray3), 1);
+        border-radius: 50px;
+
+        .wrapper {
+
+            border: none;
+
+            .taskDescription {
+                .description {
+                    display: inline;
+                }
+
+                .showMore {
+                    display: none;
+                }
+
+                .downloadItem {
+                    margin-top: 15px;
+                    margin-right: auto;
+                }
+            }
+
+            .taskFooter {
+                .proposeButton {
+                    display: none;
+                }
+
+                .deadlineAndTime {
+                    .deadline {
+                        text-wrap: nowrap;
+                    }
+
+                    .timeLeft {
+                        text-wrap: nowrap;
+                    }
+                }
+            }
+        }
+    }
+
+    &.myTask {
+        .taskDescription {
+            margin: 0 !important;
+        }
+    }
+}
+
+@media (max-width: 595px) {
+    .taskCard {
+        .wrapper {
+            padding: 15px 20px;
+
+            .taskBody {
+                gap: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .taskCard {
+        .wrapper {
+
+            .taskBody {
+                // flex-direction: column;
+                // align-items: flex-start;
+            }
+
+            .taskContent {
+                .taskDescription {
+                    .description {
+                        max-width: 200px;
+                    }
+                }
+            }
+
+            .taskFooter {
+                gap: 10px;
+                margin-top: 5px;
+            }
+        }
+    }
+}
+
+@media (max-width: 425px) {}

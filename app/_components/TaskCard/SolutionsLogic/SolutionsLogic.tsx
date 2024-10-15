@@ -15,6 +15,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import usePagination from "@/app/_hooks/usePagination";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
+import Pagination from "../../ui/Pagination/Pagination";
 
 const POSTS_PER_PAGE = 7;
 
@@ -283,21 +284,11 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                 </>
             )}
             {totalPages > 1 && (
-                <div className={styles.pagination}>
-                    {Array(totalPages)
-                        .fill(0)
-                        .map((i, ind) => (
-                            <div
-                                className={classNames(styles.paginationItem, {
-                                    [styles.active]: page === ind + 1,
-                                })}
-                                key={ind}
-                                onClick={() => setPage(ind + 1)}
-                            >
-                                <div>{ind + 1}</div>
-                            </div>
-                        ))}
-                </div>
+                <Pagination
+                    page={page}
+                    setPage={setPage}
+                    totalPages={totalPages}
+                />
             )}
         </div>
     );

@@ -27,8 +27,6 @@ export const chatSlice = createSlice({
             state,
             action: PayloadAction<{ chat_id?: string; number?: number }>,
         ) {
-            console.log(action.payload);
-
             if (action.payload.number !== undefined) {
                 state.unreadChatsCount = action.payload.number;
                 return;
@@ -37,15 +35,11 @@ export const chatSlice = createSlice({
             if (!state.chats) return;
 
             state.unreadChatsCount = state.chats?.filter(
-                (i) => i.id !== action.payload.chat_id && i.lastMessage.isRead,
+                (i) => i.id !== action.payload.chat_id && i.unreadCount,
             ).length;
         },
         tryToAddChat: (state, action: PayloadAction<IChat>) => {
-            console.log(
-                "HELO BROW",
-                state.chats && [...state.chats],
-                !state.chats,
-            );
+            console.log(state.chats, state.chats?.length, action.payload);
 
             if (!state.chats) {
                 state.chats = [action.payload];
@@ -58,7 +52,7 @@ export const chatSlice = createSlice({
             )
                 return;
 
-            console.log("adding a chat...");
+            // console.log("adding a chat...");
 
             state.chats.push(action.payload);
         },
@@ -173,12 +167,21 @@ export const chatSlice = createSlice({
             }
         },
         updateLastMessageViewed: (state, action: PayloadAction<string>) => {
+            // console.log(
+            //     "updateLastMessageViewed in chat",
+            //     action.payload,
+            //     state.chats?.find((i) => i.id === action.payload),
+            // );
+
             if (state.chats) {
                 state.chats = state.chats.map((item) => {
                     if (item.id === action.payload) {
                         return {
                             ...item,
-                            lastMessageViewed: true,
+                            lastMessage: {
+                                ...item.lastMessage,
+                                isRead: true,
+                            },
                         };
                     } else {
                         return item;

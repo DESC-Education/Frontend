@@ -81,6 +81,24 @@ const Header = () => {
         },
     ];
 
+    const [isShowNotificationsModal, setIsShowNotificationsModal] = useState<
+        boolean
+    >(false);
+
+    const [activeNotification, setActiveNotification] = useState<
+        string | undefined
+    >();
+
+    const { sortNotifications } = contentSlice.actions;
+
+
+    useEffect(() => {
+        if (isShowNotificationsModal) {
+            dispatch(sortNotifications());
+            setActiveNotification(undefined);
+        }
+    }, [isShowNotificationsModal]);
+
     const changeMenuVisibility = (val?: boolean) => {
         if (val === undefined) {
             setIsOpen((prev) => !prev);
@@ -336,6 +354,13 @@ const Header = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
+
+    useEffect(() => {
+        if (isOpen) {
+            setIsShowNotificationsModal(false);
+        }
+    }, [isOpen])
+
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -375,16 +400,63 @@ const Header = () => {
                 >
                     <div className={classNames(styles.container)}>
                         <Link href="/">
-                            <Image
-                                className={classNames("text pointer", {
-                                    [styles.open]: isOpen,
-                                })}
+                            <img
+                                className={classNames(
+                                    "text pointer",
+                                    styles.logo,
+                                    {
+                                        [styles.open]: isOpen,
+                                    },
+                                )}
                                 src="/icons/headerLogo.svg"
-                                alt="Logo"
-                                width={125}
-                                height={53}
+                                alt="logo"
                             />
                         </Link>
+                        <div
+                            className={classNames(styles.notifications, {
+                                [styles.hide]: isOpen,
+                            })}
+                        >
+                            <span
+                                className={styles.notification}
+                                onClick={() =>
+                                    setIsShowNotificationsModal((prev) => !prev)
+                                }
+                            >
+                                {notifications &&
+                                    notifications.filter((i) => !i.isRead)
+                                        .length > 0 && (
+                                        <span className={styles.unread}>
+                                            {
+                                                notifications.filter(
+                                                    (i) => !i.isRead,
+                                                ).length
+                                            }
+                                        </span>
+                                    )}
+                                <img
+                                    className={styles.icon}
+                                    src="/icons/notification.svg"
+                                    alt="notification"
+                                />
+                            </span>
+                            <div
+                                className={classNames(
+                                    styles.notificationModal,
+                                    {
+                                        [styles.active]: isShowNotificationsModal,
+                                    },
+                                )}
+                            >
+                                <NotificationsModal
+                                    active={activeNotification}
+                                    setActive={setActiveNotification}
+                                    closeModal={() =>
+                                        setIsShowNotificationsModal(false)
+                                    }
+                                />
+                            </div>
+                        </div>
                         <button
                             className={classNames(styles.burgerButton, {
                                 [styles.open]: isOpen,
@@ -464,12 +536,13 @@ const Header = () => {
                 <div className={classNames(styles.header)}>
                     <div className={classNames("container", styles.container)}>
                         <Link href="/">
-                            <Image
-                                className={"text pointer"}
+                            <img
+                                className={classNames(
+                                    "text pointer",
+                                    styles.logo,
+                                )}
                                 src="/icons/headerLogo.svg"
-                                alt="Logo"
-                                width={125}
-                                height={53}
+                                alt="logo"
                             />
                         </Link>
 

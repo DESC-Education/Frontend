@@ -4,7 +4,7 @@ import { ISolutionStatus, ISpecialtyType } from "../_types";
 export const TIMER_TIME = 60;
 
 export const MAX_LENGTH = 2000;
-export const MIN_LENGTH = 5;
+export const MIN_LENGTH = 15;
 export const MAX_REPLY_COUNT = 30;
 
 export const yearsOfEducation = {
@@ -13,44 +13,48 @@ export const yearsOfEducation = {
     magistracy: 2,
 };
 
-export const timezones = [
+interface ITimezone {
+    readonly label: string;
+    readonly value: number;
+}
+
+export const timezones: ITimezone[] = [
     {
-        name: "Калининград, UTC+2",
+        label: "Калининград, UTC+2",
         value: 2,
     },
     {
-        name: "Москва, UTC+3",
+        label: "Москва, UTC+3",
         value: 3,
     },
     {
-        name: "Самара UTC+4",
+        label: "Самара UTC+4",
         value: 4,
     },
     {
-        name: "Екатеринбург, UTC+5",
+        label: "Екатеринбург, UTC+5",
         value: 5,
     },
-    { name: "Омск, UTC+6", value: 6 },
+    { label: "Омск, UTC+6", value: 6 },
     {
-        name: "Красноярск, UTC+7",
+        label: "Красноярск, UTC+7",
         value: 7,
     },
     {
-        name: "Иркутск, UTC+8",
+        label: "Иркутск, UTC+8",
         value: 8,
     },
-    { name: "Чита, UTC+9", value: 9 },
+    { label: "Чита, UTC+9", value: 9 },
     {
-        name: "Хабаровск, UTC+10",
+        label: "Хабаровск, UTC+10",
         value: 10,
     },
 ];
 
 export const formsOfEducation = [
-    { name: "", value: "" },
-    { name: "Очное", value: "part_time" },
-    { name: "Очно-заочное", value: "full_time" },
-    { name: "Заочное", value: "part_full_time" },
+    { label: "Очное", value: "full_time" },
+    { label: "Заочное", value: "part_time" },
+    { label: "Очно-заочное", value: "full_part_time" },
 ];
 
 export const typeOfSpeciality: { name: string; value: ISpecialtyType }[] = [

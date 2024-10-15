@@ -1,0 +1,79 @@
+.error {
+    .select__control {
+        border: 1px solid rgba(var(--red), .5) !important;
+    }
+}
+
+.select {
+    &__control {
+        border-radius: 25px !important;
+        padding: 6px 10px;
+        min-width: 250px;
+
+        &--menu-is-open {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+    }
+
+    &__single-value {
+        font-size: 18px !important;
+        font-weight: 300;
+    }
+
+    &__input-container {
+        font-size: 18px !important;
+        font-weight: 300;
+    }
+
+    &__menu {
+        margin-top: 0 !important;
+        overflow: hidden;
+        border-bottom-left-radius: 25px !important;
+        border-bottom-right-radius: 25px !important;
+
+        &-list {
+            padding: 0 !important;
+        }
+
+        &-notice {
+            padding: 16px 12px !important;
+        }
+    }
+
+    &__option {
+        font-size: 18px !important;
+        padding: 16px 12px !important;
+        font-weight: 300;
+        cursor: pointer !important;
+
+        &--is-selected {
+            cursor: default !important;
+            font-weight: 500;
+        }
+    }
+}
+
+.errorText {
+    &-enter {
+        opacity: 0;
+        transform: translateX(-5%);
+    }
+
+    &-enter-done {
+        opacity: 1;
+        transform: translateX(0);
+        transition: .3s;
+    }
+
+    &-exit {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    &-exit-active {
+        transform: translateX(5%);
+        transition: .3s;
+        opacity: .2;
+    }
+}

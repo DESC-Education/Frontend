@@ -35,6 +35,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const { isAuth, isProfileLoading } = useTypesSelector(
         (state) => state.userReducer,
     );
+    const { unreadChatsCount } = useTypesSelector((state) => state.chatReducer);
     const {
         authUser,
         updateProfile,
@@ -252,6 +253,11 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     console.log("newMessage", result.data);
                                     break;
                                 case "newChat":
+                                    dispatch(
+                                        updateUnreadChatsCount({
+                                            number: unreadChatsCount + 1,
+                                        }),
+                                    );
                                     dispatch(tryToAddChat(result.data));
                                     console.log("newChat", result.data);
                                     break;

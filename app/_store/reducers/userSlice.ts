@@ -133,6 +133,9 @@ export const userSlice = createSlice({
         updateUser(state, action: PayloadAction<IUser>) {
             state.user = action.payload;
         },
+        updateStudentReplyCount(state, action: PayloadAction<number>) {
+            state.studentProfile.replyCount = action.payload;
+        },
         logoutUser(state) {
             state.user = {} as IUser;
             state.isAuth = false;

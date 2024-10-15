@@ -27,7 +27,7 @@
     }
 
     @media screen and (max-width: 768px) {
-        height: auto;
+        height: auto !important;
         padding-bottom: 50px;
 
         .wrapper {
@@ -42,6 +42,17 @@
                 gap: 15px;
                 align-items: center;
             }
+        }
+    }
+}
+
+@media screen and (max-width: 1600px) {
+    .container {
+        padding: 12px 0 35px;
+        height: 70px;
+
+        .logo {
+            width: 95px;
         }
     }
 }

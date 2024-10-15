@@ -138,16 +138,16 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
                 >
                     <img
                         src={
-                            solution.userProfile.logoImg
+                            solution.studentProfile.logoImg
                                 ? process.env.NEXT_PUBLIC_SERVER_PATH +
-                                  solution.userProfile.logoImg
+                                  solution.studentProfile.logoImg
                                 : "/images/avatar.png"
                         }
                         alt="avatar"
                     />
                     <p>
-                        {solution.userProfile.firstName}{" "}
-                        {solution.userProfile.lastName}
+                        {solution.studentProfile.firstName}{" "}
+                        {solution.studentProfile.lastName}
                     </p>
                 </Link>
                 <div

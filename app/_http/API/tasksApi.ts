@@ -352,15 +352,17 @@ export const createReview = async (dto: {
 };
 
 export const getReviews = async (
-    dto: { page: number; page_size: number } = { page: 1, page_size: 10 },
+    dto: { page: number; pageSize: number } = { page: 1, pageSize: 10 },
 ) => {
+    console.log(dto);
+    
     try {
         const { data } = await $authHost.get<{
             count: string;
             results: IReview[];
             numPages: number;
         }>(
-            `/api/v1/tasks/review-list?page=${dto.page}&page_size=${dto.page_size}`,
+            `/api/v1/tasks/review-list?page=${dto.page}&page_size=${dto.pageSize}`,
         );
 
         return {

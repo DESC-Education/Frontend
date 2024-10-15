@@ -10,6 +10,7 @@ import { taskSlice } from "@/app/_store/reducers/taskSlice";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
+import { userSlice } from "@/app/_store/reducers/userSlice";
 
 const MAX_LENGTH = 2000;
 const MIN_LENGTH = 50;
@@ -23,9 +24,9 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
     const [solutionText, setSolutionText] = useState<string>("");
     const [textLength, setTextLength] = useState(solutionText.length || 0);
 
-    const { replyCount } = useTypesSelector((state) => state.contentReducer);
+    const { studentProfile } = useTypesSelector((state) => state.userReducer);
 
-    const { updateReplyCount } = contentSlice.actions;
+    const { updateStudentReplyCount } = userSlice.actions;
 
     const { addCurrentTaskSolution } = taskSlice.actions;
     const dispatch = useTypesDispatch();
@@ -49,7 +50,7 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
 
         if (res.status === 200) {
             showAlert("Решение успешно загружено!", "success");
-            dispatch(updateReplyCount(replyCount - 1));
+            dispatch(updateStudentReplyCount(studentProfile.replyCount - 1));
             setSolutionText("");
             dispatch(addCurrentTaskSolution(res.solution!));
             setSolutionFiles([]);
