@@ -27,7 +27,7 @@ import "./page.scss";
 import { sortingOptions } from "../_utils/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AlertContext } from "../_context/AlertContext";
-import { div } from "framer-motion/client";
+import { div, s } from "framer-motion/client";
 import CustomSearch from "../_components/ui/CustomSearch/CustomSearch";
 import Link from "next/link";
 
@@ -215,7 +215,10 @@ export default function ExchangePage() {
                         })}
                     >
                         <div className={styles.filters}>
-                            <h3 className="title fz28 fw500">Фильтры</h3>
+                            <div className={styles.filtersHeader}>
+                                <h3 className="title fz28 fw500">Фильтры</h3>
+                                <div className={styles.closeButton} onClick={() => setIsOpen(false)}></div>
+                            </div>
                             <div className={styles.filterGroup}>
                                 <p
                                     className={classNames(
@@ -323,7 +326,7 @@ export default function ExchangePage() {
                                 <Button
                                     disabled={isTasksFetched}
                                     type="secondary"
-                                    onClick={() => getTasksByFiltersAndSort()}
+                                    onClick={() => (getTasksByFiltersAndSort(), setIsOpen(false))}
                                     className={styles.applyButton}
                                 >
                                     Применить
@@ -344,7 +347,9 @@ export default function ExchangePage() {
                 {!isMobile && (
                     <div className={styles.sidebar}>
                         <div className={styles.filters}>
-                            <h3 className="title fz28 fw500">Фильтры</h3>
+                            <div className={styles.filtersHeader}>
+                                <h3 className="title fz28 fw500">Фильтры</h3>
+                            </div>
                             <div className={styles.filterGroup}>
                                 <p
                                     className={classNames(
@@ -491,7 +496,7 @@ export default function ExchangePage() {
                                                 width:
                                                     (studentProfile.replyCount /
                                                         replyCount) *
-                                                        100 +
+                                                    100 +
                                                     "%",
                                             }}
                                             className={styles.barProgress}
@@ -596,11 +601,11 @@ export default function ExchangePage() {
                                                 <CustomOval />
                                             </div>
                                         }
-                                        // endMessage={
-                                        //     <p className="text fz24 fw500 center">
-                                        //         Больше заданий нет!
-                                        //     </p>
-                                        // }
+                                    // endMessage={
+                                    //     <p className="text fz24 fw500 center">
+                                    //         Больше заданий нет!
+                                    //     </p>
+                                    // }
                                     >
                                         {tasks!.map((task, index) => (
                                             <TaskCard key={index} task={task} />

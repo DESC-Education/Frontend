@@ -71,6 +71,12 @@
         position: relative;
     }
 
+    @media (max-width: 768px) {
+        .inputContainer {
+            width: 100%;
+        }
+    }
+
     .codeInputContainer {
         display: flex;
         justify-content: center;
@@ -103,4 +109,6 @@
             text-align: center;
         }
     }
+
+
 }
