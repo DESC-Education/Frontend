@@ -16,6 +16,7 @@ type SelectSkillsProps = {
     selectValues: (values: ISkill[]) => void;
     errorText?: string;
     onInput?: (search: string) => void;
+    required?: boolean;
 };
 
 const SelectSkills: React.FC<SelectSkillsProps> = ({
@@ -26,6 +27,7 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
     selectValues,
     errorText,
     onInput = () => {},
+    required = false,
 }) => {
     const [queryText, setQueryText] = useState("");
     const [mockQueryText, setMockQueryText] = useState("");
@@ -71,7 +73,8 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
         >
             <p className="text fz24 fw500">
                 {title}{" "}
-                {values.length > maxItems - 1 && `(максимум ${maxItems})`}
+                {values.length > maxItems - 1 && `(максимум ${maxItems})`}{" "}
+                {required && <span className={styles.required}>*</span>}
             </p>
             <div className={styles.values}>
                 <CSSTransition
@@ -120,24 +123,11 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
             {errorText && <p className="text fz20 fw500 red">{errorText}</p>}
             <div className={styles.inputWrapper}>
                 <Input
-                    // onKeyUp={(e) => e.key === "Enter" && addItem(mockQueryText)}
                     containerClassName={styles.input}
                     type="text"
                     value={mockQueryText}
                     onChange={(val) => setMockQueryText(val)}
                 />
-                {/* <Image
-                    className={classNames(styles.applyIcon, {
-                        [styles.disabled]:
-                            values.length >= maxItems ||
-                            values.some(item => item.name === mockQueryText),
-                    })}
-                    width={50}
-                    height={50}
-                    src="/icons/apply.svg"
-                    alt="apply"
-                    // onClick={() => addItem(mockQueryText)}
-                /> */}
             </div>
             <CSSTransition
                 unmountOnExit
@@ -168,8 +158,8 @@ const SelectSkills: React.FC<SelectSkillsProps> = ({
                                     <p
                                         onClick={() => addItem(item)}
                                         className={classNames(
+                                            // "text fw500 fz24",  
                                             styles.filteredItem,
-                                            "text fw500 fz24",
                                         )}
                                     >
                                         {item.name}

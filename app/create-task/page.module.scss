@@ -1,10 +1,11 @@
 .container {
-    
+    padding-bottom: 20px;
+
     .deadline {
         display: flex;
         // align-items: center;
         gap: 10px;
-    
+
         p {
             margin-top: 10px;
         }
@@ -26,11 +27,14 @@
         margin-bottom: 50px;
         position: relative;
 
-        
+
     }
 
     .taskContent {
-        display: flex;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: 50px;
 
         .templates {
             display: flex;
@@ -39,15 +43,14 @@
             gap: 20px;
 
             .templateButton {
-                width: 400px;
+                height: auto !important;
+                width: 100%;
             }
         }
 
         .createTask {
-            margin-left: 50px;
             display: flex;
             flex-direction: column;
-            text-align: justify;
             gap: 20px;
 
             .taskForm {
@@ -64,9 +67,9 @@
                     margin-bottom: 50px;
                 }
 
-                .textarea {
-                    height: 200px;
-                }
+                // .textarea {
+                //     height: 200px;
+                // }
 
                 .underdescription {
                     margin: 10px 0 50px 0;
@@ -100,11 +103,26 @@
 
                     .select {
                         width: 30%;
-                        .filters {
+
+                        .filterContainer {
                             margin-bottom: 20px;
                             display: flex;
                             align-items: center;
                             flex-wrap: wrap;
+
+                            &.active {
+                                position: relative;
+                                z-index: 20;
+
+                                .filter {
+                                    z-index: 30;
+                                }
+                            }
+
+                            .filter {
+                                width: 100%;
+                                position: relative;
+                            }
                         }
 
                         // &.error {
@@ -124,12 +142,12 @@
 
             .submitButtons {
                 display: flex;
-                justify-content: center;
+                justify-content: space-between;
                 margin-top: 50px;
                 gap: 20px;
 
-                .submitButton {
-                    width: 400px;
+                >button {
+                    width: 100%;
                 }
             }
         }

@@ -7,6 +7,10 @@
         }
     }
 
+    .required {
+        color: rgba(var(--red), 1);
+    }
+
     .errorText {
         text-align: center;
         // margin: -10px 0;
@@ -64,9 +68,13 @@
         margin: 30px 0 40px;
     }
 
-    .textArea {
-        height: 200px;
-    }
+    // .textArea {
+    //     // height: 200px;
+
+    //     @media screen and (max-width: 1600px) {
+    //         height: auto;
+    //     }
+    // }
 
     .content {
         margin-top: -15px;

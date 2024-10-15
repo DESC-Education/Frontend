@@ -11,17 +11,13 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 const SolutionPage = () => {
-    const { solutionId } = useParams();
-
-    if (typeof solutionId !== "string") return null;
+    const { solutionId } = useParams<{solutionId: string}>();
 
     const { currentTask } = useTypesSelector((state) => state.taskReducer);
 
     useEffect(() => {
         const asyncFunc = async () => {
             const res = await getSolution(solutionId);
-
-            console.log(res);
         };
         asyncFunc();
     }, []);

@@ -2,23 +2,41 @@ import { IReview } from "@/app/_types";
 import styles from "./ReviewsItem.module.scss";
 import { FC } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 type ReviewsItemProps = {
     review: IReview;
 };
 
 const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
+
+    console.log(review);
+    
+
     return (
-        <div className={styles.container}>
+        <div onClick={() => console.log(review)} className={styles.container}>
             <div className={styles.reviewContent}>
                 <div className={styles.reviewProfile}>
-                    <Image
-                        src={review.profile.logoImg}
-                        alt="logo"
-                        width={40}
-                        height={40}
-                    />
-                    <p className="text fw500">{review.profile.companyName}</p>
+                    <Link
+                        href={`/profile/company/${review.companyProfile?.id}`}
+                        className={styles.avatar}
+                    >
+                        <Image
+                            className={styles.logo}
+                            src={
+                                review.companyProfile?.logoImg
+                                    ? process.env.NEXT_PUBLIC_SERVER_PATH +
+                                      review.companyProfile.logoImg
+                                    : "/images/avatar.png"
+                            }
+                            alt="logo"
+                            width={40}
+                            height={40}
+                        />
+                        <p className="text fw500">
+                            {review.companyProfile?.companyName}
+                        </p>
+                    </Link>
                     <p className={styles.rating}>
                         {Array(5)
                             .fill(0)
@@ -34,8 +52,7 @@ const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
                     </p>
                 </div>
                 <div className={styles.reviewText}>
-                    <p className="text fw500">{review.title}</p>
-                    <p className="text gray">{review.description}</p>
+                    <p className="text gray">{review.text}</p>
                 </div>
             </div>
         </div>

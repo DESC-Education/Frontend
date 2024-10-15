@@ -2,13 +2,22 @@
 
 import classNames from "classnames";
 import styles from "./page.module.scss";
+import "./page.scss";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/app/_components/ui/Button/Button";
 import Input from "@/app/_components/ui/Input/Input";
 import SelectSearch, { SelectedOptionValue } from "react-select-search";
 import { createTask, getCategories } from "@/app/_http/API/tasksApi";
-import { use, useContext, useEffect, useReducer, useState } from "react";
+import {
+    createRef,
+    use,
+    useContext,
+    useEffect,
+    useMemo,
+    useReducer,
+    useState,
+} from "react";
 import {
     ICategory,
     IFile,
@@ -20,20 +29,15 @@ import { set } from "zod";
 import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
 import { AlertContext } from "@/app/_context/AlertContext";
 import BackButton from "../_components/ui/BackButton/BackButton";
-
-const maxLength = 2000;
-const minLength = 5;
-
-function addDaysAndFormat(date: Date, days: number): string {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-
-    const year = result.getFullYear();
-    const month = String(result.getMonth() + 1).padStart(2, "0");
-    const day = String(result.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-}
+import { useTypesSelector } from "../_hooks/useTypesSelector";
+import { contentSlice } from "../_store/reducers/contentSlice";
+import { useTypesDispatch } from "../_hooks/useTypesDispatch";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { ModalContext } from "../_context/ModalContext";
+import TaskCard from "../_components/TaskCard/TaskCard";
+import DemoTaskCard from "../_components/DemoTaskCard/DemoTaskCard";
+import { addDaysAndFormat } from "../_utils/time";
+import { MAX_LENGTH, MIN_LENGTH } from "../_utils/constants";
 
 type TaskState = {
     title: string;
@@ -66,6 +70,16 @@ const initState: TaskState = {
 
 export default function CreateTaskPage() {
     const { showAlert } = useContext(AlertContext);
+    const { showModal } = useContext(ModalContext);
+
+    const { companyProfile, user } = useTypesSelector(
+        (state) => state.userReducer,
+    );
+
+    const { myTasks } = useTypesSelector((state) => state.contentReducer);
+    const { updateMyTasks } = contentSlice.actions;
+
+    const dispatch = useTypesDispatch();
 
     const templates = [
         "Веб-разработка",
@@ -77,8 +91,6 @@ export default function CreateTaskPage() {
 
     const getDayTitle = (day: number): "дней" | "день" | "дня" | "дней" => {
         const number = day;
-        // console.log(day);
-
         if (number > 10 && [11, 12, 13, 14].includes(number % 100))
             return "дней";
         const last_num = number % 10;
@@ -88,7 +100,7 @@ export default function CreateTaskPage() {
         return "дней";
     };
 
-    const reduser = (state: TaskState, action: TaskAction): TaskState => {
+    const reducer = (state: TaskState, action: TaskAction): TaskState => {
         switch (action.type) {
             case "change_title": {
                 return {
@@ -138,13 +150,10 @@ export default function CreateTaskPage() {
         }
     };
 
-    const [state, taskDispatch] = useReducer(reduser, initState);
-
-    const [textLength, setTextLength] = useState(state.description.length || 0);
+    const [state, taskDispatch] = useReducer(reducer, initState);
 
     const handleTextChange = (e: string) => {
-        if (e.length < maxLength) {
-            setTextLength(e.length);
+        if (e.length < MAX_LENGTH) {
             taskDispatch({
                 type: "change_description",
                 description: e,
@@ -156,12 +165,11 @@ export default function CreateTaskPage() {
 
     const [categories, setCategories] = useState<ICategory[]>([]);
 
+    const [currActiveCategoryId, setCurrActiveCategoryId] = useState("");
+
     useEffect(() => {
         const asyncFunc = async () => {
             const res = await getCategories("");
-            console.log(res);
-            
-
             if (res.status === 200) {
                 setCategories(
                     res.categories!.map((item) => ({
@@ -188,14 +196,15 @@ export default function CreateTaskPage() {
 
     const validateFormTask = async () => {
         const errorsTemp: any = {};
-        // console.log(state);
-        
         if (state.title.length < 2) {
             errorsTemp.title = "Введите название задания";
         }
-        
-        if (state.description.length < minLength) {
-            errorsTemp.description = "Введите описание задания (" + minLength + " символов или больше)";
+
+        if (state.description.length < MIN_LENGTH) {
+            errorsTemp.description =
+                "Введите описание задания (" +
+                MIN_LENGTH +
+                " символов или больше)";
         }
 
         if (state.categoryId === "") {
@@ -218,13 +227,9 @@ export default function CreateTaskPage() {
         setErrors(errorsTemp);
 
         if (Object.keys(errorsTemp).length === 0) {
-            console.log(state.filters);
-            
             const formData = new FormData();
 
             const dedlineAsDate = addDaysAndFormat(new Date(), state.deadline);
-            // console.log(dedlineAsDate);
-
             formData.append("title", state.title);
             formData.append("description", state.description);
             formData.append("deadline", `${dedlineAsDate}`);
@@ -245,19 +250,31 @@ export default function CreateTaskPage() {
                 taskDispatch({
                     type: "clear",
                 });
+                dispatch(
+                    updateMyTasks(
+                        myTasks ? [...myTasks, res.task!] : [res.task!],
+                    ),
+                );
                 setFiles([]);
             } else {
                 showAlert(res.message);
             }
-            console.log("createTask res", res);
         }
     };
+
+    const currentFilterCategories = useMemo(() => {
+        if (!state.categoryId) return [];
+        return categories?.find((item) => item.id === state.categoryId)!
+            .filterCategories;
+    }, [state.categoryId]);
+
+    // const nodeRef = useRef<HTMLDivElement>(null);
 
     return (
         <div className={classNames(styles.container, "container")}>
             <div className={styles.taskHeader}>
                 <BackButton title="Назад" />
-                <p className="title">Создать задание</p>
+                <p className="title fz36 fw500">Создать задание</p>
             </div>
             <div className={styles.taskContent}>
                 <div className={styles.templates}>
@@ -305,7 +322,7 @@ export default function CreateTaskPage() {
                             value={state.description}
                             errorText={errors.description}
                             onChange={handleTextChange}
-                            max={maxLength}
+                            max={MAX_LENGTH}
                         />
                         <div className={styles.underdescription}>
                             <p
@@ -314,8 +331,8 @@ export default function CreateTaskPage() {
                                     styles.length,
                                 )}
                             >
-                                {textLength} из {maxLength} символов (минимум{" "}
-                                {minLength})
+                                {state.description.length} из {MAX_LENGTH} символов (минимум{" "}
+                                {MIN_LENGTH})
                             </p>
                         </div>
                         <div className={styles.selects}>
@@ -345,18 +362,23 @@ export default function CreateTaskPage() {
                         <div className={styles.selects}>
                             <div className={styles.select}>
                                 <p className="text fw500">Категории</p>
-                                <SelectSearch
-                                    options={categories}
+                                <CustomSearch
+                                    className={styles.selectSearch}
+                                    options={categories.map((i) => ({
+                                        ...i,
+                                        label: i.name,
+                                        value: i.value,
+                                    }))}
                                     onChange={(e) => {
                                         taskDispatch({
                                             type: "change_categoryId",
                                             categoryId: categories.find(
-                                                (item) => item.id === e,
+                                                (item) => item.id === e.value,
                                             )?.id!,
                                         });
                                     }}
-                                    value={state.categoryId}
                                     placeholder="Выберите категорию"
+                                    search
                                 />
                                 <p
                                     className={classNames(
@@ -373,18 +395,23 @@ export default function CreateTaskPage() {
                                 })}
                             >
                                 <p className={"text fw500"}>Фильтры</p>
-                                {categories?.find(
-                                    (item) => item.id === state.categoryId,
-                                )?.filterCategories ? (
-                                    categories
-                                        .find(
-                                            (item) =>
-                                                item.id === state.categoryId,
-                                        )
-                                        ?.filterCategories.map(
-                                            (filter, index) => (
+                                <TransitionGroup>
+                                    {currentFilterCategories.map(
+                                        (filter, index) => (
+                                            <CSSTransition
+                                                key={filter.id}
+                                                timeout={500}
+                                                classNames="filterCategories"
+                                            >
                                                 <div
-                                                    className={styles.filters}
+                                                    className={classNames(
+                                                        styles.filterContainer,
+                                                        {
+                                                            [styles.active]:
+                                                                currActiveCategoryId ===
+                                                                filter.id,
+                                                        },
+                                                    )}
                                                     key={index}
                                                 >
                                                     <p
@@ -395,34 +422,40 @@ export default function CreateTaskPage() {
                                                     >
                                                         {filter.name}
                                                     </p>
-                                                    <SelectSearch
-                                                        key={index}
+                                                    <CustomSearch
+                                                        className={classNames(
+                                                            styles.filter,
+                                                        )}
+                                                        onFocus={() => {
+                                                            setCurrActiveCategoryId(
+                                                                filter.id,
+                                                            );
+                                                        }}
                                                         options={filter.filters.map(
                                                             (i) => ({
                                                                 ...i,
+                                                                label: i.name,
                                                                 value: i.id,
                                                             }),
                                                         )}
-                                                        placeholder="Выберите фильтр"
-                                                        value={
-                                                            state.filters[
-                                                                filter.id
-                                                            ]!
-                                                        }
                                                         onChange={(e: any) => {
                                                             taskDispatch({
                                                                 type:
                                                                     "change_filters",
                                                                 filterCategoryId:
                                                                     filter.id,
-                                                                filterId: e,
+                                                                filterId: e.id,
                                                             });
                                                         }}
+                                                        placeholder="Выберите фильтр"
+                                                        search
                                                     />
                                                 </div>
-                                            ),
-                                        )
-                                ) : (
+                                            </CSSTransition>
+                                        ),
+                                    )}
+                                </TransitionGroup>
+                                {!currentFilterCategories.length && (
                                     <div
                                         className={classNames(
                                             "text gray",
@@ -463,37 +496,65 @@ export default function CreateTaskPage() {
                                         {getDayTitle(state.deadline)}
                                     </p>
                                 </div>
-                                {/* <input
-                                    type="date"
-                                    className={styles.time}
-                                    onChange={(e) => {
-                                        taskDispatch({
-                                            type: "change_deadline",
-                                            deadline: e.target.value,
-                                        });
-                                    }}
-                                /> */}
                             </div>
                         </div>
                         <div className={styles.submitButtons}>
                             <Button
+                                onClick={() =>
+                                    showModal({
+                                        content: (
+                                            <DemoTaskCard
+                                                task={{
+                                                    profile: {
+                                                        ...companyProfile,
+                                                        id: user.id,
+                                                    },
+                                                    title: state.title,
+                                                    createdAt: new Date().toISOString(),
+                                                    description:
+                                                        state.description,
+                                                    deadline: addDaysAndFormat(
+                                                        new Date(),
+                                                        state.deadline,
+                                                    ),
+                                                }}
+                                                files={files.map((i) => ({
+                                                    ...i,
+                                                    name: i.name,
+                                                    extension: `${i.name
+                                                        .split(".")
+                                                        .at(-1)}`,
+                                                }))}
+                                            />
+                                        ),
+                                    })
+                                }
                                 type="secondary"
                                 className={styles.submitButton}
+                                disabled={
+                                    state.title.length < 2 ||
+                                    state.description.length < MIN_LENGTH ||
+                                    state.deadline < 2
+                                }
                             >
                                 Демо
                             </Button>
-                            <Button
+                            {/* <Button
                                 type="primary"
                                 className={styles.submitButton}
                                 disabled={true}
                             >
                                 Сохранить как PDF
-                            </Button>
+                            </Button> */}
                             <Button
                                 type="primary"
                                 className={styles.submitButton}
                                 onClick={() => validateFormTask()}
-                                disabled={textLength < minLength}
+                                disabled={
+                                    state.title.length < 2 ||
+                                    state.description.length < MIN_LENGTH ||
+                                    state.deadline < 2
+                                }
                             >
                                 Сохранить
                             </Button>

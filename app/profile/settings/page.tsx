@@ -1,17 +1,11 @@
 "use client";
 
 import {
-    ChangeEvent,
     createRef,
-    Dispatch,
     ReactNode,
     RefObject,
-    SetStateAction,
-    useCallback,
     useContext,
     useEffect,
-    useMemo,
-    useRef,
     useState,
 } from "react";
 import styles from "./page.module.scss";
@@ -21,7 +15,6 @@ import classNames from "classnames";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { userSlice } from "@/app/_store/reducers/userSlice";
-import SelectSearch from "react-select-search";
 import {
     createProfileStudent,
     editCompanyProfile,
@@ -33,25 +26,18 @@ import {
     getUniversities,
 } from "@/app/_http/API/profileApi";
 import CustomSearch from "@/app/_components/ui/CustomSearch/CustomSearch";
-import {
-    ICity,
-    IFaculty,
-    ISkill,
-    ISpecialty,
-    IStudentProfile,
-    IUniversity,
-} from "@/app/_types";
+import Select from "react-select";
+import { ICity, IFaculty, ISkill, ISpecialty, IUniversity } from "@/app/_types";
 import SelectSkills from "@/app/_components/SelectSkills/SelectSkills";
 import { AlertContext } from "@/app/_context/AlertContext";
 import { formsOfEducation, timezones } from "@/app/_utils/constants";
 import ProfileStatus from "../ProfileStatus/ProfileStatus";
 import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
 import { AuthRoute } from "@/app/_utils/protectedRoutes";
-import { set } from "zod";
 import ChangeCredsModal from "@/app/_components/modals/ChangeCredsModal/ChangeCredsModal";
 import { ModalContext } from "@/app/_context/ModalContext";
 import { getBeautifiedPhone } from "@/app/_utils/utils";
-import useEffectDebugger from "@/app/_hooks/useEffectDebugger";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
 
 type SettingsState = "personal_data" | "profile" | "verification";
 
@@ -62,7 +48,6 @@ const SettingsPage = () => {
     const {
         studentProfile,
         companyProfile,
-        isProfileLoading,
         profileVerification,
     } = useTypesSelector((state) => state.userReducer);
 
@@ -77,65 +62,89 @@ const SettingsPage = () => {
         updateProfileVerification,
     } = userSlice.actions;
 
-    const [cities, setCities] = useState<ICity[]>([]);
+    const { isProfileInfoChanged } = useTypesSelector(
+        (state) => state.contentReducer,
+    );
+    const { updateIsProfileInfoChanged } = contentSlice.actions;
+
+    // const [cities, setCities] = useState<ICity[]>([]);
+
+    const [isCitiesLoading, setIsCitiesLoading] = useState<boolean>(false);
 
     const setCitiesBySearch = async (q: string) => {
+        setIsCitiesLoading(true);
+
         const res = await getCities(q);
 
+        setIsCitiesLoading(false);
+
         if (res.status === 200) {
-            setCities(
-                res.cities!.map((item) => ({
-                    ...item,
-                    value: item.id,
-                    name: `${item.name} (${item.region})`,
-                })),
-            );
+            // setCities(
+            return res.cities!.map((item) => ({
+                ...item,
+                value: item.id,
+                label: `${item.name} (${item.region})`,
+            }));
+            // );
+        } else {
+            return [];
         }
     };
 
-    const [universities, setUniversities] = useState<IUniversity[]>([]);
-
+    const [isUniversitiesLoading, setIsUniversitiesLoading] = useState(false);
     const setUniversitiesBySearch = async (q: string) => {
+        setIsUniversitiesLoading(true);
+
         const res = await getUniversities(q);
 
+        setIsUniversitiesLoading(false);
+
         if (res.status === 200) {
-            setUniversities(
-                res.universities!.map((item) => ({
-                    ...item,
-                    value: item.id,
-                    name: `${item.name} (${item.city.name})`,
-                })),
-            );
+            return res.universities!.map((item) => ({
+                ...item,
+                value: item.id,
+                label: `${item.name} (${item.city.name})`,
+            }));
+        } else {
+            return [];
         }
     };
 
-    const [faculties, setFaculties] = useState<IFaculty[]>([]);
-
+    const [isFacultiesLoading, setIsFacultiesLoading] = useState(false);
     const setFacultiesBySearch = async (q: string) => {
+        setIsFacultiesLoading(true);
+
         const res = await getFaculties(q, studentProfile.university?.id);
 
+        setIsFacultiesLoading(false);
+
         if (res.status === 200) {
-            setFaculties(
-                res.faculties!.map((item) => ({
-                    ...item,
-                    value: item.id,
-                })),
-            );
+            return res.faculties!.map((item) => ({
+                ...item,
+                value: item.id,
+                label: item.name,
+            }));
+        } else {
+            return [];
         }
     };
 
-    const [specialities, setSpecialities] = useState<ISpecialty[]>([]);
-
+    const [isSpecialitiesLoading, setIsSpecialitiesLoading] = useState(false);
     const setSpecialitiesBySearch = async (q: string) => {
+        setIsSpecialitiesLoading(true);
+
         const res = await getSpecialities(q);
 
+        setIsSpecialitiesLoading(false);
+
         if (res.status === 200) {
-            setSpecialities(
-                res.specialities!.map((item) => ({
-                    ...item,
-                    value: item.id,
-                })),
-            );
+            return res.specialities!.map((item) => ({
+                ...item,
+                value: item.id,
+                label: item.name,
+            }));
+        } else {
+            return [];
         }
     };
 
@@ -169,59 +178,23 @@ const SettingsPage = () => {
         };
 
         asyncFunc();
-        // showModal({content: <ChangeCredsModal initActiveTab="mail" />})
     }, []);
 
-    const [logo, setLogo] = useState<File | null>(null);
     const [studentCard, setStudentCard] = useState<File[] | null>([]);
     const [verFiles, setVerFiles] = useState<File[] | null>([]);
-    const isChanged = useRef<boolean>(false);
 
     useEffect(() => {
         setErrors({});
         setErrorsExist(false);
-    }, [studentProfile, studentCard, companyProfile, logo, verFiles]);
+    }, [studentProfile, studentCard, companyProfile, verFiles]);
 
-    useEffectDebugger(() => {
-        console.log(
-            studentProfile.id,
-            companyProfile.id,
-            isProfileLoading,
-            isChanged.current,
-            undefined,
-            profileVerification.status,
-        );
+    const [activeTab, setActiveTab] = useState<SettingsState>("verification");
 
-        if (
-            (!studentProfile.id && !companyProfile.id) ||
-            isProfileLoading ||
-            isChanged.current === undefined ||
-            profileVerification.status !== "verified"
-        )
-            return;
-
-        console.log("helo brow");
-
-        // isChanged.current = isChanged.current + 1;
-    }, [
-        studentProfile.description,
-        studentProfile.phoneVisibility,
-        studentProfile.emailVisibility,
-        studentProfile.telegramLink,
-        studentProfile.vkLink,
-        studentProfile.skills.length,
-
-        companyProfile.description,
-        companyProfile.phoneVisibility,
-        companyProfile.emailVisibility,
-        companyProfile.telegramLink,
-        companyProfile.vkLink,
-        companyProfile.linkToCompany,
-        companyProfile.skills.length,
-
-        isProfileLoading,
-        profileVerification,
-    ]);
+    useEffect(() => {
+        if (isProfileInfoChanged?.current && activeTab === "personal_data") {
+            showAlert("Изменения не сохранены!", "warning");
+        }
+    }, [activeTab]);
 
     const [errors, setErrors] = useState<any>({});
     const [errorsExist, setErrorsExist] = useState<boolean>(false);
@@ -236,7 +209,7 @@ const SettingsPage = () => {
             !studentProfile.profession ||
             studentProfile.profession?.length < 2
         ) {
-            errorsTemp.profession = "Введите профессию";
+            errorsTemp.profession = "Введите сферу деятельности";
         }
 
         if (studentProfile.firstName?.length < 2) {
@@ -267,6 +240,10 @@ const SettingsPage = () => {
             errorsTemp.studentCard = "Прикрепите студенческий билет";
         }
 
+        if (studentCard?.length !== 2) {
+            errorsTemp.studentCard = "Прикрепите две фотографии";
+        }
+
         if (
             !studentProfile.university ||
             !Object.keys(studentProfile.university).length
@@ -292,6 +269,8 @@ const SettingsPage = () => {
             errorsTemp.skills = "Выберите навыки";
         }
 
+        console.log(errorsTemp, studentProfile);
+
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 
@@ -307,6 +286,7 @@ const SettingsPage = () => {
             formdata.append("city", studentProfile.city!.id);
             formdata.append("university", studentProfile.university!.id);
             formdata.append("timezone", String(studentProfile.timezone));
+            formdata.append("description", studentProfile.description);
             formdata.append("faculty", studentProfile.faculty!.id);
             formdata.append("specialty", studentProfile.specialty!.id);
             formdata.append("formOfEducation", studentProfile.formOfEducation);
@@ -452,19 +432,15 @@ const SettingsPage = () => {
         const errorsTemp: any = {};
 
         if (
-            studentProfile.description !== null &&
+            studentProfile.description &&
             studentProfile.description?.length < 2
         ) {
             errorsTemp.description = "Введите описание";
         }
 
-        // if (!studentProfile.telegramLink) {
-        //     errorsTemp.telegramLink = "Введите корректную ссылку на телеграм";
-        // }
-
-        // if (!studentProfile.vkLink) {
-        //     errorsTemp.vkLink = "Введите корректную ссылку на вконтакте";
-        // }
+        if (!studentProfile.profession) {
+            errorsTemp.profession = "Введите корректную сферу деятельности";
+        }
 
         if (studentProfile.skills?.length === 0) {
             errorsTemp.skills = "Выберите навыки";
@@ -489,7 +465,8 @@ const SettingsPage = () => {
             });
 
             if (res.status === 200) {
-                isChanged.current = false;
+                dispatch(updateIsProfileInfoChanged(false));
+                // isChanged.current = false;
                 showAlert("Профиль успешно обновлен", "success");
             }
             setIsLoading(false);
@@ -540,7 +517,8 @@ const SettingsPage = () => {
             });
 
             if (res.status === 200) {
-                isChanged.current = false;
+                // isChanged.current = false;
+                dispatch(updateIsProfileInfoChanged(false));
                 showAlert("Профиль успешно обновлен", "success");
             }
 
@@ -692,9 +670,15 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Имя
+                                                Имя{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.firstName}
                                                 type="text"
                                                 value={studentProfile.firstName}
@@ -720,9 +704,15 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Фамилия
+                                                Фамилия{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.lastName}
                                                 type="text"
                                                 value={studentProfile.lastName}
@@ -749,29 +739,34 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Часовой пояс
+                                            Часовой пояс{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
-                                            isFirstOptionBlank
                                             onChange={(e) =>
                                                 dispatch(
                                                     updateStudentProfile({
                                                         ...studentProfile,
-                                                        timezone: Number(e),
+                                                        timezone: Number(
+                                                            e.value,
+                                                        ),
                                                     }),
                                                 )
                                             }
                                             value={
                                                 !studentProfile?.timezone
                                                     ? undefined
-                                                    : studentProfile.timezone
+                                                    : timezones.find(
+                                                          (i) =>
+                                                              i.value ===
+                                                              studentProfile.timezone,
+                                                      )!
                                             }
                                             errorText={errors.timezone}
                                             search
-                                            options={[
-                                                { name: "", value: 0 },
-                                                ...timezones,
-                                            ]}
+                                            options={timezones}
                                         />
                                     </div>
                                     <div
@@ -786,28 +781,26 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Город
+                                            Город{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
+                                            noOptionsMessage="Начните вводить название города..."
+                                            asyncSelect
                                             errorText={errors.city}
-                                            useFuzzySearch={false}
-                                            options={cities}
-                                            onInput={(e) => {
-                                                setCitiesBySearch(e);
-                                            }}
+                                            loadOptions={setCitiesBySearch}
+                                            isLoading={isCitiesLoading}
                                             onChange={(e) => {
                                                 dispatch(
                                                     updateStudentProfile({
                                                         ...studentProfile,
-                                                        city: cities.find(
-                                                            (item) =>
-                                                                item.id === e,
-                                                        )!,
+                                                        city: e,
                                                     }),
                                                 );
                                             }}
                                             search
-                                            value={studentProfile.city?.id}
                                         />
                                     </div>
                                     <div
@@ -822,69 +815,68 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            ВУЗ
+                                            ВУЗ{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
+                                            noOptionsMessage="Начните вводить название университета..."
+                                            asyncSelect
                                             errorText={errors.university}
-                                            useFuzzySearch={false}
-                                            options={universities}
-                                            onInput={(e) => {
-                                                setUniversitiesBySearch(e);
-                                            }}
+                                            loadOptions={
+                                                setUniversitiesBySearch
+                                            }
+                                            isLoading={isUniversitiesLoading}
                                             onChange={(e) => {
                                                 dispatch(
                                                     updateStudentProfile({
                                                         ...studentProfile,
-                                                        university: universities.find(
-                                                            (item) =>
-                                                                item.id === e,
-                                                        )!,
+                                                        university: e,
                                                     }),
                                                 );
                                             }}
                                             search
-                                            value={
+                                        />
+                                    </div>
+                                    <div
+                                        className={classNames(
+                                            styles.specialtySettings,
+                                            styles.generalSettingsBlock,
+                                        )}
+                                    >
+                                        <p
+                                            className={classNames(
+                                                styles.title,
+                                                "text fz24 fw500",
+                                            )}
+                                        >
+                                            Факультет (институт){" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
+                                        </p>
+                                        <CustomSearch
+                                            cacheOptions={
                                                 studentProfile.university?.id
                                             }
-                                        />
-                                    </div>
-                                    <div
-                                        className={classNames(
-                                            styles.specialtySettings,
-                                            styles.generalSettingsBlock,
-                                        )}
-                                    >
-                                        <p
-                                            className={classNames(
-                                                styles.title,
-                                                "text fz24 fw500",
-                                            )}
-                                        >
-                                            Факультет (институт)
-                                        </p>
-                                        <CustomSearch
-                                            errorText={errors.faculty}
-                                            useFuzzySearch={false}
                                             disabled={
-                                                !studentProfile.university
+                                                !studentProfile.university?.id
                                             }
-                                            options={faculties}
-                                            onInput={(e) => {
-                                                setFacultiesBySearch(e);
-                                            }}
+                                            noOptionsMessage="Начните вводить название факультета..."
+                                            asyncSelect
+                                            errorText={errors.faculty}
+                                            loadOptions={setFacultiesBySearch}
+                                            isLoading={isFacultiesLoading}
                                             onChange={(e) => {
                                                 dispatch(
                                                     updateStudentProfile({
                                                         ...studentProfile,
-                                                        faculty: faculties.find(
-                                                            (item) =>
-                                                                item.id === e,
-                                                        )!,
+                                                        faculty: e,
                                                     }),
                                                 );
                                             }}
                                             search
-                                            value={studentProfile.faculty?.id}
                                         />
                                     </div>
                                     <div
@@ -899,29 +891,34 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Специальность
+                                            Специальность{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
+                                            cacheOptions={
+                                                studentProfile.faculty?.id
+                                            }
+                                            disabled={
+                                                !studentProfile.faculty?.id
+                                            }
+                                            noOptionsMessage="Начните вводить название факультета..."
+                                            asyncSelect
                                             errorText={errors.specialty}
-                                            useFuzzySearch={false}
-                                            disabled={!studentProfile.faculty}
-                                            options={specialities}
-                                            onInput={(e) => {
-                                                setSpecialitiesBySearch(e);
-                                            }}
+                                            loadOptions={
+                                                setSpecialitiesBySearch
+                                            }
+                                            isLoading={isSpecialitiesLoading}
                                             onChange={(e) => {
                                                 dispatch(
                                                     updateStudentProfile({
                                                         ...studentProfile,
-                                                        specialty: specialities.find(
-                                                            (item) =>
-                                                                item.id === e,
-                                                        )!,
+                                                        specialty: e,
                                                     }),
                                                 );
                                             }}
                                             search
-                                            value={studentProfile.specialty?.id}
                                         />
                                     </div>
 
@@ -929,14 +926,24 @@ const SettingsPage = () => {
                                         className={styles.generalSettingsBlock}
                                     >
                                         <p className="text fz24 fw500">
-                                            Студенческий билет
+                                            Студенческий билет{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
+                                            required
                                             multiple
                                             maxFiles={2}
                                             type="file_multiple"
                                             setFile={setStudentCard}
                                             file={studentCard}
+                                            accept="image/*"
+                                            acceptExtensions={[
+                                                "png",
+                                                "jpg",
+                                                "jpeg",
+                                            ]}
                                             errorText={errors.studentCard}
                                             fileTipContent={
                                                 <div>
@@ -978,26 +985,27 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Форма обучения
+                                                Форма обучения{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <CustomSearch
                                                 errorText={
                                                     errors.formOfEducation
                                                 }
-                                                isFirstOptionBlank
-                                                useFuzzySearch={false}
                                                 options={formsOfEducation}
                                                 onChange={(e) => {
                                                     dispatch(
                                                         updateStudentProfile({
                                                             ...studentProfile,
-                                                            formOfEducation: e,
+                                                            formOfEducation:
+                                                                e.value,
                                                         }),
                                                     );
                                                 }}
-                                                value={
-                                                    studentProfile?.formOfEducation
-                                                }
                                             />
                                         </div>
                                         <div
@@ -1012,42 +1020,36 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Год поступления
+                                                Год поступления{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <CustomSearch
-                                                isFirstOptionBlank
                                                 onChange={(e) =>
                                                     dispatch(
                                                         updateStudentProfile({
                                                             ...studentProfile,
                                                             admissionYear: Number(
-                                                                e,
+                                                                e.value,
                                                             ),
                                                         }),
                                                     )
                                                 }
-                                                value={
-                                                    !studentProfile?.admissionYear
-                                                        ? undefined
-                                                        : studentProfile.admissionYear
-                                                }
-                                                errorText={errors.timezone}
+                                                errorText={errors.admissionYear}
                                                 search
-                                                options={[
-                                                    { name: "", value: 0 },
-                                                    ...Array(
-                                                        new Date().getFullYear() -
-                                                            1984 +
-                                                            1,
-                                                    )
-                                                        .fill(0)
-                                                        .map((_, i) => ({
-                                                            name: String(
-                                                                i + 1984,
-                                                            ),
-                                                            value: i + 1984,
-                                                        })),
-                                                ]}
+                                                options={Array(
+                                                    new Date().getFullYear() -
+                                                        1984 +
+                                                        1,
+                                                )
+                                                    .fill(0)
+                                                    .map((_, i) => ({
+                                                        label: String(i + 1984),
+                                                        value: i + 1984,
+                                                    }))}
                                             />
                                         </div>
                                     </div>
@@ -1131,7 +1133,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Сфера деятельности
+                                            Сфера деятельности{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <p
                                             className={classNames(
@@ -1148,6 +1153,7 @@ const SettingsPage = () => {
                                             отображаться в шапке вашего профиля!
                                         </p>
                                         <Input
+                                            required
                                             placeholder="Flask разработчик"
                                             errorText={errors.profession}
                                             type="text"
@@ -1203,6 +1209,7 @@ const SettingsPage = () => {
                                             maxItems={15}
                                             options={skills}
                                             title="Выберите навыки"
+                                            required
                                             selectValues={(e) => {
                                                 dispatch(
                                                     updateStudentProfile({
@@ -1254,9 +1261,13 @@ const SettingsPage = () => {
                                             "text fz24 fw500",
                                         )}
                                     >
-                                        Название компании
+                                        Название компании{" "}
+                                        <span className={styles.required}>
+                                            *
+                                        </span>
                                     </p>
                                     <Input
+                                        required
                                         errorText={errors.companyName}
                                         type="text"
                                         value={companyProfile.companyName}
@@ -1284,9 +1295,15 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Имя представителя
+                                                Имя представителя{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.firstName}
                                                 type="text"
                                                 value={companyProfile.firstName}
@@ -1312,9 +1329,15 @@ const SettingsPage = () => {
                                                     "text fz24 fw500",
                                                 )}
                                             >
-                                                Фамилия представителя
+                                                Фамилия представителя{" "}
+                                                <span
+                                                    className={styles.required}
+                                                >
+                                                    *
+                                                </span>
                                             </p>
                                             <Input
+                                                required
                                                 errorText={errors.lastName}
                                                 type="text"
                                                 value={companyProfile.lastName}
@@ -1341,29 +1364,34 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Часовой пояс
+                                            Часовой пояс{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
-                                            isFirstOptionBlank
                                             onChange={(e) =>
                                                 dispatch(
                                                     updateCompanyProfile({
                                                         ...companyProfile,
-                                                        timezone: Number(e),
+                                                        timezone: Number(
+                                                            e.value,
+                                                        ),
                                                     }),
                                                 )
                                             }
                                             value={
                                                 !companyProfile?.timezone
                                                     ? undefined
-                                                    : companyProfile.timezone
+                                                    : timezones.find(
+                                                          (i) =>
+                                                              i.value ===
+                                                              studentProfile.timezone,
+                                                      )!
                                             }
                                             errorText={errors.timezone}
                                             search
-                                            options={[
-                                                { name: "", value: 0 },
-                                                ...timezones,
-                                            ]}
+                                            options={timezones}
                                         />
                                     </div>
                                     <div
@@ -1378,28 +1406,26 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Город
+                                            Город{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <CustomSearch
+                                            noOptionsMessage="Начните вводить название города..."
+                                            asyncSelect
                                             errorText={errors.city}
-                                            useFuzzySearch={false}
-                                            options={cities}
-                                            onInput={(e) => {
-                                                setCitiesBySearch(e);
-                                            }}
+                                            loadOptions={setCitiesBySearch}
+                                            isLoading={isCitiesLoading}
                                             onChange={(e) => {
                                                 dispatch(
                                                     updateCompanyProfile({
                                                         ...companyProfile,
-                                                        city: cities.find(
-                                                            (item) =>
-                                                                item.id === e,
-                                                        )!,
+                                                        city: e,
                                                     }),
                                                 );
                                             }}
                                             search
-                                            value={companyProfile.city?.id}
                                         />
                                     </div>
                                     <div
@@ -1414,7 +1440,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            Ссылка на сайт компании
+                                            Ссылка на сайт компании{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
                                             errorText={errors.linkToCompany}
@@ -1510,7 +1539,10 @@ const SettingsPage = () => {
                                                 "text fz24 fw500",
                                             )}
                                         >
-                                            О компании
+                                            О компании{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
                                             errorText={errors.description}
@@ -1539,6 +1571,7 @@ const SettingsPage = () => {
                                         <SelectSkills
                                             maxItems={15}
                                             options={skills}
+                                            required
                                             title="Навыки, которые вы используете в компании"
                                             selectValues={(e) => {
                                                 dispatch(
@@ -1558,7 +1591,10 @@ const SettingsPage = () => {
                                         <p className="text fz24 fw500">
                                             Копии документов, подтверждающие
                                             регистрацию, легитимность и
-                                            надежность компании
+                                            надежность компании{" "}
+                                            <span className={styles.required}>
+                                                *
+                                            </span>
                                         </p>
                                         <Input
                                             accept="application/pdf, application/msword, .docx, image/png, image/jpeg, image/jpg"
@@ -1691,6 +1727,33 @@ const SettingsPage = () => {
                                             "text fz24 fw500",
                                         )}
                                     >
+                                        Сфера деятельности
+                                    </p>
+                                    <Input
+                                        type="text"
+                                        value={studentProfile.profession}
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateStudentProfile({
+                                                    ...studentProfile,
+                                                    profession: e,
+                                                }),
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className={classNames(
+                                        styles.yearSettings,
+                                        styles.generalSettingsBlock,
+                                    )}
+                                >
+                                    <p
+                                        className={classNames(
+                                            styles.title,
+                                            "text fz24 fw500",
+                                        )}
+                                    >
                                         Telegram
                                     </p>
                                     <Input
@@ -1775,7 +1838,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
-                                    disabled={isChanged.current}
+                                    disabled={!isProfileInfoChanged?.current}
                                     onClick={() => validateEditProfileStudent()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -1979,7 +2042,7 @@ const SettingsPage = () => {
                                     </p>
                                 </div>
                                 <Button
-                                    disabled={isChanged.current}
+                                    disabled={!isProfileInfoChanged?.current}
                                     onClick={() => validateEditProfileCompany()}
                                     htmlType="submit"
                                     className={styles.saveButton}
@@ -2003,7 +2066,6 @@ const SettingsPage = () => {
             setIsAnimating(false);
         }, 300);
     };
-    const [activeTab, setActiveTab] = useState<SettingsState>("verification");
 
     useEffect(() => {
         setActiveTab(() => {
@@ -2014,20 +2076,6 @@ const SettingsPage = () => {
             }
         });
     }, [profileVerification.status]);
-
-    useEffect(() => {
-        return () => {
-            if (isChanged.current) {
-                showAlert("Изменения не сохранены!", "warning");
-            }
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isChanged.current && activeTab === "personal_data") {
-            showAlert("Изменения не сохранены!", "warning");
-        }
-    }, [activeTab]);
 
     const getTabsContent = (): ReactNode => {
         switch (profileVerification.status) {

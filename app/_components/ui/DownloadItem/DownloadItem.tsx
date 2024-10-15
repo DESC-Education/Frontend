@@ -8,10 +8,46 @@ type DownloadItemProps = {
     name: string;
     url: string;
     extension: string;
+    showcase?: boolean;
 };
 
-const DownloadItem: FC<DownloadItemProps> = ({ extension, name, url }) => {
+const DownloadItem: FC<DownloadItemProps> = ({
+    extension,
+    name,
+    url,
+    showcase,
+}) => {
     const [isHover, setIsHover] = useState(false);
+
+    console.log(name, url, extension);
+
+    if (showcase) {
+        return <div>
+            <div
+                className={styles.container}
+                onMouseEnter={() => setIsHover(true)}
+                onMouseLeave={() => setIsHover(false)}
+            >
+                <div className={styles.imgBlock}>
+                    <img
+                        className={classNames(styles.img, {
+                            [styles.hover]: isHover,
+                        })}
+                        alt="icon"
+                        src={`/icons/extensions/${extension}.png`}
+                    />
+                    <img
+                        className={classNames(styles.imgHover, {
+                            [styles.hover]: isHover,
+                        })}
+                        alt="icon"
+                        src={`/icons/extensions/${extension}_hover.png`}
+                    />
+                </div>
+                <p className="text fz20">{name}</p>
+            </div>
+        </div>
+    }
 
     return (
         <a href={url} target="_blank" rel="noreferrer">

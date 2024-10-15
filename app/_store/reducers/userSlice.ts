@@ -5,6 +5,7 @@ import {
     ICompanyProfile,
     IFaculty,
     IFile,
+    ILevel,
     ISpecialty,
     IStudentProfile,
     IUniversity,
@@ -123,11 +124,17 @@ export const userSlice = createSlice({
         updateStudentProfile(state, action: PayloadAction<IStudentProfile>) {
             state.studentProfile = action.payload;
         },
+        updateStudentProfileLevel(state, action: PayloadAction<ILevel>) {
+            state.studentProfile.level = action.payload;
+        },
         updateCompanyProfile(state, action: PayloadAction<ICompanyProfile>) {
             state.companyProfile = action.payload;
         },
         updateUser(state, action: PayloadAction<IUser>) {
             state.user = action.payload;
+        },
+        updateStudentReplyCount(state, action: PayloadAction<number>) {
+            state.studentProfile.replyCount = action.payload;
         },
         logoutUser(state) {
             state.user = {} as IUser;

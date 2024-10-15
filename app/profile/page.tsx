@@ -9,31 +9,15 @@ import { yearsOfEducation } from "../_utils/constants";
 import ProfileStatus from "./ProfileStatus/ProfileStatus";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
 import { getBeautifiedPhone } from "../_utils/utils";
-import { IReview } from "../_types";
+import { IReview, ISolution } from "../_types";
 import ReviewsItem from "../_components/ReviewsItem/ReviewsItem";
+import { useEffect, useState } from "react";
+import usePagination from "../_hooks/usePagination";
+import { getReviews } from "../_http/API/tasksApi";
+import CustomOval from "../_components/ui/CustomOval/CustomOval";
+import Pagination from "../_components/ui/Pagination/Pagination";
 
-const reviews: IReview[] = [
-    {
-        profile: {
-            companyName: "DESC Education",
-            logoImg: "/icons/hummingbird.svg",
-        },
-        title: "Отличный студент",
-        description:
-            "DESC Education выражает благодарность Ивану Иванову за профессиональный подход и высокое качество выполненного задания. Работа была выполнена в срок и полностью соответствовала нашим ожиданиям. Желаем дальнейших успехов и готовы рекомендовать!",
-        rating: 5,
-    },
-    {
-        profile: {
-            companyName: "Политех",
-            logoImg: "/icons/Politechlogo.png",
-        },
-        title: "Отзыв о компании",
-        description:
-            "Мы благодарим Ивана Ивановича за отличное выполнение задания. Ваша ответственность, внимание к деталям и оперативность сделали сотрудничество с вами приятным и продуктивным. Рекомендуем как надежного исполнителя!",
-        rating: 4,
-    },
-];
+const POSTS_PER_PAGE = 4;
 
 export default function Home() {
     const {
@@ -44,9 +28,29 @@ export default function Home() {
         user,
     } = useTypesSelector((state) => state.userReducer);
 
+    const [
+        currentReviews,
+        totalPages,
+        page,
+        setPage,
+        loading,
+        fetchData,
+    ] = usePagination<IReview>(getReviews, null, POSTS_PER_PAGE);
+
     if (profileVerification.status !== "verified") {
         return <ProfileStatus profileVerification={profileVerification} />;
     }
+
+    const getCurrentCourse = (start: number, end: number): string => {
+        const currentYear = new Date().getFullYear();
+
+        if (start <= currentYear && currentYear <= end) {
+            return "Выпускник";
+        } else if (start > currentYear) {
+            return `${currentYear - start} курс`;
+        }
+        return "Выпускник";
+    };
 
     return (
         <div
@@ -84,7 +88,7 @@ export default function Home() {
                                 "title",
                             )}
                         >
-                            О cебе
+                            О себе
                         </p>
                         <p
                             className={classNames(
@@ -92,7 +96,9 @@ export default function Home() {
                                 "text",
                             )}
                         >
-                            {studentProfile?.description}
+                            {studentProfile?.description
+                                ? studentProfile?.description
+                                : "Информации нет"}
                         </p>
                         {studentProfile?.emailVisibility && user.email && (
                             <Link
@@ -185,7 +191,14 @@ export default function Home() {
                                     yearsOfEducation[
                                         studentProfile.specialty.type
                                     ]}{" "}
-                                гг.
+                                гг.{" "}
+                                {getCurrentCourse(
+                                    studentProfile.admissionYear!,
+                                    studentProfile.admissionYear! +
+                                        yearsOfEducation[
+                                            studentProfile.specialty.type
+                                        ],
+                                )}
                             </p>
                             <p
                                 className={classNames(
@@ -264,7 +277,7 @@ export default function Home() {
                                                     <span
                                                         className={classNames(
                                                             styles.percentage,
-                                                            "title",
+                                                            "text fz24 fw500",
                                                         )}
                                                     >
                                                         {category.percent * 100}
@@ -282,9 +295,22 @@ export default function Home() {
                     )}
 
                     <div className={styles.reviews}>
-                        {reviews.map((review, index) => (
-                            <ReviewsItem review={review} key={index} />
-                        ))}
+                        {loading ? (
+                            <div className="centerContent">
+                                <CustomOval />
+                            </div>
+                        ) : (
+                            currentReviews.map((i, ind) => (
+                                <ReviewsItem review={i} key={ind} />
+                            ))
+                        )}
+                        {totalPages > 1 && (
+                            <Pagination
+                                page={page}
+                                setPage={setPage}
+                                totalPages={totalPages}
+                            />
+                        )}
                     </div>
 
                     {/* <div className={styles.tips}>
@@ -401,7 +427,6 @@ export default function Home() {
                                 </Link>
                             </div>
                         )}
-
                         <div className={styles.education}>
                             <p
                                 className={classNames(
@@ -468,20 +493,6 @@ export default function Home() {
                             </div>
                         </div>
                     )}
-
-                    {/* <div className={styles.tips}>
-                        <TipCard
-                            title="Совет 1"
-                            description="Не стоит кушать желтый снег"
-                            image="/images/tip2Image.png"
-                            BackgroundType={TipTypeBackground.GREEN}
-                        />
-                        <TipCard
-                            title="Совет 2"
-                            description="Не стоит кушать желтый снег"
-                            image="/images/tip2Image.png"
-                        />
-                    </div> */}
                 </div>
             )}
         </div>

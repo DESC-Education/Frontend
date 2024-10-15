@@ -6,6 +6,11 @@ import { FC, useContext, useEffect, useState } from "react";
 import { IFile } from "@/app/_types";
 import { createSolvingTask } from "@/app/_http/API/tasksApi";
 import { AlertContext } from "@/app/_context/AlertContext";
+import { taskSlice } from "@/app/_store/reducers/taskSlice";
+import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
+import { contentSlice } from "@/app/_store/reducers/contentSlice";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
+import { userSlice } from "@/app/_store/reducers/userSlice";
 
 const MAX_LENGTH = 2000;
 const MIN_LENGTH = 50;
@@ -19,6 +24,13 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
     const [solutionText, setSolutionText] = useState<string>("");
     const [textLength, setTextLength] = useState(solutionText.length || 0);
 
+    const { studentProfile } = useTypesSelector((state) => state.userReducer);
+
+    const { updateStudentReplyCount } = userSlice.actions;
+
+    const { addCurrentTaskSolution } = taskSlice.actions;
+    const dispatch = useTypesDispatch();
+
     const { showAlert } = useContext(AlertContext);
 
     useEffect(() => {
@@ -26,25 +38,21 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
     }, [solutionText]);
 
     const handleCreateSolution = async () => {
-        console.log("in handleCreateSolution");
-
-        // if (!solutionFiles.length) return;
-
         const formdata = new FormData();
 
         solutionFiles.forEach((el: any, i) => {
-            formdata.append(`file`, el, el.name);
+            formdata.append(`files_list`, el, el.name);
         });
         formdata.append("description", solutionText);
         formdata.append("taskId", taskId);
 
         const res = await createSolvingTask(formdata);
 
-        console.log("createSolvingTask res", res);
-
         if (res.status === 200) {
-            showAlert("Задание успешно создано!", "success");
+            showAlert("Решение успешно загружено!", "success");
+            dispatch(updateStudentReplyCount(studentProfile.replyCount - 1));
             setSolutionText("");
+            dispatch(addCurrentTaskSolution(res.solution!));
             setSolutionFiles([]);
         } else {
             showAlert(res.message);

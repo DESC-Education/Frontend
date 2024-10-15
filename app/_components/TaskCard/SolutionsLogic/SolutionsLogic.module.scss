@@ -17,7 +17,7 @@
         gap: 20px;
 
         &.company {
-            grid-template-columns: 2fr 3fr 1fr 2fr;
+            grid-template-columns: 1.5fr 3fr 1fr 2fr;
             gap: 10px;
         }
     }
@@ -101,7 +101,7 @@
             // border: 2px solid rgba(var(--gray2), 1);
 
             &.company {
-                grid-template-columns: 2fr 3fr 1fr 2fr;
+                grid-template-columns: 1.5fr 3fr 1fr 2fr;
                 gap: 10px;
             }
 
@@ -110,9 +110,9 @@
                 align-items: center;
                 margin-left: auto;
 
-
                 button {
                     margin: 0;
+                    white-space: nowrap;
                 }
             }
         }
@@ -131,9 +131,18 @@
 
         .solutionUser {
             overflow: hidden;
-            display: flex;
             gap: 15px;
             align-items: center;
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            margin-right: auto;
+            border-radius: 10px;
+            transition: .3s;
+
+            &:hover {
+                background: rgba(var(--gray3), 1);
+            }
 
             p {
                 display: -webkit-box;
@@ -147,55 +156,5 @@
                 text-overflow: ellipsis;
             }
         }
-    }
-
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-
-        .paginationItem {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid rgba(var(--gray1), 1);
-            cursor: pointer;
-            transition: .3s;
-
-            div {
-                font-size: 18px;
-                color: rgba(var(--gray1), 1);
-            }
-
-            &:hover {
-                border: 2px solid rgba(var(--green), 1);
-
-                div {
-                    color: rgba(var(--green), 1);
-                }
-            }
-
-            &.active {
-                border: 2px solid rgba(var(--green), 1);
-
-                div {
-                    color: rgba(var(--green), 1);
-                }
-
-                &:hover {
-                    cursor: default;
-
-                    border: 2px solid rgba(var(--green), 1);
-
-                    div {
-                        color: rgba(var(--green), 1);
-                    }
-                }
-            }
-        }
-
     }
 }

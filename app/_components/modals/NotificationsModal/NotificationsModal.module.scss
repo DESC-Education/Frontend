@@ -1,0 +1,136 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 450px;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 5px;
+    scrollbar-width: thin;
+    /* Thin scrollbar */
+    scrollbar-color: rgba(var(--black));
+    /* Thumb and track colors */
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(var(--black));
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(var(--gray2), .5);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(var(--gray2));
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+
+        &.activeNotification {
+            .notification {
+                opacity: .5;
+            }
+        }
+
+        .notification {
+            width: 100%;
+            padding: 15px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(var(--gray1), 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: .3s;
+            cursor: pointer;
+            position: relative;
+
+            &.active {
+                background: rgba(var(--gray2), .5);
+                opacity: 1 !important;
+
+                .link {
+                    height: 22px;
+                }
+            }
+
+            &:hover {
+                background: rgba(var(--gray3), 1);
+            }
+
+            .read {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                width: 22px;
+                height: 22px;
+                opacity: 0;
+                transition: 1s;
+                border-radius: 50%;
+                background: rgba(var(--green), .7);
+
+                &.active {
+                    background: rgba(var(--green), .7);
+                    animation: pulse 1s infinite;
+                    opacity: 1;
+                }
+
+                @keyframes pulse {
+                    0% {
+                        transform: scale(0.95);
+                        opacity: 0.7;
+                    }
+
+                    70% {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+
+                    100% {
+                        transform: scale(0.95);
+                        opacity: 0.7;
+                    }
+                }
+            }
+
+            .link {
+                height: 0;
+                transition: .3s;
+                overflow: hidden;
+            }
+
+            .message {
+                white-space: break-spaces;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
+                -webkit-box-orient: vertical;
+                max-width: 450px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .content {
+                display: flex;
+                gap: 10px;
+
+                flex-direction: column;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 100%;
+    }
+}

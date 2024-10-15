@@ -98,15 +98,29 @@ export type ILeadTaskCategory = {
 
 export type IChat = {
     id: string;
-    companion: ChatCompanion;
+    companion: IChatCompanion;
     createdAt: string;
-    taskId: string;
+    task: {
+        id: string;
+        title: string;
+    };
     isSupport: boolean;
+    isFavorite: boolean;
     isSuspicious: boolean;
+    lastMessage: IMessage;
     messages: IMessage[];
+    unreadCount: number;
 };
 
-export type ChatCompanion = {
+export type IMiniChat = {
+    id: string;
+    companion: IChatCompanion;
+    task: { id: string; title: string };
+};
+
+export type IChatCompanion = {
+    isCompleted: boolean;
+    id: string;
     name: string;
     avatar: string;
 };
@@ -114,12 +128,18 @@ export type ChatCompanion = {
 export type IMessage = {
     id: string;
     chatId: string;
-    text: string;
-    ticketId?: string;
-    userId: string;
-    isRead: boolean;
+    message: string;
+    // ticketId?: string;
+    user: {
+        id: string;
+        name: string;
+        avatar: string;
+    };
+    files: IFile[];
+    isRead: boolean; // с заделом на групповой чат
     createdAt: string;
-    isVisible: boolean;
+    isHidden: string[]; // 1 если чат удален, все предыдущие помечаются как isHidden: false;
+    // 2 если сообщение было изменено, isHidden: [userID]
     changedId?: string;
 };
 
@@ -146,7 +166,7 @@ export type ISolution = {
     user: string;
     description: string;
     file: string;
-    userProfile: {
+    studentProfile: {
         firstName: string;
         lastName: string;
         logoImg: string;
@@ -155,12 +175,15 @@ export type ISolution = {
     status: "completed" | "failed" | "pending";
     createdAt: string;
     files: IFile[];
+    review: IReview | null;
 };
 
 export type IFile = {
+    id: string;
     name: string;
     path: string;
     extension: string;
+    size: number;
 };
 
 export type ICategory = {
@@ -184,9 +207,11 @@ export type IFilter = {
 export type ISpecialty = {
     id: string;
     name: string;
-    type: "bachelor" | "specialty" | "magister";
+    type: ISpecialtyType;
     code: string;
 };
+
+export type ISpecialtyType = "bachelor" | "specialty" | "magistracy";
 
 export type ISkill = {
     id: string;
@@ -225,49 +250,48 @@ export type IProject = {
     name: string;
     avatar: string;
 };
-
+ 
 export type IReview = {
-    profile: {
+    companyProfile: {
+        id: string;
         companyName: string;
         logoImg: string;
     };
-    title: string;
     rating: number;
-    description: string;
+    text: string;
 };
 
 export type IVerificationStudentRequest = {
-    id: string,
-    createdAt: string,
-    status: "pending" | "approved" | "rejected",
-    comment: string,
-    admin: string,
-    profile: IStudentProfile,
-    verificationFiles: [
-        string
-    ]
-}
+    id: string;
+    createdAt: string;
+    status: IVerificationStatus;
+    comment: string;
+    admin: string;
+    profile: IStudentProfile;
+    verificationFiles: [string];
+};
 
 export type IVerificationCompanyRequest = {
-    id: string,
-    createdAt: string,
-    status: "pending" | "approved" | "rejected",
-    comment: string,
-    admin: string,
-    profile: ICompanyProfile,
-    verificationFiles: [
-        string
-    ]
-}
+    id: string;
+    createdAt: string;
+    status: IVerificationStatus;
+    comment: string;
+    admin: string;
+    profile: ICompanyProfile;
+    verificationFiles: [string];
+};
 
 export type IVerificationResult = {
-    admin: string,
-    comment: string,
-    createdAt: string,
-    email: string,
-    firstName: string,
-    id: string,
-    lastName: string,
-    requestStatus: "pending" | "approved" | "rejected",
-    userType: "student" | "company",
-}
+    admin: string;
+    comment: string;
+    createdAt: string;
+    email: string;
+    firstName: string;
+    id: string;
+    lastName: string;
+    requestStatus: IVerificationStatus;
+    userType: "student" | "company";
+};
+
+export type ISolutionStatus = "completed" | "failed" | "pending";
+export type IVerificationStatus = "pending" | "approved" | "rejected";

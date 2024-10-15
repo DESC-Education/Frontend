@@ -15,8 +15,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import usePagination from "@/app/_hooks/usePagination";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
+import Pagination from "../../ui/Pagination/Pagination";
 
-const POSTS_PER_PAGE = 3;
+const POSTS_PER_PAGE = 7;
 
 const filters = [
     { name: "Выполненные", value: "completed" },
@@ -86,20 +87,6 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                 <div className={styles.solutionDescription}>
                                     <p className="text fz20">
                                         {solution.description}
-                                        {solution.description}
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Nihil officiis unde
-                                        quibusdam ratione numquam praesentium
-                                        laboriosam quos. Explicabo, doloremque
-                                        consequuntur. Ducimus, deleniti
-                                        molestiae minus quidem deserunt
-                                        perferendis in blanditiis ipsa amet modi
-                                        dicta officia similique? Corporis
-                                        commodi natus rerum sunt. Lorem ipsum
-                                        dolor sit amet consectetur, adipisicing
-                                        elit. Natus alias aperiam fugiat
-                                        corporis eius nam id veniam ex
-                                        repellendus fuga.
                                     </p>
                                 </div>
                                 <p
@@ -121,7 +108,10 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                 >
                                     <Button
                                         type="secondary"
-                                        className={styles.solutionTitle}
+                                        className={classNames(
+                                            styles.solutionTitle,
+                                            styles.button,
+                                        )}
                                     >
                                         Перейти к решению
                                     </Button>
@@ -201,7 +191,8 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                     )}
                                                     key={index}
                                                 >
-                                                    <div
+                                                    <Link
+                                                        href={`/profile/student/${solution.user}`}
                                                         className={
                                                             styles.solutionUser
                                                         }
@@ -213,7 +204,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                                     .logoImg
                                                                     ? process
                                                                           .env
-                                                                          .NEXT_PUBLIC_ASSETS_PATH +
+                                                                          .NEXT_PUBLIC_SERVER_PATH +
                                                                       solution
                                                                           .userProfile
                                                                           .logoImg
@@ -231,15 +222,8 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                                 solution
                                                                     .userProfile
                                                                     .lastName}
-                                                            {solution
-                                                                .userProfile
-                                                                .firstName +
-                                                                " " +
-                                                                solution
-                                                                    .userProfile
-                                                                    .lastName}
                                                         </p>
-                                                    </div>
+                                                    </Link>
                                                     <div
                                                         className={
                                                             styles.solutionDescription
@@ -300,21 +284,11 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                 </>
             )}
             {totalPages > 1 && (
-                <div className={styles.pagination}>
-                    {Array(totalPages)
-                        .fill(0)
-                        .map((i, ind) => (
-                            <div
-                                className={classNames(styles.paginationItem, {
-                                    [styles.active]: page === ind + 1,
-                                })}
-                                key={ind}
-                                onClick={() => setPage(ind + 1)}
-                            >
-                                <div>{ind + 1}</div>
-                            </div>
-                        ))}
-                </div>
+                <Pagination
+                    page={page}
+                    setPage={setPage}
+                    totalPages={totalPages}
+                />
             )}
         </div>
     );
