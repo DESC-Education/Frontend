@@ -59,7 +59,7 @@
                 border: 1px solid rgba(var(--gray2), 1);
                 padding: 50px 30px;
 
-                p {
+                >p {
                     margin-bottom: 10px;
                 }
 
@@ -104,11 +104,19 @@
                     .select {
                         width: 30%;
 
+                        >p {
+                            margin-bottom: 10px;
+                        }
+
                         .filterContainer {
                             margin-bottom: 20px;
                             display: flex;
                             align-items: center;
                             flex-wrap: wrap;
+
+                            >p {
+                                margin-bottom: 10px;
+                            }
 
                             &.active {
                                 position: relative;
@@ -148,6 +156,48 @@
 
                 >button {
                     width: 100%;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        .templates {
+            .templateButton {
+                padding: 7px 10px;
+            }
+        }
+
+        .taskContent {
+            gap: 20px;
+
+            .createTask {
+                .taskForm {
+                    padding: 20px;
+
+                    .textName {
+                        margin-bottom: 5px;
+                    }
+
+                    .underdescription {
+                        margin: 5px 0;
+                    }
+
+                    .selects {
+                        .select {
+                            >p {
+                                margin-bottom: 5px;
+                            }
+
+                            .filterContainer {
+                                >p {
+                                    margin-bottom: 5px;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

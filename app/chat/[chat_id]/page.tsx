@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./page.module.scss";
+import "./page.scss";
 import { IChat, IFile, IMessage } from "../../_types/index";
 import {
     createRef,
@@ -27,6 +28,9 @@ import { AlertContext } from "@/app/_context/AlertContext";
 import Button from "@/app/_components/ui/Button/Button";
 import Link from "next/link";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+
+type AttachedFileModifiedType = { file: File; isSent: boolean; id?: string };
 
 export default function Page() {
     const { chat_id } = useParams<{ chat_id: string }>();
@@ -34,6 +38,8 @@ export default function Page() {
     const { showAlert } = useContext(AlertContext);
 
     const [isChatLoading, setIsChatLoading] = useState<boolean>(true);
+
+    const [isWsLoading, setIsWsLoading] = useState<boolean>(true);
 
     const router = useRouter();
 
@@ -57,8 +63,6 @@ export default function Page() {
             process.env.NEXT_PUBLIC_WS_ADDRESS! +
                 `/ws/chat/${chat_id}/?token=${LocalStorage.getAccessToken()}`,
         );
-        // console.log("newWs", newWs);
-
         return newWs;
     }, [chat_id]);
 
@@ -73,6 +77,7 @@ export default function Page() {
         if (!ws) return;
 
         ws.onopen = (e) => {
+            setIsWsLoading(false);
             setWsReadyState(WebSocket.OPEN);
         };
 
@@ -94,26 +99,30 @@ export default function Page() {
                         );
                     }
                     break;
-                case "viewed":
-                    console.log("viewed", parsedPayload);
-                    dispatch(updateChatUnread({ chatId: chat_id, count: 0 }));
-                    dispatch(
-                        updateUnreadChatsCount({
-                            number: parsedPayload.unreadChatsCount,
-                        }),
-                    );
-                    dispatch(updateLastMessageViewed(chat_id));
-                    dispatch(updateIsRead(parsedPayload));
-                    break;
+                // case "viewed":
+                //     console.log("viewed", parsedPayload);
+                //     dispatch(updateChatUnread({ chatId: chat_id, count: 0 }));
+                //     dispatch(
+                //         updateUnreadChatsCount({
+                //             number: parsedPayload.unreadChatsCount,
+                //         }),
+                //     );
+                //     dispatch(updateLastMessageViewed(chat_id));
+                //     dispatch(updateIsRead(parsedPayload));
+                //     break;
             }
         };
 
         ws.onerror = (e) => {
+            if (e.eventPhase === WebSocket.CLOSING) return;
+
+            setIsWsLoading(true);
+
             showAlert("Ошибка при загрузке чата");
         };
 
         ws.onclose = (e) => {
-            // setWsReadyState(WebSocket.CLOSED);
+            setWsReadyState(WebSocket.CLOSED);
             // setWs(createWsInstance());
         };
 
@@ -122,11 +131,9 @@ export default function Page() {
         };
     }, [chat_id, ws]);
 
-    // console.log("CURR WS IS ", ws);
-
     const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
     const [attachedFilesModified, setAttachedFilesModified] = useState<
-        { file: File; isSent: boolean; id?: string }[]
+        AttachedFileModifiedType[]
     >([]);
 
     const [messageText, setMessageText] = useState<string>("");
@@ -159,7 +166,7 @@ export default function Page() {
         }
     };
 
-    const sendMessage = async () => {
+    const sendMessage = () => {
         if (!ws) return;
 
         ws.send(
@@ -179,10 +186,7 @@ export default function Page() {
         setAttachedFiles([]);
     };
 
-    // console.log("currentChat", currentChat);
-
     useEffect(() => {
-        // console.log("in chat_id page, chats ", chats, chat_id);
         setIsChatLoading(true);
         const asyncFunc = async () => {
             const res = await getChat(chat_id);
@@ -243,23 +247,9 @@ export default function Page() {
         return () => {
             window.removeEventListener("keydown", listener);
         };
-    }, [messageText.length, attachedFilesModified.length]);
+    }, [messageText.length, attachedFilesModified.map((i) => i?.id)]);
 
     const dummyRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!currentChat?.messages.length || !dummyRef.current) return;
-
-        dummyRef.current?.scrollIntoView({
-            behavior: "instant",
-        });
-
-        setTimeout(() => {
-            dummyRef.current?.scrollIntoView({
-                behavior: "instant",
-            });
-        }, 140);
-    }, [currentChat?.messages.length, dummyRef.current?.offsetHeight]);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -306,43 +296,103 @@ export default function Page() {
         };
     }, []);
 
-    if (!currentChat || !currentChat?.companion || isChatLoading)
-        return (
-            <div className="centerContent">
-                <CustomOval />
-            </div>
-        );
+    const nodeRef = useRef<HTMLDivElement>(null);
+
+    const isTotalLoading =
+        !currentChat || !currentChat?.companion || isChatLoading || isWsLoading;
+
+    useEffect(() => {
+        if (!currentChat?.messages.length || isTotalLoading) return;
+
+        dummyRef.current?.scrollIntoView({
+            behavior: "instant",
+            block: "end",
+            inline: "nearest",
+        });
+
+        setTimeout(() => {
+            dummyRef.current?.scrollIntoView({
+                behavior: "instant",
+                block: "end",
+                inline: "nearest",
+            });
+        }, 140);
+    }, [isTotalLoading]);
+
+    useEffect(() => {
+        if (!currentChat?.messages.length || isTotalLoading) return;
+
+        dummyRef.current?.scrollIntoView({
+            behavior: "instant",
+            block: "end",
+            inline: "nearest",
+        });
+
+        setTimeout(() => {
+            dummyRef.current?.scrollIntoView({
+                behavior: "instant",
+                block: "end",
+                inline: "nearest",
+            });
+        }, 50);
+    }, [currentChat?.messages.length, isTotalLoading]);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.chatHeader}>
-                <div>
-                    <Link
-                        href={
-                            user.role === "company"
-                                ? `/profile/student/${currentChat.companion.id}`
-                                : `/profile/company/${currentChat.companion.id}`
-                        }
-                        className={styles.userInfo}
-                    >
-                        <img
-                            src={
-                                currentChat.companion.avatar
-                                    ? process.env.NEXT_PUBLIC_SERVER_PATH +
-                                      currentChat.companion.avatar
-                                    : "/images/avatar.png"
-                            }
-                            alt="Аватар"
-                            className={styles.avatar}
-                        />
-                        <div>
-                            <h4 className={styles.userName}>
-                                {currentChat.companion.name}
-                            </h4>
-                            {/* <span className={styles.userStatus}>в сети</span> */}
-                        </div>
-                    </Link>
-                    {/* <div className={styles.chatActions}>
+        <SwitchTransition>
+            <CSSTransition
+                key={String(isTotalLoading)}
+                nodeRef={nodeRef}
+                addEndListener={(done: any) => {
+                    nodeRef.current!.addEventListener(
+                        "transitionend",
+                        done,
+                        false,
+                    );
+                }}
+                timeout={120}
+                classNames="fade"
+            >
+                <div
+                    ref={nodeRef}
+                    className={classNames({
+                        centerContent: isTotalLoading,
+                        [styles.container]: !isTotalLoading,
+                    })}
+                >
+                    {isTotalLoading ? (
+                        <CustomOval />
+                    ) : (
+                        <>
+                            <div className={styles.chatHeader}>
+                                <div>
+                                    <Link
+                                        href={
+                                            user.role === "company"
+                                                ? `/profile/student/${currentChat.companion.id}`
+                                                : `/profile/company/${currentChat.companion.id}`
+                                        }
+                                        className={styles.userInfo}
+                                    >
+                                        <img
+                                            src={
+                                                currentChat.companion.avatar
+                                                    ? process.env
+                                                          .NEXT_PUBLIC_SERVER_PATH +
+                                                      currentChat.companion
+                                                          .avatar
+                                                    : "/images/avatar.png"
+                                            }
+                                            alt="Аватар"
+                                            className={styles.avatar}
+                                        />
+                                        <div>
+                                            <h4 className={styles.userName}>
+                                                {currentChat.companion.name}
+                                            </h4>
+                                            {/* <span className={styles.userStatus}>в сети</span> */}
+                                        </div>
+                                    </Link>
+                                    {/* <div className={styles.chatActions}>
                     <img
                         src="/icons/searchIcon.svg"
                         alt="search"
@@ -354,181 +404,219 @@ export default function Page() {
                         className={styles.pinIcon}
                     />
                 </div> */}
-                </div>
-                {!!currentChat.task?.title && (
-                    <Link
-                        href={`/tasks/${currentChat.task.id}`}
-                        className={classNames(styles.title, "text fz20")}
-                    >
-                        Чат по заданию: {currentChat.task.title}
-                    </Link>
-                )}
-                <div></div>
-            </div>
-            <div className={styles.chatMessages}>
-                {currentChat.messages.length > 0 ? (
-                    currentChat.messages.map((message, index) => (
-                        <Message
-                            message={message}
-                            key={index}
-                            ws={ws}
-                            wsStatus={wsReadyState}
-                        />
-                    ))
-                ) : (
-                    <div className="centerContent">
-                        <p className="text fz28 fw500 gray center">
-                            Тут пока нет сообщений!
-                        </p>
-                    </div>
-                )}
-                <div ref={dummyRef}></div>
-            </div>
-            <div
-                onDrop={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    if (dragOverTimeoutRef.current) {
-                        clearTimeout(dragOverTimeoutRef.current);
-                    }
-
-                    setIsDragging(false);
-
-                    const files = e.dataTransfer.files;
-
-                    if (!files.length) return;
-
-                    const newFile = Array.from(files);
-
-                    for (let i = 0; i < newFile.length; i++) {
-                        let unsupportedFiles = false;
-
-                        const item = newFile[i];
-
-                        if (
-                            ![
-                                "pdf",
-                                "vnd.openxmlformats-officedocument.wordprocessingml.document",
-                                "png",
-                                "jpg",
-                                "jpeg",
-                            ].includes(item.type.split("/")[1])
-                        ) {
-                            showAlert(
-                                "Формат одного или нескольких файлов не поддерживается",
-                            );
-                            unsupportedFiles = true;
-                        }
-
-                        if (item.size > 5e6) {
-                            showAlert(
-                                "Один или несколько файлов слишким большие",
-                            );
-                            unsupportedFiles = true;
-                        }
-
-                        if (unsupportedFiles) continue;
-
-                        setAttachedFiles((prev: any) => {
-                            if (!prev) return newFile;
-                            return [...prev, item].slice(0, 5);
-                        });
-                    }
-
-                    // setAttachedFiles(Array.from(files));
-                }}
-                className={classNames(styles.messageInput, {
-                    [styles.dragging]: isDragging,
-                })}
-            >
-                <div className={styles.dragOverlay}>
-                    <div className={styles.dragOverlayText}>
-                        Перетащите файлы сюда
-                    </div>
-                </div>
-                <Input
-                    type="file_multiple_chat"
-                    file={attachedFiles}
-                    setFile={setAttachedFiles}
-                    multiple
-                />
-                <textarea
-                    rows={1}
-                    ref={textareaRef}
-                    style={{
-                        height: `${textareaRef.current?.scrollHeight}px`,
-                    }}
-                    placeholder="Напишите сообщение..."
-                    value={messageText}
-                    onChange={(e) => {
-                        setMessageText(e.target.value);
-                    }}
-                />
-                <div
-                    onClick={() => {
-                        if (
-                            messageText.replaceAll("\n", "").replaceAll(" ", "")
-                                .length > 0 ||
-                            attachedFilesModified.length > 0
-                        ) {
-                            sendMessage();
-                        }
-                    }}
-                    className={classNames(styles.send, {
-                        [styles.disabled]:
-                            messageText.replaceAll("\n", "").replaceAll(" ", "")
-                                .length === 0 &&
-                            attachedFilesModified.length === 0,
-                    })}
-                >
-                    <img src="/icons/send.svg" alt="send" />
-                </div>
-            </div>
-            {attachedFilesModified.length > 0 && (
-                <div className={styles.attachedFiles}>
-                    {attachedFilesModified.map((file, index) => (
-                        <div className={styles.file} key={index}>
-                            <img
-                                className={styles.delete}
-                                src="/icons/cross.png"
-                                alt="delete"
-                                onClick={() =>
-                                    setAttachedFilesModified((prev) =>
-                                        prev.filter((i) => i.id !== file.id),
-                                    )
-                                }
-                            />
-                            {["png", "jpg", "jpeg", "jfif"].includes(
-                                file.file.name.split(".").slice(-1)[0],
-                            ) ? (
-                                <img
-                                    key={index}
-                                    className={styles.userImage}
-                                    src={URL.createObjectURL(file.file)}
-                                    alt="logo"
-                                />
-                            ) : (
-                                <>
-                                    <img
-                                        key={index}
+                                </div>
+                                {!!currentChat.task?.title && (
+                                    <Link
+                                        href={`/tasks/${currentChat.task.id}`}
                                         className={classNames(
-                                            styles.userImage,
-                                            styles.imgDocument,
+                                            styles.title,
+                                            "text fz16",
                                         )}
-                                        src={`/icons/extensions/${
-                                            file.file.name
-                                                .split(".")
-                                                .slice(-1)[0]
-                                        }.png`}
-                                    />
-                                    <p>{file.file.name}</p>
-                                </>
+                                    >
+                                        Чат по заданию: {currentChat.task.title}
+                                    </Link>
+                                )}
+                                <div></div>
+                            </div>
+                            <div className={styles.chatMessages}>
+                                <div className={styles.chatMessagesContainer}>
+                                    {currentChat.messages.length > 0 ? (
+                                        currentChat.messages.map(
+                                            (message, index) => (
+                                                <Message
+                                                    message={message}
+                                                    key={index}
+                                                    ws={ws}
+                                                    wsStatus={wsReadyState}
+                                                />
+                                            ),
+                                        )
+                                    ) : (
+                                        <div className="centerContent">
+                                            <p className="text fz28 fw500 gray center">
+                                                Тут пока нет сообщений!
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.dummy} ref={dummyRef}></div>
+                            </div>
+                            <div
+                                onDrop={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+
+                                    if (dragOverTimeoutRef.current) {
+                                        clearTimeout(
+                                            dragOverTimeoutRef.current,
+                                        );
+                                    }
+
+                                    setIsDragging(false);
+
+                                    const files = e.dataTransfer.files;
+
+                                    if (!files.length) return;
+
+                                    const newFile = Array.from(files);
+
+                                    for (let i = 0; i < newFile.length; i++) {
+                                        let unsupportedFiles = false;
+
+                                        const item = newFile[i];
+
+                                        if (
+                                            ![
+                                                "pdf",
+                                                "vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                                "png",
+                                                "jpg",
+                                                "jpeg",
+                                            ].includes(item.type.split("/")[1])
+                                        ) {
+                                            showAlert(
+                                                "Формат одного или нескольких файлов не поддерживается",
+                                            );
+                                            unsupportedFiles = true;
+                                        }
+
+                                        if (item.size > 5e6) {
+                                            showAlert(
+                                                "Один или несколько файлов слишким большие",
+                                            );
+                                            unsupportedFiles = true;
+                                        }
+
+                                        if (unsupportedFiles) continue;
+
+                                        setAttachedFiles((prev: any) => {
+                                            if (!prev) return newFile;
+                                            return [...prev, item].slice(0, 5);
+                                        });
+                                    }
+                                }}
+                                className={classNames(styles.messageInput, {
+                                    [styles.dragging]: isDragging,
+                                })}
+                            >
+                                <div className={styles.dragOverlay}>
+                                    <div className={styles.dragOverlayText}>
+                                        Перетащите файлы сюда
+                                    </div>
+                                </div>
+                                <Input
+                                    type="file_multiple_chat"
+                                    file={attachedFiles}
+                                    setFile={setAttachedFiles}
+                                    multiple
+                                />
+                                <textarea
+                                    rows={1}
+                                    ref={textareaRef}
+                                    style={{
+                                        height: `${textareaRef.current?.scrollHeight}px`,
+                                    }}
+                                    placeholder="Напишите сообщение..."
+                                    value={messageText}
+                                    onChange={(e) => {
+                                        setMessageText(e.target.value);
+                                    }}
+                                />
+                                <div
+                                    onClick={() => {
+                                        if (
+                                            messageText
+                                                .replaceAll("\n", "")
+                                                .replaceAll(" ", "").length >
+                                                0 ||
+                                            attachedFilesModified.length > 0
+                                        ) {
+                                            sendMessage();
+                                        }
+                                    }}
+                                    className={classNames(styles.send, {
+                                        [styles.disabled]:
+                                            messageText
+                                                .replaceAll("\n", "")
+                                                .replaceAll(" ", "").length ===
+                                                0 &&
+                                            attachedFilesModified.length === 0,
+                                    })}
+                                >
+                                    <img src="/icons/send.svg" alt="send" />
+                                </div>
+                            </div>
+                            {attachedFilesModified.length > 0 && (
+                                <div className={styles.attachedFiles}>
+                                    {attachedFilesModified.map(
+                                        (file, index) => (
+                                            <div
+                                                className={styles.file}
+                                                key={index}
+                                            >
+                                                <img
+                                                    className={styles.delete}
+                                                    src="/icons/cross.png"
+                                                    alt="delete"
+                                                    onClick={() =>
+                                                        setAttachedFilesModified(
+                                                            (prev) =>
+                                                                prev.filter(
+                                                                    (i) =>
+                                                                        i.id !==
+                                                                        file.id,
+                                                                ),
+                                                        )
+                                                    }
+                                                />
+                                                {[
+                                                    "png",
+                                                    "jpg",
+                                                    "jpeg",
+                                                    "jfif",
+                                                ].includes(
+                                                    file.file.name
+                                                        .split(".")
+                                                        .slice(-1)[0],
+                                                ) ? (
+                                                    <img
+                                                        key={index}
+                                                        className={
+                                                            styles.userImage
+                                                        }
+                                                        src={URL.createObjectURL(
+                                                            file.file,
+                                                        )}
+                                                        alt="logo"
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <img
+                                                            key={index}
+                                                            className={classNames(
+                                                                styles.userImage,
+                                                                styles.imgDocument,
+                                                            )}
+                                                            src={`/icons/extensions/${
+                                                                file.file.name
+                                                                    .split(".")
+                                                                    .slice(
+                                                                        -1,
+                                                                    )[0]
+                                                            }.png`}
+                                                        />
+                                                        <p>{file.file.name}</p>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ),
+                                    )}
+                                </div>
                             )}
-                        </div>
-                    ))}
+                        </>
+                    )}
                 </div>
-            )}
-        </div>
+            </CSSTransition>
+        </SwitchTransition>
     );
 }

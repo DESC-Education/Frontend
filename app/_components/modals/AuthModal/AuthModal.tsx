@@ -201,7 +201,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { authUser } = userSlice.actions;
-    const { updateIsLoading } = contentSlice.actions;
+    const { updateIsLoading, updateNotifications } = contentSlice.actions;
     const dispatch = useTypesDispatch();
 
     const [state, authDispatch] = useReducer(reducer, initState);
@@ -304,6 +304,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
         if (res.status === 200) {
             showAlert!("Вы успешно вошли в аккаунт!", "success");
             dispatch(updateIsLoading(true));
+            dispatch(updateNotifications(res.notifications!));
             dispatch(authUser({ user: res.user!, tokens: res.tokens! }));
             closeModal();
         } else if (res.status === 406) {

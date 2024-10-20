@@ -34,14 +34,6 @@ const Message: FC<MessageProps> = ({ message, ws, wsStatus }) => {
     const [lightBoxOpened, setLightBoxOpened] = useState<boolean>(false);
 
     useEffect(() => {
-        // console.log(
-        //     !ws,
-        //     message.isRead,
-        //     wsStatus !== 1,
-        //     !inView,
-        //     message.user.id === user.id,
-        // );
-
         if (
             !ws ||
             message.isRead ||
@@ -94,7 +86,7 @@ const Message: FC<MessageProps> = ({ message, ws, wsStatus }) => {
                 />
             )}
             <div className={classNames(styles.decor)}></div>
-            <p className={classNames("text fz20", styles.text)}>
+            <p className={classNames("text fz16", styles.text)}>
                 {message.message}
             </p>
             <div className={styles.messageFiles}>
@@ -138,10 +130,10 @@ const Message: FC<MessageProps> = ({ message, ws, wsStatus }) => {
                     )}
             </div>
             <div className={styles.footer}>
-                <p className={classNames(styles.changed, "text fz16 gray")}>
+                <p className={classNames(styles.changed, "text fz14 gray")}>
                     {message.changedId ? "Изменено" : ""}
                 </p>
-                <p className={classNames(styles.messageTime, "text fz16")}>
+                <p className={classNames(styles.messageTime, "text fz14")}>
                     {messageTime}
                 </p>
                 {user.id === message.user.id && (

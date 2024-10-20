@@ -11,6 +11,7 @@ type CustomSelectProps = {
     options?: OptionsOrGroups<any, any> | undefined;
     className?: string;
     value?: any;
+    initValue?: any;
     multiple?: boolean;
     disabled?: boolean;
     onFocus?: (value: any) => void;
@@ -30,6 +31,7 @@ const CustomSearch: FC<CustomSelectProps> = ({
     options,
     className = "",
     value,
+    initValue = null,
     multiple = false,
     search = true,
     onFocus = () => {},
@@ -52,6 +54,7 @@ const CustomSearch: FC<CustomSelectProps> = ({
         return (
             <>
                 <AsyncSelect
+                    defaultValue={initValue}
                     cacheOptions={cacheOptions}
                     loadingMessage={() => "Загрузка..."}
                     loadOptions={async (inputValue) => loadOptions(inputValue)}
@@ -101,6 +104,7 @@ const CustomSearch: FC<CustomSelectProps> = ({
     return (
         <>
             <Select
+                defaultValue={initValue}
                 onFocus={onFocus}
                 isDisabled={disabled}
                 placeholder={placeholder}

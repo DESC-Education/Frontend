@@ -57,6 +57,8 @@ export default function JobsPage() {
     ] = useState<number>(1);
 
     const getMoreMyTasks = async () => {
+        console.log("helo kozinak");
+        
         setIsLoadingMyTasks(true);
 
         const res = await getMyTasks({
@@ -75,6 +77,7 @@ export default function JobsPage() {
         } else {
             showAlert(res.message);
         }
+        console.log("helo kozinak2");
         setIsLoadingMyTasks(false);
     };
 
@@ -104,15 +107,15 @@ export default function JobsPage() {
         setIsLoadingMyTasks(false);
     };
 
-    const [isLoadingMyTasks, setIsLoadingMyTasks] = useState<boolean>(true);
+    const [isLoadingMyTasks, setIsLoadingMyTasks] = useState<boolean>(myTasks?.length === 0);
     const [isLoadingMyArchivedTasks, setIsLoadingMyArchivedTasks] = useState<
         boolean
-    >(true);
+    >(myArchivedTasks?.length === 0);
 
     const myTasksListRef = useRef<HTMLDivElement>(null);
     const myArchivedTasksListRef = useRef<HTMLDivElement>(null);
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(myTasks?.length === 0);
 
     const handleTabChange = (newTab: TasksPage) => {
         if (activeTab === newTab) return;
@@ -141,6 +144,7 @@ export default function JobsPage() {
                 status: "active",
             });
 
+            console.log("helo kozinak333");
             setHasMoreMyTasks(activeTasks.pageCount! > 1);
             setIsLoadingMyTasks(false);
 

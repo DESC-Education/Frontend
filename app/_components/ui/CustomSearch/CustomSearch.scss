@@ -77,3 +77,19 @@
         opacity: .2;
     }
 }
+
+@media screen and (max-width: 1200px) {
+    .select {
+        &__control {
+            min-width: 200px;
+            padding: 1px 10px;
+            font-size: 16px !important;
+            font-weight: 300;
+        }
+
+        &__option {
+            font-size: 16px !important;
+            padding: 10px 12px !important;
+        }
+    }
+}

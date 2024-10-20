@@ -155,6 +155,17 @@
     .header {
         padding: 12px 0 !important;
 
+        .icons {
+            .notification {
+                .unread {
+                    top: -12px;
+                    right: -12px;
+                    padding: 3px 7px;
+                    font-size: 14px;
+                }
+            }
+        }
+
         .logo {
             width: 95px;
         }

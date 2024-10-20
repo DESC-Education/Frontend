@@ -85,7 +85,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
                 />
                 <div className={styles.userInfo}>
                     <div className={styles.mainInfo}>
-                        <p className="text fw500">{name}</p>
+                        <p className="text fw500 fz20">{name}</p>
                     </div>
                     {lastMessage ? (
                         <p

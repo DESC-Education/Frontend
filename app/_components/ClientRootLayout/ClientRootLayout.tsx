@@ -54,7 +54,9 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         updateLastMessage,
         updateChatUnread,
         updateUnreadChatsCount,
+        updateLastMessageViewed,
         tryToAddChat,
+        updateIsRead,
     } = chatSlice.actions;
     const {
         updateCurrentTaskSolution,
@@ -116,6 +118,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                 }
                             });
 
+                            // SSE Events
                             switch (result.event) {
                                 case "notification":
                                     // payload:
@@ -191,7 +194,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             dispatch(
                                                 updateCurrentTaskSolution(
                                                     result.data.payload,
-                                                ),
+                                                )
                                             );
                                             break;
                                         }
@@ -220,7 +223,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     console.log("notification", result.data);
                                     break;
                                 case "newMessage":
-                                    // payload:
+                                    // payload: 
                                     // chat: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
                                     // createdAt: "2024-10-03T17:39:03.961803"
                                     // message: "sdvdfvdf"
@@ -253,6 +256,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     console.log("newMessage", result.data);
                                     break;
                                 case "newChat":
+                                    // payload: IChat
                                     dispatch(
                                         updateUnreadChatsCount({
                                             number: unreadChatsCount + 1,
@@ -260,6 +264,24 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     );
                                     dispatch(tryToAddChat(result.data));
                                     console.log("newChat", result.data);
+                                    break;
+                                case "viewed":
+                                    // payload: 
+                                    // chat: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
+                                    // createdAt: "2024-10-03T17:39:03.961803"
+                                    // (messageId)id: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
+                                    // message: "sdvdfvdf"
+                                    // unreadChatsCount: 1
+                                    // unreadCount: 1
+                                    console.log("SSE viewed", result.data);
+                                    dispatch(updateChatUnread({ chatId: result.data.chat, count: result.data.unreadCount }));
+                                    dispatch(
+                                        updateUnreadChatsCount({
+                                            number: result.data.unreadChatsCount,
+                                        }),
+                                    );
+                                    dispatch(updateLastMessageViewed(result.data.chat));
+                                    dispatch(updateIsRead(result.data.id));
                                     break;
                             }
                         } catch (error) {}

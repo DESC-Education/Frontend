@@ -39,8 +39,6 @@ export const chatSlice = createSlice({
             ).length;
         },
         tryToAddChat: (state, action: PayloadAction<IChat>) => {
-            console.log(state.chats, state.chats?.length, action.payload);
-
             if (!state.chats) {
                 state.chats = [action.payload];
                 return;
@@ -51,8 +49,6 @@ export const chatSlice = createSlice({
                 state.chats.filter((i) => i.id === action.payload.id).length
             )
                 return;
-
-            // console.log("adding a chat...");
 
             state.chats.push(action.payload);
         },
@@ -71,11 +67,11 @@ export const chatSlice = createSlice({
                 state.currentChat.messages?.push(action.payload);
             }
         },
-        updateIsRead: (state, action: PayloadAction<IMessage>) => {
+        updateIsRead: (state, action: PayloadAction<string>) => {
             if (state.currentChat) {
                 state.currentChat.messages = state.currentChat.messages.map(
                     (item) => {
-                        if (item.id === action.payload.id) {
+                        if (item.id === action.payload) {
                             return { ...item, isRead: true };
                         } else {
                             return item;
