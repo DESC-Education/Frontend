@@ -52,9 +52,9 @@ export const timezones: ITimezone[] = [
 ];
 
 export const formsOfEducation = [
-    { label: "Очное", value: "full_time" },
-    { label: "Заочное", value: "part_time" },
-    { label: "Очно-заочное", value: "full_part_time" },
+    { name: "Очное", label: "Очное", value: "full_time" },
+    { name: "Заочное", label: "Заочное", value: "part_time" },
+    { name: "Очно-заочное", label: "Очно-заочное", value: "full_part_time" },
 ];
 
 export const typeOfSpeciality: { name: string; value: ISpecialtyType }[] = [
@@ -70,8 +70,8 @@ export const levels = [
 ];
 
 export const sortingOptions = [
-    { label: "Сначала новые", value: "-createdAt" },
-    { label: "Сначала старые", value: "createdAt" },
+    { name: "Сначала новые", label: "Сначала новые", value: "-createdAt" },
+    { name: "Сначала старые", label: "Сначала старые", value: "createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
 ];
 
@@ -99,27 +99,6 @@ export const solutionStatuses: {
         color: "#DD6565",
         textColor: "white",
     },
-];
-
-export interface ColourOption {
-    readonly value: string;
-    readonly label: string;
-    readonly color: string;
-    readonly isFixed?: boolean;
-    readonly isDisabled?: boolean;
-}
-
-export const colourOptions: readonly ColourOption[] = [
-    { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
-    { value: "blue", label: "Blue", color: "#0052CC", isDisabled: true },
-    { value: "purple", label: "Purple", color: "#5243AA" },
-    { value: "red", label: "Red", color: "#FF5630", isFixed: true },
-    { value: "orange", label: "Orange", color: "#FF8B00" },
-    { value: "yellow", label: "Yellow", color: "#FFC400" },
-    { value: "green", label: "Green", color: "#36B37E" },
-    { value: "forest", label: "Forest", color: "#00875A" },
-    { value: "slate", label: "Slate", color: "#253858" },
-    { value: "silver", label: "Silver", color: "#666666" },
 ];
 
 // export const getMotificationRoute = (
