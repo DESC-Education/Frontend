@@ -7,8 +7,6 @@ const usePagination = <T>(
     args: any,
     pageSize: number = 10,
 ): [T[], number, number, (page: number) => void, boolean, () => void] => {
-    console.log("pageSize", pageSize);
-    
     const [data, setData] = useState<T[]>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);

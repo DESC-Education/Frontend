@@ -283,7 +283,7 @@ export default function CreateTaskPage() {
                         <Button
                             key={index}
                             type="primary"
-                            className={styles.templateButton}
+                            className={classNames(styles.templateButton, "text fz20")}
                         >
                             {template}
                         </Button>
@@ -394,7 +394,7 @@ export default function CreateTaskPage() {
                                     [styles.error]: errors.filters,
                                 })}
                             >
-                                <p className={"text fw500"}>Фильтры</p>
+                                <p className={"text fz24 fw500"}>Фильтры</p>
                                 <TransitionGroup>
                                     {currentFilterCategories.map(
                                         (filter, index) => (

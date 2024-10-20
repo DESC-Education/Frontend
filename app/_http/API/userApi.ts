@@ -104,11 +104,12 @@ export const loginUser = async (dto: {
     status: number;
     message: string;
     user?: IUser;
+    notifications?: SSENotificationPayload[];
     tokens?: Tokens;
 }> => {
     try {
         const { data } = await $host.post<{
-            user: IUser;
+            user: IUser & { notifications: SSENotificationPayload[] };
             tokens: Tokens;
         }>("/api/v1/users/login", dto);
 
@@ -116,6 +117,7 @@ export const loginUser = async (dto: {
             status: 200,
             message: "Успешно",
             user: data.user,
+            notifications: data.user.notifications,
             tokens: data.tokens,
         };
     } catch (error) {

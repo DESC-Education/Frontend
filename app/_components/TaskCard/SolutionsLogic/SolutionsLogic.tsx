@@ -20,14 +20,14 @@ import Pagination from "../../ui/Pagination/Pagination";
 const POSTS_PER_PAGE = 7;
 
 const filters = [
-    { name: "Выполненные", value: "completed" },
-    { name: "Не выполненные", value: "failed" },
-    { name: "На оценке", value: "pending" },
+    { label: "Выполненные", value: "completed" },
+    { label: "Не выполненные", value: "failed" },
+    { label: "На оценке", value: "pending" },
 ];
 
 const sortings = [
-    { name: "Сначала новые", value: "createdAt" },
-    { name: "Сначала старые", value: "-createdAt" },
+    { label: "Сначала новые", value: "createdAt" },
+    { label: "Сначала старые", value: "-createdAt" },
 ];
 
 type SolutionsLogicProps = {
@@ -127,10 +127,10 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                             <div>
                                 <p className="title fz24 gray fw500">Фильтр:</p>
                                 <CustomSearch
+                                    initValue={filters[0]}
                                     options={filters}
-                                    value={filter}
                                     onChange={(e) => {
-                                        setFilter(e);
+                                        setFilter(e.value);
                                     }}
                                 />
                             </div>
@@ -139,10 +139,10 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                     Сортировка:
                                 </p>
                                 <CustomSearch
+                                    initValue={sortings[0]}
                                     options={sortings}
-                                    value={sorting}
                                     onChange={(e) => {
-                                        setSorting(e);
+                                        setSorting(e.value);
                                     }}
                                 />
                             </div>
@@ -200,13 +200,13 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                         <img
                                                             src={
                                                                 solution
-                                                                    .userProfile
+                                                                    .studentProfile
                                                                     .logoImg
                                                                     ? process
                                                                           .env
                                                                           .NEXT_PUBLIC_SERVER_PATH +
                                                                       solution
-                                                                          .userProfile
+                                                                          .studentProfile
                                                                           .logoImg
                                                                     : "/images/avatar.png"
                                                             }
@@ -216,11 +216,11 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                                         />
                                                         <p className="text fz24">
                                                             {solution
-                                                                .userProfile
+                                                                .studentProfile
                                                                 .firstName +
                                                                 " " +
                                                                 solution
-                                                                    .userProfile
+                                                                    .studentProfile
                                                                     .lastName}
                                                         </p>
                                                     </Link>

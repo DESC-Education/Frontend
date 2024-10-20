@@ -117,6 +117,14 @@
     }
 }
 
+@media screen and (max-width: 1200px) {
+    .button {
+        padding: 8px 30px;
+        height: auto;
+    }
+}
+
+
 @media screen and (max-width: 595px) {
     .button {
         padding: 8px 15px;

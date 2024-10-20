@@ -52,7 +52,7 @@ export default function ExchangePage() {
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
         null,
     );
-    
+
     const [selectedFilters, setSelectedFilters] = useState<{
         [key: string]: string[];
     }>({});
@@ -217,7 +217,10 @@ export default function ExchangePage() {
                         <div className={styles.filters}>
                             <div className={styles.filtersHeader}>
                                 <h3 className="title fz28 fw500">Фильтры</h3>
-                                <div className={styles.closeButton} onClick={() => setIsOpen(false)}></div>
+                                <div
+                                    className={styles.closeButton}
+                                    onClick={() => setIsOpen(false)}
+                                ></div>
                             </div>
                             <div className={styles.filterGroup}>
                                 <p
@@ -326,7 +329,10 @@ export default function ExchangePage() {
                                 <Button
                                     disabled={isTasksFetched}
                                     type="secondary"
-                                    onClick={() => (getTasksByFiltersAndSort(), setIsOpen(false))}
+                                    onClick={() => (
+                                        getTasksByFiltersAndSort(),
+                                        setIsOpen(false)
+                                    )}
                                     className={styles.applyButton}
                                 >
                                     Применить
@@ -496,7 +502,7 @@ export default function ExchangePage() {
                                                 width:
                                                     (studentProfile.replyCount /
                                                         replyCount) *
-                                                    100 +
+                                                        100 +
                                                     "%",
                                             }}
                                             className={styles.barProgress}
@@ -527,10 +533,10 @@ export default function ExchangePage() {
                                     Сортировка:
                                 </span>
                                 <CustomSearch
-                                    value={sorting}
+                                    initValue={sortingOptions[0]}
                                     onChange={(e: any) => {
-                                        setSorting(e);
-                                        getTasksByFiltersAndSort(e);
+                                        setSorting(e.value);
+                                        getTasksByFiltersAndSort(e.value);
                                     }}
                                     options={sortingOptions}
                                 />
@@ -601,11 +607,11 @@ export default function ExchangePage() {
                                                 <CustomOval />
                                             </div>
                                         }
-                                    // endMessage={
-                                    //     <p className="text fz24 fw500 center">
-                                    //         Больше заданий нет!
-                                    //     </p>
-                                    // }
+                                        // endMessage={
+                                        //     <p className="text fz24 fw500 center">
+                                        //         Больше заданий нет!
+                                        //     </p>
+                                        // }
                                     >
                                         {tasks!.map((task, index) => (
                                             <TaskCard key={index} task={task} />

@@ -148,7 +148,7 @@
                 opacity: 1;
                 z-index: 15;
             }
-            
+
             .dragOverlayText {
                 opacity: 1;
                 z-index: 20;
@@ -203,6 +203,12 @@
 
     img {
         width: 40px;
+    }
+
+    @media screen and (max-width: 1800px) {
+        img {
+            width: 28px;
+        }
     }
 }
 
@@ -265,6 +271,19 @@
     white-space: pre-wrap;
     color: rgba(var(--red), 1);
     // transition: .3s !important;
+}
+
+@media screen and (max-width: 1200px) {
+    .input {
+        padding: 8px 10px;
+
+    }
+
+    .fileInput {
+        .addFileImage {
+            width: 120px;
+        }
+    }
 }
 
 @media screen and (max-width: 595px) {
