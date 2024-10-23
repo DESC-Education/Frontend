@@ -28,8 +28,6 @@ $authHost.interceptors.request.use(
     },
 );
 
-let times: number = 0;
-
 $authHost.interceptors.response.use(
     (res) => {
         return res;
@@ -37,17 +35,14 @@ $authHost.interceptors.response.use(
     async (err) => {
         const originalConfig = err.config;
 
+        console.log("originalConfig", originalConfig, err.response, err.response.config.url);
+
         if (originalConfig.url !== "/api/v1/users/login" && err.response) {
             if (err.response.status === 401) {
                 try {
-                    times++;
-
-                    // console.log(originalConfig);
-
                     if (
                         !LocalStorage.getRefreshToken() ||
-                        !LocalStorage.getAccessToken() ||
-                        times >= 3
+                        !LocalStorage.getAccessToken()
                     ) {
                         return;
                     }
@@ -61,10 +56,14 @@ $authHost.interceptors.response.use(
 
                     const token = res.data.access;
 
+                    console.log("refresh res", res);
+
                     LocalStorage.setAccessToken(token);
 
                     return $authHost(originalConfig);
                 } catch (_error) {
+                    console.log("ERROR IN TOKEN REFRESH", _error);
+                    
                     return Promise.reject(_error);
                 }
             }

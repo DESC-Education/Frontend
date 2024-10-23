@@ -12,7 +12,7 @@ type UserInterface = {
     myTasks: ITask[] | null;
     myArchivedTasks: ITask[] | null;
     isProfileInfoChanged: RefObject<boolean> | undefined;
-    // unreadChatsCount: number;
+    screenWidth: number;
     notifications: SSENotificationPayload[] | null;
 };
 
@@ -24,7 +24,7 @@ const initialState: UserInterface = {
     myArchivedTasks: null,
     isProfileInfoChanged: undefined,
     notifications: null,
-    // unreadChatsCount: 0,
+    screenWidth: 0,
 };
 
 export const contentSlice = createSlice({
@@ -39,6 +39,9 @@ export const contentSlice = createSlice({
         },
         updateMyArchivedTasks(state, action: PayloadAction<ITask[]>) {
             state.myArchivedTasks = action.payload;
+        },
+        updateScreenWidth(state, action: PayloadAction<number>) {
+            state.screenWidth = action.payload;
         },
         updateIsMobileDevice(state, action: PayloadAction<boolean>) {
             state.isMobileDevice = action.payload;

@@ -33,7 +33,7 @@ export const createChat = async (dto: {
 };
 
 export const getChats = async (
-    dto: { page: number; page_size: number; q: string } = {
+    dto: { page?: number; page_size?: number; q?: string } = {
         page: 1,
         page_size: 50,
         q: "",
@@ -69,17 +69,34 @@ export const getChats = async (
     }
 };
 
-export const getChat = async (id: string, messageId?: string) => {
+export const getChat = async (
+    dto: {
+        id: string;
+        messageId?: string;
+        page?: number;
+        page_size?: number;
+    } = {
+        id: "",
+        messageId: "",
+        page: 1,
+        page_size: 20,
+    },
+) => {
     try {
-        const { data } = await $authHost.get<IChat>(
-            `/api/v1/chats/chat/${id}${
-                messageId ? `?message_id=${messageId}` : ""
-            }`,
+        const { data } = await $authHost.get<
+            IChat & { hasMoreMessages: boolean }
+        >(
+            `/api/v1/chats/chat/${dto.id}${
+                dto.messageId ? `?messageId=${dto.messageId}` : ""
+            }${dto.messageId ? "&" : "?"}${dto.page ? `page=${dto.page}` : ""}${
+                dto.page ? "&" : "?"
+            }${dto.page_size ? `page_size=${dto.page_size}` : ""}`,
         );
 
         return {
             status: 200,
             chat: data,
+            hasMoreMessages: data.hasMoreMessages,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {

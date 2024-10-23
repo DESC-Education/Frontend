@@ -5,6 +5,7 @@ import "./page.scss";
 import { IChat, IFile, IMessage } from "../../_types/index";
 import {
     createRef,
+    UIEventHandler,
     useCallback,
     useContext,
     useEffect,
@@ -29,6 +30,7 @@ import Button from "@/app/_components/ui/Button/Button";
 import Link from "next/link";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
+import BackButton from "@/app/_components/ui/BackButton/BackButton";
 
 type AttachedFileModifiedType = { file: File; isSent: boolean; id?: string };
 
@@ -44,15 +46,16 @@ export default function Page() {
     const router = useRouter();
 
     const { user } = useTypesSelector((state) => state.userReducer);
-    const { chats, currentChat } = useTypesSelector(
+    const { chats, currentChat, messagesPerRequest } = useTypesSelector(
         (state) => state.chatReducer,
     );
+    const { screenWidth } = useTypesSelector((state) => state.contentReducer);
     const dispatch = useTypesDispatch();
     const {
         updateCurrentChat,
         addChatMessage,
         updateIsRead,
-        updateChatUnread,
+        updateIsChatHasMoreMessages,
         updateLastMessage,
         updateLastMessageViewed,
         updateUnreadChatsCount,
@@ -63,25 +66,26 @@ export default function Page() {
             process.env.NEXT_PUBLIC_WS_ADDRESS! +
                 `/ws/chat/${chat_id}/?token=${LocalStorage.getAccessToken()}`,
         );
+
         return newWs;
     }, [chat_id]);
 
-    const [ws, setWs] = useState<WebSocket | null>(null);
+    const wsRef = useRef<WebSocket>();
     const [wsReadyState, setWsReadyState] = useState<number>(0);
 
     useLayoutEffect(() => {
-        setWs(createWsInstance());
+        wsRef.current = createWsInstance();
     }, []);
 
     useEffect(() => {
-        if (!ws) return;
+        if (!wsRef.current) return;
 
-        ws.onopen = (e) => {
+        wsRef.current.onopen = (e) => {
             setIsWsLoading(false);
             setWsReadyState(WebSocket.OPEN);
         };
 
-        ws.onmessage = (event) => {
+        wsRef.current.onmessage = (event) => {
             const parsedData = JSON.parse(event.data);
             const parsedPayload: any = JSON.parse(parsedData.payload);
 
@@ -99,21 +103,10 @@ export default function Page() {
                         );
                     }
                     break;
-                // case "viewed":
-                //     console.log("viewed", parsedPayload);
-                //     dispatch(updateChatUnread({ chatId: chat_id, count: 0 }));
-                //     dispatch(
-                //         updateUnreadChatsCount({
-                //             number: parsedPayload.unreadChatsCount,
-                //         }),
-                //     );
-                //     dispatch(updateLastMessageViewed(chat_id));
-                //     dispatch(updateIsRead(parsedPayload));
-                //     break;
             }
         };
 
-        ws.onerror = (e) => {
+        wsRef.current.onerror = (e) => {
             if (e.eventPhase === WebSocket.CLOSING) return;
 
             setIsWsLoading(true);
@@ -121,15 +114,16 @@ export default function Page() {
             showAlert("Ошибка при загрузке чата");
         };
 
-        ws.onclose = (e) => {
+        wsRef.current.onclose = (e) => {
             setWsReadyState(WebSocket.CLOSED);
-            // setWs(createWsInstance());
         };
+    }, [chat_id, wsRef.current]);
 
+    useEffect(() => {
         return () => {
-            ws?.close();
+            wsRef.current?.close();
         };
-    }, [chat_id, ws]);
+    }, []);
 
     const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
     const [attachedFilesModified, setAttachedFilesModified] = useState<
@@ -137,6 +131,65 @@ export default function Page() {
     >([]);
 
     const [messageText, setMessageText] = useState<string>("");
+
+    const validateFiles = (e: any, event: "drop" | "paste") => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (dragOverTimeoutRef.current) {
+            clearTimeout(dragOverTimeoutRef.current);
+        }
+        setIsDragging(false);
+
+        let files: FileList;
+
+        if (event === "drop") {
+            if (!e.dataTransfer?.files.length) return;
+
+            files = e.dataTransfer.files;
+        } else {
+            if (!e.clipboardData?.files.length) return;
+
+            files = e.clipboardData.files;
+        }
+
+        if (!files.length) return;
+
+        const newFile = Array.from(files);
+
+        for (let i = 0; i < newFile.length; i++) {
+            let unsupportedFiles = false;
+
+            const item: any = newFile[i];
+
+            if (
+                ![
+                    "pdf",
+                    "vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "png",
+                    "jpg",
+                    "jpeg",
+                ].includes(item.type.split("/")[1])
+            ) {
+                showAlert(
+                    "Формат одного или нескольких файлов не поддерживается",
+                );
+                unsupportedFiles = true;
+            }
+
+            if (item.size > 5e6) {
+                showAlert("Один или несколько файлов слишким большие");
+                unsupportedFiles = true;
+            }
+
+            if (unsupportedFiles) continue;
+
+            setAttachedFiles((prev: any) => {
+                if (!prev) return newFile;
+                return [...prev, item].slice(0, 5);
+            });
+        }
+    };
 
     const sendFile = async () => {
         if (!attachedFilesModified.length) return;
@@ -166,10 +219,22 @@ export default function Page() {
         }
     };
 
-    const sendMessage = () => {
-        if (!ws) return;
+    const sendMessage = async () => {
+        if (!wsRef.current) return;
 
-        ws.send(
+        const establishWs = async () => {
+            if (wsRef.current?.readyState === WebSocket.CLOSED) {
+                wsRef.current = createWsInstance();
+
+                while (wsRef.current.readyState !== 1) {
+                    await new Promise((r) => setTimeout(r, 50));
+                }
+            }
+        };
+
+        await establishWs();
+
+        wsRef.current.send(
             JSON.stringify({
                 type: "message",
                 payload: {
@@ -186,12 +251,20 @@ export default function Page() {
         setAttachedFiles([]);
     };
 
+    const isTotalLoading =
+        !currentChat || !currentChat?.companion || isChatLoading || isWsLoading;
+
     useEffect(() => {
         setIsChatLoading(true);
         const asyncFunc = async () => {
-            const res = await getChat(chat_id);
+            const res = await getChat({
+                id: chat_id,
+                page_size: messagesPerRequest,
+                page: 1,
+            });
 
             if (res.status === 200) {
+                dispatch(updateIsChatHasMoreMessages(res.hasMoreMessages!));
                 dispatch(
                     updateCurrentChat({
                         ...res.chat!,
@@ -253,6 +326,19 @@ export default function Page() {
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [scrollContainerScrollTop, setScrollContainerScrollTop] = useState(0);
+    const [
+        scrollContainerScrollHeight,
+        setScrollContainerScrollHeight,
+    ] = useState(0);
+
+    useEffect(() => {
+        if (!scrollContainerRef.current?.scrollHeight) return;
+
+        setScrollContainerScrollHeight(scrollContainerRef.current.scrollHeight);
+    }, [scrollContainerRef.current?.scrollHeight]);
+
     useEffect(() => {
         if (!textareaRef.current) return;
 
@@ -298,11 +384,10 @@ export default function Page() {
 
     const nodeRef = useRef<HTMLDivElement>(null);
 
-    const isTotalLoading =
-        !currentChat || !currentChat?.companion || isChatLoading || isWsLoading;
-
     useEffect(() => {
         if (!currentChat?.messages.length || isTotalLoading) return;
+
+        console.log("PROC HERE 2");
 
         dummyRef.current?.scrollIntoView({
             behavior: "instant",
@@ -319,23 +404,83 @@ export default function Page() {
         }, 140);
     }, [isTotalLoading]);
 
+    const [lastLength, setLastLength] = useState(0);
+
+    // useEffect(() => {
+    //     return () => {
+    //         if (!currentChat?.messages) return;
+    //         setLastLength(currentChat?.messages.length);
+    //     };
+    // }, [currentChat?.messages.length]);
+
     useEffect(() => {
         if (!currentChat?.messages.length || isTotalLoading) return;
 
-        dummyRef.current?.scrollIntoView({
-            behavior: "instant",
-            block: "end",
-            inline: "nearest",
-        });
+        console.log(
+            "123123",
+            lastLength,
+            currentChat.messages.length,
+            currentChat.messages.length - lastLength !== 1 ||
+                (lastLength === 0 &&
+                    currentChat.messages.length > messagesPerRequest * 2),
+        );
 
-        setTimeout(() => {
+        if (
+            currentChat.messages.length - lastLength === 1 ||
+            (lastLength === 0 &&
+                currentChat.messages.length > messagesPerRequest * 2)
+        ) {
+            console.log("PROC HERE 1");
+
             dummyRef.current?.scrollIntoView({
                 behavior: "instant",
                 block: "end",
                 inline: "nearest",
             });
-        }, 50);
+            setTimeout(() => {
+                dummyRef.current?.scrollIntoView({
+                    behavior: "instant",
+                    block: "end",
+                    inline: "nearest",
+                });
+            }, 50);
+        }
+
+        setLastLength(currentChat.messages.length);
     }, [currentChat?.messages.length, isTotalLoading]);
+
+    useEffect(() => {
+        console.log(
+            "ASDADSADS",
+            !currentChat?.messages.length,
+            isTotalLoading,
+            !scrollContainerRef.current,
+            currentChat?.messages.length === lastLength,
+            currentChat?.messages.length,
+            lastLength,
+        );
+
+        if (
+            !currentChat?.messages.length ||
+            isTotalLoading ||
+            !scrollContainerRef.current ||
+            currentChat.messages.length === lastLength ||
+            currentChat.messages.length - 1 === lastLength ||
+            lastLength === 0
+        )
+            return;
+
+        console.log("я прокнул");
+
+        scrollContainerRef.current.scrollTop =
+            scrollContainerRef.current?.scrollHeight -
+            scrollContainerScrollHeight;
+    }, [
+        currentChat?.messages.length,
+        isTotalLoading,
+        scrollContainerScrollTop,
+        scrollContainerScrollHeight,
+    ]);
 
     return (
         <SwitchTransition>
@@ -365,6 +510,11 @@ export default function Page() {
                         <>
                             <div className={styles.chatHeader}>
                                 <div>
+                                    {screenWidth < 1024 && (
+                                        <BackButton
+                                            className={styles.backButton}
+                                        />
+                                    )}
                                     <Link
                                         href={
                                             user.role === "company"
@@ -393,17 +543,17 @@ export default function Page() {
                                         </div>
                                     </Link>
                                     {/* <div className={styles.chatActions}>
-                    <img
-                        src="/icons/searchIcon.svg"
-                        alt="search"
-                        className={styles.searchIcon}
-                    />
-                    <img
-                        src="/icons/extraIcon.svg"
-                        alt="search"
-                        className={styles.pinIcon}
-                    />
-                </div> */}
+                                        <img
+                                            src="/icons/searchIcon.svg"
+                                            alt="search"
+                                            className={styles.searchIcon}
+                                        />
+                                        <img
+                                            src="/icons/extraIcon.svg"
+                                            alt="search"
+                                            className={styles.pinIcon}
+                                        />
+                                    </div> */}
                                 </div>
                                 {!!currentChat.task?.title && (
                                     <Link
@@ -418,15 +568,25 @@ export default function Page() {
                                 )}
                                 <div></div>
                             </div>
-                            <div className={styles.chatMessages}>
+                            <div
+                                onScroll={(e: any) =>
+                                    setScrollContainerScrollTop(
+                                        e.target.scrollTop,
+                                    )
+                                }
+                                ref={scrollContainerRef}
+                                className={styles.chatMessages}
+                            >
                                 <div className={styles.chatMessagesContainer}>
                                     {currentChat.messages.length > 0 ? (
                                         currentChat.messages.map(
                                             (message, index) => (
                                                 <Message
+                                                    ref={scrollContainerRef}
+                                                    isFirst={index === 0}
                                                     message={message}
                                                     key={index}
-                                                    ws={ws}
+                                                    ws={wsRef.current!}
                                                     wsStatus={wsReadyState}
                                                 />
                                             ),
@@ -439,62 +599,13 @@ export default function Page() {
                                         </div>
                                     )}
                                 </div>
-                                <div className={styles.dummy} ref={dummyRef}></div>
+                                <div
+                                    className={styles.dummy}
+                                    ref={dummyRef}
+                                ></div>
                             </div>
                             <div
-                                onDrop={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-
-                                    if (dragOverTimeoutRef.current) {
-                                        clearTimeout(
-                                            dragOverTimeoutRef.current,
-                                        );
-                                    }
-
-                                    setIsDragging(false);
-
-                                    const files = e.dataTransfer.files;
-
-                                    if (!files.length) return;
-
-                                    const newFile = Array.from(files);
-
-                                    for (let i = 0; i < newFile.length; i++) {
-                                        let unsupportedFiles = false;
-
-                                        const item = newFile[i];
-
-                                        if (
-                                            ![
-                                                "pdf",
-                                                "vnd.openxmlformats-officedocument.wordprocessingml.document",
-                                                "png",
-                                                "jpg",
-                                                "jpeg",
-                                            ].includes(item.type.split("/")[1])
-                                        ) {
-                                            showAlert(
-                                                "Формат одного или нескольких файлов не поддерживается",
-                                            );
-                                            unsupportedFiles = true;
-                                        }
-
-                                        if (item.size > 5e6) {
-                                            showAlert(
-                                                "Один или несколько файлов слишким большие",
-                                            );
-                                            unsupportedFiles = true;
-                                        }
-
-                                        if (unsupportedFiles) continue;
-
-                                        setAttachedFiles((prev: any) => {
-                                            if (!prev) return newFile;
-                                            return [...prev, item].slice(0, 5);
-                                        });
-                                    }
-                                }}
+                                onDrop={(e) => validateFiles(e, "drop")}
                                 className={classNames(styles.messageInput, {
                                     [styles.dragging]: isDragging,
                                 })}
@@ -511,6 +622,7 @@ export default function Page() {
                                     multiple
                                 />
                                 <textarea
+                                    onPaste={(e) => validateFiles(e, "paste")}
                                     rows={1}
                                     ref={textareaRef}
                                     style={{

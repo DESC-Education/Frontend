@@ -439,7 +439,12 @@
 
 @media (max-width: 425px) {
     .header {
+        padding: 5px 0 !important;
 
+        .container {
+            padding: 5px;
+        }
+        
         img {
             position: relative;
             z-index: 20;

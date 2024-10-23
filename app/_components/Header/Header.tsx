@@ -33,6 +33,7 @@ import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { taskSlice } from "@/app/_store/reducers/taskSlice";
 import NotificationsModal from "../modals/NotificationsModal/NotificationsModal";
 import UserContent from "./UserContent/UserContent";
+import LocalStorage from "@/app/_utils/LocalStorage";
 
 type RoleState =
     | "student"

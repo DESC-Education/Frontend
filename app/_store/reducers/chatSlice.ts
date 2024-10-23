@@ -1,16 +1,21 @@
 import { IChat, IMessage, ISolution } from "@/app/_types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { log } from "console";
 
 type ChatState = {
     chats: IChat[] | null;
     currentChat: IChat | null;
     unreadChatsCount: number;
+    messagesPerRequest: number;
+    isChatHasMoreMessages: boolean;
 };
 
 const initialState: ChatState = {
     chats: null,
     currentChat: null,
     unreadChatsCount: 0,
+    messagesPerRequest: 20,
+    isChatHasMoreMessages: false,
 };
 
 export const chatSlice = createSlice({
@@ -20,6 +25,14 @@ export const chatSlice = createSlice({
         updateCurrentChat: (state, action: PayloadAction<IChat | null>) => {
             state.currentChat = action.payload;
         },
+        prependMessages: (state, action: PayloadAction<IMessage[]>) => {
+            if (!state.currentChat) return;
+
+            state.currentChat.messages = [
+                ...action.payload,
+                ...state.currentChat?.messages,
+            ];
+        },
         updateChats: (state, action: PayloadAction<IChat[]>) => {
             state.chats = action.payload;
         },
@@ -27,6 +40,8 @@ export const chatSlice = createSlice({
             state,
             action: PayloadAction<{ chat_id?: string; number?: number }>,
         ) {
+            // console.log("updateUnreadChatsCount", action.payload);
+
             if (action.payload.number !== undefined) {
                 state.unreadChatsCount = action.payload.number;
                 return;
@@ -39,6 +54,8 @@ export const chatSlice = createSlice({
             ).length;
         },
         tryToAddChat: (state, action: PayloadAction<IChat>) => {
+            // console.log("tryToAddChat", action.payload);
+
             if (!state.chats) {
                 state.chats = [action.payload];
                 return;
@@ -51,6 +68,12 @@ export const chatSlice = createSlice({
                 return;
 
             state.chats.push(action.payload);
+        },
+        updateIsChatHasMoreMessages: (
+            state,
+            action: PayloadAction<boolean>,
+        ) => {
+            state.isChatHasMoreMessages = action.payload;
         },
         addChat: (state, action: PayloadAction<IChat>) => {
             state.chats?.push(action.payload);
@@ -84,6 +107,8 @@ export const chatSlice = createSlice({
             state,
             action: PayloadAction<{ chatId: string; count: number }>,
         ) => {
+            // console.log("updateChatUnread", action.payload);
+
             if (state.chats) {
                 state.chats = state.chats.map((item) => {
                     if (item.id === action.payload.chatId) {
@@ -115,6 +140,8 @@ export const chatSlice = createSlice({
             }
         },
         updateChatMessage: (state, action: PayloadAction<IMessage>) => {
+            // console.log("updateChatMessage", action.payload);
+
             if (state.currentChat) {
                 state.currentChat.messages = state.currentChat.messages.map(
                     (item) => {
@@ -135,6 +162,8 @@ export const chatSlice = createSlice({
                 myMessage?: boolean;
             }>,
         ) => {
+            // console.log("updateLastMessage", action.payload);
+
             if (state.chats) {
                 state.chats = state.chats.map((item) => {
                     if (item.id === action.payload.chatId) {
@@ -163,11 +192,7 @@ export const chatSlice = createSlice({
             }
         },
         updateLastMessageViewed: (state, action: PayloadAction<string>) => {
-            // console.log(
-            //     "updateLastMessageViewed in chat",
-            //     action.payload,
-            //     state.chats?.find((i) => i.id === action.payload),
-            // );
+            // console.log("updateLastMessageViewed", action.payload);
 
             if (state.chats) {
                 state.chats = state.chats.map((item) => {
