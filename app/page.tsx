@@ -20,10 +20,6 @@ import "./swiper.scss";
 import ProjectCard from "./_components/ProjectsList/ProjectCard/ProjectCard";
 import AuthModal from "./_components/modals/AuthModal/AuthModal";
 import { useTypesSelector } from "./_hooks/useTypesSelector";
-import CodeInput from "./_components/ui/Input/CodeInput/CodeInput";
-import Select from "react-select";
-import { timezones } from "./_utils/constants";
-import { AlertContext } from "./_context/AlertContext";
 
 const projects = [
     {

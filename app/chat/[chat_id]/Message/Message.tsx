@@ -2,7 +2,15 @@
 
 import { IMessage } from "@/app/_types";
 import classNames from "classnames";
-import { FC, use, useEffect, useState } from "react";
+import {
+    FC,
+    ForwardedRef,
+    forwardRef,
+    Ref,
+    use,
+    useEffect,
+    useState,
+} from "react";
 import styles from "./Message.module.scss";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useInView } from "react-intersection-observer";
@@ -13,145 +21,207 @@ import "yet-another-react-lightbox/styles.css";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { useParams } from "next/navigation";
 import { chatSlice } from "@/app/_store/reducers/chatSlice";
+import { getChat } from "@/app/_http/API/chatsApi";
+
+type ContainerRef = HTMLDivElement;
 
 type MessageProps = {
     message: IMessage;
     ws: WebSocket | null;
     wsStatus: number;
+    isFirst: boolean;
 };
 
-const Message: FC<MessageProps> = ({ message, ws, wsStatus }) => {
-    const { user } = useTypesSelector((state) => state.userReducer);
-    const [messageTime, setMessageTime] = useState<string>("");
+const Message = forwardRef<ContainerRef, MessageProps>(
+    ({ message, ws, wsStatus, isFirst }, scrollRef) => {
+        const { user } = useTypesSelector((state) => state.userReducer);
+        const [messageTime, setMessageTime] = useState<string>("");
 
-    const { chat_id } = useParams<{ chat_id: string }>();
-
-    const { updateChatUnread } = chatSlice.actions;
-    const dispatch = useTypesDispatch();
-
-    const { ref, inView, entry } = useInView();
-
-    const [lightBoxOpened, setLightBoxOpened] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (
-            !ws ||
-            message.isRead ||
-            wsStatus !== 1 ||
-            !inView ||
-            message.user.id === user.id
-        )
-            return;
-
-        console.log("I VIEWED A MESSAGE AND SENT WS", message.message);
-
-        ws.send(
-            JSON.stringify({
-                type: "viewed",
-                payload: message.id,
-            }),
+        const { isChatHasMoreMessages, messagesPerRequest } = useTypesSelector(
+            (state) => state.chatReducer,
         );
 
-        dispatch(updateChatUnread({ chatId: chat_id, count: 1 }));
-    }, [inView, message.isRead, wsStatus]);
+        const { chat_id } = useParams<{ chat_id: string }>();
 
-    useEffect(() => {
-        setMessageTime(getDateOrTime(message.createdAt));
-    }, []);
+        const {
+            prependMessages,
+            updateIsChatHasMoreMessages,
+        } = chatSlice.actions;
+        const dispatch = useTypesDispatch();
 
-    return (
-        <div
-            ref={ref}
-            className={classNames(
-                styles.container,
+        const { ref, inView } = useInView();
+        const { ref: refFirst, inView: inViewFirst } = useInView();
+
+        const [isScrolled, setIsScrolled] = useState(false);
+
+        const [lightBoxOpened, setLightBoxOpened] = useState<boolean>(false);
+
+        useEffect(() => {
+            if (
+                !ws ||
+                message.isRead ||
+                wsStatus !== 1 ||
+                !inView ||
                 message.user.id === user.id
-                    ? styles.outgoingMessage
-                    : styles.incomingMessage,
-                { [styles.hasFiles]: !!message.files.length },
-            )}
-        >
-            {!!message.files.length && (
-                <Lightbox
-                    controller={{ closeOnBackdropClick: true }}
-                    plugins={[Download]}
-                    open={lightBoxOpened}
-                    close={() => setLightBoxOpened(false)}
-                    slides={message.files
-                        .filter((i) =>
-                            ["png", "jpg", "jpeg"].includes(i.extension),
-                        )
-                        .map((i) => ({
-                            src: process.env.NEXT_PUBLIC_SERVER_PATH + i.path,
-                        }))}
-                />
-            )}
-            <div className={classNames(styles.decor)}></div>
-            <p className={classNames("text fz16", styles.text)}>
-                {message.message}
-            </p>
-            <div className={styles.messageFiles}>
-                {!!message.files.length &&
-                    message.files.map((file, index) =>
-                        ["png", "jpg", "jpeg", "jfif"].includes(
-                            file.extension,
-                        ) ? (
-                            <img
-                                onClick={() => setLightBoxOpened(true)}
-                                key={index}
-                                className={styles.userImage}
-                                src={
+            )
+                return;
+
+            // console.log("I VIEWED A MESSAGE AND SENT WS", message.message);
+
+            ws.send(
+                JSON.stringify({
+                    type: "viewed",
+                    payload: message.id,
+                }),
+            );
+        }, [inView, message.isRead, wsStatus]);
+
+        useEffect(() => {
+            console.log(isChatHasMoreMessages);
+            
+            if (!isFirst || !isChatHasMoreMessages) return;
+
+            const scrollListener = (e: Event) => {
+                setIsScrolled(true);
+            };
+
+            if (!isScrolled) {
+                window.addEventListener("wheel", scrollListener);
+                return;
+            }
+
+            if (!inViewFirst || !scrollRef) return;
+
+            const asyncFunc = async () => {
+                const res = await getChat({
+                    id: chat_id,
+                    messageId: message.id,
+                    page: 1,
+                    page_size: messagesPerRequest,
+                });
+
+                if (res.status === 200) {
+                    dispatch(prependMessages(res.chat!.messages.toReversed()));
+                    dispatch(updateIsChatHasMoreMessages(res.hasMoreMessages!));
+                }
+            };
+
+            asyncFunc();
+
+            return () => {
+                window.removeEventListener("wheel", scrollListener);
+            };
+        }, [inViewFirst, isScrolled, isChatHasMoreMessages]);
+
+        useEffect(() => {
+            setMessageTime(getDateOrTime(message.createdAt));
+        }, []);
+
+        return (
+            <div
+                ref={ref}
+                className={classNames(
+                    styles.container,
+                    message.user.id === user.id
+                        ? styles.outgoingMessage
+                        : styles.incomingMessage,
+                    { [styles.hasFiles]: !!message.files.length },
+                )}
+            >
+                {!!message.files.length && (
+                    <Lightbox
+                        controller={{ closeOnBackdropClick: true }}
+                        plugins={[Download]}
+                        open={lightBoxOpened}
+                        close={() => setLightBoxOpened(false)}
+                        slides={message.files
+                            .filter((i) =>
+                                ["png", "jpg", "jpeg"].includes(i.extension),
+                            )
+                            .map((i) => ({
+                                src:
                                     process.env.NEXT_PUBLIC_SERVER_PATH +
-                                    file.path
-                                }
-                                alt="logo"
-                            />
-                        ) : (
-                            <a
-                                key={index}
-                                href={
-                                    process.env.NEXT_PUBLIC_SERVER_PATH +
-                                    file.path
-                                }
-                                download
-                                target="_blank"
-                                rel="noreferrer"
-                                className={classNames(
-                                    styles.userImage,
-                                    styles.document,
-                                )}
-                            >
-                                <img
-                                    className={classNames(styles.imgDocument)}
-                                    src={`/icons/extensions/${file.extension}.png`}
-                                />
-                                <p>{file.name}</p>
-                            </a>
-                        ),
-                    )}
-            </div>
-            <div className={styles.footer}>
-                <p className={classNames(styles.changed, "text fz14 gray")}>
-                    {message.changedId ? "Изменено" : ""}
-                </p>
-                <p className={classNames(styles.messageTime, "text fz14")}>
-                    {messageTime}
-                </p>
-                {user.id === message.user.id && (
-                    <img
-                        src={`/icons/${
-                            message.isRead
-                                ? "isReadTrue.svg"
-                                : "isReadFalse.svg"
-                        }`}
-                        alt="readStatus"
-                        className={classNames(styles.checkMark, {
-                            [styles.checkMarkActive]: message.isRead,
-                        })}
+                                    i.path,
+                            }))}
                     />
                 )}
+                <div className={classNames(styles.decor)}></div>
+                <p
+                    ref={isFirst ? refFirst : null}
+                    className={classNames("text fz16", styles.text)}
+                >
+                    {/* {message.message} {message.id} */}
+                    {message.message}
+                </p>
+                <div className={styles.messageFiles}>
+                    {!!message.files.length &&
+                        message.files.map((file, index) =>
+                            ["png", "jpg", "jpeg", "jfif"].includes(
+                                file.extension,
+                            ) ? (
+                                <img
+                                    onClick={() => setLightBoxOpened(true)}
+                                    key={index}
+                                    className={styles.userImage}
+                                    src={
+                                        process.env.NEXT_PUBLIC_SERVER_PATH +
+                                        file.path
+                                    }
+                                    alt="logo"
+                                />
+                            ) : (
+                                <a
+                                    key={index}
+                                    href={
+                                        process.env.NEXT_PUBLIC_SERVER_PATH +
+                                        file.path
+                                    }
+                                    download
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={classNames(
+                                        styles.userImage,
+                                        styles.document,
+                                    )}
+                                >
+                                    <img
+                                        className={classNames(
+                                            styles.imgDocument,
+                                        )}
+                                        src={`/icons/extensions/${file.extension}.png`}
+                                    />
+                                    <p>{file.name}</p>
+                                </a>
+                            ),
+                        )}
+                </div>
+                <div className={styles.footer}>
+                    <p className={classNames(styles.changed, "text fz14 gray")}>
+                        {message.changedId ? "Изменено" : ""}
+                    </p>
+                    <p className={classNames(styles.messageTime, "text fz14")}>
+                    {messageTime}
+                </p>
+                    {/* <p className={classNames(styles.messageTime, "text fz14")}>
+                        {new Date(message.createdAt).getTime()}
+                    </p> */}
+                    {user.id === message.user.id && (
+                        <img
+                            src={`/icons/${
+                                message.isRead
+                                    ? "isReadTrue.svg"
+                                    : "isReadFalse.svg"
+                            }`}
+                            alt="readStatus"
+                            className={classNames(styles.checkMark, {
+                                [styles.checkMarkActive]: message.isRead,
+                            })}
+                        />
+                    )}
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    },
+);
 
 export default Message;

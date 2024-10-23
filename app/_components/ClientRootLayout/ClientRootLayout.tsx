@@ -49,6 +49,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         addNotification,
         updateNotifications,
         updateReplyCount,
+        updateScreenWidth,
     } = contentSlice.actions;
     const {
         updateLastMessage,
@@ -66,6 +67,14 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const [isInitialRun, setIsInitialRun] = useState(true);
 
     const isChanged = useRef<boolean>();
+
+    // Updating screenWidth variable
+    useEffect(() => {
+        const listener = (e: any) => {
+            dispatch(updateScreenWidth(e.target.innerWidth));
+        };
+        window.addEventListener("resize", listener);
+    }, []);
 
     // SSE Setup
     useEffect(() => {
@@ -127,10 +136,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     // title: string;
                                     // message: string;
                                     // payload: string;
-                                    console.log(
-                                        "new notification with data",
-                                        result.data,
-                                    );
+                                    // console.log(
+                                    //     "new notification with data",
+                                    //     result.data,
+                                    // );
                                     dispatch(
                                         addNotification({
                                             ...result.data,
@@ -163,10 +172,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "evaluation": {
-                                            console.log(
-                                                "evaluation",
-                                                result.data,
-                                            );
+                                            // console.log(
+                                            //     "evaluation",
+                                            //     result.data,
+                                            // );
 
                                             dispatch(
                                                 updateCurrentTaskSolution(
@@ -176,10 +185,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "solution": {
-                                            console.log(
-                                                "solution",
-                                                result.data,
-                                            );
+                                            // console.log(
+                                            //     "solution",
+                                            //     result.data,
+                                            // );
 
                                             dispatch(
                                                 addCurrentTaskSolution(
@@ -189,12 +198,12 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "review": {
-                                            console.log("review", result.data);
+                                            // console.log("review", result.data);
 
                                             dispatch(
                                                 updateCurrentTaskSolution(
                                                     result.data.payload,
-                                                )
+                                                ),
                                             );
                                             break;
                                         }
@@ -207,10 +216,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "level": {
-                                            console.log(
-                                                "level",
-                                                result.data.payload,
-                                            );
+                                            // console.log(
+                                            //     "level",
+                                            //     result.data.payload,
+                                            // );
 
                                             dispatch(
                                                 updateStudentProfileLevel(
@@ -220,10 +229,10 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                     }
-                                    console.log("notification", result.data);
+                                    // console.log("notification", result.data);
                                     break;
                                 case "newMessage":
-                                    // payload: 
+                                    // payload:
                                     // chat: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
                                     // createdAt: "2024-10-03T17:39:03.961803"
                                     // message: "sdvdfvdf"
@@ -241,6 +250,11 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             myMessage: false,
                                         }),
                                     );
+                                    console.log("newMessage updateChatUnread", {
+                                        chatId: result.data.chat,
+                                        count: result.data.unreadCount,
+                                    });
+
                                     dispatch(
                                         updateChatUnread({
                                             chatId: result.data.chat,
@@ -253,7 +267,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                                 result.data.unreadChatsCount,
                                         }),
                                     );
-                                    console.log("newMessage", result.data);
+                                    // console.log("newMessage", result.data);
                                     break;
                                 case "newChat":
                                     // payload: IChat
@@ -263,24 +277,37 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                         }),
                                     );
                                     dispatch(tryToAddChat(result.data));
-                                    console.log("newChat", result.data);
+                                    // console.log("newChat", result.data);
                                     break;
                                 case "viewed":
-                                    // payload: 
+                                    // payload:
                                     // chat: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
                                     // createdAt: "2024-10-03T17:39:03.961803"
                                     // (messageId)id: "68577bd8-1f40-464e-8f58-a4b709c73b6b"
                                     // message: "sdvdfvdf"
                                     // unreadChatsCount: 1
                                     // unreadCount: 1
-                                    console.log("SSE viewed", result.data);
-                                    dispatch(updateChatUnread({ chatId: result.data.chat, count: result.data.unreadCount }));
+                                    console.log("SSE viewed updateChatUnread", {
+                                        chatId: result.data.chat,
+                                        count: result.data.unreadCount,
+                                    });
                                     dispatch(
-                                        updateUnreadChatsCount({
-                                            number: result.data.unreadChatsCount,
+                                        updateChatUnread({
+                                            chatId: result.data.chat,
+                                            count: result.data.unreadCount,
                                         }),
                                     );
-                                    dispatch(updateLastMessageViewed(result.data.chat));
+                                    dispatch(
+                                        updateUnreadChatsCount({
+                                            number:
+                                                result.data.unreadChatsCount,
+                                        }),
+                                    );
+                                    dispatch(
+                                        updateLastMessageViewed(
+                                            result.data.chat,
+                                        ),
+                                    );
                                     dispatch(updateIsRead(result.data.id));
                                     break;
                             }
@@ -369,6 +396,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         asyncFunc();
     }, [isInitialRun]);
 
+    // Get profile setup
     useEffect(() => {
         if (isInitialRun || (isAuth && !isProfileLoading)) return;
 
