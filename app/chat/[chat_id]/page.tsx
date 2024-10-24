@@ -31,6 +31,7 @@ import Link from "next/link";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import BackButton from "@/app/_components/ui/BackButton/BackButton";
+import { MAX_MESSAGE_LENGTH } from "@/app/_utils/constants";
 
 type AttachedFileModifiedType = { file: File; isSent: boolean; id?: string };
 
@@ -132,7 +133,20 @@ export default function Page() {
 
     const [messageText, setMessageText] = useState<string>("");
 
+    useEffect(() => {
+        if (messageText.length > MAX_MESSAGE_LENGTH) {
+            setMessageText((prev) => prev.slice(0, MAX_MESSAGE_LENGTH));
+        }
+    }, [messageText]);
+
     const validateFiles = (e: any, event: "drop" | "paste") => {
+        if (event === "paste") {
+            if (e.clipboardData.getData("Text")) {
+                setMessageText(
+                    (prev) => prev + e.clipboardData.getData("Text"),
+                );
+            }
+        }
         e.preventDefault();
         e.stopPropagation();
 
@@ -591,6 +605,7 @@ export default function Page() {
                                     </div>
                                 </div>
                                 <Input
+                                    accept="image/png, image/jpeg, image/jpg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                     type="file_multiple_chat"
                                     file={attachedFiles}
                                     setFile={setAttachedFiles}
