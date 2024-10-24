@@ -70,7 +70,13 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
 
     // Updating screenWidth variable
     useEffect(() => {
+        console.log(window.innerWidth);
+        
+        dispatch(updateScreenWidth(window.innerWidth))
+
         const listener = (e: any) => {
+            console.log("HEL");
+            
             dispatch(updateScreenWidth(e.target.innerWidth));
         };
         window.addEventListener("resize", listener);
