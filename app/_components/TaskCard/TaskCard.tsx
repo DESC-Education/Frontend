@@ -183,7 +183,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                     styles.descriptionBlock,
                                 )}
                             >
-                                <p className={styles.description}>
+                                <p
+                                    className={classNames(
+                                        styles.description,
+                                        "text fz20",
+                                    )}
+                                >
                                     {task.description}
                                 </p>
                                 {isTaskPage &&
@@ -212,7 +217,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                             <span
                                 className={classNames(
                                     styles.deadline,
-                                    "text fw500",
+                                    "text fw500 fz20",
                                 )}
                             >
                                 Срок выполнения:{" "}
@@ -229,7 +234,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                             <span
                                 className={classNames(
                                     styles.timeLeft,
-                                    "text fw500 fz20",
+                                    "text fw500 fz16",
                                 )}
                             >
                                 осталось:{" "}

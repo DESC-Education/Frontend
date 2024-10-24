@@ -2,3 +2,11 @@
     white-space: pre-wrap;
     color: rgba(var(--red), 1);
 }
+
+.selectSearch {
+    cursor: pointer;
+
+    * {
+        cursor: pointer;
+    }
+}
