@@ -5,8 +5,12 @@ import styles from "./page.module.scss"
 import Link from "next/link";
 import Image from "next/image";
 import { link } from "fs";
-import { createRef, ReactNode, RefObject, useState } from "react";
+import { createRef, ReactNode, RefObject, useEffect, useState } from "react";
 import Button from "@/app/_components/ui/Button/Button";
+import { useParams } from "next/navigation";
+import { ICompanyInfo, ICompanyProfile } from "@/app/_types";
+import { getUser } from "@/app/_http/API/adminApi";
+import { Oval } from "react-loader-spinner";
 
 type CompanyInfo = "general" | "chats" | "tasks"
 
@@ -16,7 +20,7 @@ const CompanyPage = () => {
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
 
-    const company = {
+    const company12 = {
         linkToCompany: "https://vk.com/join/asdfasdf",
         companyName: "Сибирская Ветроудаляющая Организация (СВО)",
         firstName: "Иван",
@@ -39,6 +43,23 @@ const CompanyPage = () => {
     };
 
 
+    const { company_id } = useParams();
+
+    const [company, setCompany] = useState<ICompanyProfile | null>(null);
+
+    useEffect(() => {
+        const asyncFunc = async () => {
+            if (typeof company_id !== "string") return;
+
+            const data = await getUser(company_id);
+            setCompany(data.profile);
+            console.log(data.profile)
+        };
+        asyncFunc();
+    }, []);
+
+    if (!company) return (<div className={styles.loading}><Oval /></div>);
+
     const getCompanyContent = (activeTab: CompanyInfo,): {
         content: ReactNode;
         ref: RefObject<HTMLDivElement>
@@ -47,7 +68,18 @@ const CompanyPage = () => {
             case "general":
                 return {
                     content: (
-                        <div className={styles.content}>general
+                        <div className={styles.companyContent}>
+                            <div className={styles.infoBlock}>
+                                <p className="title">Информация:</p>
+                                <div className={styles.textBlock}>
+                                    <p className="text fw500">Город:</p>
+                                    <p className="text fz20">{company.city.name}, {company.city.region}</p>
+                                </div>
+                                <div className={styles.textBlock}>
+                                    <p className="text fw500">Представитель:</p>
+                                    <p className="text fz20">{company.firstName} {company.lastName}</p>
+                                </div>
+                            </div>
                         </div>
                     ),
                     ref: createRef(),
@@ -78,6 +110,7 @@ const CompanyPage = () => {
             setIsAnimating(false);
         }, 300);
     };
+
 
     return (
         <div className={classNames(styles.container, "container")}>

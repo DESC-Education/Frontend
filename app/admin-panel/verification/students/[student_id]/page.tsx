@@ -127,7 +127,7 @@ export default function StudentPage() {
                         <div className={classNames('text', styles.info)}>Специализация: {<p>{studentVerificationProfile.profile.specialty.name}</p>}</div>
                         <div className={classNames('text', styles.info)}>Факультет: {<p>{studentVerificationProfile.profile.faculty.name}</p>}</div>
                         <div className={classNames('text', styles.info)}>Год поступления: {<p>{studentVerificationProfile.profile.admissionYear} год</p>}</div>
-                        <div className={classNames('text', styles.info)}>Выпускная программа: {<p>{typeOfSpeciality.find((item) => item.value === studentVerificationProfile.profile.specialty.type)?.name}, {formsOfEducation.find((item) => item.value === studentVerificationProfile.profile.formOfEducation)?.name}</p>}</div>
+                        <div className={classNames('text', styles.info)}>Выпускная программа: {<p>{typeOfSpeciality.find((item) => item.value === studentVerificationProfile.profile.specialty.type)?.name}, {formsOfEducation.find((item) => item.value === studentVerificationProfile.profile.formOfEducation)?.label}</p>}</div>
                     </div>
                     <div className={styles.infoBlock}>
                         <p className={classNames('text fw500', styles.title)}>Связь</p>

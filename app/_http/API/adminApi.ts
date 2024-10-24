@@ -1,7 +1,7 @@
 import axios from "axios";
 import { $authHost } from "..";
 import { dt } from "framer-motion/client";
-import { IVerificationResult } from "@/app/_types";
+import { ICompanyProfile, IUsersRequest, IVerificationResult } from "@/app/_types";
 
 
 export const getRequests = async (
@@ -86,3 +86,84 @@ export const answerVerifyRequest = async (id: string, dto: {
         }
     }
 };
+
+export const getUsers = async (
+    role: "student" | "company",
+    q?: string,
+) => {
+    try {
+        const { data } = await $authHost.get<{
+            results: IUsersRequest[];
+            role: "student" | "company",
+            q: "",
+        }>(`/api/v1/admins/users/?role=${role}&search=${q}`);
+
+        return {
+            status: 200,
+            users: data.results,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+}
+
+export const getUser = async (companyId: string) => {
+    try {
+        const { data } = await $authHost.get<any>(`/api/v1/admins/user/${companyId}`);
+        return data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+}
+
+
+export const statsRegUsers = async (dto: {
+    fromDate: string,
+    toDate: string,
+}) => {
+    try {
+        const { data } = await $authHost.post<{
+            fromDate: string,
+            toDate: string,
+        }>('/api/v1/admins/stats/users', dto)
+
+        return {
+            status: 200,
+            stats: data,
+        };
+        
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+}

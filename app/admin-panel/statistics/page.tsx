@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     LineChart,
     Line,
@@ -15,6 +15,8 @@ import {
 } from "recharts";
 import styles from "./page.module.scss";
 import Button from "@/app/_components/ui/Button/Button";
+import { statsRegUsers } from "@/app/_http/API/adminApi";
+import Input from "@/app/_components/ui/Input/Input";
 
 
 
@@ -42,6 +44,31 @@ const onlineData = [
 
 
 export default function Page() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${Number(day) - 10}`;
+    const toformateddate = `${year}-${month}-${day}`;
+
+    const [regData, setRegData] = useState<any>([]);
+    const [regDateFrom, setRegDateFrom] = useState<string>(`${formattedDate}`);
+    const [regDateTo, setRegDateTo] = useState<string>(`${toformateddate}`);
+    
+
+    async function getRegData() {
+        console.log(regDateFrom, "datereghere", regDateTo);
+        const data = await statsRegUsers({ fromDate: regDateFrom, toDate: regDateTo });
+        setRegData(data.stats);
+        console.log(data)
+    }
+
+    useEffect(() => {
+        getRegData();
+    }, []);
+
+
+    console.log(regDateFrom, regDateTo);
     return (
         <div className='container'>
             <div className={styles.statisticsContainer}>
@@ -54,13 +81,13 @@ export default function Page() {
                         <h3 className="text fz24 fw500">Регистрация (Компаний и Студентов)</h3>
                         <div className={styles.datePicker}>
                             <label htmlFor="date" className="text fz16">От</label>
-                            <input type="date" className={styles.input} placeholder="Выберите дату" />
+                            <Input type="date" placeholder="Выберите дату" value={regDateFrom} onChange={(val) => setRegDateFrom(val)} />
                             <label htmlFor="date" className="text fz16">До</label>
-                            <input type="date" className={styles.input} placeholder="Выберите дату" />
-                            <Button type="primary" className={styles.button}>Показать</Button>
+                            <Input type="date" placeholder="Выберите дату" value={regDateTo} onChange={(val) => setRegDateTo(val)} />
+                            <Button type="primary" className={styles.button} onClick={() => getRegData()}>Показать</Button>
                         </div>
                         <ResponsiveContainer width="100%" height={400}>
-                            <LineChart data={registrationData}>
+                            <LineChart data={regData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="date" />
                                 <YAxis />

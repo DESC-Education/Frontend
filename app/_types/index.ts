@@ -296,3 +296,86 @@ export type IVerificationResult = {
 
 export type ISolutionStatus = "completed" | "failed" | "pending";
 export type IVerificationStatus = "pending" | "approved" | "rejected";
+
+export type IUsersRequest = {
+    id: string,
+    email: string,
+    role: "student" | "company",
+    isActive: boolean,
+    isStaff: boolean,
+    isSuperuser: boolean,
+    isVerified: boolean,
+    createdAt: string,
+    unreadChatsCount: number,
+    notifications: [
+      {
+        createdAt: string,
+        isRead: boolean,
+        user: string,
+        id: string,
+        type: string,
+        title: string,
+        message: string,
+        payload: string
+      }
+    ],
+    firstName: string,
+    lastName: string,
+    companyName: string
+}
+
+export type IStudentInfo = {
+    id: string,
+    email: string,
+    role: "student",
+    isActive: boolean,
+    isStaff: boolean,
+    isSuperuser: boolean,
+    isVerified: boolean,
+    createdAt: string,
+    unreadChatsCount: number,
+    notifications: [
+      {
+        createdAt: string,
+        isRead: boolean,
+        user: string,
+        id: string,
+        type: string,
+        title: string,
+        message: string,
+        payload: string
+      }
+    ],
+    firstName: string,
+    lastName: string,
+    companyName: string,
+    profile: IStudentProfile
+}
+
+export type ICompanyInfo = {
+    id: string,
+    email: string,
+    role: "company",
+    isActive: boolean,
+    isStaff: boolean,
+    isSuperuser: boolean,
+    isVerified: boolean,
+    createdAt: string,
+    unreadChatsCount: number,
+    notifications: [
+      {
+        createdAt: string,
+        isRead: boolean,
+        user: string,
+        id: string,
+        type: string,
+        title: string,
+        message: string,
+        payload: string
+      }
+    ],
+    firstName: string,
+    lastName: string,
+    companyName: string,
+    profile: ICompanyProfile
+}
