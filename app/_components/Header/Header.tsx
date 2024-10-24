@@ -35,12 +35,7 @@ import NotificationsModal from "../modals/NotificationsModal/NotificationsModal"
 import UserContent from "./UserContent/UserContent";
 import LocalStorage from "@/app/_utils/LocalStorage";
 
-type RoleState =
-    | "student"
-    | "company"
-    | "u_admin"
-    | "moderator"
-    | "admin";
+type RoleState = "student" | "company" | "u_admin" | "moderator" | "admin";
 
 const Header = () => {
     const { showModal } = useContext(ModalContext);
@@ -91,7 +86,6 @@ const Header = () => {
     >();
 
     const { sortNotifications } = contentSlice.actions;
-
 
     useEffect(() => {
         if (isShowNotificationsModal) {
@@ -353,12 +347,11 @@ const Header = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-
     useEffect(() => {
         if (isOpen) {
             setIsShowNotificationsModal(false);
         }
-    }, [isOpen])
+    }, [isOpen]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -411,51 +404,56 @@ const Header = () => {
                                 alt="logo"
                             />
                         </Link>
-                        <div
-                            className={classNames(styles.notifications, {
-                                [styles.hide]: isOpen,
-                            })}
-                        >
-                            <span
-                                className={styles.notification}
-                                onClick={() =>
-                                    setIsShowNotificationsModal((prev) => !prev)
-                                }
-                            >
-                                {notifications &&
-                                    notifications.filter((i) => !i.isRead)
-                                        .length > 0 && (
-                                        <span className={styles.unread}>
-                                            {
-                                                notifications.filter(
-                                                    (i) => !i.isRead,
-                                                ).length
-                                            }
-                                        </span>
-                                    )}
-                                <img
-                                    className={styles.icon}
-                                    src="/icons/notification.svg"
-                                    alt="notification"
-                                />
-                            </span>
+                        {profileVerification.status === "verified" && (
                             <div
-                                className={classNames(
-                                    styles.notificationModal,
-                                    {
-                                        [styles.active]: isShowNotificationsModal,
-                                    },
-                                )}
+                                className={classNames(styles.notifications, {
+                                    [styles.hide]: isOpen,
+                                })}
                             >
-                                <NotificationsModal
-                                    active={activeNotification}
-                                    setActive={setActiveNotification}
-                                    closeModal={() =>
-                                        setIsShowNotificationsModal(false)
+                                <span
+                                    className={styles.notification}
+                                    onClick={() =>
+                                        setIsShowNotificationsModal(
+                                            (prev) => !prev,
+                                        )
                                     }
-                                />
+                                >
+                                    {notifications &&
+                                        notifications.filter((i) => !i.isRead)
+                                            .length > 0 && (
+                                            <span className={styles.unread}>
+                                                {
+                                                    notifications.filter(
+                                                        (i) => !i.isRead,
+                                                    ).length
+                                                }
+                                            </span>
+                                        )}
+                                    <img
+                                        className={styles.icon}
+                                        src="/icons/notification.svg"
+                                        alt="notification"
+                                    />
+                                </span>
+                                <div
+                                    className={classNames(
+                                        styles.notificationModal,
+                                        {
+                                            [styles.active]: isShowNotificationsModal,
+                                        },
+                                    )}
+                                >
+                                    <NotificationsModal
+                                        active={activeNotification}
+                                        setActive={setActiveNotification}
+                                        closeModal={() =>
+                                            setIsShowNotificationsModal(false)
+                                        }
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        )}
+
                         <button
                             className={classNames(styles.burgerButton, {
                                 [styles.open]: isOpen,

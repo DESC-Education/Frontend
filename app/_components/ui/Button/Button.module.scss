@@ -117,9 +117,18 @@
     }
 }
 
+@media screen and (max-width: 1600px) {
+    .button {
+        padding: 12px 28px;
+        font-size: 18px !important;
+        height: auto;
+    }
+}
+
 @media screen and (max-width: 1200px) {
     .button {
-        padding: 8px 30px;
+        padding: 8px 24px;
+        font-size: 17px !important;
         height: auto;
     }
 }

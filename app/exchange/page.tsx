@@ -125,6 +125,8 @@ export default function ExchangePage() {
     }, [tasks]);
 
     const clearTasks = async () => {
+        console.log("АЛЕ БЛЯ?");
+
         setIsLoading(true);
         setHasMore(false);
         setCurrentPage(1);
@@ -133,6 +135,8 @@ export default function ExchangePage() {
         setSelectedFilters({});
 
         const res = await getTasks(1, POSTS_PER_PAGE, "", [], "createdAt");
+
+        console.log("REs", res);
 
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: res.tasks! }));
@@ -204,7 +208,7 @@ export default function ExchangePage() {
 
     return (
         <div className="container">
-            <h2 className={classNames(styles.exchangeTitle, "title fz32")}>
+            <h2 className={classNames(styles.exchangeTitle, "title fz36")}>
                 Биржа заданий
             </h2>
             <div className={styles.mainContainer}>
@@ -216,7 +220,7 @@ export default function ExchangePage() {
                     >
                         <div className={styles.filters}>
                             <div className={styles.filtersHeader}>
-                                <h3 className="title fz28 fw500">Фильтры</h3>
+                                <h3 className="title fz36 fw500">Фильтры</h3>
                                 <div
                                     className={styles.closeButton}
                                     onClick={() => setIsOpen(false)}
@@ -342,6 +346,7 @@ export default function ExchangePage() {
                                     className={styles.clearButton}
                                     onClick={() => {
                                         clearTasks();
+                                        setIsOpen(false)
                                     }}
                                 >
                                     Очистить
@@ -471,11 +476,7 @@ export default function ExchangePage() {
                                     type="primary"
                                     className={styles.clearButton}
                                     onClick={() => {
-                                        setSelectedCategory(null);
-                                        setSelectedFilters({});
-                                        setTimeout(() => {
-                                            getTasksByFiltersAndSort();
-                                        }, 100);
+                                        clearTasks();
                                     }}
                                 >
                                     Очистить
@@ -490,8 +491,10 @@ export default function ExchangePage() {
                             <div className={styles.replayCount}>
                                 <div className={styles.bar}>
                                     <div className={styles.barText}>
-                                        <p className="text fw500">Отклики</p>
-                                        <p className="text gray fw500">
+                                        <p className="text fw500 fz24">
+                                            Отклики
+                                        </p>
+                                        <p className="text gray fw500 fz20">
                                             Осталось {studentProfile.replyCount}{" "}
                                             из {replyCount}
                                         </p>
@@ -511,8 +514,10 @@ export default function ExchangePage() {
                                 </div>
                                 <div className={styles.delimiter}></div>
                                 <div className={styles.date}>
-                                    <p className="text">Дата пополнения:</p>
-                                    <p className="text fw500">
+                                    <p className="text fz20">
+                                        Дата пополнения:
+                                    </p>
+                                    <p className="text fw500 fz20">
                                         <Moment format="DD MMMM" locale="ru">
                                             {studentProfile.replyReloadDate}
                                         </Moment>
@@ -529,10 +534,11 @@ export default function ExchangePage() {
                         )}
                         <div className={styles.sorting}>
                             <div className={styles.sort}>
-                                <span className="title fz28 fw500">
+                                <span className="title fz24 fw500">
                                     Сортировка:
                                 </span>
                                 <CustomSearch
+                                    search={false}
                                     initValue={sortingOptions[0]}
                                     onChange={(e: any) => {
                                         setSorting(e.value);
@@ -551,13 +557,11 @@ export default function ExchangePage() {
                                     <div
                                         className={classNames(
                                             styles.filterButton,
-                                            { [styles.open]: isOpen },
                                         )}
                                     >
-                                        1
-                                    </div>
-                                    <div className="title fz28 fw500">
-                                        Фильтры
+                                        <div className="text fz24">
+                                            Фильтры
+                                        </div>
                                     </div>
                                 </button>
                             )}

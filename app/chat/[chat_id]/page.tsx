@@ -387,8 +387,6 @@ export default function Page() {
     useEffect(() => {
         if (!currentChat?.messages.length || isTotalLoading) return;
 
-        console.log("PROC HERE 2");
-
         dummyRef.current?.scrollIntoView({
             behavior: "instant",
             block: "end",
@@ -416,22 +414,11 @@ export default function Page() {
     useEffect(() => {
         if (!currentChat?.messages.length || isTotalLoading) return;
 
-        console.log(
-            "123123",
-            lastLength,
-            currentChat.messages.length,
-            currentChat.messages.length - lastLength !== 1 ||
-                (lastLength === 0 &&
-                    currentChat.messages.length > messagesPerRequest * 2),
-        );
-
         if (
             currentChat.messages.length - lastLength === 1 ||
             (lastLength === 0 &&
                 currentChat.messages.length > messagesPerRequest * 2)
         ) {
-            console.log("PROC HERE 1");
-
             dummyRef.current?.scrollIntoView({
                 behavior: "instant",
                 block: "end",
@@ -450,16 +437,6 @@ export default function Page() {
     }, [currentChat?.messages.length, isTotalLoading]);
 
     useEffect(() => {
-        console.log(
-            "ASDADSADS",
-            !currentChat?.messages.length,
-            isTotalLoading,
-            !scrollContainerRef.current,
-            currentChat?.messages.length === lastLength,
-            currentChat?.messages.length,
-            lastLength,
-        );
-
         if (
             !currentChat?.messages.length ||
             isTotalLoading ||
@@ -469,8 +446,6 @@ export default function Page() {
             lastLength === 0
         )
             return;
-
-        console.log("я прокнул");
 
         scrollContainerRef.current.scrollTop =
             scrollContainerRef.current?.scrollHeight -

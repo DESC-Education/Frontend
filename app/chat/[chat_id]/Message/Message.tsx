@@ -66,8 +66,6 @@ const Message = forwardRef<ContainerRef, MessageProps>(
             )
                 return;
 
-            // console.log("I VIEWED A MESSAGE AND SENT WS", message.message);
-
             ws.send(
                 JSON.stringify({
                     type: "viewed",
@@ -77,8 +75,6 @@ const Message = forwardRef<ContainerRef, MessageProps>(
         }, [inView, message.isRead, wsStatus]);
 
         useEffect(() => {
-            console.log(isChatHasMoreMessages);
-            
             if (!isFirst || !isChatHasMoreMessages) return;
 
             const scrollListener = (e: Event) => {
@@ -87,6 +83,7 @@ const Message = forwardRef<ContainerRef, MessageProps>(
 
             if (!isScrolled) {
                 window.addEventListener("wheel", scrollListener);
+                window.addEventListener("touchstart", scrollListener);
                 return;
             }
 
@@ -110,12 +107,13 @@ const Message = forwardRef<ContainerRef, MessageProps>(
 
             return () => {
                 window.removeEventListener("wheel", scrollListener);
+                window.removeEventListener("touchstart", scrollListener);
             };
         }, [inViewFirst, isScrolled, isChatHasMoreMessages]);
 
         useEffect(() => {
             setMessageTime(getDateOrTime(message.createdAt));
-        }, []);
+        }, [message.createdAt]);
 
         return (
             <div
@@ -200,8 +198,8 @@ const Message = forwardRef<ContainerRef, MessageProps>(
                         {message.changedId ? "Изменено" : ""}
                     </p>
                     <p className={classNames(styles.messageTime, "text fz14")}>
-                    {messageTime}
-                </p>
+                        {messageTime}
+                    </p>
                     {/* <p className={classNames(styles.messageTime, "text fz14")}>
                         {new Date(message.createdAt).getTime()}
                     </p> */}

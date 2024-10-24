@@ -81,6 +81,30 @@
                     max-width: 100px;
                 }
             }
+
+            @media screen and (max-width: 1024px) {
+                .mainInfo p {
+                    max-width: 150px;
+                    padding-right: 0;
+                }
+
+                .lastMessage {
+                    padding-right: 0;
+                    max-width: 150px;
+                }
+            }
+
+            @media screen and (max-width: 320px) {
+                .mainInfo p {
+                    max-width: 120px;
+                    padding-right: 0;
+                }
+
+                .lastMessage {
+                    padding-right: 0;
+                    max-width: 120px;
+                }
+            }
         }
     }
 
@@ -227,6 +251,31 @@
             .avatar {
                 width: 45px;
                 height: 45px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .chatItem {
+        display: flex;
+        justify-content: space-between;
+
+        .chatMeta {
+            width: 60px;
+        }
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .chatItem {
+        .chatInfo {
+            .avatar {
+                margin-right: 7px;
+            }
+
+            .userInfo {
+                width: 130px;
             }
         }
     }
