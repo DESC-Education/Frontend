@@ -4,6 +4,7 @@ import { ISolutionStatus, ISpecialtyType } from "../_types";
 export const TIMER_TIME = 60;
 
 export const MAX_LENGTH = 2000;
+export const MAX_MESSAGE_LENGTH = 3000;
 export const MIN_LENGTH = 15;
 export const MAX_REPLY_COUNT = 30;
 

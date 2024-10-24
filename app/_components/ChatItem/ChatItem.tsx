@@ -65,7 +65,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
 
         setLastMessageTime(getDateOrTime(lastMessage.createdAt));
     }, [lastMessage?.createdAt]);
-
+    
     return (
         <div
             className={classNames(styles.chatItem, {
@@ -94,7 +94,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
                                 "text fz16",
                             )}
                         >
-                            {lastMessage.message}
+                            {lastMessage.message ? lastMessage.message : "Файл"}
                         </p>
                     ) : (
                         <p
