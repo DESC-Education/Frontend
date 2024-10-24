@@ -21,18 +21,19 @@ import { AlertContext } from "@/app/_context/AlertContext";
 
 type InputProps = {
     type:
-        | "text"
-        | "password"
-        | "tel"
-        | "email"
-        | "checkbox"
-        | "radio"
-        | "code"
-        | "number"
-        | "file"
-        | "file_multiple"
-        | "file_multiple_chat"
-        | "textarea";
+    | "text"
+    | "password"
+    | "tel"
+    | "email"
+    | "checkbox"
+    | "radio"
+    | "code"
+    | "number"
+    | "file"
+    | "file_multiple"
+    | "file_multiple_chat"
+    | "date"
+    | "textarea";
     containerClassName?: string;
     onChange?: (val: string) => void;
     onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -61,10 +62,10 @@ type InputProps = {
 const Input: FC<InputProps> = ({
     type,
     containerClassName = "",
-    onChange = (val: string) => {},
-    onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {},
-    onCheck = (val: boolean) => {},
-    onBlur = (val: string) => {},
+    onChange = (val: string) => { },
+    onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => { },
+    onCheck = (val: boolean) => { },
+    onBlur = (val: string) => { },
     labelContent,
     title,
     max = Infinity,
@@ -513,11 +514,10 @@ const Input: FC<InputProps> = ({
                                                         styles.userImage,
                                                         styles.imgDocument,
                                                     )}
-                                                    src={`/icons/extensions/${
-                                                        file.name
+                                                    src={`/icons/extensions/${file.name
                                                             .split(".")
                                                             .slice(-1)[0]
-                                                    }.png`}
+                                                        }.png`}
                                                 />
                                                 <p>{file.name}</p>
                                             </>
@@ -620,6 +620,54 @@ const Input: FC<InputProps> = ({
                     )}
                 </>
             );
+
+        case "date":
+            return (
+                <div
+                    className={classNames(
+                        styles.inputWrapper,
+                        containerClassName,
+                    )}
+                >
+                    {title && (
+                        <p className="text fz20 fw500">
+                            {title}{" "}
+                            {required && (
+                                <span className={styles.required}>*</span>
+                            )}
+                        </p>
+                    )}
+                    <input
+                        placeholder={placeholder}
+                        onKeyUp={onKeyUp}
+                        autoComplete={autoComplete}
+                        className={classNames(styles.input, {
+                            [styles.inputError]: errorText.length !== 0,
+                        })}
+                        type={type}
+                        value={value}
+                        onBlur={(e) => onBlur(e.target.value)}
+                        onChange={(e) => onChange(e.target.value)}
+                    />
+                    <CSSTransition
+                        in={errorText.length !== 0}
+                        nodeRef={errorRef}
+                        timeout={100}
+                        classNames="errorText"
+                    >
+                        <p
+                            ref={errorRef}
+                            className={classNames(
+                                "text fz20",
+                                styles.errorText,
+                            )}
+                        >
+                            {errorText}
+                        </p>
+                    </CSSTransition>
+                </div>
+            );
+
         default:
             return (
                 <div

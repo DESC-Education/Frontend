@@ -1,6 +1,7 @@
 "use client"
 
-import { createRef, ReactNode, RefObject, useState } from "react";
+
+import { createRef, ReactNode, RefObject, useEffect, useState } from "react";
 import styles from "./page.module.scss"
 import Button from "@/app/_components/ui/Button/Button";
 import classNames from "classnames";
@@ -9,6 +10,10 @@ import Link from "next/link";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useDispatch } from "react-redux";
 import SelectSearch from "react-select-search";
+import { useParams } from "next/navigation";
+import { IStudentInfo, IStudentProfile } from "@/app/_types";
+import { getUser } from "@/app/_http/API/adminApi";
+import { Oval } from "react-loader-spinner";
 
 
 type StudentInfo = "general" | "chats" | "tasks"
@@ -27,7 +32,7 @@ const StudentPage = () => {
         role: "student",
     }
 
-    const student = {
+    const student1 = {
         id: "1",
         isVerified: true,
         admissionYear: "2023",
@@ -234,14 +239,28 @@ const StudentPage = () => {
     ];
 
 
+    const { student_id } = useParams();
 
+    const [student, setStudent] = useState<IStudentInfo | null>(null);
 
+    useEffect(() => {
+        const asyncFunc = async () => {
+            if (typeof student_id !== "string") return;
+
+            const data = await getUser(student_id);
+            setStudent(data);
+            // console.log(data);
+        };
+        asyncFunc();
+    }, []);
+    if (!student) return (<div className={styles.loading}><Oval /></div>);
     const getStudentContent = (activeTab: StudentInfo,): {
         content: ReactNode;
         ref: RefObject<HTMLDivElement>
     } => {
         switch (activeTab) {
             case "general":
+
                 return {
                     content: (
                         <div className={styles.studentContent}>
@@ -249,31 +268,31 @@ const StudentPage = () => {
                                 <p className="title">Образование:</p>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Университет:</p>
-                                    <p className="text fz20">{student.university.name}, {student.university.city.name}</p>
+                                    <p className="text fz20">{student.profile.university.name}, {student.profile.university.city.name}</p>
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Факультет:</p>
-                                    <p className="text fz20">{student.faculty.name}</p>
+                                    <p className="text fz20">{student.profile.faculty.name}</p>
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Специальность:</p>
-                                    <p className="text fz20">{student.speciality.name}</p>
+                                    <p className="text fz20">{student.profile.specialty.name}</p>
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Форма обучения:</p>
-                                    <p className="text fz20">{student.formOfEducation}</p>
+                                    <p className="text fz20">{student.profile.formOfEducation}</p>
                                 </div>
                             </div>
                             <div className={styles.infoBlock}>
                                 <p className="title">Описание:</p>
                                 <div className={styles.textBlock}>
-                                    <p className={classNames("text fz20", styles.description)}>{student.description}</p>
+                                    <p className={classNames("text fz20", styles.description)}>{student.profile.description}</p>
                                 </div>
                             </div>
                             <div className={styles.infoBlock}>
                                 <p className="title">Навыки:</p>
                                 <div className={styles.skillsBlock}>
-                                    {student.skills.map((skill, index) => (
+                                    {student.profile.skills.map((skill, index) => (
                                         <div key={index} className={classNames("text fz20", styles.skill)}>{skill.name}</div>
                                     ))}
                                 </div>
@@ -286,15 +305,15 @@ const StudentPage = () => {
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Телеграм:</p>
-                                    <p className="text fz20">{student.telegramLink ? <a href={student.telegramLink}>{"@" + student.telegramLink.slice(22)}</a> : "Не указан"}</p>
+                                    <p className="text fz20">{student.profile.telegramLink ? <a href={student.profile.telegramLink}>{"@" + student.profile.telegramLink.slice(13)}</a> : "Не указан"}</p>
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Вконтакте:</p>
-                                    <p className="text fz20">{student.vkLink ? <a href={student.vkLink}>{"@" + student.vkLink.slice(20)}</a> : "Не указан"}</p>
+                                    <p className="text fz20">{student.profile.vkLink ? <a href={student.profile.vkLink}>{"@" + student.profile.vkLink.slice(20)}</a> : "Не указан"}</p>
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Телефон:</p>
-                                    <p className="text fz20">{student.phone ? student.phone : "Не указан"}</p>
+                                    <p className="text fz20">{student.profile.phone ? student.profile.phone : "Не указан"}</p>
                                 </div>
                             </div>
                             <div className={styles.infoBlock}>
@@ -305,13 +324,13 @@ const StudentPage = () => {
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Состояние аккаунта:</p>
-                                    {user.isBanned ? <p className="text fz20 red">Забанен</p> : <p className="text fz20 green">Активен</p>}
-                                    {user.isBanned ? <Button className={styles.unbanButton} type="unban">Разбанить</Button> : <Button className={styles.banButton} type="ban">Забанить</Button>}
+                                    {student.isActive ? <p className="text fz20 green">Активен</p> : <p className="text fz20 red">Забанен</p>}
+                                    {/* {user.isBanned ? <Button className={styles.unbanButton} type="unban">Разбанить</Button> : <Button className={styles.banButton} type="ban">Забанить</Button>} */}
                                 </div>
                                 <div className={styles.textBlock}>
-                                    <p className="text fw500">Послений онлайн:</p>
+                                    <p className="text fw500">Права</p>
                                     {/* Ласт онлайн сюда */}
-                                    {user.isOnline ? <p className="text fz20 green">В сети</p> : <p className="text fz20 red">Был в сети N минут назад</p>}
+                                    {student.isStaff ? <p className="text fz20 green">Модератор</p> : <p className="text fz20 red">Не модератор</p>}
                                 </div>
                             </div>
                             {/* <Button type="ban">Удалить аккаунт</Button> */}
@@ -333,10 +352,10 @@ const StudentPage = () => {
                                 </div>
                             </div>
                             <div className={styles.chatsList}>
-                                {chats.map((chat, index) => (
+                                {student.notifications.map((chat, index) => (
                                     <Link key={index} className={styles.chatItem} href="#">
                                         <div className={styles.chatHeader}>
-                                            <p className="text fw500">{chat.companion.email}</p>
+                                            {/* <p className="text fw500">{chat.companion.email}</p> */}
                                             <p className="text fz20">Время: {chat.createdAt}</p>
                                         </div>
                                     </Link>
@@ -398,36 +417,48 @@ const StudentPage = () => {
                     {student.firstName} {student.lastName}
                 </p>
             </div>
-            <div className={styles.navigationButtons}>
-                <Button
-                    className={styles.navigationButton}
-                    type={activeTab === "general" ? "secondary" : "primary"}
-                    onClick={() => handleTabChange("general")}
-                >
-                    Общие
-                </Button>
-                <Button
-                    className={styles.navigationButton}
-                    type={activeTab === "chats" ? "secondary" : "primary"}
-                    onClick={() => handleTabChange("chats")}
-                >
-                    Чаты
-                </Button>
-                <Button
-                    className={styles.navigationButton}
-                    type={activeTab === "tasks" ? "secondary" : "primary"}
-                    onClick={() => handleTabChange("tasks")}
-                >
-                    Задачи
-                </Button>
-            </div>
-            <div
-                className={classNames(styles.content, {
-                    [styles.exit]: isAnimating,
-                })}
-            >
-                {getStudentContent(activeTab).content}
-            </div>
+            {student.profile.verification.status === "verified" ?
+                (<div>
+                    <div className={styles.navigationButtons}>
+                        <Button
+                            className={styles.navigationButton}
+                            type={activeTab === "general" ? "secondary" : "primary"}
+                            onClick={() => handleTabChange("general")}
+                        >
+                            Общие
+                        </Button>
+                        <Button
+                            className={styles.navigationButton}
+                            type={activeTab === "chats" ? "secondary" : "primary"}
+                            onClick={() => handleTabChange("chats")}
+                        >
+                            Чаты
+                        </Button>
+                        <Button
+                            className={styles.navigationButton}
+                            type={activeTab === "tasks" ? "secondary" : "primary"}
+                            onClick={() => handleTabChange("tasks")}
+                        >
+                            Задачи
+                        </Button>
+                    </div>
+                    <div
+                        className={classNames(styles.content, {
+                            [styles.exit]: isAnimating,
+                        })}
+                    >
+                        {getStudentContent(activeTab).content}
+                    </div>
+                </div>)
+                :
+                (
+                    <div className={styles.content}>
+                        <img src="/images/questions.png" alt="notVerified" className={styles.notVerified} />
+                        <p className="text fw500 fz20">Профиль не верифицирован, информации нет.</p>
+                    </div>
+                )
+            }
+
         </div>
     )
 

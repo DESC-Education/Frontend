@@ -54,6 +54,53 @@
         &.exit {
             animation: fadeOut 0.4s forwards;
         }
+
+        .companyContent {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+
+            .infoBlock {
+                display: flex;
+                flex-direction: row;
+
+                gap: 10px;
+                margin-bottom: 50px;
+
+                .textBlock {
+                    display: flex;
+                    flex-direction: column;
+                    white-space: nowrap;
+                    align-items: flex-start;
+                    margin: 0px 20px 0px 20px;
+
+                    p {
+                        text-align: left;
+                        display: flex;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                        margin-bottom: 5px;
+                    }
+
+                    .description {
+                        white-space: normal;
+                    }
+                }
+
+                .skillsBlock {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                    margin: 0px 20px 0px 20px;
+
+                    .skill {
+                        padding: 10px 15px;
+                        border-radius: 30px;
+                        border: 1px solid rgba(var(--gray2), 1);
+                    }
+                }
+            }
+        }
     }
 
     @keyframes fadeIn {
