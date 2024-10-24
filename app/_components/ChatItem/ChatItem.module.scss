@@ -51,7 +51,7 @@
             }
 
             .lastMessage {
-                max-width: 250px;
+                max-width: 220px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -60,6 +60,26 @@
 
             p {
                 color: rgba(var(--gray1), 1);
+            }
+
+            @media screen and (max-width: 1500px) {
+                .mainInfo p {
+                    max-width: 150px;
+                }
+
+                .lastMessage {
+                    max-width: 150px;
+                }
+            }
+
+            @media screen and (max-width: 1200px) {
+                .mainInfo p {
+                    max-width: 100px;
+                }
+
+                .lastMessage {
+                    max-width: 100px;
+                }
             }
         }
     }
@@ -115,6 +135,12 @@
             }
         }
 
+        @media screen and (max-width: 1500px) {
+            .metaHeader img {
+                width: 15px;
+            }
+        }
+
         .metaFooter {
             padding-left: 3px;
 
@@ -136,16 +162,72 @@
                     overflow: hidden;
                 }
 
-                p {
-                    color: white;
-                    font-size: 16px;
-                    line-height: 16px;
+                color: white;
+                font-size: 16px;
+                line-height: 16px;
+            }
+        }
+
+        @media screen and (max-width: 1800px) {
+            .metaFooter {
+                padding-left: 3px;
+
+                .unreadCount {
+                    padding-top: 1px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 20px;
+                    height: 20px;
+
+                    font-size: 14px;
+                    line-height: 14px;
                 }
+            }
+        }
+
+        @media screen and (max-width: 1500px) {
+            .metaFooter {
+                padding-left: 3px;
+
+                .unreadCount {
+                    width: 16px;
+                    height: 16px;
+
+                    font-size: 12px;
+                    line-height: 12px;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        grid-template-columns: 3fr 1fr;
+    }
+}
+
+@media screen and (max-width: 1800px) {
+    .chatItem {
+        padding: 7px 12px 7px 10px;
+
+        .chatInfo {
+            .avatar {
+                width: 60px;
+                height: 60px;
             }
         }
     }
 }
 
-@media screen and (max-width: 1920px) {
-    
+@media screen and (max-width: 1400px) {
+    .chatItem {
+        padding: 5px 10px 5px 8px;
+
+        .chatInfo {
+            .avatar {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    }
 }

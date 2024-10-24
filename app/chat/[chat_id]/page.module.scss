@@ -72,6 +72,13 @@
             color: #4caf50;
             font-size: 14px;
         }
+
+        @media screen and (max-width: 1800px) {
+            .avatar {
+                width: 35px;
+                height: 35px;
+            }
+        }
     }
 
     .chatActions {
@@ -92,6 +99,40 @@
         span {
             cursor: pointer;
             font-size: 24px;
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        align-items: center;
+
+        >div {
+            position: relative;
+        }
+
+        .userInfo {
+            margin-left: 20px;
+        }
+
+        .backButton {
+            left: -65px;
+            top: calc(50% - 8px);
+        }
+    }
+
+    @media screen and (max-width: 425px) {
+        align-items: center;
+
+        >div {
+            position: relative;
+        }
+
+        .userInfo {
+            margin-left: 30px;
+        }
+
+        .backButton {
+            left: -30px;
+            top: calc(50% - 8px);
         }
     }
 }
@@ -118,9 +159,20 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
     overflow-y: auto;
     padding: 20px 0;
+    max-height: 600px;
+    overscroll-behavior: contain;
+
+    .dummy {
+        transform: translateY(20px);
+    }
+
+    .chatMessagesContainer {
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+    }
 
     .messageWrapper {
         display: contents;
@@ -285,12 +337,47 @@
         }
 
         p {
+            text-align: center;
+            max-width: 100%;
             white-space: break-spaces;
             -webkit-line-clamp: 1;
             line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+    }
+}
+
+@media screen and (max-width: 1800px) {
+    .messageInput {
+        padding: 3px 12px;
+        gap: 10px;
+
+        .send {
+            width: 35px;
+            height: 35px;
+
+            img {
+                width: 18px;
+            }
+        }
+
+        textarea {
+            font-size: 16px;
+            line-height: 16px;
+            padding: 8px 6px;
+        }
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .messageInput {
+        gap: 3px;
+
+        textarea {
+            padding: 7px 5px;
+            font-size: 13px;
         }
     }
 }

@@ -176,6 +176,7 @@ export type ISolution = {
     createdAt: string;
     files: IFile[];
     review: IReview | null;
+    task: string // taskId
 };
 
 export type IFile = {

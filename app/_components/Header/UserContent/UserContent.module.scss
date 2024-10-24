@@ -182,13 +182,25 @@
 }
 
 @media screen and (max-width: 1600px) {
+    .link {
+        &.messages {
+            .unread {
+                top: -6px;
+                right: -2px;
+                padding: 6px 7px 5px 6px;
+                font-size: 14px;
+            }
+        }
+    }
+
     .icons {
         gap: 20px;
 
         .icon {
             width: 35px;
         }
-  
+
+
         .notificationModal {
             top: 52px;
 

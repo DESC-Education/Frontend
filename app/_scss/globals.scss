@@ -1,6 +1,5 @@
 @import "select-search";
 
-
 :root {
     --white: 255, 255, 255;
     --black: 25, 40, 44;
@@ -23,6 +22,14 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+html {
+    height: calc(100vh - 140px);
+
+    @media screen and (max-width: 1600px) {
+        height: calc(100vh - 100px);
+    }
+}
+
 body {
     min-height: calc(100vh - 140px);
     // margin-top: 100px;
@@ -30,10 +37,15 @@ body {
     flex-direction: column;
     margin-top: 140px;
     position: relative;
-    
+
     @media screen and (max-width: 1600px) {
         margin-top: 100px;
         height: calc(100vh - 100px);
+    }
+    
+    @media screen and (max-width: 1600px) {
+        margin-top: 70px;
+        height: calc(100vh - 70px);
     }
 }
 
@@ -97,17 +109,6 @@ a {
 }
 
 
-.selectLayout {
-    display: flex;
-    margin: 40px 0;
-    max-height: 70vh;
-    background-color: rgba(var(--white), 1);
-    border: 2px solid rgba(var(--gray2), 1);
-    border-radius: 40px;
-    overflow-y: auto;
-}
-
-
 .text {
     font-size: 24px;
     line-height: 28px;
@@ -151,7 +152,7 @@ a {
     }
 
     &.fw500 {
-        font-weight: 500;
+        font-weight: 500 !important;
     }
 
     &.fz20 {
@@ -162,6 +163,11 @@ a {
     &.fz16 {
         font-size: 16px;
         line-height: 20px;
+    }
+
+    &.fz14 {
+        font-size: 14px;
+        line-height: 17px;
     }
 }
 
@@ -199,7 +205,7 @@ a {
     }
 
     &.fw500 {
-        font-weight: 500;
+        font-weight: 500 !important;
     }
 }
 
@@ -252,7 +258,7 @@ a {
             line-height: 24px;
             font-weight: 300;
         }
-    
+
         &.fz28 {
             font-size: 22px;
             line-height: 30px;
@@ -341,6 +347,11 @@ a {
             line-height: 17px;
         }
 
+        &.fz14 {
+            font-size: 11px;
+            line-height: 14px;
+        }
+
         &.fz16 {
             font-size: 12px;
             line-height: 14px;
@@ -403,8 +414,8 @@ a {
         }
 
         &.fz16 {
-            font-size: 11px;
-            line-height: 13px;
+            font-size: 12px;
+            line-height: 14px;
         }
 
         &.fz24 {

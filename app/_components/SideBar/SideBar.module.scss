@@ -1,12 +1,18 @@
 .sidebar {
-    width: 40%;
-    max-width: 500px;
-    height: calc(70vh - 2px);
+    // height: calc(70vh - 2px);
+    height: 100%;
     background-color: rgba(var(--white), 1);
-    padding: 30px 15px;
+    padding: 20px 12px;
     border-right: 2px solid rgba(var(--gray2), 1);
     overflow: auto;
     display: flex;
     flex-direction: column;
     margin-bottom: auto;
+}
+
+
+@media screen and (max-width: 1800px) {
+    .sidebar {
+        padding: 10px 12px;
+    }
 }

@@ -5,6 +5,7 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { getTask } from "@/app/_http/API/tasksApi";
 import { taskSlice } from "@/app/_store/reducers/taskSlice";
+import { ProfileRoute } from "@/app/_utils/protectedRoutes";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -44,9 +45,11 @@ export default function RootLayout({
 
     if (isLoading)
         return (
-            <div className="centerContent">
-                <CustomOval />
-            </div>
+            <ProfileRoute>
+                <div className="centerContent">
+                    <CustomOval />
+                </div>
+            </ProfileRoute>
         );
 
     return children;

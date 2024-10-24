@@ -18,3 +18,21 @@
     flex-direction: column;
     gap: 15px;
 }
+
+@media screen and (max-width: 1800px) {
+    .chatList {
+        gap: 10px;
+    }
+}
+
+
+@media screen and (max-width: 1024px) {
+    .chatContainer {
+        height: 100%;
+        padding: 0;
+    }
+}
+
+.mobileContainer {
+    width: 100%;
+}

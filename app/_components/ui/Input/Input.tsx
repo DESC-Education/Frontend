@@ -458,7 +458,11 @@ const Input: FC<InputProps> = ({
                             />
                         ) : (
                             <>
-                                <img src="/icons/add_file.svg" alt="add" />
+                                <img
+                                    className={styles.addFileImage}
+                                    src="/icons/add_file.svg"
+                                    alt="add"
+                                />
                                 <div>
                                     <p className="text fz16 gray">
                                         Форматы: PNG, JPG, JPEG
@@ -562,7 +566,11 @@ const Input: FC<InputProps> = ({
                                         );
                                     }}
                                 />
-                                <img src="/icons/add_file.svg" alt="add" />
+                                <img
+                                    className={styles.addFileImage}
+                                    src="/icons/add_file.svg"
+                                    alt="add"
+                                />
                                 {fileTipContent}
                             </div>
 

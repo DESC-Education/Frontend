@@ -52,9 +52,9 @@ export const timezones: ITimezone[] = [
 ];
 
 export const formsOfEducation = [
-    { label: "Очное", value: "full_time" },
-    { label: "Заочное", value: "part_time" },
-    { label: "Очно-заочное", value: "full_part_time" },
+    { name: "Очное", label: "Очное", value: "full_time" },
+    { name: "Заочное", label: "Заочное", value: "part_time" },
+    { name: "Очно-заочное", label: "Очно-заочное", value: "full_part_time" },
 ];
 
 export const typeOfSpeciality: { name: string; value: ISpecialtyType }[] = [
@@ -70,8 +70,8 @@ export const levels = [
 ];
 
 export const sortingOptions = [
-    { name: "Сначала новые", value: "-createdAt" },
-    { name: "Сначала старые", value: "createdAt" },
+    { name: "Сначала новые", label: "Сначала новые", value: "-createdAt" },
+    { name: "Сначала старые", label: "Сначала старые", value: "createdAt" },
     // { name: "Сначала рекомендуемые", value: "relevant" },
 ];
 
