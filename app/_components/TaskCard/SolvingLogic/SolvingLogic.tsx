@@ -24,10 +24,12 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
     const [solutionText, setSolutionText] = useState<string>("");
     const [textLength, setTextLength] = useState(solutionText.length || 0);
 
+    const { currentTask } = useTypesSelector((state) => state.taskReducer);
+
     const { studentProfile } = useTypesSelector((state) => state.userReducer);
 
     const { updateStudentReplyCount } = userSlice.actions;
-
+    const { addMyTask } = contentSlice.actions;
     const { addCurrentTaskSolution } = taskSlice.actions;
     const dispatch = useTypesDispatch();
 
@@ -52,6 +54,7 @@ const SolvingLogic: FC<SolvingLogicProps> = ({ taskId }) => {
             showAlert("Решение успешно загружено!", "success");
             dispatch(updateStudentReplyCount(studentProfile.replyCount - 1));
             setSolutionText("");
+            dispatch(addMyTask(currentTask!));
             dispatch(addCurrentTaskSolution(res.solution!));
             setSolutionFiles([]);
         } else {
