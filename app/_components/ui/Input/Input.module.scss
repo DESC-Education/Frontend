@@ -14,6 +14,14 @@
         resize: none;
         padding: 18px 20px;
     }
+
+    @media screen and (max-width: 768px) {
+        textarea {
+            padding: 9px 10px;
+            border-radius: 20px;
+            font-size: 15px;
+        }
+    }
 }
 
 .checkboxWrapper {
@@ -273,10 +281,19 @@
     // transition: .3s !important;
 }
 
+@media screen and (max-width: 768px) {
+    .checkLabel {
+        width: 18px;
+    }
+
+    .input {
+        font-size: 15px;
+    }
+}
+
 @media screen and (max-width: 1200px) {
     .input {
         padding: 8px 10px;
-
     }
 
     .fileInput {
@@ -293,12 +310,35 @@
             font-size: 15px !important;
         }
     }
+
+    .input {
+        padding: 8px 15px;
+        font-size: 15px !important;
+    }
 }
 
 @media (max-width: 425px) {
     .fileInput {
         >div {
             flex-direction: column;
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    .inputWrapper {
+        .input {
+            font-size: 13px !important;
+        }
+    }
+
+    .input {
+        font-size: 13px !important;
+    }
+
+    .textareaWrapper {
+        textarea {
+            font-size: 13px !important;
         }
     }
 }

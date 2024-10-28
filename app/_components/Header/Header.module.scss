@@ -218,7 +218,7 @@
                 border-radius: 20px;
                 border: 1px solid rgba(var(--gray1), .4);
                 padding: 0;
-                
+
                 &.active {
                     padding: 15px 5px 15px 20px;
                     z-index: 20;
@@ -244,6 +244,16 @@
             }
 
             @media screen and (max-width: 768px) {
+                .notification {
+                    display: block;
+                    height: 100%;
+
+                    .unread {
+                        z-index: 22 !important;
+                        font-size: 14px;
+                    }
+                }
+
                 .notificationModal {
                     top: 88px;
                 }
@@ -253,7 +263,7 @@
                 .notificationModal {
                     width: 100%;
                     border-radius: 0;
-                    
+
                     &.active {
                         padding: 15px 10px;
                         height: calc(100vh - 85px);
@@ -390,7 +400,6 @@
             }
         }
 
-
         .burgerButton {
             display: flex;
             flex-direction: column;
@@ -450,7 +459,7 @@
         .container {
             padding: 5px;
         }
-        
+
         img {
             position: relative;
             z-index: 20;
@@ -473,6 +482,8 @@
         }
 
         .burgerMenu {
+            padding-top: 75px;
+
             &.open {
                 width: 100%;
             }

@@ -72,7 +72,7 @@ const CodeInput: FC<CodeInputProps> = ({ value, setValue, className = "" }) => {
         };
         const listenerPaste = (e: ClipboardEvent) => {
             if (e.clipboardData) {
-                const pastedText = e.clipboardData.getData("text");
+                const pastedText = e.clipboardData.getData("text").trim();
 
                 if (/^\d{4}$/.test(pastedText)) {
                     setValue(pastedText);

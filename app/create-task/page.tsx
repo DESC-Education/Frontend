@@ -277,18 +277,21 @@ export default function CreateTaskPage() {
                 <p className="title fz36 fw500">Создать задание</p>
             </div>
             <div className={styles.taskContent}>
-                <div className={styles.templates}>
+                {/* <div className={styles.templates}>
                     <p className="text fw500">Шаблоны технических заданий</p>
                     {templates.map((template, index) => (
                         <Button
                             key={index}
                             type="primary"
-                            className={classNames(styles.templateButton, "text fz20")}
+                            className={classNames(
+                                styles.templateButton,
+                                "text fz20",
+                            )}
                         >
                             {template}
                         </Button>
                     ))}
-                </div>
+                </div> */}
                 <div className={styles.createTask}>
                     <p className="text fw500">Опишите, что нужно сделать</p>
                     <p className="text gray fz20">
@@ -331,8 +334,8 @@ export default function CreateTaskPage() {
                                     styles.length,
                                 )}
                             >
-                                {state.description.length} из {MAX_LENGTH} символов (минимум{" "}
-                                {MIN_LENGTH})
+                                {state.description.length} из {MAX_LENGTH}{" "}
+                                символов (минимум {MIN_LENGTH})
                             </p>
                         </div>
                         <div className={styles.selects}>
@@ -361,7 +364,14 @@ export default function CreateTaskPage() {
                         </div>
                         <div className={styles.selects}>
                             <div className={styles.select}>
-                                <p className="text fw500">Категории</p>
+                                <p
+                                    className={classNames(
+                                        "text fw500 fz28",
+                                        styles.catTitle,
+                                    )}
+                                >
+                                    Категории
+                                </p>
                                 <CustomSearch
                                     className={styles.selectSearch}
                                     options={categories.map((i) => ({
@@ -394,7 +404,14 @@ export default function CreateTaskPage() {
                                     [styles.error]: errors.filters,
                                 })}
                             >
-                                <p className={"text fz24 fw500"}>Фильтры</p>
+                                <p
+                                    className={classNames(
+                                        "text fz28 fw500",
+                                        styles.catTitle,
+                                    )}
+                                >
+                                    Фильтры
+                                </p>
                                 <TransitionGroup>
                                     {currentFilterCategories.map(
                                         (filter, index) => (
@@ -475,7 +492,14 @@ export default function CreateTaskPage() {
                                 </p>
                             </div>
                             <div className={styles.select}>
-                                <p className="text fw500">Сроки</p>
+                                <p
+                                    className={classNames(
+                                        "text fw500 fz28",
+                                        styles.deadlineTitle,
+                                    )}
+                                >
+                                    Сроки
+                                </p>
                                 <div className={styles.deadline}>
                                     <Input
                                         containerClassName={

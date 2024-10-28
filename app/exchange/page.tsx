@@ -346,7 +346,7 @@ export default function ExchangePage() {
                                     className={styles.clearButton}
                                     onClick={() => {
                                         clearTasks();
-                                        setIsOpen(false)
+                                        setIsOpen(false);
                                     }}
                                 >
                                     Очистить
@@ -559,9 +559,7 @@ export default function ExchangePage() {
                                             styles.filterButton,
                                         )}
                                     >
-                                        <div className="text fz24">
-                                            Фильтры
-                                        </div>
+                                        <div className="text fz24">Фильтры</div>
                                     </div>
                                 </button>
                             )}
@@ -585,7 +583,12 @@ export default function ExchangePage() {
                             })}
                         >
                             {tasks?.length === 0 ? (
-                                <div className="centerContent">
+                                <div
+                                    className={classNames(
+                                        "centerContent",
+                                        styles.noTasks,
+                                    )}
+                                >
                                     <img src="/images/questions.png" />
                                     <p
                                         className={classNames(

@@ -33,7 +33,8 @@
     .taskContent {
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        // grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr;
         gap: 50px;
 
         .templates {
@@ -200,6 +201,44 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .container {
+        .taskContent {
+            grid-template-columns: 1fr;
+
+            .templates {
+                display: none;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        .selects {
+            flex-direction: column;
+            gap: 10px;
+
+            .select {
+                width: 100% !important;
+            }
+
+            .deadline {
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+        .deadlineTitle {
+            text-align: center;
+        }
+
+        .catTitle {
+            text-align: center;
         }
     }
 }

@@ -108,6 +108,9 @@ const TaskCard: React.FC<TaskCardProps> = ({
             : false;
     }, [task.solutions]);
 
+    console.log(task);
+    
+
     return (
         <div
             className={classNames(
@@ -135,7 +138,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                                       companyProfile?.logoImg
                                                     : "/images/avatar.png"
                                             }
-                                            alt={task.profile?.companyName}
+                                            alt={task.companyProfile?.companyName}
                                             width={50}
                                             height={50}
                                         />
@@ -144,26 +147,25 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                     <div className={styles.companyLogo}>
                                         <img
                                             src={
-                                                task.profile?.logoImg
+                                                task.companyProfile?.logoImg
                                                     ? process.env
                                                           .NEXT_PUBLIC_SERVER_PATH +
-                                                      task.profile?.logoImg
+                                                      task.companyProfile?.logoImg
                                                     : "/images/avatar.png"
                                             }
-                                            alt={task.profile?.companyName}
+                                            alt={task.companyProfile?.companyName}
                                             width={50}
                                             height={50}
                                         />
                                     </div>
                                 )}
-
                                 <p
                                     className={classNames(
                                         styles.taskTitle,
                                         "title fz28 fw500",
                                     )}
                                 >
-                                    {task.profile?.companyName}
+                                    {task.companyProfile?.companyName}
                                 </p>
                             </Link>
                         )}
@@ -172,7 +174,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                             <div
                                 className={classNames(
                                     styles.taskName,
-                                    "title fz28",
+                                    "title fz28 fw500",
                                 )}
                             >
                                 {task.title}

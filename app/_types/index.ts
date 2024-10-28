@@ -145,7 +145,7 @@ export type IMessage = {
 
 export type ITask = {
     id: string;
-    profile: ICompanyProfile;
+    companyProfile: ICompanyProfile;
     user: string; // id
     title: string;
     description: string;

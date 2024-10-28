@@ -35,6 +35,7 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import CustomOval from "../../ui/CustomOval/CustomOval";
 import { TIMER_TIME } from "@/app/_utils/constants";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 
 // export const PasswordSchema = z.string();
 
@@ -114,11 +115,18 @@ type AuthModalProps = {
 
 type ModalState = "reg" | "login" | "regCode" | "recover" | "recoverCode";
 
-const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState = "regClient" }) => {
+const AuthModal: FC<AuthModalProps> = ({
+    initModalState = "login",
+    initRegState = "regClient",
+}) => {
     const [modalState, setModalState] = useState<ModalState>(initModalState);
 
     const [regState, setRegState] = useState<"regClient" | "regCompany">(
         initRegState,
+    );
+
+    const { isMobileDevice } = useTypesSelector(
+        (state) => state.contentReducer,
     );
 
     const { showAlert } = useContext(AlertContext);
@@ -219,6 +227,8 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
     };
 
     useEffect(() => {
+        if (isMobileDevice) return;
+        
         const listener = (e: KeyboardEvent) => {
             if (e.key === "Enter") {
                 if (modalState === "regCode") {
@@ -236,7 +246,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
         return () => {
             window.removeEventListener("keydown", listener);
         };
-    }, [modalState, state.code]);
+    }, [modalState, state.code, isMobileDevice]);
 
     const registerHandler = async () => {
         setIsLoading(true);
@@ -267,7 +277,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
 
         if (res.status === 200) {
             showAlert!("Код отправлен", "success");
-            setModalState("recoverCode")
+            setModalState("recoverCode");
         } else {
             showAlert!(res.message);
         }
@@ -460,7 +470,8 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
                                             >
                                                 Политику конфиденциальности
                                             </Link> */}
-                                            Пользовательское соглашение и Политику конфиденциальности
+                                            Пользовательское соглашение и
+                                            Политику конфиденциальности
                                         </p>
                                     }
                                 />
@@ -595,7 +606,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
                             onSubmit={(e) => {
                                 e.preventDefault();
                                 valEmailBool(state.email) &&
-                                    !valPassBool(state.password) &&
+                                    valPassBool(state.password) &&
                                     loginHandler();
                             }}
                             className="formContent"
@@ -674,7 +685,7 @@ const AuthModal: FC<AuthModalProps> = ({ initModalState = "login", initRegState 
                                 />
                             </div>
                             <Button
-                                onClick={() => loginHandler()}
+                                htmlType="submit"
                                 className={styles.resButton}
                                 type="secondary"
                                 disabled={

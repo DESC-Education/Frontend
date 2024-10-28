@@ -41,7 +41,7 @@ export default function Page() {
     const { showAlert } = useContext(AlertContext);
 
     const [isChatLoading, setIsChatLoading] = useState<boolean>(true);
-
+    const [isMessagesLoading, setIsMessagesLoading] = useState<boolean>(false);
     const [isWsLoading, setIsWsLoading] = useState<boolean>(true);
 
     const router = useRouter();
@@ -461,8 +461,10 @@ export default function Page() {
         )
             return;
 
+        // Was invented empirically
         scrollContainerRef.current.scrollTop =
-            scrollContainerRef.current?.scrollHeight -
+            scrollContainerRef.current?.scrollHeight +
+            16 -
             scrollContainerScrollHeight;
     }, [
         currentChat?.messages.length,
@@ -528,21 +530,8 @@ export default function Page() {
                                             <h4 className={styles.userName}>
                                                 {currentChat.companion.name}
                                             </h4>
-                                            {/* <span className={styles.userStatus}>в сети</span> */}
                                         </div>
                                     </Link>
-                                    {/* <div className={styles.chatActions}>
-                                        <img
-                                            src="/icons/searchIcon.svg"
-                                            alt="search"
-                                            className={styles.searchIcon}
-                                        />
-                                        <img
-                                            src="/icons/extraIcon.svg"
-                                            alt="search"
-                                            className={styles.pinIcon}
-                                        />
-                                    </div> */}
                                 </div>
                                 {!!currentChat.task?.title && (
                                     <Link
@@ -564,13 +553,21 @@ export default function Page() {
                                     )
                                 }
                                 ref={scrollContainerRef}
-                                className={styles.chatMessages}
+                                className={classNames(styles.chatMessages, {
+                                    [styles.loading]: isMessagesLoading,
+                                })}
                             >
+                                <div className={styles.messagesLoader}>
+                                    <CustomOval />
+                                </div>
                                 <div className={styles.chatMessagesContainer}>
                                     {currentChat.messages.length > 0 ? (
                                         currentChat.messages.map(
                                             (message, index) => (
                                                 <Message
+                                                    setIsMessagesLoading={
+                                                        setIsMessagesLoading
+                                                    }
                                                     ref={scrollContainerRef}
                                                     isFirst={index === 0}
                                                     message={message}

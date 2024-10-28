@@ -2,8 +2,35 @@
     .navigationButtons {
         margin-bottom: 20px;
 
+        &.notVerified {
+            @media screen and (max-width: 768px) {
+                display: flex;
+                justify-content: center;
+
+                .navigationButton {
+                    margin-right: 0;
+                }
+            }
+        }
+
         .navigationButton {
-            margin-right: 60px;
+            margin-right: 30px;
+
+            @media screen and (max-width: 768px) {
+                margin-right: 20px;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+            gap: 10px;
+
+            .navigationButton {
+                margin-right: 0;
+            }
         }
     }
 
@@ -16,7 +43,7 @@
         // margin: -10px 0;
         color: rgba(var(--red), 1);
     }
-    
+
     .generalSettingsBlock {
         display: flex;
         flex-direction: column;

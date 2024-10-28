@@ -96,6 +96,10 @@
 
 @media screen and (max-width: 768px) {
     .select {
+        &__input {
+            font-size: 15px !important;
+        }
+
         &__single {
             &-value {
                 font-size: 14px !important;
@@ -105,15 +109,20 @@
         &__menu {
             border-bottom-right-radius: 15px !important;
             border-bottom-left-radius: 15px !important;
+
         }
 
         &__control {
-            border-top-left-radius: 15px !important;
-            border-top-right-radius: 15px !important;
+            border-radius: 15px !important;
             min-width: 150px;
             padding: 1px 8px;
             font-size: 14px !important;
             font-weight: 300;
+
+            &--menu-is-open {
+                border-bottom-left-radius: 0 !important;
+                border-bottom-right-radius: 0 !important;
+            }
         }
 
         &__option {

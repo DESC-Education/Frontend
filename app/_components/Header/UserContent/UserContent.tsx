@@ -11,6 +11,8 @@ import { AlertContext } from "@/app/_context/AlertContext";
 import NotificationsModal from "../../modals/NotificationsModal/NotificationsModal";
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { contentSlice } from "@/app/_store/reducers/contentSlice";
+import { ModalContext } from "@/app/_context/ModalContext";
+import NeedToVerifyModal from "../../modals/NeedToVerifyModal/NeedToVerifyModal";
 
 type UserContentProps = {
     profileVerification: any;
@@ -35,6 +37,7 @@ const UserContent: FC<UserContentProps> = ({
     const { unreadChatsCount } = useTypesSelector((state) => state.chatReducer);
 
     const { showAlert } = useContext(AlertContext);
+    const { showModal } = useContext(ModalContext);
 
     const dispatch = useTypesDispatch();
     const { sortNotifications } = contentSlice.actions;
@@ -76,7 +79,16 @@ const UserContent: FC<UserContentProps> = ({
     return (
         <>
             <div className={styles.navigation}>
-                <div className={styles.linkContainer}>
+                <div
+                    onClick={() =>
+                        isMobile &&
+                        profileVerification.status !== "verified" &&
+                        showModal({
+                            content: <NeedToVerifyModal item="бирже" />,
+                        })
+                    }
+                    className={styles.linkContainer}
+                >
                     {profileVerification.status !== "verified" ? (
                         <InfoIcon
                             className={styles.infoIcon}
@@ -84,7 +96,7 @@ const UserContent: FC<UserContentProps> = ({
                                 <div className={styles.tooltipContent}>
                                     Для доступа к бирже необходимо подтвердить
                                     профиль
-                                    <Button type="primary">Инструкция</Button>
+                                    {/* <Button type="primary">Инструкция</Button> */}
                                 </div>
                             }
                             toggleContent={
@@ -128,7 +140,15 @@ const UserContent: FC<UserContentProps> = ({
                         </Link>
                     )}
                 </div>
-                <div className={styles.linkContainer}>
+                <div
+                onClick={() =>
+                    isMobile &&
+                    profileVerification.status !== "verified" &&
+                    showModal({
+                        content: <NeedToVerifyModal item="сообщениям" />,
+                    })
+                }
+                className={styles.linkContainer}>
                     {profileVerification.status !== "verified" ? (
                         <InfoIcon
                             className={styles.infoIcon}
@@ -136,7 +156,7 @@ const UserContent: FC<UserContentProps> = ({
                                 <div className={styles.tooltipContent}>
                                     Для доступа к сообщениям необходимо
                                     подтвердить профиль
-                                    <Button type="primary">Инструкция</Button>
+                                    {/* <Button type="primary">Инструкция</Button> */}
                                 </div>
                             }
                             toggleContent={

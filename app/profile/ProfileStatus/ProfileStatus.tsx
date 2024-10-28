@@ -13,7 +13,7 @@ const ProfileStatus: FC<ProfileStatusProps> = ({ profileVerification }) => {
         return (
             <div className={styles.emptyProfile}>
                 <img src="/images/questions.png" alt="questions" />
-                <p className="text fz24">Ваш профиль не верифицирован!</p>
+                <p className="text fz24 fw500">Ваш профиль не верифицирован!</p>
                 <Link href="/profile/settings">
                     <Button type="secondary">Исправить!</Button>
                 </Link>
@@ -24,7 +24,7 @@ const ProfileStatus: FC<ProfileStatusProps> = ({ profileVerification }) => {
         return (
             <div className={styles.emptyProfile}>
                 <img src="/images/pending.png" alt="questions" />
-                <p className="text fz24">
+                <p className="text fz24 fw500">
                     Ваш профиль находится на верификации!
                 </p>
                 <p className="text fz20">Пожалуйста, подождите немного</p>
@@ -35,7 +35,7 @@ const ProfileStatus: FC<ProfileStatusProps> = ({ profileVerification }) => {
         return (
             <div className={styles.emptyProfile}>
                 <img src="/images/questions.png" alt="questions" />
-                <p className="text fz24">
+                <p className="text fz24 fw500">
                     Заявка не верификацию была отклонена!
                 </p>
                 <p className="text fz20">{profileVerification.comment}</p>
