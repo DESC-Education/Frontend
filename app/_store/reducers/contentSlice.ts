@@ -37,6 +37,11 @@ export const contentSlice = createSlice({
         updateMyTasks(state, action: PayloadAction<ITask[]>) {
             state.myTasks = action.payload;
         },
+        addMyTask(state, action: PayloadAction<ITask>) {
+            if (!state.myTasks) return;
+
+            state.myTasks = [...state.myTasks, action.payload];
+        },
         updateMyArchivedTasks(state, action: PayloadAction<ITask[]>) {
             state.myArchivedTasks = action.payload;
         },
