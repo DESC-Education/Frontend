@@ -35,7 +35,13 @@ $authHost.interceptors.response.use(
     async (err) => {
         const originalConfig = err.config;
 
-        console.log("originalConfig", originalConfig, err.response, err.response.config.url);
+        if (
+            err?.response?.data?.code === "user_not_found" ||
+            err.response.config.url.split("/").at(-1) === "events"
+        ) {
+            LocalStorage.logout();
+            return;
+        }
 
         if (originalConfig.url !== "/api/v1/users/login" && err.response) {
             if (err.response.status === 401) {
@@ -63,7 +69,7 @@ $authHost.interceptors.response.use(
                     return $authHost(originalConfig);
                 } catch (_error) {
                     console.log("ERROR IN TOKEN REFRESH", _error);
-                    
+
                     return Promise.reject(_error);
                 }
             }

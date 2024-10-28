@@ -2082,7 +2082,7 @@ const SettingsPage = () => {
             case "not_verified":
                 return (
                     <Button
-                        className={styles.navigationButton}
+                        className={classNames(styles.navigationButton)}
                         type={
                             activeTab === "verification"
                                 ? "secondary"
@@ -2136,7 +2136,12 @@ const SettingsPage = () => {
     return (
         <AuthRoute>
             <div className={styles.container}>
-                <div className={styles.navigationButtons}>
+                <div
+                    className={classNames(styles.navigationButtons, {
+                        [styles.notVerified]:
+                            profileVerification.status === "not_verified",
+                    })}
+                >
                     {getTabsContent()}
                 </div>
                 <div

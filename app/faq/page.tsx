@@ -32,7 +32,7 @@ const faqs = [
 const Page = () => {
     return (
         <div className={classNames(styles.container, "container")}>
-            <div className={classNames(styles.title, "title")}>
+            <div className={classNames(styles.title, "title fz36")}>
                 Вопросы и ответы
             </div>
             <div className={styles.accordions}>

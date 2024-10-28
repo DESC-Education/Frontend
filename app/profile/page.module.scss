@@ -3,6 +3,12 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
+
+    @media screen and (max-width: 500px) {
+        img {
+            width: 80%;
+        }
+    }
 }
 
 .userContainer {
@@ -75,6 +81,10 @@
     .level {
         border-radius: 50px;
         padding: 20px 30px;
+
+        @media screen and (max-width: 768px) {
+            padding: 10px 12px;
+        }
     }
 }
 
@@ -86,6 +96,14 @@
 
     .descriptionText {
         margin-bottom: 30px;
+    }
+
+    @media screen and (max-width: 768px) {
+        margin-bottom: 20px;
+
+        .descriptionText {
+            margin-bottom: 10px;
+        }
     }
 
     .contact {

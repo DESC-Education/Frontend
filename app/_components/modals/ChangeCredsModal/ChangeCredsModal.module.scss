@@ -109,6 +109,18 @@
             text-align: center;
         }
     }
+}
 
+@media screen and (max-width: 500px) {
+    .container {
+        .typeOfModal {
+            div {
+                padding: 7px 10px;
 
+                &:last-child {
+                    padding: 7px 20px 7px 10px;
+                }
+            }
+        }
+    }
 }

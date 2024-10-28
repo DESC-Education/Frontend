@@ -404,7 +404,7 @@ const Header = () => {
                                 alt="logo"
                             />
                         </Link>
-                        {profileVerification.status === "verified" && (
+                        {isAuth && (
                             <div
                                 className={classNames(styles.notifications, {
                                     [styles.hide]: isOpen,

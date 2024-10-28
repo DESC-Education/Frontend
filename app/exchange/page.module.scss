@@ -87,6 +87,14 @@
 
 .mainContent {
     flex-grow: 1;
+
+    @media screen and (max-width: 768px) {
+        .noTasks {
+            img {
+                max-width: 200px;
+            }
+        }
+    }
 }
 
 .topPanel {

@@ -32,13 +32,22 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
     const { updateNotificationRead } = contentSlice.actions;
 
     const readNotificationHandler = async (id: string) => {
+        console.log("??", id, notifications, notifications?.find((i) => i.id === id), notifications?.find((i) => i.id === id)?.isRead);
+        
+        console.log("1");
         setActive((prev) => (prev && prev === id ? undefined : id));
-
+        
+        console.log("2");
         if (notifications?.find((i) => i.id === id)?.isRead) {
+            console.log("2.5");
             return;
         }
+        console.log("3");
 
         const res = await readNotification(id);
+
+        console.log("ghelo", res);
+        
 
         if (res.status !== 200) {
             showAlert("Произошла ошибка");
@@ -46,14 +55,6 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
             dispatch(updateNotificationRead(id));
         }
     };
-
-    if (!notifications) {
-        return (
-            <div className="centerContent">
-                <CustomOval />
-            </div>
-        );
-    }
 
     return (
         <div className={styles.container}>
@@ -63,7 +64,7 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
                     [styles.activeNotification]: active,
                 })}
             >
-                {notifications.map((notification, index) => (
+                {notifications?.map((notification, index) => (
                     <div
                         onClick={() => readNotificationHandler(notification.id)}
                         key={index}
@@ -111,6 +112,11 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
                         </div>
                     </div>
                 ))}
+                {(!notifications || notifications.length === 0) && (
+                    <div className={styles.empty}>
+                        <p className="text fz20 gray">Тут пусто</p>
+                    </div>
+                )}
             </div>
         </div>
     );

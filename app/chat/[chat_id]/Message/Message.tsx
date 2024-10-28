@@ -7,6 +7,8 @@ import {
     ForwardedRef,
     forwardRef,
     Ref,
+    SetStateAction,
+    // SetStateAction,
     use,
     useEffect,
     useState,
@@ -22,6 +24,7 @@ import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { useParams } from "next/navigation";
 import { chatSlice } from "@/app/_store/reducers/chatSlice";
 import { getChat } from "@/app/_http/API/chatsApi";
+import { Dispatch } from "@reduxjs/toolkit";
 
 type ContainerRef = HTMLDivElement;
 
@@ -30,10 +33,11 @@ type MessageProps = {
     ws: WebSocket | null;
     wsStatus: number;
     isFirst: boolean;
+    setIsMessagesLoading: any;
 };
 
 const Message = forwardRef<ContainerRef, MessageProps>(
-    ({ message, ws, wsStatus, isFirst }, scrollRef) => {
+    ({ message, ws, wsStatus, isFirst, setIsMessagesLoading }, scrollRef) => {
         const { user } = useTypesSelector((state) => state.userReducer);
         const [messageTime, setMessageTime] = useState<string>("");
 
@@ -89,6 +93,8 @@ const Message = forwardRef<ContainerRef, MessageProps>(
 
             if (!inViewFirst || !scrollRef) return;
 
+            setIsMessagesLoading(true);
+
             const asyncFunc = async () => {
                 const res = await getChat({
                     id: chat_id,
@@ -101,6 +107,7 @@ const Message = forwardRef<ContainerRef, MessageProps>(
                     dispatch(prependMessages(res.chat!.messages.toReversed()));
                     dispatch(updateIsChatHasMoreMessages(res.hasMoreMessages!));
                 }
+                setIsMessagesLoading(false);
             };
 
             asyncFunc();

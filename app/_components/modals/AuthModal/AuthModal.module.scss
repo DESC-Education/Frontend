@@ -107,11 +107,24 @@
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .container {
+        .typeOfModal {
+            div {
+                &:first-child,
+                &:last-child {
+                    padding: 8px 20px;
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 500px) {
     .container {
         .typeOfModal {
             div {
-                height: 45px !important;
+                height: 38px !important;
                 padding: 7px 12px !important;
 
                 &.active {

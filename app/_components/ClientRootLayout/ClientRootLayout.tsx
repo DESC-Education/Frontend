@@ -70,7 +70,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
 
     // Updating screenWidth variable
     useEffect(() => {
-        dispatch(updateScreenWidth(window.innerWidth))
+        dispatch(updateScreenWidth(window.innerWidth));
 
         const listener = (e: any) => {
             dispatch(updateScreenWidth(e.target.innerWidth));
@@ -80,6 +80,8 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
 
     // SSE Setup
     useEffect(() => {
+        if (isAuth === false || !LocalStorage.getAccessToken()) return;
+
         const asyncFunc = async () => {
             $authHost
                 .get("/api/v1/notifications/events", {
@@ -320,7 +322,7 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                 });
         };
         asyncFunc();
-    }, []);
+    }, [isAuth]);
 
     // Setting "isMobile" flag
     useEffect(() => {

@@ -327,20 +327,11 @@
         }
     }
 
-    // @media screen and (max-width: 768px) {
-    //      .keywordsBlock {
-
-    //         .keyword {
-    //             &2 {
-    //                 top: 35%;
-    //             }
-    //             &5 {
-    //                 left: 60%;
-    //                 top: 40%;
-    //             }
-    //         }
-    //     }
-    // }
+    @media screen and (max-width: 768px) {
+        .textBlock {
+            padding: 30px 40px;
+        }
+    }
 
     @media screen and (max-width: 610px) {
         .keywordsBlock {
@@ -392,19 +383,41 @@
                     left: 20%;
                     top: 35%;
                 }
+
+                &4 {
+                    right: 10px;
+                    left: auto;
+                }
+
+                &5 {
+                    right: 10px;
+                    left: auto;
+                }
             }
         }
     }
 
-    // .keyword {
-    //     background-color: rgba(var(--white), 1);
-    //     color: rgba(var(--black), 1);
-    //     padding: 10px 20px;
-    //     border-radius: 20px;
-    //     display: inline-block;
-    //     margin: 5px;
-    //     box-shadow: 0 4px 8px rgba(var(--black), 1);
-    // }
+    @media screen and (max-width: 396px) {
+        .keywordsBlock {
+            .keyword {
+                &2 {
+                    top: 130px;
+                }
+
+                &3 {
+                    left: 10px;
+                }
+
+                &4 {
+                    top: 35px;
+                }
+
+                &5 {
+                    top: 85px;
+                }
+            }
+        }
+    }
 }
 
 .howItWorks {
@@ -507,6 +520,8 @@
     }
 
     @media screen and (max-width: 500px) {
+        padding-bottom: 20px;
+
         .step {
             border-radius: 15px;
             padding: 15px 20px;

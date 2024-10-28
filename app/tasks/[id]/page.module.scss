@@ -5,3 +5,15 @@
 .task {
     margin: 15px;
 }
+
+@media screen and (max-width: 600px) {
+    .container {
+        padding: 25px 10px 15px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .container {
+        margin-top: 8px;
+    }
+}
