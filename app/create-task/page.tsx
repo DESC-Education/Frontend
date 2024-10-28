@@ -529,7 +529,7 @@ export default function CreateTaskPage() {
                                         content: (
                                             <DemoTaskCard
                                                 task={{
-                                                    profile: {
+                                                    companyProfile: {
                                                         ...companyProfile,
                                                         id: user.id,
                                                     },

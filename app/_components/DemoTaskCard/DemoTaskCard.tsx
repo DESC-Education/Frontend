@@ -45,19 +45,19 @@ const DemoTaskCard: FC<DemoTaskCardProps> = ({ task, files }) => {
                     <div className={styles.taskContent}>
                         <Link
                             onClick={() => closeModal()}
-                            href={`/profile/company/${task.profile?.id}`}
+                            href={`/profile/company/${task.companyProfile?.id}`}
                             className={styles.companyInfo}
                         >
                             <div className={styles.companyLogo}>
                                 <img
                                     src={
-                                        task.profile?.logoImg
+                                        task.companyProfile?.logoImg
                                             ? process.env
                                                   .NEXT_PUBLIC_SERVER_PATH +
-                                              task.profile?.logoImg
+                                              task.companyProfile?.logoImg
                                             : "/images/avatar.png"
                                     }
-                                    alt={task.profile?.companyName}
+                                    alt={task.companyProfile?.companyName}
                                     width={50}
                                     height={50}
                                 />
@@ -69,7 +69,7 @@ const DemoTaskCard: FC<DemoTaskCardProps> = ({ task, files }) => {
                                     "title fz28 fw500",
                                 )}
                             >
-                                {task.profile?.companyName}
+                                {task.companyProfile?.companyName}
                             </p>
                         </Link>
 
