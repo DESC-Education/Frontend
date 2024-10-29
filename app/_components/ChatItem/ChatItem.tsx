@@ -26,6 +26,7 @@ type ChatUserProps = {
     active: boolean;
     isFavourited: boolean;
     lastMessage?: IMessage;
+    isListType?: boolean;
 };
 
 const ChatUser: React.FC<ChatUserProps> = ({
@@ -36,6 +37,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
     unreadCount,
     isFavourited,
     lastMessage,
+    isListType = false,
 }) => {
     const [lastMessageTime, setLastMessageTime] = useState<string>("");
     const { user } = useTypesSelector((state) => state.userReducer);
@@ -71,6 +73,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
             className={classNames(styles.chatItem, {
                 [styles.active]: active,
                 [styles.unread]: unreadCount > 0,
+                [styles.listType]: isListType,
             })}
         >
             <div className={styles.chatInfo}>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     LineChart,
     Line,
@@ -15,24 +15,25 @@ import {
 } from "recharts";
 import styles from "./page.module.scss";
 import Button from "@/app/_components/ui/Button/Button";
-import { statsRegUsers } from "@/app/_http/API/adminApi";
+import { statsRegUsers, statsTasks } from "@/app/_http/API/adminApi";
 import Input from "@/app/_components/ui/Input/Input";
+import { AlertContext } from "@/app/_context/AlertContext";
 
 
 
-const registrationData = [
-    { date: "01-08", companies: 10, students: 30 },
-    { date: "02-08", companies: 15, students: 40 },
-    { date: "03-08", companies: 5, students: 20 },
-    { date: "04-08", companies: 20, students: 50 },
-];
+// const registrationData = [
+//     { date: "01-08", companies: 10, students: 30 },
+//     { date: "02-08", companies: 15, students: 40 },
+//     { date: "03-08", companies: 5, students: 20 },
+//     { date: "04-08", companies: 20, students: 50 },
+// ];
 
-const taskData = [
-    { date: "01-08", published: 5, taken: 3, completed: 2 },
-    { date: "02-08", published: 10, taken: 7, completed: 6 },
-    { date: "03-08", published: 8, taken: 6, completed: 4 },
-    { date: "04-08", published: 15, taken: 10, completed: 9 },
-];
+// const taskData = [
+//     { date: "01-08", published: 5, taken: 3, completed: 2 },
+//     { date: "02-08", published: 10, taken: 7, completed: 6 },
+//     { date: "03-08", published: 8, taken: 6, completed: 4 },
+//     { date: "04-08", published: 15, taken: 10, completed: 9 },
+// ];
 
 const onlineData = [
     { date: "01-08", online: 50 },
@@ -54,17 +55,35 @@ export default function Page() {
     const [regData, setRegData] = useState<any>([]);
     const [regDateFrom, setRegDateFrom] = useState<string>(`${formattedDate}`);
     const [regDateTo, setRegDateTo] = useState<string>(`${toformateddate}`);
-    
+
+    const [taskData, setTaskData] = useState<any>([]);
+    const [taskDateFrom, setTaskDateFrom] = useState<string>(`${formattedDate}`);
+    const [taskDateTo, setTaskDateTo] = useState<string>(`${toformateddate}`);
+
+    const { showAlert } = useContext(AlertContext);
+
 
     async function getRegData() {
-        console.log(regDateFrom, "datereghere", regDateTo);
+        if (regDateFrom > regDateTo) {
+            showAlert("Начальная дата не может быть позже конца даты");
+            return;
+        }
         const data = await statsRegUsers({ fromDate: regDateFrom, toDate: regDateTo });
         setRegData(data.stats);
-        console.log(data)
+    }
+
+    async function getTaskData() {
+        if (taskDateFrom > taskDateTo) {
+            showAlert("Начальная дата не может быть позже конца даты");
+            return;
+        }
+        const data = await statsTasks({ fromDate: taskDateFrom, toDate: taskDateTo });
+        setTaskData(data.stats);
     }
 
     useEffect(() => {
         getRegData();
+        getTaskData();
     }, []);
 
 
@@ -101,13 +120,13 @@ export default function Page() {
 
                     {/* Задания */}
                     <div className={styles.chartContainer}>
-                        <h3 className="text fz24 fw500">Задания (Опубликованные, Взятые, Выполненные)</h3>
+                        <h3 className="text fz24 fw500">Задания (Созданные, Выполненные, Ожидающие, Не выполненные)</h3>
                         <div className={styles.datePicker}>
                             <label htmlFor="date" className="text fz16">От</label>
-                            <input type="date" className={styles.input} placeholder="Выберите дату" />
+                            <Input type="date" placeholder="Выберите дату" value={taskDateFrom} onChange={(val) => setTaskDateFrom(val)} />
                             <label htmlFor="date" className="text fz16">До</label>
-                            <input type="date" className={styles.input} placeholder="Выберите дату" />
-                            <Button type="primary" className={styles.button}>Показать</Button>
+                            <Input type="date" placeholder="Выберите дату" value={taskDateTo} onChange={(val) => setTaskDateTo(val)} />
+                            <Button type="primary" className={styles.button} onClick={() => getTaskData()}>Показать</Button>
                         </div>
                         <ResponsiveContainer width="100%" height={400}>
                             <BarChart data={taskData}>
@@ -116,9 +135,10 @@ export default function Page() {
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey="published" fill="#8884d8" />
-                                <Bar dataKey="taken" fill="#82ca9d" />
-                                <Bar dataKey="completed" fill="#ffc658" />
+                                <Bar dataKey="created" fill="#8884d8" />
+                                <Bar dataKey="completed" fill="#82ca9d" />
+                                <Bar dataKey="pending" fill="#ffc658" />
+                                <Bar dataKey="failed" fill="#ff0000" />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

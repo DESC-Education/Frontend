@@ -321,7 +321,8 @@ export type IUsersRequest = {
     ],
     firstName: string,
     lastName: string,
-    companyName: string
+    companyName: string,
+    profileVerification: VerificationStatuses
 }
 
 export type IStudentInfo = {

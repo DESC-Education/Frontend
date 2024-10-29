@@ -68,3 +68,29 @@ export const AuthRoute: FC<RouteProps> = ({ children }) => {
 
     return children;
 };
+
+
+export const AdminRoute: FC<RouteProps> = ({ children }) => {
+    const { isAuth, user } = useTypesSelector((state) => state.userReducer);
+    const { isLoading } = useTypesSelector((state) => state.contentReducer);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (typeof window !== "undefined" && !isLoading) {
+            if (!isAuth || user.role !== "admin") {
+                router.replace("/");
+                return;
+            }
+        }
+    }, [isLoading, isAuth]);
+
+    if (isLoading) {
+        return (
+            <div className="centerContent">
+                <CustomOval />
+            </div>
+        );
+    }
+
+    return children;
+};

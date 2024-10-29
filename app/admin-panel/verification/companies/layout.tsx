@@ -46,7 +46,7 @@ export default function RootLayout({
 
     return (
         <div className="container">
-            <div className='selectLayout'>
+            <div className={styles.selectLayout}>
                 <SideBar>
                     <div className={styles.search}>
                         <Input

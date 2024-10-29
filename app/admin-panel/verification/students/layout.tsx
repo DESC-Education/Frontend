@@ -45,7 +45,7 @@ export default function RootLayout({
     if (!studentsVerifications) return (<div className={styles.loading}><Oval /></div>);
     return (
         <div className="container">
-            <div className='selectLayout'>
+            <div className={styles.selectLayout}>
                 <SideBar>
                     <div className={styles.search}>
                         <Input

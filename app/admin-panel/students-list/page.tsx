@@ -8,20 +8,23 @@ import { useEffect, useState } from "react";
 import { IUsersRequest } from "@/app/_types";
 import { getUsers } from "@/app/_http/API/adminApi";
 import { Oval } from "react-loader-spinner";
+import Input from "@/app/_components/ui/Input/Input";
+import { get } from "http";
 
 
 export default function StudentsListPage() {
 
     const [users, setUsers] = useState<IUsersRequest[] | null>(null);
+    const [search, setSearch] = useState<string>("");
+
+    const getUserFunc = async (q?: string) => {
+        const data = await getUsers("student", q || "");
+        if (!data.users) return;
+        setUsers(data.users);
+    }
 
     useEffect(() => {
-        const asyncFunc = async () => {
-            const data = await getUsers("student", "");
-            if (!data.users) return;
-            setUsers(data.users);
-            console.log(data)
-        };
-        asyncFunc();
+        getUserFunc();
     }, []);
 
 
@@ -30,7 +33,12 @@ export default function StudentsListPage() {
     return (
         <div className="container">
             <div className={styles.search}>
-                <input type="text" placeholder="Поиск" className="text" />
+                <Input 
+                type="text" 
+                placeholder="Поиск" 
+                onChange={(e) => (setSearch(e), getUserFunc(e))}
+                value={search}
+                />
             </div>
             <div className={styles.studentsList}>
                 {users.map((user) => (
@@ -44,7 +52,7 @@ export default function StudentsListPage() {
                                 {/* <p className={classNames("text gray fz16", styles.education)}>{user.university.name} {student.faculty.name} {student.speciality.name}</p> */}
                             </div>
                             <div className={styles.status}>
-                                {user.isVerified ? <p className={classNames("text green fz16 fw500", styles.verified)}>Проверен</p> : <p className={classNames("text red fz16 fw500", styles.notVerified)}>Не проверен</p>}
+                                {user.profileVerification === "verified" ? <p className={classNames("text green fz16 fw500", styles.verified)}>Проверен</p> : <p className={classNames("text red fz16 fw500", styles.notVerified)}>Не проверен</p>}
 
                             </div>
                         </div>
