@@ -1,8 +1,20 @@
+"use client";
+
 import classNames from "classnames";
 import styles from "./Footer.module.scss";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 
 const Footer = () => {
+    const pathname = usePathname();
+
+    const { isMobileDevice } = useTypesSelector(
+        (state) => state.contentReducer,
+    );
+
+    if (pathname.split("/").includes("chat") && isMobileDevice) return null;
+
     return (
         <div className={classNames(styles.container)}>
             <div className={classNames(styles.wrapper, "container")}>
