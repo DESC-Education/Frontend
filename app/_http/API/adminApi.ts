@@ -1,7 +1,7 @@
 import axios from "axios";
 import { $authHost } from "..";
 import { dt } from "framer-motion/client";
-import { ICompanyProfile, IUsersRequest, IVerificationResult } from "@/app/_types";
+import { IChat, ICompanyProfile, ISolution, IUsersRequest, IVerificationResult } from "@/app/_types";
 
 
 export const getRequests = async (
@@ -137,6 +137,46 @@ export const getUser = async (companyId: string) => {
 }
 
 
+export const getUserChats = async (userId: string) => {
+    try {
+        const { data } = await $authHost.get<any>(`/api/v1/admins/user/${userId}/chats`);
+        
+        return {
+            status: 200,
+            chats: data,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+}
+
+
+export const getStudentSolutions = async (userId: string) => {
+    try {
+        const { data } = await $authHost.get<any>(`/api/v1/admins/student/${userId}/solutions`);
+        return {
+            status: 200,
+            solutions: data,
+        }
+    } catch (e) {
+        return {
+            status: 500,
+            message: "Ошибка сервера",
+        };
+    }
+}
+
+
 export const statsRegUsers = async (dto: {
     fromDate: string,
     toDate: string,
@@ -146,6 +186,38 @@ export const statsRegUsers = async (dto: {
             fromDate: string,
             toDate: string,
         }>('/api/v1/admins/stats/users', dto)
+
+        return {
+            status: 200,
+            stats: data,
+        };
+        
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+}
+
+
+export const statsTasks = async (dto: {
+    fromDate: string,
+    toDate: string,
+}) => {
+    try {
+        const { data } = await $authHost.post<{
+            fromDate: string,
+            toDate: string,
+        }>('/api/v1/admins/stats/tasks', dto)
 
         return {
             status: 200,

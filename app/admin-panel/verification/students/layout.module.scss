@@ -33,6 +33,17 @@
     border-radius: 40px;
 }
 
+.selectLayout {
+    display: grid;
+    grid-template-columns: 1.5fr 4fr;
+    margin: 40px 0;
+    height: 800px;
+    background-color: rgba(var(--white), 1);
+    border: 2px solid rgba(var(--gray2), 1);
+    border-radius: 40px;
+    overflow-y: hidden;
+}
+
 
 .studentsList {
     display: flex;

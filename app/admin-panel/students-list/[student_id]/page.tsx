@@ -11,9 +11,12 @@ import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { useDispatch } from "react-redux";
 import SelectSearch from "react-select-search";
 import { useParams } from "next/navigation";
-import { IStudentInfo, IStudentProfile } from "@/app/_types";
-import { getUser } from "@/app/_http/API/adminApi";
+import { IChat, IStudentInfo, IStudentProfile, ITask } from "@/app/_types";
+import { getStudentSolutions, getUser, getUserChats } from "@/app/_http/API/adminApi";
 import { Oval } from "react-loader-spinner";
+import ChatUser from "@/app/_components/ChatItem/ChatItem";
+import { get } from "http";
+import TaskCard from "@/app/_components/TaskCard/TaskCard";
 
 
 type StudentInfo = "general" | "chats" | "tasks"
@@ -89,7 +92,7 @@ const StudentPage = () => {
     };
 
 
-    const chats = [
+    const chats1 = [
         {
             id: "1",
             companion: {
@@ -196,7 +199,7 @@ const StudentPage = () => {
         }
     ];
 
-    const tasks = [
+    const tasks1 = [
         {
             id: "1",
             companyId: "1",
@@ -243,17 +246,40 @@ const StudentPage = () => {
 
     const [student, setStudent] = useState<IStudentInfo | null>(null);
 
-    useEffect(() => {
-        const asyncFunc = async () => {
-            if (typeof student_id !== "string") return;
+    const [chats, setChats] = useState<IChat[] | null>(null);
 
-            const data = await getUser(student_id);
-            setStudent(data);
-            // console.log(data);
-        };
-        asyncFunc();
+    const [tasks, setTasks] = useState<ITask[] | null>(null);
+
+    const getUserFunc = async () => {
+        if (typeof student_id !== "string") return;
+
+        const data = await getUser(student_id);
+        setStudent(data);
+    }
+
+    const getChatsFunc = async () => {
+        if (typeof student_id !== "string") return;
+
+        const data = await getUserChats(student_id);
+        setChats(data.chats.results);
+    }
+
+    const getTasksFunc = async () => {
+        if (typeof student_id !== "string") return;
+
+        const data = await getStudentSolutions(student_id);
+        setTasks(data.solutions.results);
+        console.log(data.solutions.results);
+    }
+
+    useEffect(() => {
+        getUserFunc();
+        getChatsFunc();
+        getTasksFunc();
     }, []);
-    if (!student) return (<div className={styles.loading}><Oval /></div>);
+
+
+    if (!student || !chats || !tasks) return (<div className={styles.loading}><Oval /></div>);
     const getStudentContent = (activeTab: StudentInfo,): {
         content: ReactNode;
         ref: RefObject<HTMLDivElement>
@@ -352,12 +378,9 @@ const StudentPage = () => {
                                 </div>
                             </div>
                             <div className={styles.chatsList}>
-                                {student.notifications.map((chat, index) => (
-                                    <Link key={index} className={styles.chatItem} href="#">
-                                        <div className={styles.chatHeader}>
-                                            {/* <p className="text fw500">{chat.companion.email}</p> */}
-                                            <p className="text fz20">Время: {chat.createdAt}</p>
-                                        </div>
+                                {chats.map((chat, index) => (
+                                    <Link key={index} href={`/chat/${chat.id}`}>
+                                        <ChatUser id={chat.id} name={chat.companion.name} avatar={chat.companion.avatar} lastMessage={chat.lastMessage} unreadCount={chat.unreadCount} active={false} isFavourited={chat.isFavorite} isListType={true}/>
                                     </Link>
                                 ))}
                             </div>
@@ -380,12 +403,13 @@ const StudentPage = () => {
                             </div>
                             <div className={styles.tasksList}>
                                 {tasks.map((task, index) => (
-                                    <Link key={index} className={styles.taskItem} href="#">
-                                        <div className={styles.taskHeader}>
-                                            <p className="text fw500">{task.name}</p>
-                                            <p className="text fz20">Время: {task.createdat}</p>
-                                        </div>
-                                    </Link>
+                                    <TaskCard key={index} task={task} />
+                                    // <Link key={index} className={styles.taskItem} href="#">
+                                    //     <div className={styles.taskHeader}>
+                                    //         <p className="text fw500">{task.name}</p>
+                                    //         <p className="text fz20">Время: {task.createdat}</p>
+                                    //     </div>
+                                    // </Link>
                                 ))}
                             </div>
 

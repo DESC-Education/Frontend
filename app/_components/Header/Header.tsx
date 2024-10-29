@@ -62,11 +62,6 @@ const Header = () => {
             value: "companies",
             href: "/admin-panel/verification/companies",
         },
-        {
-            label: "Заданий",
-            value: "tasks",
-            href: "/admin-panel/verification/tasks",
-        },
     ];
 
     const optionsForInstitutesModerator = [
@@ -328,15 +323,19 @@ const Header = () => {
                                     placeholder="Верификация"
                                 />
                             </div>
-                            <Link
+                            <p
                                 className={classNames(
                                     styles.link,
                                     "text fz24 fw500",
                                 )}
-                                href="/profile"
+                                onClick={() => {
+                                    dispatch(logoutContent());
+                                    dispatch(logoutUser());
+                                    showAlert("Вы вышли из аккаунта!", "success");
+                                }}
                             >
                                 Выйти
-                            </Link>
+                            </p>
                         </div>
                     ),
                     ref: createRef(),
