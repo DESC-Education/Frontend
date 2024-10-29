@@ -649,115 +649,80 @@
     "category": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 
+
 [
     {
         "title": "Сервер для простых CRUD-ов",
         "description": "Создать сервер для простых CRUD-ов для следующей задачи:",
         {
-                    "id": "db6f4f5f-e17a-422e-bb20-6e82f0913f3e",
-                    "name": "Языки программирования",
-                    "filters": [
-                        {
-                            "id": "ed1a400d-dacd-465a-9ddb-be985ce9677a",
-                            "name": "Flutter (Dart)"
-                        },
-                        {
-                            "id": "bece43c4-0e3a-4f25-98c3-49bb74bcaba2",
-                            "name": "PHP"
-                        },
-                        {
-                            "id": "a409fc0a-688d-42e5-a016-a840e9b292d9",
-                            "name": "Rust"
-                        },
-                        {
-                            "id": "8a10f48f-f664-41ae-b171-04f5013fff90",
-                            "name": "Ruby"
-                        },
-                        {
-                            "id": "7f61e7dd-f836-41a5-af11-7492699ed155",
-                            "name": "Swift"
-                        },
-                        {
-                            "id": "7bbd3a5e-1294-4fd4-9ed5-7ea470d3986f",
-                            "name": "Python"
-                        },
-                        {
-                            "id": "3b2afe8d-5c08-4304-b6af-180e6dfce956",
-                            "name": "Kotlin"
-                        },
-                        {
-                            "id": "3a0caf11-8cea-48fb-aa8f-47fac0f86cbc",
-                            "name": "Java"
-                        },
-                        {
-                            "id": "35126fad-8a83-4a59-981a-d7906b31866a",
-                            "name": "JavaScript"
-                        },
-                        {
-                            "id": "30f48f76-1657-4ea1-9ca5-a2efe15867e5",
-                            "name": "Go"
-                        }
-                    ]
-                },
+            "id": "db6f4f5f-e17a-422e-bb20-6e82f0913f3e",
+            "name": "Языки программирования",
+            "filters": [
                 {
-                    "id": "db38f4f3-7647-4923-b6f4-87b7933187dc",
-                    "name": "Фреймворки",
-                    "filters": [
-                        {
-                            "id": "91d6dcec-9ece-4516-af4d-089618482c49",
-                            "name": "Flutter"
-                        },
-                        {
-                            "id": "80f0bc72-bcf1-4659-a3e4-e9c868f94e73",
-                            "name": "Django"
-                        },
-                        {
-                            "id": "64663ef3-7ed9-4d2d-a435-44fa61f42aed",
-                            "name": "Laravel"
-                        },
-                        {
-                            "id": "4ce9259d-830c-4e80-a33d-b550b69735b9",
-                            "name": "React Native"
-                        },
-                        {
-                            "id": "47fd827f-c71c-403b-8fb5-2c6b2d3a8390",
-                            "name": "Express.js"
-                        },
-                        {
-                            "id": "1f15e1fa-e9fd-4913-8368-1549691eab87",
-                            "name": "Rails"
-                        },
-                        {
-                            "id": "1b91abb7-bfa9-44cf-9dcc-84d4992b4fea",
-                            "name": "Spring"
-                        },
-                        {
-                            "id": "18777bfa-3719-407d-904e-c93238ff488c",
-                            "name": "Cordova"
-                        },
-                        {
-                            "id": "075f4128-b1f7-4d7b-a634-1e212dfd1376",
-                            "name": "Xamarin"
-                        }
-                    ]
-                },
-                {
-                    "id": "13ab5b9b-b94c-4fce-aeb7-7b8752f1d4dd",
-                    "name": "Уровни сложности",
-                    "filters": [
-                        {
-                            "id": "ef732be4-67d6-42ec-a665-fba190fdee63",
-                            "name": "Cредний"
-                        },
-                        {
-                            "id": "32d935b9-a8b5-485b-b5bb-33041164794d",
-                            "name": "Начинающий"
-                        },
-                        {
-                            "id": "2da12efa-ce4f-4d7e-bf14-510d524b3a64",
-                            "name": "Продвинутый"
-                        }
-                    ]
+                    "id": "7bbd3a5e-1294-4fd4-9ed5-7ea470d3986f",
+                    "name": "Python"
                 }
+            ]
+        },
+        {
+            "id": "db38f4f3-7647-4923-b6f4-87b7933187dc",
+            "name": "Фреймворки",
+            "filters": [
+                {
+                    "id": "91d6dcec-9ece-4516-af4d-089618482c49",
+                    "name": "Flutter"
+                },
+                {
+                    "id": "80f0bc72-bcf1-4659-a3e4-e9c868f94e73",
+                    "name": "Django"
+                },
+                {
+                    "id": "64663ef3-7ed9-4d2d-a435-44fa61f42aed",
+                    "name": "Laravel"
+                },
+                {
+                    "id": "4ce9259d-830c-4e80-a33d-b550b69735b9",
+                    "name": "React Native"
+                },
+                {
+                    "id": "47fd827f-c71c-403b-8fb5-2c6b2d3a8390",
+                    "name": "Express.js"
+                },
+                {
+                    "id": "1f15e1fa-e9fd-4913-8368-1549691eab87",
+                    "name": "Rails"
+                },
+                {
+                    "id": "1b91abb7-bfa9-44cf-9dcc-84d4992b4fea",
+                    "name": "Spring"
+                },
+                {
+                    "id": "18777bfa-3719-407d-904e-c93238ff488c",
+                    "name": "Cordova"
+                },
+                {
+                    "id": "075f4128-b1f7-4d7b-a634-1e212dfd1376",
+                    "name": "Xamarin"
+                }
+            ]
+        },
+        {
+            "id": "13ab5b9b-b94c-4fce-aeb7-7b8752f1d4dd",
+            "name": "Уровни сложности",
+            "filters": [
+                {
+                    "id": "ef732be4-67d6-42ec-a665-fba190fdee63",
+                    "name": "Cредний"
+                },
+                {
+                    "id": "32d935b9-a8b5-485b-b5bb-33041164794d",
+                    "name": "Начинающий"
+                },
+                {
+                    "id": "2da12efa-ce4f-4d7e-bf14-510d524b3a64",
+                    "name": "Продвинутый"
+                }
+            ]
+        }
     }
 ]
