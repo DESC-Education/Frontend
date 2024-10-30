@@ -395,6 +395,18 @@
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .messageInput {
+        margin: 0 20px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .messageInput {
+        margin: 0 10px;
+    }
+}
+
 @media screen and (max-width: 375px) {
     .messageInput {
         gap: 3px;

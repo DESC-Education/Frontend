@@ -8,12 +8,16 @@
     margin: 0 !important;
     padding: 15px 0 !important;
     box-shadow: 0px 2px 7px rgba(var(--gray2), 1);
+    height: 100px;
+    display: flex;
+    align-items: center;
 
     .logo {
         width: 125px;
     }
 
     .container {
+        width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -154,7 +158,14 @@
 
 @media screen and (max-width: 1600px) {
     .header {
+        display: flex;
+        align-items: center;
+        height: 70px;
         padding: 12px 0 !important;
+
+        .container {
+            width: 100%;
+        }
 
         .icons {
             .notification {
@@ -178,6 +189,7 @@
     .header {
         transition: transform 0.3s ease;
         z-index: 20;
+        padding: 0 !important;
         // padding: 3px 0 !important;
 
         .container {
