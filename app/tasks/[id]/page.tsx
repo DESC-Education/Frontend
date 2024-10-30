@@ -23,7 +23,7 @@ const TasksPage = () => {
         );
 
     return (
-        <div className={classNames(styles.container, "container")}>
+        <div className={classNames("container", styles.container)}>
             <BackButton />
             <div className={styles.content}>
                 <div className={styles.currentTask}>
