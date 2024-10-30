@@ -22,6 +22,12 @@
 }
 
 @media screen and (max-height: 1080px) {
+    .chatContainer {
+        padding-top: 30px;
+    }
+}
+
+@media screen and (max-height: 1080px) {
     .selectLayout {
         height: 650px;
     }
