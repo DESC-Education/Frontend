@@ -140,10 +140,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     // title: string;
                                     // message: string;
                                     // payload: string;
-                                    // console.log(
-                                    //     "new notification with data",
-                                    //     result.data,
-                                    // );
                                     dispatch(
                                         addNotification({
                                             ...result.data,
@@ -176,11 +172,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "evaluation": {
-                                            // console.log(
-                                            //     "evaluation",
-                                            //     result.data,
-                                            // );
-
                                             dispatch(
                                                 updateCurrentTaskSolution(
                                                     result.data.payload,
@@ -189,11 +180,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "solution": {
-                                            // console.log(
-                                            //     "solution",
-                                            //     result.data,
-                                            // );
-
                                             dispatch(
                                                 addCurrentTaskSolution(
                                                     result.data.payload,
@@ -202,8 +188,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "review": {
-                                            // console.log("review", result.data);
-
                                             dispatch(
                                                 updateCurrentTaskSolution(
                                                     result.data.payload,
@@ -220,11 +204,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                         case "level": {
-                                            // console.log(
-                                            //     "level",
-                                            //     result.data.payload,
-                                            // );
-
                                             dispatch(
                                                 updateStudentProfileLevel(
                                                     result.data.payload,
@@ -233,7 +212,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             break;
                                         }
                                     }
-                                    // console.log("notification", result.data);
                                     break;
                                 case "newMessage":
                                     // payload:
@@ -254,11 +232,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                             myMessage: false,
                                         }),
                                     );
-                                    console.log("newMessage updateChatUnread", {
-                                        chatId: result.data.chat,
-                                        count: result.data.unreadCount,
-                                    });
-
                                     dispatch(
                                         updateChatUnread({
                                             chatId: result.data.chat,
@@ -271,7 +244,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                                 result.data.unreadChatsCount,
                                         }),
                                     );
-                                    // console.log("newMessage", result.data);
                                     break;
                                 case "newChat":
                                     // payload: IChat
@@ -281,7 +253,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                         }),
                                     );
                                     dispatch(tryToAddChat(result.data));
-                                    // console.log("newChat", result.data);
                                     break;
                                 case "viewed":
                                     // payload:
@@ -291,10 +262,6 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     // message: "sdvdfvdf"
                                     // unreadChatsCount: 1
                                     // unreadCount: 1
-                                    console.log("SSE viewed updateChatUnread", {
-                                        chatId: result.data.chat,
-                                        count: result.data.unreadCount,
-                                    });
                                     dispatch(
                                         updateChatUnread({
                                             chatId: result.data.chat,

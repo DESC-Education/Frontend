@@ -84,8 +84,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
             companionId: task.user,
             taskId: task.id,
         });
-        console.log("createChat res", res);
-
         if (res.status === 200) {
             dispatch(updateCurrentChat({ ...res.chat!, messages: [] }));
             router.push(`/chat/${res.chat!.id}`);
@@ -109,9 +107,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
             ? task.solutions.filter((i) => i.status === "pending").length > 0
             : false;
     }, [task.solutions]);
-
-    console.log(task);
-    
 
     return (
         <div

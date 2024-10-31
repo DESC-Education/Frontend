@@ -19,8 +19,6 @@ const DownloadItem: FC<DownloadItemProps> = ({
 }) => {
     const [isHover, setIsHover] = useState(false);
 
-    console.log(name, url, extension);
-
     if (showcase) {
         return <div>
             <div

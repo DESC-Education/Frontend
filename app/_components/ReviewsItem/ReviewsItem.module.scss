@@ -50,8 +50,29 @@
     }
 }
 
+@media (max-width: 768px) {
+    .container {
+        border-radius: 15px;
+
+        .reviewContent {
+            gap: 10px;
+
+            .reviewProfile {
+                gap: 10px;
+
+                img {
+                    width: 20px;
+                }
+            }
+        }
+
+    }
+}
+
 @media (max-width: 425px) {
     .container {
+        padding: 10px;
+
         .reviewContent {
             .reviewProfile {
                 flex-wrap: wrap;

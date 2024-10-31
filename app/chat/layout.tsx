@@ -29,7 +29,6 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const { screenWidth } = useTypesSelector((state) => state.contentReducer);
-    console.log(screenWidth);
    
     const { chats, currentChat } = useTypesSelector(
         (state) => state.chatReducer,

@@ -12,6 +12,7 @@ import Image from "next/image";
 import { getDateOrTime } from "@/app/_utils/time";
 import { readNotification } from "@/app/_http/API/notificationApi";
 import { AlertContext } from "@/app/_context/AlertContext";
+import { usePathname, useRouter } from "next/navigation";
 
 type NotificationsModalProps = {
     active: string | undefined;
@@ -25,6 +26,8 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
     closeModal,
 }) => {
     const { notifications } = useTypesSelector((state) => state.contentReducer);
+    const pathname = usePathname();
+    const router = useRouter();
 
     const { showAlert } = useContext(AlertContext);
 
@@ -32,22 +35,13 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
     const { updateNotificationRead } = contentSlice.actions;
 
     const readNotificationHandler = async (id: string) => {
-        console.log("??", id, notifications, notifications?.find((i) => i.id === id), notifications?.find((i) => i.id === id)?.isRead);
-        
-        console.log("1");
         setActive((prev) => (prev && prev === id ? undefined : id));
-        
-        console.log("2");
+
         if (notifications?.find((i) => i.id === id)?.isRead) {
-            console.log("2.5");
             return;
         }
-        console.log("3");
 
         const res = await readNotification(id);
-
-        console.log("ghelo", res);
-        
 
         if (res.status !== 200) {
             showAlert("Произошла ошибка");
@@ -97,9 +91,15 @@ const NotificationsModal: FC<NotificationsModalProps> = ({
                             {!!notification.payload &&
                                 notification.type !== "level" && (
                                     <Link
-                                        onClick={() =>
-                                            closeModal && closeModal()
-                                        }
+                                        onClick={() => {
+                                            if (
+                                                pathname ===
+                                                `/tasks/${notification.payload.task}/solutions/${notification.payload.id}`
+                                            ) {
+                                                location.reload();
+                                            }
+                                            closeModal && closeModal();
+                                        }}
                                         href={`/tasks/${notification.payload.task}/solutions/${notification.payload.id}`}
                                         className={classNames(
                                             "text fz20 blue pointer under",

@@ -68,18 +68,6 @@ const Timer: FC<TimerProps> = ({
         }
     }, [state, time]);
 
-    // useEffect(() => {
-    //     console.log("time is" ,time);
-        
-    //     if (time !== 0) {
-    //         restart(new Date(Date.now() + 1000 * time));
-    //         setTimeIsUp(false);
-    //         pause();
-    //         onRestart && onRestart(totalSeconds);
-    //         onPause && onPause(totalSeconds);
-    //     }
-    // }, [time]);
-
     return (
         <div className={classNames(styles.container, className)}>
             <p

@@ -276,17 +276,12 @@
                 .notificationModal {
                     width: 100%;
                     border-radius: 0;
+                    top: 70px;
 
                     &.active {
                         padding: 15px 10px;
-                        height: calc(100vh - 85px);
+                        height: calc(100vh - 70px);
                     }
-                }
-            }
-
-            @media screen and (max-width: 480px) {
-                .notificationModal {
-                    top: 63px;
                 }
             }
         }
