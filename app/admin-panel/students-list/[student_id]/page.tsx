@@ -26,220 +26,6 @@ const StudentPage = () => {
     const [activeTab, setActiveTab] = useState<StudentInfo>("general");
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
-    const user = {
-        id: "1",
-        email: "test@gmail.com",
-        isVerified: true,
-        isOnline: false,
-        isBanned: false,
-        role: "student",
-    }
-
-    const student1 = {
-        id: "1",
-        isVerified: true,
-        admissionYear: "2023",
-        description: "Понятие подозрительный – содержащий 1) банворды 2) ссылки (не на фигму, гитхаб, гитлаб, стаковерфлов, и пр.) 3) подумать нал файлами картинками сисимасиси",
-        firstName: "Иван",
-        lastName: "Иванов",
-        logoImg: "/images/userImage10.png",
-        phone: "",
-        emailVisibility: true,
-        phoneVisibility: true,
-        timezone: 3,
-        university: {
-            id: "1",
-            name: "СФУ",
-            city: {
-                id: "1",
-                name: "город X",
-                region: "Регион X",
-            }
-        },
-        speciality: {
-            id: "1",
-            name: "Специальность",
-            type: "speciality",
-            code: "12.34.56",
-        },
-        faculty: {
-            id: "1",
-            name: "Системы искуственного интеллекта",
-            university: "Университет имени X",
-        },
-        formOfEducation: "bachelor",
-        educationProgram: "bachelor",
-        telegramLink: "https://t.me/joinchat/asdfasdf",
-        vkLink: "https://vk.com/join/asdfasdf",
-        city: {
-            id: "1",
-            name: "город X",
-            region: "Регион X",
-        },
-        skills: [
-            {
-                id: "1",
-                name: "Навык X",
-                percent: 50,
-            },
-            {
-                id: "2",
-                name: "Навык Y",
-                percent: 50,
-            },
-        ],
-
-    };
-
-
-    const chats1 = [
-        {
-            id: "1",
-            companion: {
-                id: "1",
-                email: "test@gmail.com",
-                isVerified: true,
-                isOnline: true,
-                isBanned: false,
-                role: "student",
-            },
-            createdAt: "13.12.2023",
-            taskId: "1",
-            isSupport: true,
-            isSuspicious: false,
-            messages: [
-                {
-                    id: "1",
-                    chatId: "1",
-                    text: "Привет, как дела?",
-                    ticketId: "1",
-                    userId: "1",
-                    isRead: true,
-                    createdat: "12.12.2023",
-                    isVisible: true,
-                    changedId: "1",
-                },
-                {
-                    id: "2",
-                    chatId: "1",
-                    text: "Привет, как дела?",
-                    ticketId: "1",
-                    userId: "1",
-                    isRead: true,
-                    createdat: "2023-05-01T00:00:00.000Z",
-                    isVisible: true,
-                    changedId: "1",
-                },
-            ],
-        },
-        {
-            id: "2",
-            companion: {
-                id: "1",
-                email: "test@gmail.com",
-                isVerified: true,
-                isOnline: true,
-                isBanned: false,
-                role: "student",
-            },
-            createdAt: "13.12.2023",
-            taskId: "1",
-            isSupport: true,
-            isSuspicious: false,
-            messages: [],
-
-        },
-        {
-            id: "3",
-            companion: {
-                id: "1",
-                email: "test@gmail.com",
-                isVerified: true,
-                isOnline: true,
-                isBanned: false,
-                role: "student",
-            },
-            createdAt: "13.12.2023",
-            taskId: "1",
-            isSupport: true,
-            isSuspicious: false,
-            messages: [],
-        },
-        {
-            id: "4",
-            companion: {
-                id: "1",
-                email: "test@gmail.com",
-                isVerified: true,
-                isOnline: true,
-                isBanned: false,
-                role: "student",
-            },
-            createdAt: "13.12.2023",
-            taskId: "1",
-            isSupport: true,
-            isSuspicious: false,
-            messages: [],
-        },
-        {
-            id: "5",
-            companion: {
-                id: "1",
-                email: "test@gmail.com",
-                isVerified: true,
-                isOnline: true,
-                isBanned: false,
-                role: "student",
-            },
-            taskId: "1",
-            createdAt: "13.12.2023",
-            isSupport: true,
-            isSuspicious: false,
-            messages: [],
-        }
-    ];
-
-    const tasks1 = [
-        {
-            id: "1",
-            companyId: "1",
-            name: "Задание1",
-            description: "Описание задания",
-            deadline: "10.03.2024",
-            createdat: "13.12.2023",
-            catogoryId: "1",
-            isVerified: true,
-            isSuspicious: false,
-            isVisible: true,
-            files: [],
-        },
-        {
-            id: "2",
-            companyId: "1",
-            name: "Задание2",
-            description: "Описание задания",
-            deadline: "10.03.2024",
-            createdat: "13.12.2023",
-            catogoryId: "1",
-            isVerified: true,
-            isSuspicious: false,
-            isVisible: true,
-            files: [],
-        },
-        {
-            id: "3",
-            companyId: "1",
-            name: "Задание3",
-            description: "Описание задания",
-            deadline: "10.03.2024",
-            createdat: "13.12.2023",
-            catogoryId: "1",
-            isVerified: true,
-            isSuspicious: false,
-            isVisible: true,
-            files: [],
-        },
-    ];
 
 
     const { student_id } = useParams();
@@ -327,7 +113,7 @@ const StudentPage = () => {
                                 <p className="title">Контакты:</p>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Почта:</p>
-                                    <p className="text fz20">{user.email}</p>
+                                    <p className="text fz20">{student.email}</p>
                                 </div>
                                 <div className={styles.textBlock}>
                                     <p className="text fw500">Телеграм:</p>
@@ -379,7 +165,7 @@ const StudentPage = () => {
                             </div>
                             <div className={styles.chatsList}>
                                 {chats.map((chat, index) => (
-                                    <Link key={index} href={`/chat/${chat.id}`}>
+                                    <Link key={index} href={`/admin-panel/students-list/${student_id}/${chat.id}`}>
                                         <ChatUser id={chat.id} name={chat.companion.name} avatar={chat.companion.avatar} lastMessage={chat.lastMessage} unreadCount={chat.unreadCount} active={false} isFavourited={chat.isFavorite} isListType={true}/>
                                     </Link>
                                 ))}
@@ -403,7 +189,7 @@ const StudentPage = () => {
                             </div>
                             <div className={styles.tasksList}>
                                 {tasks.map((task, index) => (
-                                    <TaskCard key={index} task={task} />
+                                    <TaskCard key={index} task={task} isAdminWatch={true} isSolutionsPage isTaskPage/>
                                     // <Link key={index} className={styles.taskItem} href="#">
                                     //     <div className={styles.taskHeader}>
                                     //         <p className="text fw500">{task.name}</p>

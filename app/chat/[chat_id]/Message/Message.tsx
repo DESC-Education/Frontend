@@ -25,19 +25,21 @@ import { useParams } from "next/navigation";
 import { chatSlice } from "@/app/_store/reducers/chatSlice";
 import { getChat } from "@/app/_http/API/chatsApi";
 import { Dispatch } from "@reduxjs/toolkit";
+import { getUserChat } from "@/app/_http/API/adminApi";
 
 type ContainerRef = HTMLDivElement;
 
 type MessageProps = {
     message: IMessage;
-    ws: WebSocket | null;
-    wsStatus: number;
+    ws?: WebSocket | null;
+    wsStatus?: number;
     isFirst: boolean;
     setIsMessagesLoading: any;
+    isAdminWatch?: string;
 };
 
 const Message = forwardRef<ContainerRef, MessageProps>(
-    ({ message, ws, wsStatus, isFirst, setIsMessagesLoading }, scrollRef) => {
+    ({ message, ws, wsStatus, isFirst, setIsMessagesLoading, isAdminWatch }, scrollRef) => {
         const { user } = useTypesSelector((state) => state.userReducer);
         const [messageTime, setMessageTime] = useState<string>("");
 
@@ -79,6 +81,7 @@ const Message = forwardRef<ContainerRef, MessageProps>(
         }, [inView, message.isRead, wsStatus]);
 
         useEffect(() => {
+            console.log(isFirst, isChatHasMoreMessages, isScrolled)
             if (!isFirst || !isChatHasMoreMessages) return;
 
             const scrollListener = (e: Event) => {
@@ -94,14 +97,24 @@ const Message = forwardRef<ContainerRef, MessageProps>(
             if (!inViewFirst || !scrollRef) return;
 
             setIsMessagesLoading(true);
-
+            console.log(isFirst, isChatHasMoreMessages, isScrolled)
             const asyncFunc = async () => {
-                const res = await getChat({
-                    id: chat_id,
-                    messageId: message.id,
-                    page: 1,
-                    page_size: messagesPerRequest,
-                });
+                let res;
+                if (isAdminWatch) {
+                    res = await getUserChat({
+                        chatId: chat_id,
+                        userId: isAdminWatch,
+                        messageId: message.id,
+                    });
+
+                } else {
+                    res = await getChat({
+                        id: chat_id,
+                        messageId: message.id,
+                        page: 1,
+                        page_size: messagesPerRequest,
+                    });
+                }
 
                 if (res.status === 200) {
                     dispatch(prependMessages(res.chat!.messages.toReversed()));
@@ -131,6 +144,9 @@ const Message = forwardRef<ContainerRef, MessageProps>(
                         ? styles.outgoingMessage
                         : styles.incomingMessage,
                     { [styles.hasFiles]: !!message.files.length },
+                    message.user.id === isAdminWatch
+                        ? styles.outgoingMessage
+                        : styles.incomingMessage
                 )}
             >
                 {!!message.files.length && (
@@ -212,11 +228,10 @@ const Message = forwardRef<ContainerRef, MessageProps>(
                     </p> */}
                     {user.id === message.user.id && (
                         <img
-                            src={`/icons/${
-                                message.isRead
+                            src={`/icons/${message.isRead
                                     ? "isReadTrue.svg"
                                     : "isReadFalse.svg"
-                            }`}
+                                }`}
                             alt="readStatus"
                             className={classNames(styles.checkMark, {
                                 [styles.checkMarkActive]: message.isRead,
