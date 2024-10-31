@@ -35,6 +35,7 @@ type TaskCardProps = {
     isSolutionsPage?: boolean;
     isSolutionPage?: boolean;
     isMyTask?: boolean;
+    isAdminWatch?: boolean;
 };
 
 const TaskCard: React.FC<TaskCardProps> = ({
@@ -45,6 +46,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
     isSolutionsPage = false,
     isSolutionPage = false,
     isMyTask = false,
+    isAdminWatch = false
 }) => {
     const [dayTitle, setDayTitle] = useState<string>("");
     const { user, companyProfile } = useTypesSelector(
@@ -113,6 +115,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 { [styles.extended]: isTaskPage },
                 { [styles.solution]: isSolvingPage },
                 { [styles.myTask]: isMyTask },
+                {[styles.adminWatch]: isAdminWatch}
             )}
         >
             <div className={styles.wrapper}>
@@ -360,7 +363,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 {isSolvingPage && <SolvingLogic taskId={task.id} />}
                 {isSolutionsPage && (
                     <SolutionsLogic
-                        role={user.role as "student" | "company"}
+                        role={user.role as "student" | "company" | "admin"}
                         taskId={task.id}
                         studnetSolutions={task.solutions}
                     />
