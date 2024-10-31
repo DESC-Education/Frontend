@@ -145,7 +145,7 @@ const SolutionLogic: FC<SolutionLogicProps> = ({ solutionId }) => {
                         }
                         alt="avatar"
                     />
-                    <p>
+                    <p className="text fz28 fw500">
                         {solution.studentProfile.firstName}{" "}
                         {solution.studentProfile.lastName}
                     </p>

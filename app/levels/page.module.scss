@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 30px;
+    margin-top: 35px;
 
     .levels {
         display: grid;
@@ -57,10 +58,16 @@
     }
 }
 
+@media screen and (max-width: 900px) {
+    .container {
+        margin-top: 20px;
+    }
+}
+
 @media screen and (max-width: 425px) {
     .container {
         gap: 10px;
         padding-top: 20px;
-        margin-top: 5px;
+        margin-top: 10px;
     }
 }
