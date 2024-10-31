@@ -269,8 +269,6 @@ const SettingsPage = () => {
             errorsTemp.skills = "Выберите навыки";
         }
 
-        console.log(errorsTemp, studentProfile);
-
         setErrorsExist(Object.keys(errorsTemp).length !== 0);
         setErrors(errorsTemp);
 

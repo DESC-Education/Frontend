@@ -62,14 +62,10 @@ $authHost.interceptors.response.use(
 
                     const token = res.data.access;
 
-                    console.log("refresh res", res);
-
                     LocalStorage.setAccessToken(token);
 
                     return $authHost(originalConfig);
                 } catch (_error) {
-                    console.log("ERROR IN TOKEN REFRESH", _error);
-
                     return Promise.reject(_error);
                 }
             }

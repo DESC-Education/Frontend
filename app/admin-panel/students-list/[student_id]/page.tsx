@@ -269,7 +269,6 @@ const StudentPage = () => {
 
         const data = await getStudentSolutions(student_id);
         setTasks(data.solutions.results);
-        console.log(data.solutions.results);
     }
 
     useEffect(() => {

@@ -154,7 +154,7 @@
 
     &.solution {
         border: 2px solid rgba(var(--gray2), 1);
-        background: rgba(var(--gray3), 1);
+        // background: rgba(var(--gray3), 1);
         border-radius: 50px;
 
         .wrapper {
@@ -318,7 +318,7 @@
 }
 
 
-@media screen and (max-width: 595px) {
+@media screen and (max-width: 600px) {
     .taskCard {
         .wrapper {
             border-radius: 40px;

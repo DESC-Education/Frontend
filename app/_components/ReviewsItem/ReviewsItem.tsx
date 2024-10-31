@@ -10,9 +10,6 @@ type ReviewsItemProps = {
 
 const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
 
-    console.log(review);
-    
-
     return (
         <div onClick={() => console.log(review)} className={styles.container}>
             <div className={styles.reviewContent}>
@@ -21,7 +18,7 @@ const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
                         href={`/profile/company/${review.companyProfile?.id}`}
                         className={styles.avatar}
                     >
-                        <Image
+                        <img
                             className={styles.logo}
                             src={
                                 review.companyProfile?.logoImg
@@ -30,8 +27,6 @@ const ReviewsItem: FC<ReviewsItemProps> = ({ review }) => {
                                     : "/images/avatar.png"
                             }
                             alt="logo"
-                            width={40}
-                            height={40}
                         />
                         <p className="text fw500">
                             {review.companyProfile?.companyName}

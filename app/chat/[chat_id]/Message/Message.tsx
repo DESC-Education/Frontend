@@ -30,10 +30,10 @@ type ContainerRef = HTMLDivElement;
 
 type MessageProps = {
     message: IMessage;
-    ws: WebSocket | null;
-    wsStatus: number;
     isFirst: boolean;
     setIsMessagesLoading: any;
+    ws?: WebSocket | null;
+    wsStatus?: number;
 };
 
 const Message = forwardRef<ContainerRef, MessageProps>(

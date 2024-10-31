@@ -124,7 +124,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                 <>
                     <div className={styles.solutionsFilters}>
                         <div>
-                            <div>
+                            <div className={styles.row}>
                                 <p className="title fz24 gray fw500">Фильтр:</p>
                                 <CustomSearch
                                     initValue={filters[0]}
@@ -134,7 +134,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                     }}
                                 />
                             </div>
-                            <div>
+                            <div className={styles.row}>
                                 <p className="title fz24 gray fw500">
                                     Сортировка:
                                 </p>
@@ -181,7 +181,7 @@ const SolutionsLogic: FC<SolutionsLogicProps> = ({
                                         <CustomOval />
                                     </div>
                                 ) : currentCompanySolutions.length > 0 ? (
-                                    <div className={styles.solutionsList}>
+                                    <div className={classNames(styles.solutionsList, styles.company)}>
                                         {currentCompanySolutions.map(
                                             (solution, index) => (
                                                 <div

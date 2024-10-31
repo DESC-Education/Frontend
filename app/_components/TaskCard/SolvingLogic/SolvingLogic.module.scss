@@ -3,7 +3,7 @@
 
     background-color: rgba(var(--gray3), 1);
     border-radius: 50px;
-    margin: 0 -30px -30px;
+    margin: 0 -30px -60px;
 
     .solutionTitle {
         background-color: rgba(var(--white), 1);
@@ -49,10 +49,55 @@
     }
 }
 
-@media (max-width: 595px) {
+@media (max-width: 1600px) {
     .solutionContent {
-        padding: 20px 35px;
-        margin: 0 -20px -20px;
+        padding: 15px 20px 20px;
+        margin: 0 -20px -30px;
+
+        .solution {
+            p {
+                margin-left: 0;
+            }
+        }
+
+        .solutionTitle {
+            margin: 0;
+            padding: 20px 15px;
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .solutionContent {
+        .header {
+            padding: 15px 25px;
+        }
+
+        .textarea {
+            height: 200px;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .solutionContent {
+
+
+        .solutionTitle {
+            padding: 8px 15px;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .solutionContent {
+        border-radius: 20px;
+        padding: 15px 20px;
+        margin: 0 -20px -25px;
+
+        .solutionDescription {
+            margin: 20px 0;
+        }
     }
 }
 

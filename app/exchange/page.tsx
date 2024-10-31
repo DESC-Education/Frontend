@@ -125,8 +125,6 @@ export default function ExchangePage() {
     }, [tasks]);
 
     const clearTasks = async () => {
-        console.log("АЛЕ БЛЯ?");
-
         setIsLoading(true);
         setHasMore(false);
         setCurrentPage(1);
@@ -135,8 +133,6 @@ export default function ExchangePage() {
         setSelectedFilters({});
 
         const res = await getTasks(1, POSTS_PER_PAGE, "", [], "createdAt");
-
-        console.log("REs", res);
 
         if (res.status === 200) {
             dispatch(updateTasks({ tasks: res.tasks! }));

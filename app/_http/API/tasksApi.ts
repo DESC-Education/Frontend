@@ -354,8 +354,6 @@ export const createReview = async (dto: {
 export const getReviews = async (
     dto: { page: number; pageSize: number } = { page: 1, pageSize: 10 },
 ) => {
-    console.log(dto);
-    
     try {
         const { data } = await $authHost.get<{
             count: string;

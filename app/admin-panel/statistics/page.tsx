@@ -87,7 +87,6 @@ export default function Page() {
     }, []);
 
 
-    console.log(regDateFrom, regDateTo);
     return (
         <div className='container'>
             <div className={styles.statisticsContainer}>

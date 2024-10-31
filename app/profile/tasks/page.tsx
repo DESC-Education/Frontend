@@ -57,8 +57,6 @@ export default function JobsPage() {
     ] = useState<number>(1);
 
     const getMoreMyTasks = async () => {
-        console.log("helo kozinak");
-        
         setIsLoadingMyTasks(true);
 
         const res = await getMyTasks({
@@ -77,7 +75,6 @@ export default function JobsPage() {
         } else {
             showAlert(res.message);
         }
-        console.log("helo kozinak2");
         setIsLoadingMyTasks(false);
     };
 
@@ -144,7 +141,6 @@ export default function JobsPage() {
                 status: "active",
             });
 
-            console.log("helo kozinak333");
             setHasMoreMyTasks(activeTasks.pageCount! > 1);
             setIsLoadingMyTasks(false);
 
@@ -172,8 +168,6 @@ export default function JobsPage() {
         };
         asyncFunc();
     }, [user.role, myTasks]);
-
-    console.log(isLoadingMyTasks, myTasks);
 
     const getJobsPageContent = useCallback(
         (

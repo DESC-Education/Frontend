@@ -30,19 +30,11 @@ export const taskSlice = createSlice({
             state.currentTask = action.payload;
         },
         addCurrentTaskSolution(state, action: PayloadAction<ISolution>) {
-            console.log("ghelo blyea", action.payload, {
-                ...state.currentTask,
-            });
-
             if (state.currentTask) {
                 state.currentTask.solutions.push(action.payload);
             }
         },
         updateCurrentTaskSolution(state, action: PayloadAction<ISolution>) {
-            console.log("ghelo blyea 2", action.payload, {
-                ...state.currentTask,
-            });
-
             if (
                 state.currentTask &&
                 state.currentTask.id === action.payload.task
