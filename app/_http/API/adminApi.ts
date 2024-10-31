@@ -140,10 +140,37 @@ export const getUser = async (companyId: string) => {
 export const getUserChats = async (userId: string) => {
     try {
         const { data } = await $authHost.get<any>(`/api/v1/admins/user/${userId}/chats`);
-        
+
         return {
             status: 200,
             chats: data,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+}
+
+export const getUserChat = async (dto: {
+    chatId: string,
+    userId: string,
+    messageId?: string,
+}) => {
+    try {
+        const { data } = await $authHost.get<IChat & { hasMoreMessages: boolean }>(`/api/v1/admins/user/${dto.userId}/chat/${dto.chatId}${dto.messageId ? `?messageId=${dto.messageId}` : ""}`);
+        return {
+            status: 200,
+            chat: data,
+            hasMoreMessages: data.hasMoreMessages,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -191,7 +218,7 @@ export const statsRegUsers = async (dto: {
             status: 200,
             stats: data,
         };
-        
+
     }
     catch (error) {
         if (axios.isAxiosError(error)) {
@@ -223,7 +250,7 @@ export const statsTasks = async (dto: {
             status: 200,
             stats: data,
         };
-        
+
     }
     catch (error) {
         if (axios.isAxiosError(error)) {
