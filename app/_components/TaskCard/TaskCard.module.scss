@@ -1,6 +1,24 @@
 .taskCard {
     padding-bottom: 30px;
 
+    &.adminWatch {
+        .deadline {
+            display: none;
+        }
+        .wrapper {
+            .taskFooter {
+                .deadlineAndTime {
+                    display: none;
+                }
+            }
+
+            .taskButtons {
+                display: none;
+            }
+        }
+
+    }
+
     .isViewed {
         visibility: hidden;
         width: min-content;

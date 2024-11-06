@@ -32,7 +32,7 @@ const sortings = [
 
 type SolutionsLogicProps = {
     taskId: string;
-    role: "student" | "company";
+    role: "student" | "company" | "admin";
     studnetSolutions: ISolution[] | null;
 };
 
