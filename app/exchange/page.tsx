@@ -482,7 +482,7 @@ export default function ExchangePage() {
                     </div>
                 )}
                 <main className={styles.mainContent}>
-                    <div className={styles.topPanel}>
+                    <div className={classNames(styles.topPanel, {[styles.company]: user.role === "company"})}>
                         {!!(user.role === "student") ? (
                             <div className={styles.replayCount}>
                                 <div className={styles.bar}>

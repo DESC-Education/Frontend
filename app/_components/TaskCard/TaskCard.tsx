@@ -84,6 +84,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             companionId: task.user,
             taskId: task.id,
         });
+        
         if (res.status === 200) {
             dispatch(updateCurrentChat({ ...res.chat!, messages: [] }));
             router.push(`/chat/${res.chat!.id}`);

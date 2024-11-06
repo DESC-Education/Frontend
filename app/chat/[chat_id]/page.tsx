@@ -464,7 +464,7 @@ export default function Page() {
         // Was invented empirically
         scrollContainerRef.current.scrollTop =
             scrollContainerRef.current?.scrollHeight +
-            16 -
+            80 -
             scrollContainerScrollHeight;
     }, [
         currentChat?.messages.length,

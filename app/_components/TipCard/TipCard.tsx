@@ -7,7 +7,6 @@ export enum TipTypeBackground {
     YELLOW = "rgba(var(--yellow), 1)",
 }
 
-
 type TipCardProps = {
     title: string;
     description: string;

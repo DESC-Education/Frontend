@@ -30,7 +30,11 @@ import Select from "react-select";
 import { ICity, IFaculty, ISkill, ISpecialty, IUniversity } from "@/app/_types";
 import SelectSkills from "@/app/_components/SelectSkills/SelectSkills";
 import { AlertContext } from "@/app/_context/AlertContext";
-import { formsOfEducation, timezones } from "@/app/_utils/constants";
+import {
+    formsOfEducation,
+    timezones,
+    typeOfSpeciality,
+} from "@/app/_utils/constants";
 import ProfileStatus from "../ProfileStatus/ProfileStatus";
 import CustomOval from "@/app/_components/ui/CustomOval/CustomOval";
 import { AuthRoute } from "@/app/_utils/protectedRoutes";
@@ -141,7 +145,9 @@ const SettingsPage = () => {
             return res.specialities!.map((item) => ({
                 ...item,
                 value: item.id,
-                label: item.name,
+                label: `${item.name} (${
+                    typeOfSpeciality.find((i) => i.value === item.type)!.name
+                })`,
             }));
         } else {
             return [];

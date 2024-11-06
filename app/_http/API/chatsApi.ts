@@ -13,7 +13,6 @@ export const createChat = async (dto: {
     taskId?: string;
 }) => {
     try {
-        // const { data } = await $authHost.post("/api/v1/chats/chat", dto);
         const { data } = await $authHost.post<IChat>("/api/v1/chats/chat", dto);
 
         return { status: 200, chat: data };
