@@ -260,7 +260,9 @@ const ProfilePage = () => {
                                     "text",
                                 )}
                             >
-                                {studentProfile?.description}
+                                {studentProfile?.description
+                                ? studentProfile?.description
+                                : "Информации нет"}
                             </p>
                             <div className={styles.education}>
                                 <p
@@ -523,7 +525,9 @@ const ProfilePage = () => {
                                     "text",
                                 )}
                             >
-                                {companyProfile.description}
+                                {companyProfile?.description
+                                ? companyProfile?.description
+                                : "Информации нет"}
                             </p>
                             <div className={styles.education}>
                                 <p

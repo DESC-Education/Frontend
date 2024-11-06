@@ -155,8 +155,8 @@ const Message = forwardRef<ContainerRef, MessageProps>(
                     ref={isFirst ? refFirst : null}
                     className={classNames("text fz16", styles.text)}
                 >
-                    {/* {message.message} {message.id} */}
-                    {message.message}
+                    {message.message} {message.id}
+                    {/* {message.message} */}
                 </p>
                 <div className={styles.messageFiles}>
                     {!!message.files.length &&

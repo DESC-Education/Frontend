@@ -68,18 +68,18 @@ export default function JobsPage() {
         });
 
         if (res.status === 200) {
-            // dispatch(updateTasks({ tasks: [...tasks!, ...res.tasks!] }));
             dispatch(updateMyTasks([...myTasks!, ...res.results!]));
             setHasMoreMyTasks(res.pageCount! > currentPageMyTasks + 1);
             setCurrentPageMyTasks((prev) => prev + 1);
         } else {
             showAlert(res.message);
         }
+        
         setIsLoadingMyTasks(false);
     };
 
     const getMoreMyArchivedTasks = async () => {
-        setIsLoadingMyTasks(true);
+        setIsLoadingMyArchivedTasks(true);
 
         const res = await getMyTasks({
             page: currentPageMyArchivedTasks + 1,
@@ -101,7 +101,7 @@ export default function JobsPage() {
         } else {
             showAlert(res.message);
         }
-        setIsLoadingMyTasks(false);
+        setIsLoadingMyArchivedTasks(false);
     };
 
     const [isLoadingMyTasks, setIsLoadingMyTasks] = useState<boolean>(myTasks?.length === 0);
