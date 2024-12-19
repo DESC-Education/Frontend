@@ -385,14 +385,14 @@ export default function Home() {
                                     width={35}
                                     height={35}
                                 />
-                                <p className="text">{user.email}</p>
+                                <p className="text">{`mailto:${user.email}`}</p>
                             </div>
                         )}
                         {companyProfile.telegramLink && (
                             <div className={styles.contact}>
                                 <Link
                                     href={
-                                        "https:/t.me/" +
+                                        "https://t.me/" +
                                         companyProfile.telegramLink
                                     }
                                     className={styles.contact}
@@ -413,7 +413,7 @@ export default function Home() {
                             <div className={styles.contact}>
                                 <Link
                                     href={
-                                        "https:/vk.com/" + companyProfile.vkLink
+                                        "https://vk.com/" + companyProfile.vkLink
                                     }
                                     className={styles.contact}
                                 >
