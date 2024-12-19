@@ -146,7 +146,7 @@ export default function Home() {
                                 target="_blank"
                                 rel="noreferrer"
                                 href={
-                                    "https:/t.me/" +
+                                    "https://t.me/" +
                                     studentProfile?.telegramLink
                                 }
                                 className={styles.contact}
@@ -166,7 +166,7 @@ export default function Home() {
                             <Link
                                 target="_blank"
                                 rel="noreferrer"
-                                href={"https:/vk.com/" + studentProfile?.vkLink}
+                                href={"https://vk.com/" + studentProfile?.vkLink}
                                 className={styles.contact}
                             >
                                 <Image
