@@ -23,29 +23,23 @@
 }
 
 html {
-    height: calc(100vh - 140px);
+    height: calc(100dvh - 140px);
 
     @media screen and (max-width: 1600px) {
-        height: calc(100vh - 100px);
+        height: calc(100dvh - 100px);
     }
 }
 
 body {
-    min-height: calc(100vh - 140px);
-    // margin-top: 100px;
+    min-height: calc(100dvh - 100px);
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
-    margin-top: 140px;
     position: relative;
 
     @media screen and (max-width: 1600px) {
-        margin-top: 100px;
-        height: calc(100vh - 100px);
-    }
-    
-    @media screen and (max-width: 425px) {
         margin-top: 70px;
-        height: calc(100vh - 70px);
+        height: calc(100dvh - 70px);
     }
 }
 

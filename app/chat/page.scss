@@ -22,6 +22,12 @@
 }
 
 @media screen and (max-height: 1080px) {
+    .chatContainer {
+        padding-top: 30px;
+    }
+}
+
+@media screen and (max-height: 1080px) {
     .selectLayout {
         height: 650px;
     }
@@ -29,7 +35,7 @@
 
 @media screen and (max-width: 1024px) {
     .helo2 {
-        height: calc(100% - 150px);
+        height: 100%;
     }
 
     .selectLayout {
@@ -38,18 +44,22 @@
         height: 100%;
         border: none;
         border-radius: 0;
+        margin-top: 0;
     }
 
     .chatContainer {
+        padding-top: 25px;
+        border-radius: 0;
         height: 100%;
+        padding-bottom: 35px;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .helo2 {
-        height: calc(100% - 60px);
-        padding-bottom: 20px;
-    }
+    // .helo2 {
+    //     height: calc(100% - 60px);
+    //     padding-bottom: 20px;
+    // }
 
     .chatContainer {
         padding: 20px 0;
@@ -58,10 +68,10 @@
 }
 
 @media screen and (max-width: 425px) {
-    .helo2 {
-        height: calc(100% - 80px);
-        padding-bottom: 20px;
-    }
+    // .helo2 {
+    //     height: 100%;
+    //     padding-bottom: 20px;
+    // }
 
     .chatContainer {
         padding: 20px 0;

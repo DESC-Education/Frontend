@@ -28,6 +28,11 @@
             &:hover {
                 background: rgba(var(--gray3), 1);
             }
+
+            p {
+                max-width: 400px;
+                overflow: hidden;
+            }
         }
 
         >div {
@@ -195,6 +200,70 @@
             .reviewTextarea {
                 width: 70%;
             }
+        }
+    }
+}
+
+@media screen and (max-width: 1600px) {
+    .solutionContent {
+        padding: 20px 45px;
+        margin: 0 -20px -20px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .solutionContent {
+        .solutionTitle {
+            padding: 7px 10px;
+        }
+
+        .description {
+            padding: 10px 20px;
+        }
+
+        .files {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .solutionContent {
+        .solutionTitle {
+            .avatar p {
+                max-width: 100px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .solutionContent {
+        border-radius: 30px;
+        margin: 0 -20px -15px;
+
+
+        .solutionTitle {
+            .avatar p {
+                max-width: 100px;
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .status {
+                padding: 7px 12px;
+                white-space: nowrap;
+            }
+        }
+
+        .description {
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin: 10px -30px;
+            // margin: 2px 0;
         }
     }
 }

@@ -368,11 +368,13 @@
     }
 }
 
-// @media screen and (max-width: 425px) {
-//     .taskCard {
-//         padding-top: 10px;
-//     }
-// }
+@media screen and (max-width: 425px) {
+    .taskCard {
+        .wrapper {
+            border-radius: 30px;
+        }
+    }
+}
 
 @media screen and (max-width: 375px) {
     .taskCard {

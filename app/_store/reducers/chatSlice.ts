@@ -14,7 +14,7 @@ const initialState: ChatState = {
     chats: null,
     currentChat: null,
     unreadChatsCount: 0,
-    messagesPerRequest: 20,
+    messagesPerRequest: 50,
     isChatHasMoreMessages: false,
 };
 
