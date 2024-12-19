@@ -15,6 +15,8 @@ const usePagination = <T>(
     const fetchData = async () => {
         setLoading(true);
         const res = await getData({ ...args, page, pageSize });
+        
+        console.log("res", res, args);
 
         if (res.status !== 200) {
             setLoading(false);

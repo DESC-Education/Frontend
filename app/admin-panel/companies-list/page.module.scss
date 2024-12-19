@@ -1,3 +1,7 @@
+.container {
+    padding: 30px 0;
+}
+
 .search {
     position: sticky;
     top: 0;
@@ -15,13 +19,34 @@
     }
 }
 
-.companiesList {
+.searchForm {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .searchInput {
+        width: 100%;
+    }
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 40px;
+}
+
+.studentsList {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    .companyLink {
+    .studentLink {
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -34,14 +59,14 @@
             background-color: rgba(var(--gray2), 1);
         }
 
-        .company {
+        .student {
             display: flex;
             align-items: center;
             gap: 20px;
 
             .info {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 gap: 5px;
             }
         }
