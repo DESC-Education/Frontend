@@ -408,7 +408,7 @@ const SettingsPage = () => {
                     ? `https://t.me/${companyProfile.telegramLink}`
                     : "",
             );
-            formdata.append("description", companyProfile.description ?? "");
+            formdata.append("description", companyProfile.description || "");
 
             companyProfile.skills.forEach((el, i) => {
                 formdata.append(`skills`, el.id);

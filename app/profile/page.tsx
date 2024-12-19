@@ -58,8 +58,6 @@ export default function Home() {
         return "Выпускник";
     };
 
-    
-
     return (
         <div
             className={classNames(styles.userContainer, {

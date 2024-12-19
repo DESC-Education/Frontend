@@ -1,6 +1,4 @@
-"use client";
-
-import Image from "next/image";
+"use client";import Image from "next/image";
 import styles from "./Header.module.scss";
 import Button from "../ui/Button/Button";
 import AuthModal from "../modals/AuthModal/AuthModal";
@@ -72,9 +70,8 @@ const Header = () => {
         },
     ];
 
-    const [isShowNotificationsModal, setIsShowNotificationsModal] = useState<
-        boolean
-    >(false);
+    const [isShowNotificationsModal, setIsShowNotificationsModal] =
+        useState<boolean>(false);
 
     const [activeNotification, setActiveNotification] = useState<
         string | undefined
@@ -158,8 +155,7 @@ const Header = () => {
                                                 "/admin-panel/chats",
                                         },
                                     )}
-                                    href="/admin-panel/chats"
-                                >
+                                    href="/admin-panel/chats">
                                     Чаты
                                 </Link>
                                 <Link
@@ -172,33 +168,37 @@ const Header = () => {
                                                 "/admin-panel/statistics",
                                         },
                                     )}
-                                    href="/admin-panel/statistics"
-                                >
+                                    href="/admin-panel/statistics">
                                     Статистика
                                 </Link>
                                 <Link
                                     className={classNames(
                                         styles.link,
                                         {
-                                            [styles.active]: pathname.startsWith(
-                                                "/admin-panel/verification",
-                                            ),
+                                            [styles.active]:
+                                                pathname.startsWith(
+                                                    "/admin-panel/verification",
+                                                ),
                                         },
                                         "text fz24 fw500",
                                     )}
-                                    href="/admin-panel/verification/students"
-                                >
+                                    href="/admin-panel/verification/students">
                                     Верификация студентов
                                 </Link>
-                                <Link
+                                <p
+                                    onClick={() => {
+                                        logout();
+                                        showAlert(
+                                            "Вы успешно вышли из аккаунта!",
+                                            "success",
+                                        );
+                                    }}
                                     className={classNames(
                                         styles.link,
                                         "text fz24 fw500",
-                                    )}
-                                    href="/profile"
-                                >
+                                    )}>
                                     Выйти
-                                </Link>
+                                </p>
                             </div>
                         </>
                     ),
@@ -220,8 +220,7 @@ const Header = () => {
                                                 "/admin-panel/chats",
                                         },
                                     )}
-                                    href="/admin-panel/chats"
-                                >
+                                    href="/admin-panel/chats">
                                     Чаты
                                 </Link>
                                 <Link
@@ -234,8 +233,7 @@ const Header = () => {
                                                 "/admin-panel/statistics",
                                         },
                                     )}
-                                    href="/admin-panel/statistics"
-                                >
+                                    href="/admin-panel/statistics">
                                     Статистика
                                 </Link>
                                 <div
@@ -243,8 +241,7 @@ const Header = () => {
                                         [styles.active]: pathname.startsWith(
                                             "/admin-panel/verification",
                                         ),
-                                    })}
-                                >
+                                    })}>
                                     <Dropdown
                                         options={options}
                                         placeholder="Верификация"
@@ -255,8 +252,7 @@ const Header = () => {
                                         styles.link,
                                         "text fz24 fw500",
                                     )}
-                                    href="/profile"
-                                >
+                                    href="/profile">
                                     Выйти
                                 </Link>
                             </div>
@@ -279,8 +275,7 @@ const Header = () => {
                                             "/admin-panel/statistics",
                                     },
                                 )}
-                                href="/admin-panel/statistics"
-                            >
+                                href="/admin-panel/statistics">
                                 Статистика
                             </Link>
                             <Link
@@ -293,8 +288,7 @@ const Header = () => {
                                             "/admin-panel/students-list",
                                     },
                                 )}
-                                href="/admin-panel/students-list"
-                            >
+                                href="/admin-panel/students-list">
                                 Студенты
                             </Link>
                             <Link
@@ -307,8 +301,7 @@ const Header = () => {
                                             "/admin-panel/companies-list",
                                     },
                                 )}
-                                href="/admin-panel/companies-list"
-                            >
+                                href="/admin-panel/companies-list">
                                 Компании
                             </Link>
                             <div
@@ -316,8 +309,7 @@ const Header = () => {
                                     [styles.active]: pathname.startsWith(
                                         "/admin-panel/verification",
                                     ),
-                                })}
-                            >
+                                })}>
                                 <Dropdown
                                     options={options}
                                     placeholder="Верификация"
@@ -331,9 +323,11 @@ const Header = () => {
                                 onClick={() => {
                                     dispatch(logoutContent());
                                     dispatch(logoutUser());
-                                    showAlert("Вы вышли из аккаунта!", "success");
-                                }}
-                            >
+                                    showAlert(
+                                        "Вы вышли из аккаунта!",
+                                        "success",
+                                    );
+                                }}>
                                 Выйти
                             </p>
                         </div>
@@ -387,8 +381,7 @@ const Header = () => {
                 <div
                     className={classNames(styles.header, {
                         [styles.open]: isOpen,
-                    })}
-                >
+                    })}>
                     <div className={classNames(styles.container)}>
                         <Link href="/">
                             <img
@@ -407,16 +400,14 @@ const Header = () => {
                             <div
                                 className={classNames(styles.notifications, {
                                     [styles.hide]: isOpen,
-                                })}
-                            >
+                                })}>
                                 <span
                                     className={styles.notification}
                                     onClick={() =>
                                         setIsShowNotificationsModal(
                                             (prev) => !prev,
                                         )
-                                    }
-                                >
+                                    }>
                                     {notifications &&
                                         notifications.filter((i) => !i.isRead)
                                             .length > 0 && (
@@ -438,10 +429,10 @@ const Header = () => {
                                     className={classNames(
                                         styles.notificationModal,
                                         {
-                                            [styles.active]: isShowNotificationsModal,
+                                            [styles.active]:
+                                                isShowNotificationsModal,
                                         },
-                                    )}
-                                >
+                                    )}>
                                     <NotificationsModal
                                         active={activeNotification}
                                         setActive={setActiveNotification}
@@ -457,8 +448,7 @@ const Header = () => {
                             className={classNames(styles.burgerButton, {
                                 [styles.open]: isOpen,
                             })}
-                            onClick={() => changeMenuVisibility()}
-                        >
+                            onClick={() => changeMenuVisibility()}>
                             <span className={styles.burgerLine}></span>
                             <span className={styles.burgerLine}></span>
                             <span className={styles.burgerLine}></span>
@@ -466,8 +456,7 @@ const Header = () => {
                         <div
                             className={classNames(styles.burgerMenu, {
                                 [styles.open]: isOpen,
-                            })}
-                        >
+                            })}>
                             <div className={styles.burgerList}>
                                 {isAuth ? (
                                     <div
@@ -477,8 +466,7 @@ const Header = () => {
                                         )}
                                         onClick={() =>
                                             changeMenuVisibility(false)
-                                        }
-                                    >
+                                        }>
                                         {getHeaderContent(activeState).content}
                                     </div>
                                 ) : (
@@ -486,8 +474,7 @@ const Header = () => {
                                         className={styles.clickItems}
                                         onClick={() =>
                                             changeMenuVisibility(false)
-                                        }
-                                    >
+                                        }>
                                         <div className={styles.linkContainer}>
                                             <div
                                                 onClick={() =>
@@ -500,8 +487,7 @@ const Header = () => {
                                                 className={classNames(
                                                     styles.link,
                                                     "text fz24 fw500",
-                                                )}
-                                            >
+                                                )}>
                                                 Вход
                                             </div>
                                         </div>
@@ -517,8 +503,7 @@ const Header = () => {
                                                 className={classNames(
                                                     styles.link,
                                                     "text fz24 fw500",
-                                                )}
-                                            >
+                                                )}>
                                                 Регистрация
                                             </div>
                                         </div>
@@ -555,8 +540,7 @@ const Header = () => {
                                                 ),
                                             })
                                         }
-                                        type="primary"
-                                    >
+                                        type="primary">
                                         Вход
                                     </Button>
                                     <Button
@@ -567,8 +551,7 @@ const Header = () => {
                                                 ),
                                             })
                                         }
-                                        type="secondary"
-                                    >
+                                        type="secondary">
                                         Регистрация
                                     </Button>
                                 </div>
