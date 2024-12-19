@@ -101,8 +101,6 @@ export const getUsers = async (
             numPages: number,
             count: number,
         }>(`/api/v1/admins/users/?role=${dto.role}&page=${dto.page}&page_size=${dto.pageSize}${dto.q ? `&search=${dto.q}` : ""}`);
-        console.log("DTODTO", dto);
-        
         return {
             status: 200,
             numPages: data.numPages,

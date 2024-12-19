@@ -6,6 +6,7 @@ const usePagination = <T>(
     ) => Promise<{ results?: T[]; numPages?: number; status: number }>,
     args: any,
     pageSize: number = 10,
+    instantFire: boolean = true,
 ): [T[], number, number, (page: number) => void, boolean, () => void] => {
     const [data, setData] = useState<T[]>([]);
     const [page, setPage] = useState(1);
@@ -16,8 +17,6 @@ const usePagination = <T>(
         setLoading(true);
         const res = await getData({ ...args, page, pageSize });
         
-        console.log("res", res, args);
-
         if (res.status !== 200) {
             setLoading(false);
             return;
@@ -30,7 +29,7 @@ const usePagination = <T>(
     };
 
     useEffect(() => {
-        fetchData();
+        instantFire && fetchData();
     }, [page, pageSize]);
 
     return [data, totalPages, page, setPage, loading, fetchData];
