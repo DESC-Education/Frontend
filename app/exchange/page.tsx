@@ -125,7 +125,6 @@ export default function ExchangePage() {
     }, [tasks]);
 
     const clearTasks = async () => {
-        console.log("АЛЕ БЛЯ?");
 
         setIsLoading(true);
         setHasMore(false);

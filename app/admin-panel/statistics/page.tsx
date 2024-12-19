@@ -18,6 +18,7 @@ import Button from "@/app/_components/ui/Button/Button";
 import { statsRegUsers, statsTasks } from "@/app/_http/API/adminApi";
 import Input from "@/app/_components/ui/Input/Input";
 import { AlertContext } from "@/app/_context/AlertContext";
+import { form } from "framer-motion/client";
 
 
 
@@ -45,20 +46,14 @@ const onlineData = [
 
 
 export default function Page() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${Number(day) - 10}`;
-    const toformateddate = `${year}-${month}-${day}`;
 
     const [regData, setRegData] = useState<any>([]);
-    const [regDateFrom, setRegDateFrom] = useState<string>(`${formattedDate}`);
-    const [regDateTo, setRegDateTo] = useState<string>(`${toformateddate}`);
+    const [regDateFrom, setRegDateFrom] = useState<string>("");
+    const [regDateTo, setRegDateTo] = useState<string>("");
 
     const [taskData, setTaskData] = useState<any>([]);
-    const [taskDateFrom, setTaskDateFrom] = useState<string>(`${formattedDate}`);
-    const [taskDateTo, setTaskDateTo] = useState<string>(`${toformateddate}`);
+    const [taskDateFrom, setTaskDateFrom] = useState<string>("");
+    const [taskDateTo, setTaskDateTo] = useState<string>("");
 
     const { showAlert } = useContext(AlertContext);
 
@@ -144,7 +139,7 @@ export default function Page() {
                     </div>
 
                     {/* Текущий онлайн */}
-                    <div className={styles.chartContainer}>
+                    {/* <div className={styles.chartContainer}>
                         <h3 className="text fz24 fw500">Онлайн за период</h3>
                         <div className={styles.datePicker}>
                             <label htmlFor="date" className="text fz16">От</label>
@@ -163,7 +158,7 @@ export default function Page() {
                                 <Line type="monotone" dataKey="online" stroke="#8884d8" />
                             </LineChart>
                         </ResponsiveContainer>
-                    </div>
+                    </div> */}
                 </section>
             </div>
         </div>

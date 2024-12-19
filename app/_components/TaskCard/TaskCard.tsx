@@ -141,7 +141,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                                       companyProfile?.logoImg
                                                     : "/images/avatar.png"
                                             }
-                                            alt={task.companyProfile?.companyName}
+                                            alt={task.profile?.companyName}
                                             width={50}
                                             height={50}
                                         />
@@ -150,13 +150,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                     <div className={styles.companyLogo}>
                                         <img
                                             src={
-                                                task.companyProfile?.logoImg
+                                                task.profile?.logoImg
                                                     ? process.env
                                                           .NEXT_PUBLIC_SERVER_PATH +
-                                                      task.companyProfile?.logoImg
+                                                      task.profile?.logoImg
                                                     : "/images/avatar.png"
                                             }
-                                            alt={task.companyProfile?.companyName}
+                                            alt={task.profile?.companyName}
                                             width={50}
                                             height={50}
                                         />
@@ -168,7 +168,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                         "title fz28 fw500",
                                     )}
                                 >
-                                    {task.companyProfile?.companyName}
+                                    {task.profile?.companyName}
                                 </p>
                             </Link>
                         )}

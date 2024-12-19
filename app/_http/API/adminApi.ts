@@ -209,6 +209,18 @@ export const statsRegUsers = async (dto: {
     toDate: string,
 }) => {
     try {
+        if (dto.fromDate === "" || dto.toDate === "") {
+            const { data } = await $authHost.post<{
+                fromDate: string,
+                toDate: string,
+            }>('/api/v1/admins/stats/users')
+
+            return {
+                status: 200,
+                stats: data,
+            };
+        }
+
         const { data } = await $authHost.post<{
             fromDate: string,
             toDate: string,
@@ -241,6 +253,19 @@ export const statsTasks = async (dto: {
     toDate: string,
 }) => {
     try {
+
+        if (dto.fromDate === "" || dto.toDate === "") {
+            const { data } = await $authHost.post<{
+                fromDate: string,
+                toDate: string,
+            }>('/api/v1/admins/stats/tasks')
+
+            return {
+                status: 200,
+                stats: data,
+            };
+        }
+
         const { data } = await $authHost.post<{
             fromDate: string,
             toDate: string,
