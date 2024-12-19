@@ -108,7 +108,7 @@ export default function Home() {
                         </p>
                         {studentProfile?.emailVisibility && user.email && (
                             <Link
-                                href={`mailto:${user.email}`}
+                                href={`${user.email}`}
                                 className={styles.contact}
                             >
                                 <Image
@@ -117,7 +117,7 @@ export default function Home() {
                                     width={35}
                                     height={35}
                                 />
-                                <p className="text">{user.email}</p>
+                                <p className="text">{`mailto:${user.email}`}</p>
                             </Link>
                         )}
                         {studentProfile?.phoneVisibility &&
