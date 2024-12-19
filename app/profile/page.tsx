@@ -52,7 +52,7 @@ export default function Home() {
         return "Выпускник";
     };
 
-    
+
 
     return (
         <div
@@ -104,7 +104,7 @@ export default function Home() {
                         </p>
                         {studentProfile?.emailVisibility && user.email && (
                             <Link
-                                href={`${user.email}`}
+                                href={`mailto:${user.email}`}
                                 className={styles.contact}
                             >
                                 <Image
@@ -113,7 +113,7 @@ export default function Home() {
                                     width={35}
                                     height={35}
                                 />
-                                <p className="text">{`mailto:${user.email}`}</p>
+                                <p className="text">{`${user.email}`}</p>
                             </Link>
                         )}
                         {studentProfile?.phoneVisibility &&
@@ -191,15 +191,15 @@ export default function Home() {
                                 {studentProfile.admissionYear} -{" "}
                                 {studentProfile.admissionYear! +
                                     yearsOfEducation[
-                                        studentProfile.specialty.type
+                                    studentProfile.specialty.type
                                     ]}{" "}
                                 гг.{" "}
                                 {getCurrentCourse(
                                     studentProfile.admissionYear!,
                                     studentProfile.admissionYear! +
-                                        yearsOfEducation[
-                                            studentProfile.specialty.type
-                                        ],
+                                    yearsOfEducation[
+                                    studentProfile.specialty.type
+                                    ],
                                 )}
                             </p>
                             <p
@@ -270,10 +270,9 @@ export default function Home() {
                                                 <div
                                                     className={styles.circle}
                                                     style={{
-                                                        background: `conic-gradient(#19282C ${
-                                                            category.percent *
+                                                        background: `conic-gradient(#19282C ${category.percent *
                                                             100
-                                                        }%, #e0e0e0 0%)`,
+                                                            }%, #e0e0e0 0%)`,
                                                     }}
                                                 >
                                                     <span
@@ -378,15 +377,17 @@ export default function Home() {
                                 </div>
                             )}
                         {companyProfile.emailVisibility && user.email && (
-                            <div className={styles.contact}>
+                            <Link
+                                href={`mailto:${user.email}`}
+                                className={styles.contact}>
                                 <Image
                                     src="/icons/mail.png"
                                     alt="phone"
                                     width={35}
                                     height={35}
                                 />
-                                <p className="text">{`mailto:${user.email}`}</p>
-                            </div>
+                                <p className="text">{`${user.email}`}</p>
+                            </Link>
                         )}
                         {companyProfile.telegramLink && (
                             <div className={styles.contact}>
@@ -470,10 +471,9 @@ export default function Home() {
                                                 <div
                                                     className={styles.circle}
                                                     style={{
-                                                        background: `conic-gradient(#19282C ${
-                                                            category.percent *
+                                                        background: `conic-gradient(#19282C ${category.percent *
                                                             100
-                                                        }%, #e0e0e0 0%)`,
+                                                            }%, #e0e0e0 0%)`,
                                                     }}
                                                 >
                                                     <span
