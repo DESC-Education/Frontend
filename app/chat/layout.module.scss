@@ -13,6 +13,18 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+
+    &.empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px 0;
+
+        img {
+            width: 180px;
+        }
+    }
 }
 
 @media screen and (max-width: 1800px) {

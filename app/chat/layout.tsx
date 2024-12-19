@@ -1,6 +1,4 @@
-"use client";
-
-import styles from "./layout.module.scss";
+"use client";import styles from "./layout.module.scss";
 import Link from "next/link";
 import ChatItem from "../_components/ChatItem/ChatItem";
 import { useTypesSelector } from "../_hooks/useTypesSelector";
@@ -29,18 +27,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const { screenWidth } = useTypesSelector((state) => state.contentReducer);
-   
+
     const { chats, currentChat } = useTypesSelector(
         (state) => state.chatReducer,
     );
     const pathname = usePathname();
     const { user } = useTypesSelector((state) => state.userReducer);
     const dispatch = useTypesDispatch();
-    const {
-        updateChats,
-        tryToAddChat,
-        updateIsChatHasMoreMessages,
-    } = chatSlice.actions;
+    const { updateChats, tryToAddChat, updateIsChatHasMoreMessages } =
+        chatSlice.actions;
     const { chat_id } = useParams<{ chat_id: string }>();
 
     const [isChatsLoading, setIsChatsLoading] = useState<boolean>(false);
@@ -78,13 +73,13 @@ export default function RootLayout({
 
     const mobileContainerRef = useRef<HTMLDivElement>(null);
 
+    console.log(screenWidth, pathname.split("/").at(-1) === "chat", chats);
 
     return (
         <ProfileRoute>
             <div
                 suppressHydrationWarning
-                className={classNames("container", styles.chatContainer)}
-            >
+                className={classNames("container", styles.chatContainer)}>
                 <div className="selectLayout">
                     {screenWidth > 1024 ? (
                         <>
@@ -95,52 +90,67 @@ export default function RootLayout({
                                     </div>
                                 ) : (
                                     <TransitionGroup
-                                        className={styles.chatList}
-                                    >
-                                        {chats?.map((chat, index) => {
-                                            if (!chat.companion) return;
+                                        className={styles.chatList}>
+                                        {chats?.length && chats.length > 0 ? (
+                                            chats?.map((chat, index) => {
+                                                if (!chat.companion) return;
 
-                                            return (
-                                                <CSSTransition
-                                                    key={chat.id}
-                                                    timeout={200}
-                                                    classNames="item-value"
-                                                >
-                                                    <Link
-                                                        href={`/chat/${chat.id}`}
-                                                        key={index}
-                                                        className={
-                                                            styles.chatLink
-                                                        }
-                                                    >
-                                                        <ChatItem
-                                                            unreadCount={
-                                                                chat.unreadCount
-                                                            }
-                                                            active={
-                                                                chat.id ===
-                                                                currentChat?.id
-                                                            }
-                                                            id={chat.id}
-                                                            name={
-                                                                chat.companion
-                                                                    .name
-                                                            }
-                                                            isFavourited={
-                                                                chat.isFavorite
-                                                            }
-                                                            avatar={
-                                                                chat.companion
-                                                                    .avatar
-                                                            }
-                                                            lastMessage={
-                                                                chat.lastMessage
-                                                            }
-                                                        />
-                                                    </Link>
-                                                </CSSTransition>
-                                            );
-                                        })}
+                                                return (
+                                                    <CSSTransition
+                                                        key={chat.id}
+                                                        timeout={200}
+                                                        classNames="item-value">
+                                                        <Link
+                                                            href={`/chat/${chat.id}`}
+                                                            key={index}
+                                                            className={
+                                                                styles.chatLink
+                                                            }>
+                                                            <ChatItem
+                                                                unreadCount={
+                                                                    chat.unreadCount
+                                                                }
+                                                                active={
+                                                                    chat.id ===
+                                                                    currentChat?.id
+                                                                }
+                                                                id={chat.id}
+                                                                name={
+                                                                    chat
+                                                                        .companion
+                                                                        .name
+                                                                }
+                                                                isFavourited={
+                                                                    chat.isFavorite
+                                                                }
+                                                                avatar={
+                                                                    chat
+                                                                        .companion
+                                                                        .avatar
+                                                                }
+                                                                lastMessage={
+                                                                    chat.lastMessage
+                                                                }
+                                                            />
+                                                        </Link>
+                                                    </CSSTransition>
+                                                );
+                                            })
+                                        ) : (
+                                            <div
+                                                className={classNames(
+                                                    styles.chatList,
+                                                    styles.empty,
+                                                )}>
+                                                <img
+                                                    src="/images/questions.png"
+                                                    alt="empty"
+                                                />
+                                                <p className="text fz24 fw500 gray center">
+                                                    У Вас нет сообщений
+                                                </p>
+                                            </div>
+                                        )}
                                     </TransitionGroup>
                                 )}
                             </SideBar>
@@ -160,8 +170,7 @@ export default function RootLayout({
                                     );
                                 }}
                                 className={styles.mobileContainer}
-                                classNames="fade"
-                            >
+                                classNames="fade">
                                 <div ref={mobileContainerRef}>
                                     {pathname.split("/").at(-1) === "chat" ? (
                                         <SideBar>
@@ -171,64 +180,81 @@ export default function RootLayout({
                                                 </div>
                                             ) : (
                                                 <TransitionGroup
-                                                    className={styles.chatList}
-                                                >
-                                                    {chats?.map(
-                                                        (chat, index) => {
-                                                            if (!chat.companion)
-                                                                return;
+                                                    className={styles.chatList}>
+                                                    {chats?.length &&
+                                                    chats.length > 0 ? (
+                                                        chats?.map(
+                                                            (chat, index) => {
+                                                                if (
+                                                                    !chat.companion
+                                                                )
+                                                                    return;
 
-                                                            return (
-                                                                <CSSTransition
-                                                                    key={
-                                                                        chat.id
-                                                                    }
-                                                                    timeout={
-                                                                        200
-                                                                    }
-                                                                    classNames="item-value"
-                                                                >
-                                                                    <Link
-                                                                        href={`/chat/${chat.id}`}
+                                                                return (
+                                                                    <CSSTransition
                                                                         key={
-                                                                            index
+                                                                            chat.id
                                                                         }
-                                                                        className={
-                                                                            styles.chatLink
+                                                                        timeout={
+                                                                            200
                                                                         }
-                                                                    >
-                                                                        <ChatItem
-                                                                            unreadCount={
-                                                                                chat.unreadCount
+                                                                        classNames="item-value">
+                                                                        <Link
+                                                                            href={`/chat/${chat.id}`}
+                                                                            key={
+                                                                                index
                                                                             }
-                                                                            active={
-                                                                                chat.id ===
-                                                                                currentChat?.id
-                                                                            }
-                                                                            id={
-                                                                                chat.id
-                                                                            }
-                                                                            name={
-                                                                                chat
-                                                                                    .companion
-                                                                                    .name
-                                                                            }
-                                                                            isFavourited={
-                                                                                chat.isFavorite
-                                                                            }
-                                                                            avatar={
-                                                                                chat
-                                                                                    .companion
-                                                                                    .avatar
-                                                                            }
-                                                                            lastMessage={
-                                                                                chat.lastMessage
-                                                                            }
-                                                                        />
-                                                                    </Link>
-                                                                </CSSTransition>
-                                                            );
-                                                        },
+                                                                            className={
+                                                                                styles.chatLink
+                                                                            }>
+                                                                            <ChatItem
+                                                                                unreadCount={
+                                                                                    chat.unreadCount
+                                                                                }
+                                                                                active={
+                                                                                    chat.id ===
+                                                                                    currentChat?.id
+                                                                                }
+                                                                                id={
+                                                                                    chat.id
+                                                                                }
+                                                                                name={
+                                                                                    chat
+                                                                                        .companion
+                                                                                        .name
+                                                                                }
+                                                                                isFavourited={
+                                                                                    chat.isFavorite
+                                                                                }
+                                                                                avatar={
+                                                                                    chat
+                                                                                        .companion
+                                                                                        .avatar
+                                                                                }
+                                                                                lastMessage={
+                                                                                    chat.lastMessage
+                                                                                }
+                                                                            />
+                                                                        </Link>
+                                                                    </CSSTransition>
+                                                                );
+                                                            },
+                                                        )
+                                                    ) : (
+                                                        <div
+                                                            className={classNames(
+                                                                styles.chatList,
+                                                                styles.empty,
+                                                            )}>
+                                                            <img
+                                                                src="/images/questions.png"
+                                                                alt="empty"
+                                                            />
+                                                            <p className="text fz24 fw500 gray center">
+                                                                У Вас нет
+                                                                сообщений
+                                                            </p>
+                                                        </div>
                                                     )}
                                                 </TransitionGroup>
                                             )}
