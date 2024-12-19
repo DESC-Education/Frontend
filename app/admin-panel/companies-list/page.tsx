@@ -57,7 +57,7 @@ export default function CompanyListPage() {
                 {!loading ? (
                     currentUsers?.map((user) => (
                         <Link
-                            href={`/admin-panel/students-list/${user.id}`}
+                            href={`/admin-panel/companies-list/${user.id}`}
                             key={user.id}
                             className={styles.studentLink}>
                             <div className={styles.student}>
