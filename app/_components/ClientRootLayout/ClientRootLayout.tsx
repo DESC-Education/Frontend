@@ -1,5 +1,4 @@
 "use client";
-
 import { useTypesDispatch } from "@/app/_hooks/useTypesDispatch";
 import { useTypesSelector } from "@/app/_hooks/useTypesSelector";
 import { getProfile } from "@/app/_http/API/profileApi";
@@ -32,7 +31,7 @@ declare global {
 
 const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
     const dispatch = useTypesDispatch();
-    const { isAuth, isProfileLoading } = useTypesSelector(
+    const { isAuth, isProfileLoading, user } = useTypesSelector(
         (state) => state.userReducer,
     );
     const { unreadChatsCount } = useTypesSelector((state) => state.chatReducer);
@@ -59,10 +58,8 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
         tryToAddChat,
         updateIsRead,
     } = chatSlice.actions;
-    const {
-        updateCurrentTaskSolution,
-        addCurrentTaskSolution,
-    } = taskSlice.actions;
+    const { updateCurrentTaskSolution, addCurrentTaskSolution } =
+        taskSlice.actions;
 
     const [isInitialRun, setIsInitialRun] = useState(true);
 
@@ -148,18 +145,20 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     );
                                     switch (result.data.type) {
                                         case "verification": {
-                                            const profileRes = await getProfile();
+                                            const profileRes =
+                                                await getProfile();
 
                                             if (profileRes.status === 200) {
                                                 dispatch(
                                                     updateProfile({
                                                         ...profileRes.profile!,
-                                                        telegramLink: profileRes.profile!
-                                                            .telegramLink
-                                                            ? profileRes.profile!.telegramLink.slice(
-                                                                  13,
-                                                              )
-                                                            : undefined,
+                                                        telegramLink:
+                                                            profileRes.profile!
+                                                                .telegramLink
+                                                                ? profileRes.profile!.telegramLink.slice(
+                                                                      13,
+                                                                  )
+                                                                : undefined,
                                                         vkLink: profileRes.profile!
                                                             .vkLink
                                                             ? profileRes.profile!.vkLink.slice(
@@ -240,8 +239,8 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     );
                                     dispatch(
                                         updateUnreadChatsCount({
-                                            number:
-                                                result.data.unreadChatsCount,
+                                            number: result.data
+                                                .unreadChatsCount,
                                         }),
                                     );
                                     break;
@@ -270,8 +269,8 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                                     );
                                     dispatch(
                                         updateUnreadChatsCount({
-                                            number:
-                                                result.data.unreadChatsCount,
+                                            number: result.data
+                                                .unreadChatsCount,
                                         }),
                                     );
                                     dispatch(
@@ -335,37 +334,40 @@ const ClientRootLayout: FC<ClientRootLayoutProps> = ({ children }) => {
                         }),
                     );
 
-                    const profile = await getProfile();
+                    if (res.user!.role === "student") {
+                        const profile = await getProfile();
 
-                    // Profile Setup
-                    if (profile.status === 200) {
-                        if (
-                            profile.profile.verification.status !==
-                            "not_verified"
-                        ) {
-                            dispatch(
-                                updateProfile({
-                                    ...profile.profile!,
-                                    telegramLink: profile.profile!.telegramLink
-                                        ? profile.profile!.telegramLink.slice(
-                                              13,
-                                          )
-                                        : undefined,
-                                    vkLink: profile.profile!.vkLink
-                                        ? profile.profile!.vkLink.slice(15)
-                                        : undefined,
-                                }),
-                            );
+                        // Profile Setup
+                        if (profile.status === 200) {
+                            if (
+                                profile.profile.verification.status !==
+                                "not_verified"
+                            ) {
+                                dispatch(
+                                    updateProfile({
+                                        ...profile.profile!,
+                                        telegramLink: profile.profile!
+                                            .telegramLink
+                                            ? profile.profile!.telegramLink.slice(
+                                                  13,
+                                              )
+                                            : undefined,
+                                        vkLink: profile.profile!.vkLink
+                                            ? profile.profile!.vkLink.slice(15)
+                                            : undefined,
+                                    }),
+                                );
+                            }
                         }
+                        dispatch(updateIsProfileLoading(false));
                     }
-                    dispatch(updateIsProfileLoading(false));
                 }
             }
             dispatch(updateIsLoading(false));
             setIsInitialRun(false);
         };
         asyncFunc();
-    }, [isInitialRun]);
+    }, [isInitialRun, user.role]);
 
     // Get profile setup
     useEffect(() => {
