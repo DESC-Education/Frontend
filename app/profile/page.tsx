@@ -35,7 +35,13 @@ export default function Home() {
         setPage,
         loading,
         fetchData,
-    ] = usePagination<IReview>(getReviews, null, POSTS_PER_PAGE);
+    ] = usePagination<IReview>(getReviews, null, POSTS_PER_PAGE, false);
+    
+    useEffect(() => {
+        if (user.role === "student") {
+            fetchData();
+        }
+    }, [])
 
     if (profileVerification.status !== "verified") {
         return <ProfileStatus profileVerification={profileVerification} />;
@@ -51,8 +57,6 @@ export default function Home() {
         }
         return "Выпускник";
     };
-
-
 
     return (
         <div

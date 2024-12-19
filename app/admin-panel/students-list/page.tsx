@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import styles from "./page.module.scss";
 import Image from "next/image";
@@ -10,55 +9,112 @@ import { getUsers } from "@/app/_http/API/adminApi";
 import { Oval } from "react-loader-spinner";
 import Input from "@/app/_components/ui/Input/Input";
 import { get } from "http";
-
+import usePagination from "@/app/_hooks/usePagination";
+import Pagination from "@/app/_components/ui/Pagination/Pagination";
+import Button from "@/app/_components/ui/Button/Button";
 
 export default function StudentsListPage() {
-
-    const [users, setUsers] = useState<IUsersRequest[] | null>(null);
     const [search, setSearch] = useState<string>("");
 
-    const getUserFunc = async (q?: string) => {
-        const data = await getUsers("student", q || "");
-        if (!data.users) return;
-        setUsers(data.users);
-    }
+    const [currentUsers, totalPages, page, setPage, loading, fetchData] =
+        usePagination<IUsersRequest>(
+            getUsers,
+            {
+                role: "student",
+                q: search,
+            },
+            20,
+        );
 
     useEffect(() => {
-        getUserFunc();
+        fetchData();
     }, []);
 
-
-
-    if (!users) return (<div className={styles.loading}><Oval /></div>);
     return (
-        <div className="container">
+        <div className={classNames("container", styles.container)}>
             <div className={styles.search}>
-                <Input 
-                type="text" 
-                placeholder="Поиск" 
-                onChange={(e) => (setSearch(e), getUserFunc(e))}
-                value={search}
-                />
+                <form
+                    className={styles.searchForm}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        setPage(1);
+                        fetchData();
+                    }}>
+                    <Input
+                        containerClassName={styles.searchInput}
+                        type="text"
+                        placeholder="Поиск"
+                        // onBlur={() => fetchData()}
+                        onChange={(e) => setSearch(e)}
+                        value={search}
+                    />
+                    <Button type="secondary" htmlType="submit">
+                        Поиск
+                    </Button>
+                </form>
             </div>
             <div className={styles.studentsList}>
-                {users.map((user) => (
-                    <Link href={`/admin-panel/students-list/${user.id}`} key={user.id} className={styles.studentLink}>
-                        <div className={styles.student}>
-                            <div className={styles.info}>
-                                {user.firstName && user.lastName &&
-                                    <p className={classNames("text fw500", styles.name)}>{user.firstName} {user.lastName}</p>
-                                }
-                                <p className={classNames("text fw500", styles.name)}>{user.email}</p>
-                                {/* <p className={classNames("text gray fz16", styles.education)}>{user.university.name} {student.faculty.name} {student.speciality.name}</p> */}
+                {!loading ? (
+                    currentUsers?.map((user) => (
+                        <Link
+                            href={`/admin-panel/students-list/${user.id}`}
+                            key={user.id}
+                            className={styles.studentLink}>
+                            <div className={styles.student}>
+                                <div className={styles.info}>
+                                    {user.firstName && user.lastName && (
+                                        <p
+                                            className={classNames(
+                                                "text fw500",
+                                                styles.name,
+                                            )}>
+                                            {user.firstName} {user.lastName}
+                                        </p>
+                                    )}
+                                    <p
+                                        className={classNames(
+                                            "text fw500",
+                                            styles.name,
+                                        )}>
+                                        {user.email}
+                                    </p>
+                                    {/* <p className={classNames("text gray fz16", styles.education)}>{user.university.name} {student.faculty.name} {student.speciality.name}</p> */}
+                                </div>
+                                <div className={styles.status}>
+                                    {user.profileVerification === "verified" ? (
+                                        <p
+                                            className={classNames(
+                                                "text green fz16 fw500",
+                                                styles.verified,
+                                            )}>
+                                            Проверен
+                                        </p>
+                                    ) : (
+                                        <p
+                                            className={classNames(
+                                                "text red fz16 fw500",
+                                                styles.notVerified,
+                                            )}>
+                                            Не проверен
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                            <div className={styles.status}>
-                                {user.profileVerification === "verified" ? <p className={classNames("text green fz16 fw500", styles.verified)}>Проверен</p> : <p className={classNames("text red fz16 fw500", styles.notVerified)}>Не проверен</p>}
-
-                            </div>
-                        </div>
-                    </Link>
-                ))}
+                        </Link>
+                    ))
+                ) : (
+                    <div className={styles.loading}>
+                        <Oval />
+                    </div>
+                )}
             </div>
+            {totalPages > 1 && !loading && (
+                <Pagination
+                    page={page}
+                    setPage={setPage}
+                    totalPages={totalPages}
+                />
+            )}
         </div>
     );
 }

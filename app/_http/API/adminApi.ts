@@ -88,19 +88,24 @@ export const answerVerifyRequest = async (id: string, dto: {
 };
 
 export const getUsers = async (
-    role: "student" | "company",
-    q?: string,
+    dto: {
+        role: "student" | "company",
+        q?: string,
+        page: number,
+        pageSize: number,
+    }
 ) => {
     try {
         const { data } = await $authHost.get<{
             results: IUsersRequest[];
-            role: "student" | "company",
-            q: "",
-        }>(`/api/v1/admins/users/?role=${role}&search=${q}`);
-
+            numPages: number,
+            count: number,
+        }>(`/api/v1/admins/users/?role=${dto.role}&page=${dto.page}&page_size=${dto.pageSize}${dto.q ? `&search=${dto.q}` : ""}`);
         return {
             status: 200,
-            users: data.results,
+            numPages: data.numPages,
+            count: data.count,
+            results: data.results,
         };
     } catch (error) {
         if (axios.isAxiosError(error)) {
