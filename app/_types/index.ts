@@ -380,3 +380,38 @@ export type ICompanyInfo = {
     companyName: string,
     profile: ICompanyProfile
 }
+
+export type IVacancy = {
+    id: string;
+    companyProfile: ICompanyProfile;
+    title: string;
+    description: string;
+    requirements: string;
+    responsibilities: string;
+    conditions: string;
+    salary: {
+        min: number;
+        max: number;
+        currency: string;
+    };
+    location: ICity;
+    employmentType: "full_time" | "part_time" | "remote" | "hybrid";
+    experienceLevel: "intern" | "junior" | "middle" | "senior";
+    skills: ISkill[];
+    category: ICategory;
+    isActive: boolean;
+    isVerified: boolean;
+    createdAt: string;
+    deadline: string;
+    applicationsCount: number;
+};
+
+export type IVacancyApplication = {
+    id: string;
+    vacancy: IVacancy;
+    studentProfile: IStudentProfile;
+    coverLetter: string;
+    status: "pending" | "accepted" | "rejected" | "interview";
+    createdAt: string;
+    files: IFile[];
+};
