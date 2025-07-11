@@ -44,8 +44,16 @@ const mockVacancies = [
 ];
 
 
+type FilterState = {
+    categories: string[];
+    directions: string[];
+    levels: string[];
+    employments: string[];
+    schedules: string[];
+};
 
-const initialFilterState = {
+const initialFilterState: FilterState = {
+    categories: [],
     directions: [],
     levels: [],
     employments: [],
@@ -63,7 +71,7 @@ const sortOptions = [
 export default function VacanciesPage() {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
-    const [filters, setFilters] = useState(initialFilterState);
+    const [filters, setFilters] = useState<FilterState>(initialFilterState);
     const [sort, setSort] = useState("recommend");
     const [filteredVacancies, setFilteredVacancies] = useState(mockVacancies);
 
@@ -72,7 +80,7 @@ export default function VacanciesPage() {
     };
 
     const handleFilterChange = (
-        section: keyof typeof initialFilterState,
+        section: keyof FilterState,
         value: string,
         checked: boolean
     ) => {
@@ -82,7 +90,7 @@ export default function VacanciesPage() {
                 ...prev,
                 [section]: checked
                     ? [...arr, value]
-                    : arr.filter((v: string) => v !== value),
+                    : arr.filter((v) => v !== value),
             };
         });
     };
@@ -162,27 +170,22 @@ export default function VacanciesPage() {
 
     return (
         <div className={classNames("container", styles.container)}>
-            <div style={{ display: "flex", gap: 32 }}>
-                <div>
-                    <VacancyFilters
-                        values={filters}
-                        onChange={handleFilterChange}
-                        onClear={handleClearFilters}
-                    />
+                <div className={styles.vacancyCount}>
+                    Вакансии <span className={styles.count}>{filteredVacancies.length}</span>
                 </div>
-                <div style={{ flex: 1 }}>
-                    <div className={styles.resultsHeader}>
-                        <h2 className="title fz32">
-                            Вакансии
-                            <span className={styles.vacancyCountBadge}>{filteredVacancies.length}</span>
-                        </h2>
-                        <div className={styles.sortBar}>
-                            <span className={styles.sortLink}>
-                                <VacancySort value={sort} onChange={setSort} />
-                            </span>
-                        </div>
+            <div className={styles.topPanel}>
+                <div className={styles.sorting}>
+                    <div className={styles.sort}>
+                        <VacancySort value={sort} onChange={setSort} />
                     </div>
-                    <div className={styles.vacanciesList}>
+                </div>
+            </div>
+            <div className={styles.mainContainer}>
+                <aside className={styles.sidebar1}>
+                    <VacancyFilters values={filters} onChange={handleFilterChange} onClear={handleClearFilters} />
+                </aside>
+                <main className={styles.mainContent}>
+                    <div className={styles.grid}>
                         {filteredVacancies.map((vacancy) => (
                             <div
                                 key={vacancy.id}
@@ -212,14 +215,15 @@ export default function VacanciesPage() {
                         ))}
                     </div>
                     {filteredVacancies.length === 0 && (
-                        <div className={styles.noResults}>
+                        <div className={styles.emptyState}>
+                            <div className={styles.emptyIcon}>📂</div>
                             <h3 className="title fz24">Вакансии не найдены</h3>
                             <p className="text gray">
                                 Попробуйте изменить параметры поиска
                             </p>
                         </div>
                     )}
-                </div>
+                </main>
             </div>
         </div>
     );

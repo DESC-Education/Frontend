@@ -1,109 +1,98 @@
-import React from "react";
-import styles from "./VacancyFilters.module.scss";
+import React, { useState, useEffect } from "react";
+import styles from "./page.module.scss";
+import Input from "../_components/ui/Input/Input";
+import Button from "../_components/ui/Button/Button";
+import classNames from "classnames";
 
-const directions = [
+type FilterState = {
+    categories: string[];
+    directions: string[];
+    levels: string[];
+    employments: string[];
+    schedules: string[];
+};
+
+const categories = [
+    { label: "Искусственный интеллект", value: "ai" },
+    { label: "Мобильная разработка", value: "mobile" },
+    { label: "Серверная разработка", value: "server" },
+    { label: "Анимация", value: "animation" },
     { label: "Дизайн", value: "design" },
-    { label: "Верстка", value: "layout" },
-    { label: "Программирование", value: "programming" },
-    { label: "Базы данных", value: "databases" },
-    { label: "Исследователь", value: "research" },
-];
-
-const levels = [
-    { label: "Стажер", value: "intern" },
-    { label: "Junior", value: "junior" },
-    { label: "Middle", value: "middle" },
-    { label: "Senior", value: "senior" },
-    { label: "Team Lead", value: "lead" },
-];
-
-const employments = [
-    { label: "Полная занятость", value: "full" },
-    { label: "Частичная занятость", value: "part" },
-    { label: "Проектная работа", value: "project" },
-];
-
-const schedules = [
-    { label: "Полный день", value: "day" },
-    { label: "Удаленная работа", value: "remote" },
-    { label: "Сменный график", value: "shift" },
-    { label: "Гибкий график", value: "flexible" },
+    { label: "Веб-разработка", value: "web" },
 ];
 
 type Props = {
     values: {
-        directions: string[];
-        levels: string[];
-        employments: string[];
-        schedules: string[];
+        categories: string[];
     };
-    onChange: (section: keyof Props["values"], value: string, checked: boolean) => void;
+    onChange: (section: keyof FilterState, value: string, checked: boolean) => void;
     onClear: () => void;
 };
 
-const VacancyFilters: React.FC<Props> = ({ values, onChange, onClear }) => {
+const VacancyFilters: React.FC<Props> = ({ values = { categories: [] }, onChange, onClear }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 1024);
+        };
+
+        handleResize(); // Set initial value
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <div className={styles.filtersBox}>
-            <h3 className={styles.title}>Фильтры</h3>
-            <div className={styles.group}>
-                <div className={styles.groupTitle}>Направление</div>
-                {directions.map((item) => (
-                    <React.Fragment key={item.value}>
-                        <label className={styles.checkboxLabel}>
-                            <input
+        <div className={isMobile ? styles.filtersMenu : styles.sidebar}>
+            <div className={styles.filters}>
+                <div className={styles.filtersHeader}>
+                    <h3 className="title fz28 fw500">Фильтры</h3>
+                    {isMobile && (
+                        <div
+                            className={styles.closeButton}
+                            onClick={() => setIsOpen(false)}
+                        ></div>
+                    )}
+                </div>
+                <div className={styles.filterGroup}>
+                    <p className={classNames("text gray fz20", styles.filterTitle)}>
+                        Категории
+                    </p>
+                    {categories.map((item, index) => (
+                        <label key={index} className={styles.filterLabel}>
+                            <Input
                                 type="checkbox"
-                                checked={values.directions.includes(item.value)}
-                                onChange={e => onChange("directions", item.value, e.target.checked)}
+                                checked={values.categories.includes(item.value)}
+                                onCheck={(e) => onChange("categories", item.value, e)}
                             />
-                            {item.label}
+                            <p className="text fw500 fz20">{item.label}</p>
                         </label>
-                        {/* Вложенные уровни для выбранного направления */}
-                        {item.value === "programming" && values.directions.includes(item.value) && (
-                            <div className={styles.levelsNested}>
-                                {levels.map((level) => (
-                                    <label key={level.value} className={styles.checkboxLabel}>
-                                        <input
-                                            type="checkbox"
-                                            checked={values.levels.includes(level.value)}
-                                            onChange={e => onChange("levels", level.value, e.target.checked)}
-                                        />
-                                        {level.label}
-                                    </label>
-                                ))}
-                            </div>
-                        )}
-                    </React.Fragment>
-                ))}
+                    ))}
+                </div>
+                <p className={classNames("text center fz20", styles.selectText)}>
+                    Выберите категорию
+                </p>
+                <div className={styles.buttons}>
+                    <Button
+                        type="secondary"
+                        onClick={() => {}}
+                        className={styles.applyButton}
+                    >
+                        Применить
+                    </Button>
+                    <Button
+                        type="primary"
+                        className={styles.clearButton}
+                        onClick={onClear}
+                    >
+                        Очистить
+                    </Button>
+                </div>
             </div>
-            <div className={styles.group}>
-                <div className={styles.groupTitle}>Занятость</div>
-                {employments.map((item) => (
-                    <label key={item.value} className={styles.checkboxLabel}>
-                        <input
-                            type="checkbox"
-                            checked={values.employments.includes(item.value)}
-                            onChange={e => onChange("employments", item.value, e.target.checked)}
-                        />
-                        {item.label}
-                    </label>
-                ))}
-            </div>
-            <div className={styles.group}>
-                <div className={styles.groupTitle}>График</div>
-                {schedules.map((item) => (
-                    <label key={item.value} className={styles.checkboxLabel}>
-                        <input
-                            type="checkbox"
-                            checked={values.schedules.includes(item.value)}
-                            onChange={e => onChange("schedules", item.value, e.target.checked)}
-                        />
-                        {item.label}
-                    </label>
-                ))}
-            </div>
-            <button className={styles.clearBtn} onClick={onClear}>Очистить</button>
         </div>
     );
 };
 
-export default VacancyFilters; 
+export default VacancyFilters;

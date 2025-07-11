@@ -31,4 +31,4 @@ const VacancySort: React.FC<Props> = ({ value, onChange }) => {
     );
 };
 
-export default VacancySort; 
+export default VacancySort;
