@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import styles from "../page.module.scss";
 import Button from "../../_components/ui/Button/Button";
 import classNames from "classnames";
-import { mockVacancyDetails } from "../page";
+import mockVacancyDetails from "../mockVacancyDetails";
 
 export default function VacancyDetailPage() {
     // В реальном проекте: получить vacancyId из useParams и загрузить данные

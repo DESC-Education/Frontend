@@ -9,6 +9,7 @@ import VacancyFilters from "./VacancyFilters";
 import VacancySort from "./VacancySort";
 import React from "react";
 import { useRouter } from "next/navigation";
+import mockVacancyDetails from "./mockVacancyDetails";
 
 // Моковые данные вакансий
 const mockVacancies = [
@@ -42,26 +43,7 @@ const mockVacancies = [
     }
 ];
 
-// Моковые данные для детальной страницы вакансии
-export const mockVacancyDetails = {
-    id: "1",
-    title: "Верстальщик сайтов",
-    company: "IT компания",
-    location: "Москва, ул. Мира, 17",
-    salary: "20 000 - 50 000 руб.",
-    postedDate: "2 мая 2024",
-    description: `Redis — это key-value хранилище. Если провести аналогию с привычными типами — словарь, который отлично подходит для хранения кэша. Удобно использовать для межкомпонентного взаимодействия.`,
-    requirements: [
-        "Key-value хранилище. Если провести аналогию с привычными типами — словарь, который отлично подходит для хранения кэша. Удобно использовать для межкомпонентного взаимодействия.",
-        "Хранение JSON-документов, то такой же аналог — и можно больше. Отлично подходит, если где-то генерируется большое количество данных, которые не хочется терять."
-    ],
-    conditions: [
-        "Key-value хранилище.",
-        "Хранение JSON-документов."
-    ],
-    skills: ["Figma", "Adobe Illustrator", "Photoshop", "Анимация"],
-    tags: ["Полная занятость", "Джуниор", "Без опыта", "Удалённо"],
-};
+
 
 const initialFilterState = {
     directions: [],
