@@ -476,6 +476,20 @@ const Header = () => {
                                             changeMenuVisibility(false)
                                         }>
                                         <div className={styles.linkContainer}>
+                                            <Link
+                                                className={classNames(
+                                                    styles.link,
+                                                    "text fz24 fw500",
+                                                    {
+                                                        [styles.active]: pathname === "/vacancies",
+                                                    }
+                                                )}
+                                                href="/vacancies"
+                                            >
+                                                Вакансии
+                                            </Link>
+                                        </div>
+                                        <div className={styles.linkContainer}>
                                             <div
                                                 onClick={() =>
                                                     showModal({
@@ -532,6 +546,18 @@ const Header = () => {
                         ) : (
                             <nav>
                                 <div className={styles.navList}>
+                                    <Link
+                                        className={classNames(
+                                            styles.link,
+                                            "text fz24 fw500",
+                                            {
+                                                [styles.active]: pathname === "/vacancies",
+                                            }
+                                        )}
+                                        href="/vacancies"
+                                    >
+                                        Вакансии
+                                    </Link>
                                     <Button
                                         onClick={() =>
                                             showModal({
