@@ -1,0 +1,205 @@
+.vacancyCard {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        transform: translateY(-2px);
+    }
+
+    &.isVacancyPage {
+        border: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        
+        &:hover {
+            transform: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.companyInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.logo {
+    flex-shrink: 0;
+}
+
+.companyLogo {
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.companyDetails {
+    flex: 1;
+    min-width: 0;
+}
+
+.companyName {
+    margin: 0 0 4px 0;
+    color: #374151;
+    line-height: 1.4;
+}
+
+.location {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.salary {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.salaryText {
+    color: #059669;
+    line-height: 1.4;
+}
+
+.content {
+    margin-bottom: 16px;
+}
+
+.titleLink {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    margin-bottom: 8px;
+
+    &:hover .title {
+        color: #3b82f6;
+    }
+}
+
+.title {
+    margin: 0;
+    color: #111827;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.description {
+    margin: 0 0 16px 0;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.tag {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.category {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.employmentType {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.experienceLevel {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill {
+    padding: 2px 6px;
+    background: #f3f4f6;
+    color: #374151;
+    border-radius: 4px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.moreSkills {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.date, .deadline {
+    line-height: 1.4;
+}
+
+.applications {
+    text-align: right;
+}
+
+.applicationsCount {
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .vacancyCard {
+        padding: 16px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .salary {
+        align-self: flex-end;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .applications {
+        align-self: flex-end;
+    }
+} 

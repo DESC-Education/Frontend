@@ -185,6 +185,14 @@ const Header = () => {
                                     href="/admin-panel/verification/students">
                                     Верификация студентов
                                 </Link>
+                                <Link
+                                    className={classNames(styles.link, "text fz24 fw500", {
+                                        [styles.active]: pathname.startsWith("/vacancies"),
+                                    })}
+                                    href="/vacancies"
+                                >
+                                    Вакансии
+                                </Link>
                                 <p
                                     onClick={() => {
                                         logout();
