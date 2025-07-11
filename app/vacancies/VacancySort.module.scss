@@ -1,0 +1,28 @@
+.sortBox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.label {
+    font-size: 16px;
+    color: #222;
+    font-weight: 500;
+}
+
+.select {
+    font-size: 15px;
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid #F6F7F8;
+    background: #fff;
+    color: #3ebeff;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.select:focus {
+    border-color: #222;
+} 

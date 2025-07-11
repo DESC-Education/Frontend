@@ -1,0 +1,75 @@
+.filtersBox {
+    border: 2px solid #F6F7F8;
+    border-radius: 20px;
+    padding: 24px 20px;
+    background: #fff;
+    min-width: 240px;
+    max-width: 320px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.group {
+    margin-bottom: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f3f7ff;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.groupTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    user-select: none;
+    padding-left: 2px;
+    input[type="checkbox"] {
+        accent-color: #3ebeff;
+        width: 16px;
+        height: 16px;
+        margin: 0 6px 0 0;
+    }
+}
+
+.levelsNested {
+    margin-left: 18px;
+    margin-top: 2px;
+    padding-left: 8px;
+    border-left: 2px solid #f3f7ff;
+}
+
+.clearBtn {
+    margin-top: 10px;
+    background: none;
+    border: 1px solid #3ebeff;
+    color: #3ebeff;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 500;
+}
+.clearBtn:hover {
+    background: #3ebeff;
+    color: #fff;
+} 
