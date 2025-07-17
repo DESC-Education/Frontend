@@ -1,0 +1,160 @@
+.container {
+    padding: 32px 0;
+}
+
+.backLink {
+    color: #3ebeff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.backLink:hover {
+    color: #2a8fd8;
+}
+
+.myApplicationsHeader {
+    margin-bottom: 32px;
+}
+
+.applicationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.applicationCard {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    padding: 24px;
+    transition: box-shadow 0.2s;
+}
+
+.applicationCard:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.applicationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.applicationInfo {
+    flex: 1;
+}
+
+.vacancyTitle {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.applicationStatus {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.applicationDate {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.responseDate {
+    font-size: 14px;
+    color: #666;
+}
+
+.applicationActions {
+    min-width: 150px;
+}
+
+.applicationDetails {
+    margin-bottom: 20px;
+}
+
+.detailRow {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.detailRow strong {
+    color: #222;
+}
+
+.companyComment {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3ebeff;
+}
+
+.companyComment strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.companyComment p {
+    font-size: 14px;
+    color: #444;
+    margin: 0;
+}
+
+.coverLetter {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 20px;
+}
+
+.coverLetter strong {
+    display: block;
+    margin-bottom: 12px;
+    color: #222;
+    font-size: 16px;
+}
+
+.coverLetter p {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.emptyIcon {
+    font-size: 64px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .applicationHeader {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .applicationActions {
+        width: 100%;
+    }
+}

@@ -11,7 +11,7 @@ import { applyToVacancy } from "../../_http/API/vacancyApi";
 export default function VacancyDetailPage() {
     const { id } = useParams();
     const router = useRouter();
-    const { user, isAuth } = useTypesSelector((state) => state.userReducer);
+    const { user,isAuth } = useTypesSelector((state) => state.userReducer);
     const [isLoading, setIsLoading] = useState(false);
     const [showApplicationForm, setShowApplicationForm] = useState(false);
     const [applicationData, setApplicationData] = useState({
@@ -203,7 +203,7 @@ export default function VacancyDetailPage() {
                                 <div>Полная занятость</div>
                                 <div>{vacancy.postedDate}</div>
                             </div>
-                            {user.role === "student" && isAuth ? (
+                           { user.role === "student" && isAuth ? (
                                 <Button type="primary" className={styles.applyButton} onClick={handleApply}>
                                     Откликнуться
                                 </Button>

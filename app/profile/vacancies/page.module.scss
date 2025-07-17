@@ -1,0 +1,289 @@
+.container {
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.createButton {
+    font-size: 16px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.createButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(62, 190, 255, 0.3);
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.emptyIcon {
+    font-size: 64px;
+    margin-bottom: 24px;
+}
+
+.vacanciesList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.vacancyItem {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    padding: 24px;
+    transition: box-shadow 0.2s;
+}
+
+.vacancyItem:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.vacancyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.vacancyInfo {
+    flex: 1;
+}
+
+.vacancyTitle {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.vacancyLocation {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.vacancySalary {
+    font-size: 16px;
+    font-weight: 600;
+    color: #3ebeff;
+    margin-bottom: 8px;
+}
+
+.vacancyStatus {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.vacancyDate {
+    font-size: 14px;
+    color: #888;
+}
+
+.vacancyActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.viewButton, .applicationsButton {
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.applicationsList {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 20px;
+    margin-top: 16px;
+}
+
+.applicationsTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #222;
+}
+
+.noApplications {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+.applicationItem {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.applicationInfo {
+    flex: 1;
+}
+
+.applicantName {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.applicationDetails {
+    margin-bottom: 12px;
+}
+
+.applicationDetails p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.coverLetter {
+    font-size: 14px;
+    color: #444;
+}
+
+.coverLetter strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #222;
+}
+
+.applicationActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.acceptButton {
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    background: #10b981;
+    color: white;
+    border: none;
+}
+
+.acceptButton:hover {
+    background: #059669;
+}
+
+.rejectButton {
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    background: #ef4444;
+    color: white;
+    border: none;
+}
+
+.rejectButton:hover {
+    background: #dc2626;
+}
+
+// Статусы
+.statusActive {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.statusInactive {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.statusModeration {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.statusPending {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.statusAccepted {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.statusRejected {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.statusDefault {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .vacancyHeader {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .vacancyActions {
+        width: 100%;
+        flex-direction: row;
+    }
+    
+    .applicationItem {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .applicationActions {
+        width: 100%;
+        flex-direction: row;
+    }
+}

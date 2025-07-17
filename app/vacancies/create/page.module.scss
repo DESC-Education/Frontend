@@ -1,0 +1,143 @@
+.container {
+    padding: 32px 0;
+}
+
+.backLink {
+    color: #3ebeff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.backLink:hover {
+    color: #2a8fd8;
+}
+
+.createVacancyForm {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    padding: 32px;
+}
+
+.form {
+    margin-top: 24px;
+}
+
+.formSection {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.formSection:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.formRow .formGroup:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+.label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.input, .textarea, .select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
+}
+
+.input:focus, .textarea:focus, .select:focus {
+    outline: none;
+    border-color: #3ebeff;
+    box-shadow: 0 0 0 3px rgba(62, 190, 255, 0.1);
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: #3ebeff;
+    cursor: pointer;
+}
+
+.formActions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.cancelButton {
+    min-width: 120px;
+}
+
+.submitButton {
+    min-width: 180px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .createVacancyForm {
+        padding: 24px 16px;
+        margin: 0;
+    }
+    
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .formActions {
+        flex-direction: column;
+    }
+    
+    .cancelButton, .submitButton {
+        width: 100%;
+    }
+}

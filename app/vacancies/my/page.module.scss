@@ -1,0 +1,201 @@
+.container {
+    padding: 32px 0;
+}
+
+.backLink {
+    color: #3ebeff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.backLink:hover {
+    color: #2a8fd8;
+}
+
+.myVacanciesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.vacanciesList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.vacancyItem {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    padding: 24px;
+    transition: box-shadow 0.2s;
+}
+
+.vacancyItem:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.vacancyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.vacancyInfo {
+    flex: 1;
+}
+
+.vacancyTitle {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.vacancyLocation {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.vacancySalary {
+    font-size: 16px;
+    font-weight: 600;
+    color: #3ebeff;
+    margin-bottom: 8px;
+}
+
+.vacancyStatus {
+    font-size: 14px;
+}
+
+.vacancyActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.applicationsList {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 20px;
+    margin-top: 16px;
+}
+
+.applicationsTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #222;
+}
+
+.noApplications {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+.applicationItem {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.applicationInfo {
+    flex: 1;
+}
+
+.applicantName {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.applicationDetails {
+    margin-bottom: 12px;
+}
+
+.applicationDetails p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.coverLetter {
+    font-size: 14px;
+    color: #444;
+}
+
+.coverLetter strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #222;
+}
+
+.applicationActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.emptyIcon {
+    font-size: 64px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .myVacanciesHeader {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .vacancyHeader {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .vacancyActions {
+        width: 100%;
+        flex-direction: row;
+    }
+    
+    .applicationItem {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .applicationActions {
+        width: 100%;
+        flex-direction: row;
+    }
+}

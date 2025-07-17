@@ -42,6 +42,10 @@ const companyPages = [
         name: "Мои задания",
         path: "/profile/tasks",
     },
+    {
+        name: "Мои вакансии",
+        path: "/profile/vacancies",
+    },
 ];
 
 const ProfileNavMenu = () => {

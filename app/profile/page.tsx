@@ -16,6 +16,7 @@ import usePagination from "../_hooks/usePagination";
 import { getReviews } from "../_http/API/tasksApi";
 import CustomOval from "../_components/ui/CustomOval/CustomOval";
 import Pagination from "../_components/ui/Pagination/Pagination";
+import Button from "../_components/ui/Button/Button";
 
 const POSTS_PER_PAGE = 4;
 
@@ -499,6 +500,32 @@ export default function Home() {
                             </div>
                         </div>
                     )}
+
+                    <div className={styles.vacanciesSection}>
+                        <div className={styles.vacanciesHeader}>
+                            <p
+                                className={classNames(
+                                    styles.vacanciesTitle,
+                                    "title",
+                                )}
+                            >
+                                Мои вакансии
+                            </p>
+                            <Link href="/profile/vacancies" className={styles.viewAllLink}>
+                                Посмотреть все
+                            </Link>
+                        </div>
+                        <div className={styles.vacanciesPreview}>
+                            <p className="text gray">
+                                Управляйте созданными вакансиями, просматривайте заявки и принимайте решения о кандидатах.
+                            </p>
+                            <Link href="/profile/vacancies">
+                                <Button type="primary" className={styles.manageVacanciesButton}>
+                                    Управлять вакансиями
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
