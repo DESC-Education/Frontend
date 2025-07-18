@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "./page.module.scss";
 import Link from "next/link";
+import Image from "next/image";
 
 const EmployerVacanciesPage = () => {
     const [isHovered, setIsHovered] = useState(false);
@@ -24,7 +25,13 @@ const EmployerVacanciesPage = () => {
                         </Link>
                     </div>
                     <div className={styles.heroImage}>
-                        <div className={styles.hummingbird}></div>
+                        <Image
+                            src="/icons/hummingbird.svg"
+                            alt="Hummingbird"
+                            width={262}
+                            height={218}
+                            className={styles.hummingbird}
+                        />
                     </div>
                 </div>
             </section>
@@ -36,6 +43,7 @@ const EmployerVacanciesPage = () => {
                     <div className={styles.advantagesGrid}>
                         <div className={`${styles.advantageCard} ${styles.card1}`}>
                             <div className={styles.cardNumber}>1</div>
+                            <div className={styles.cardIcon}>🎯</div>
                             <h3 className={styles.cardTitle}>Целевая аудитория</h3>
                             <p className={styles.cardDescription}>
                                 Только студенты и выпускники, активно ищущие работу или стажировку. 
@@ -44,6 +52,7 @@ const EmployerVacanciesPage = () => {
                         </div>
                         <div className={`${styles.advantageCard} ${styles.card2}`}>
                             <div className={styles.cardNumber}>2</div>
+                            <div className={styles.cardIcon}>💰</div>
                             <h3 className={styles.cardTitle}>Прозрачная оплата</h3>
                             <p className={styles.cardDescription}>
                                 Платите только за отклики (20 руб. за каждый). 
@@ -52,6 +61,7 @@ const EmployerVacanciesPage = () => {
                         </div>
                         <div className={`${styles.advantageCard} ${styles.card3}`}>
                             <div className={styles.cardNumber}>3</div>
+                            <div className={styles.cardIcon}>⚡</div>
                             <h3 className={styles.cardTitle}>Быстрый результат</h3>
                             <p className={styles.cardDescription}>
                                 Среднее время получения первого отклика — менее 24 часов 
@@ -82,7 +92,11 @@ const EmployerVacanciesPage = () => {
                             </ul>
                         </div>
                         <div className={styles.serviceProperties}>
+                            <div className={styles.propertiesNumber}>1</div>
                             <h3 className={styles.propertiesTitle}>Потребительские свойства</h3>
+                            <p className={styles.propertiesSubtitle}>
+                                Ключевые преимущества и характеристики услуги
+                            </p>
                             <div className={styles.propertiesList}>
                                 <div className={styles.propertyItem}>
                                     <h4>Целевая аудитория</h4>
@@ -116,25 +130,39 @@ const EmployerVacanciesPage = () => {
                     <h2 className={styles.sectionTitle}>Стоимость услуги</h2>
                     <div className={styles.pricingContent}>
                         <div className={styles.priceCard}>
-                            <div className={styles.priceAmount}>20 ₽</div>
-                            <div className={styles.priceLabel}>За каждый отклик</div>
-                        </div>
-                        <div className={styles.pricingInfo}>
-                            <div className={styles.pricingItem}>
-                                <span className={styles.pricingLabel}>Минимальное пополнение:</span>
-                                <span className={styles.pricingValue}>1000 рублей</span>
-                            </div>
-                            <div className={styles.pricingItem}>
-                                <span className={styles.pricingLabel}>Среднее количество откликов:</span>
-                                <span className={styles.pricingValue}>15-20 на вакансию</span>
-                            </div>
-                            <div className={styles.pricingItem}>
-                                <span className={styles.pricingLabel}>Ожидаемые расходы:</span>
-                                <span className={styles.pricingValue}>300-400 рублей</span>
+                            <div className={styles.priceCircle}>
+                                <div className={styles.priceAmount}>20 ₽</div>
+                                <div className={styles.priceLabel}>За каждый отклик</div>
                             </div>
                             <div className={styles.pricingExample}>
                                 <h4>Пример расчета:</h4>
-                                <p>При получении 25 откликов на вакансию: 25 откликов × 20 ₽ = 500 ₽</p>
+                                <p>25 откликов × 20 ₽ = 500 ₽</p>
+                            </div>
+                        </div>
+                        <div className={styles.pricingProcedure}>
+                            <div className={styles.procedureNumber}>2</div>
+                            <h3 className={styles.procedureTitle}>Порядок предоставления услуги</h3>
+                            <div className={styles.procedureList}>
+                                <div className={styles.procedureItem}>
+                                    <span className={styles.procedureNumber}>1</span>
+                                    <span>Регистрация компании в системе</span>
+                                </div>
+                                <div className={styles.procedureItem}>
+                                    <span className={styles.procedureNumber}>2</span>
+                                    <span>Пополнение баланса в личном кабинете</span>
+                                </div>
+                                <div className={styles.procedureItem}>
+                                    <span className={styles.procedureNumber}>3</span>
+                                    <span>Создание и публикация вакансии</span>
+                                </div>
+                                <div className={styles.procedureItem}>
+                                    <span className={styles.procedureNumber}>4</span>
+                                    <span>Получение откликов от соискателей</span>
+                                </div>
+                                <div className={styles.procedureItem}>
+                                    <span className={styles.procedureNumber}>5</span>
+                                    <span>Автоматическое списание средств за каждый отклик (20 ₽)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -192,9 +220,6 @@ const EmployerVacanciesPage = () => {
                             <div className={styles.socialLinks}>
                                 <a href="https://vk.com/desc_edu" target="_blank" rel="noreferrer" className={styles.socialLink}>
                                     VK
-                                </a>
-                                <a href="https://t.me/studio_desc" target="_blank" rel="noreferrer" className={styles.socialLink}>
-                                    Telegram
                                 </a>
                             </div>
                         </div>

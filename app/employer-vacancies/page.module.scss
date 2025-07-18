@@ -64,36 +64,7 @@
     }
 
     .hummingbird {
-        width: 120px;
-        height: 120px;
-        background: linear-gradient(45deg, #4CAF50, #81C784);
-        border-radius: 50%;
-        position: relative;
         animation: float 3s ease-in-out infinite;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            right: -10px;
-            width: 40px;
-            height: 60px;
-            background: #4CAF50;
-            border-radius: 50% 50% 0 0;
-            transform: rotate(45deg);
-        }
-
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 30px;
-            background: #4CAF50;
-            border-radius: 0 0 50% 50%;
-        }
     }
 }
 
@@ -137,15 +108,15 @@
         }
 
         &.card1 {
-            border-left: 4px solid #4CAF50;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
         }
 
         &.card2 {
-            border-left: 4px solid #2196F3;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
         }
 
         &.card3 {
-            border-left: 4px solid #4CAF50;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
         }
     }
 
@@ -161,6 +132,11 @@
         font-weight: 700;
         font-size: 18px;
         margin-bottom: 20px;
+    }
+
+    .cardIcon {
+        font-size: 24px;
+        margin-bottom: 15px;
     }
 
     .cardTitle {
@@ -187,6 +163,14 @@
         grid-template-columns: 1fr 1fr;
         gap: 80px;
         align-items: start;
+    }
+
+    .serviceDescription {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        border: 2px solid #e0e0e0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
     .serviceText {
@@ -227,10 +211,38 @@
         }
     }
 
+    .serviceProperties {
+        background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+        padding: 40px;
+        border-radius: 16px;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .propertiesNumber {
+        width: 40px;
+        height: 40px;
+        background: #2196F3;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
     .propertiesTitle {
         font-size: 24px;
         font-weight: 600;
         color: #1a1a1a;
+        margin-bottom: 10px;
+    }
+
+    .propertiesSubtitle {
+        font-size: 16px;
+        color: #666;
         margin-bottom: 30px;
     }
 
@@ -241,10 +253,11 @@
     }
 
     .propertyItem {
-        background: #f8f9fa;
+        background: white;
         padding: 20px;
         border-radius: 12px;
         border-left: 4px solid #2196F3;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
         h4 {
             font-size: 18px;
@@ -257,7 +270,6 @@
             font-size: 14px;
             color: #666;
             line-height: 1.5;
-            margin: 0;
         }
     }
 }
@@ -268,68 +280,51 @@
     background: #fafafa;
 
     .pricingContent {
-        display: flex;
-        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 80px;
-        max-width: 1000px;
-        margin: 0 auto;
+        align-items: start;
     }
 
     .priceCard {
-        background: white;
+        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
         padding: 40px;
-        border-radius: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         text-align: center;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-        min-width: 200px;
+    }
+
+    .priceCircle {
+        width: 200px;
+        height: 200px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .priceAmount {
         font-size: 48px;
         font-weight: 700;
-        color: #4CAF50;
+        color: #1a1a1a;
         margin-bottom: 10px;
     }
 
     .priceLabel {
-        font-size: 16px;
+        font-size: 18px;
         color: #666;
         font-weight: 500;
     }
 
-    .pricingInfo {
-        flex: 1;
-    }
-
-    .pricingItem {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid #eee;
-
-        &:last-of-type {
-            border-bottom: none;
-        }
-    }
-
-    .pricingLabel {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .pricingValue {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1a1a1a;
-    }
-
     .pricingExample {
-        margin-top: 30px;
+        background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
         padding: 20px;
-        background: white;
         border-radius: 12px;
-        border-left: 4px solid #4CAF50;
+        margin-top: 20px;
 
         h4 {
             font-size: 18px;
@@ -341,42 +336,104 @@
         p {
             font-size: 16px;
             color: #666;
-            margin: 0;
+            font-weight: 500;
+        }
+    }
+
+    .pricingProcedure {
+        background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: relative;
+    }
+
+    .procedureNumber {
+        width: 40px;
+        height: 40px;
+        background: #FFC107;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .procedureTitle {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 30px;
+    }
+
+    .procedureList {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .procedureItem {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 16px;
+        color: #666;
+        line-height: 1.5;
+
+        .procedureNumber {
+            width: 30px;
+            height: 30px;
+            background: #FFC107;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
         }
     }
 }
 
 // CTA Section
 .ctaSection {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+    background: #4CAF50;
+    padding: 80px 0;
     color: white;
-    text-align: center;
+
+    .ctaContent {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
     .ctaTitle {
         font-size: 36px;
         font-weight: 700;
         margin-bottom: 20px;
+        line-height: 1.2;
     }
 
     .ctaText {
-        font-size: 20px;
+        font-size: 18px;
         margin-bottom: 40px;
+        line-height: 1.6;
         opacity: 0.9;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .ctaButton {
         display: inline-block;
         background: white;
         color: #4CAF50;
-        padding: 18px 40px;
+        padding: 16px 32px;
         border-radius: 12px;
         text-decoration: none;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
         transition: all 0.3s ease;
         border: 2px solid white;
 
@@ -401,25 +458,28 @@
     }
 
     .contactCard {
+        background: white;
         padding: 40px 30px;
         border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         text-align: center;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
 
         &:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
 
         &.emailCard {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
         }
 
         &.phoneCard {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
         }
 
         &.socialCard {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
         }
     }
 
@@ -439,6 +499,7 @@
         font-size: 16px;
         color: #666;
         margin-bottom: 20px;
+        line-height: 1.5;
     }
 
     .contactLink {
@@ -455,56 +516,61 @@
 
     .socialLinks {
         display: flex;
-        gap: 15px;
         justify-content: center;
+        gap: 15px;
     }
 
     .socialLink {
-        display: inline-block;
-        padding: 10px 20px;
         background: #4CAF50;
         color: white;
-        text-decoration: none;
+        padding: 8px 16px;
         border-radius: 8px;
+        text-decoration: none;
         font-weight: 600;
-        transition: background 0.3s ease;
+        font-size: 14px;
+        transition: all 0.3s ease;
 
         &:hover {
             background: #2E7D32;
+            transform: translateY(-2px);
         }
     }
 }
 
 // Responsive Design
-@media (max-width: 1024px) {
+@media screen and (max-width: 1024px) {
     .heroSection {
         .container {
             flex-direction: column;
             text-align: center;
         }
 
-        .heroTitle {
-            font-size: 36px;
+        .heroContent {
+            max-width: 100%;
         }
     }
 
-    .serviceContent {
-        grid-template-columns: 1fr;
-        gap: 40px;
+    .serviceSection {
+        .serviceContent {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
     }
 
-    .pricingContent {
-        flex-direction: column;
-        text-align: center;
+    .pricingSection {
+        .pricingContent {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
     }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .heroSection {
         padding: 60px 0;
 
         .heroTitle {
-            font-size: 28px;
+            font-size: 36px;
         }
 
         .heroSubtitle {
@@ -514,19 +580,32 @@
 
     .sectionTitle {
         font-size: 28px;
+        margin-bottom: 40px;
     }
 
-    .advantagesGrid {
-        grid-template-columns: 1fr;
+    .advantagesSection,
+    .serviceSection,
+    .pricingSection,
+    .contactsSection {
+        padding: 60px 0;
     }
 
+    .advantagesGrid,
     .contactsGrid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .pricingItem {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+    .priceCircle {
+        width: 150px !important;
+        height: 150px !important;
+
+        .priceAmount {
+            font-size: 36px;
+        }
+
+        .priceLabel {
+            font-size: 16px;
+        }
     }
 } 
