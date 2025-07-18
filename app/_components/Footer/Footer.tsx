@@ -20,11 +20,11 @@ const Footer = () => {
             <div className={classNames(styles.wrapper, "container")}>
                 {/* Логотип */}
                 <div className={styles.logoSection}>
-                    <img
-                        className={styles.logo}
-                        src="/icons/footerLogo.png"
-                        alt="logo"
-                    />
+                <img
+                    className={styles.logo}
+                    src="/icons/footerLogo.png"
+                    alt="logo"
+                />
                 </div>
 
                 {/* Юридическая информация */}
@@ -48,32 +48,32 @@ const Footer = () => {
                         </a>
                     </p>
                     <div className={styles.socialMedia}>
-                        <Link
-                            href="https://t.me/studio_desc"
-                            className={styles.smItem}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <img
-                                src="/icons/tgFooter.png"
-                                alt="telegram"
-                                width={30}
-                                height={30}
-                            />
-                        </Link>
-                        <Link
-                            href="https://vk.com/desc_edu"
-                            className={styles.smItem}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <img
-                                src="/icons/vkFooter.png"
+                    <Link
+                        href="https://t.me/studio_desc"
+                        className={styles.smItem}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <img
+                            src="/icons/tgFooter.png"
+                            alt="telegram"
+                            width={30}
+                            height={30}
+                        />
+                    </Link>
+                    <Link
+                        href="https://vk.com/desc_edu"
+                        className={styles.smItem}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <img
+                            src="/icons/vkFooter.png"
                                 alt="vkontakte"
-                                width={30}
-                                height={30}
-                            />
-                        </Link>
+                            width={30}
+                            height={30}
+                        />
+                    </Link>
                     </div>
                 </div>
             </div>

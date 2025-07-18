@@ -13,9 +13,9 @@
     }
 
     .logoSection {
-        .logo {
-            width: 125px;
-        }
+    .logo {
+        width: 125px;
+    }
     }
 
     .legalSection {
@@ -129,18 +129,18 @@
             .logoSection {
                 grid-column: 1 / -1;
                 text-align: center;
-            }
         }
     }
+}
 
-    @media screen and (max-width: 1600px) {
+@media screen and (max-width: 1600px) {
         .wrapper {
             padding: 30px 0;
         }
 
         .logoSection {
-            .logo {
-                width: 95px;
+        .logo {
+            width: 95px;
             }
         }
     }

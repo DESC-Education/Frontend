@@ -3,22 +3,20 @@
     background: #ffffff;
 }
 
-// Hero Section
-.heroSection {
-    background: linear-gradient(135deg, #e8f5e8 0%, #e8f4f8 100%);
-    padding: 80px 0;
+// Hero Section - используем стиль главной страницы
+.hero {
     position: relative;
-    overflow: hidden;
-
-    .container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 60px;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #e0ffef 0%, #e0ffff 100%);
+    padding: 308px 0;
+    margin: 40px 0 0 0;
+    border-radius: 50px;
 
     .heroContent {
-        flex: 1;
+        z-index: 1;
         max-width: 600px;
     }
 
@@ -56,21 +54,60 @@
         }
     }
 
-    .heroImage {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .heroImageContainer {
+        position: absolute;
+        right: 10%;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
-    .hummingbird {
+    .heroImage {
         animation: float 3s ease-in-out infinite;
+    }
+
+    @media screen and (max-width: 1900px) {
+        .heroImageContainer {
+            top: 30%;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .heroImageContainer {
+            opacity: 0.5;
+        }
     }
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
+}
+
+@media screen and (max-width: 1600px) {
+    .hero {
+        padding: 200px 10px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .hero {
+        padding: 158px 10px;
+    }
+}
+
+@media screen and (max-width: 505px) {
+    .hero {
+        padding: 250px 10px 20px;
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .hero {
+        .heroImageContainer {
+            right: 5%;
+        }
+    }
 }
 
 // Section Titles
@@ -106,18 +143,6 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
-
-        &.card1 {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-        }
-
-        &.card2 {
-            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
-        }
-
-        &.card3 {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-        }
     }
 
     .cardNumber {
@@ -135,8 +160,20 @@
     }
 
     .cardIcon {
-        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
         margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
     }
 
     .cardTitle {
@@ -161,7 +198,7 @@
     .serviceContent {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 80px;
+        gap: 40px;
         align-items: start;
     }
 
@@ -173,17 +210,17 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
-    .serviceText {
-        font-size: 18px;
-        color: #666;
-        line-height: 1.7;
-        margin-bottom: 30px;
+    .serviceTitle {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
     }
 
-    .serviceSubtitle {
-        font-size: 24px;
-        font-weight: 600;
-        color: #1a1a1a;
+    .serviceText {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
         margin-bottom: 20px;
     }
 
@@ -193,19 +230,18 @@
 
         li {
             position: relative;
-            padding-left: 30px;
-            margin-bottom: 15px;
+            padding-left: 20px;
+            margin-bottom: 12px;
             font-size: 16px;
             color: #666;
-            line-height: 1.6;
+            line-height: 1.5;
 
             &::before {
-                content: '✓';
+                content: '•';
                 position: absolute;
                 left: 0;
                 top: 0;
-                color: #4CAF50;
-                font-weight: bold;
+                color: #666;
                 font-size: 18px;
             }
         }
@@ -222,8 +258,8 @@
     .propertiesNumber {
         width: 40px;
         height: 40px;
-        background: #2196F3;
-        color: white;
+        background: white;
+        color: #1a1a1a;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -231,11 +267,12 @@
         font-weight: 700;
         font-size: 18px;
         margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .propertiesTitle {
         font-size: 24px;
-        font-weight: 600;
+        font-weight: 700;
         color: #1a1a1a;
         margin-bottom: 10px;
     }
@@ -243,33 +280,23 @@
     .propertiesSubtitle {
         font-size: 16px;
         color: #666;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
 
     .propertiesList {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
     }
 
     .propertyItem {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 4px solid #2196F3;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        font-size: 16px;
+        color: #666;
+        line-height: 1.5;
 
-        h4 {
-            font-size: 18px;
-            font-weight: 600;
+        strong {
             color: #1a1a1a;
-            margin-bottom: 8px;
-        }
-
-        p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
+            font-weight: 600;
         }
     }
 }
@@ -281,17 +308,23 @@
 
     .pricingContent {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
         align-items: start;
     }
 
     .priceCard {
-        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+        background: linear-gradient(135deg, #e8f5e8 0%, #e8f4f8 100%);
         padding: 40px;
         border-radius: 16px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        text-align: center;
+    }
+
+    .pricingTitle {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 30px;
     }
 
     .priceCircle {
@@ -303,7 +336,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 30px;
+        margin: 0 auto 40px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
@@ -316,15 +349,58 @@
 
     .priceLabel {
         font-size: 18px;
-        color: #666;
+        color: #1a1a1a;
         font-weight: 500;
+    }
+
+    .pricingMetrics {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .metricItem {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .metricNumber {
+        width: 40px;
+        height: 40px;
+        background: #1a1a1a;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .metricContent {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        strong {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        span {
+            font-size: 16px;
+            color: #666;
+        }
     }
 
     .pricingExample {
         background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
         padding: 20px;
         border-radius: 12px;
-        margin-top: 20px;
 
         h4 {
             font-size: 18px;
@@ -338,6 +414,12 @@
             color: #666;
             font-weight: 500;
         }
+    }
+
+    .pricingRightColumn {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
     }
 
     .pricingProcedure {
@@ -377,69 +459,58 @@
 
     .procedureItem {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 15px;
         font-size: 16px;
         color: #666;
         line-height: 1.5;
-
-        .procedureNumber {
-            width: 30px;
-            height: 30px;
-            background: #FFC107;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
     }
-}
 
-// CTA Section
-.ctaSection {
-    background: #4CAF50;
-    padding: 80px 0;
-    color: white;
+    .procedureStepNumber {
+        font-weight: 600;
+        color: #1a1a1a;
+        flex-shrink: 0;
+    }
 
-    .ctaContent {
+    .ctaCard {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        border: 2px solid #e0e0e0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         text-align: center;
-        max-width: 800px;
-        margin: 0 auto;
     }
 
     .ctaTitle {
-        font-size: 36px;
+        font-size: 24px;
         font-weight: 700;
-        margin-bottom: 20px;
+        color: #1a1a1a;
+        margin-bottom: 15px;
         line-height: 1.2;
     }
 
     .ctaText {
-        font-size: 18px;
-        margin-bottom: 40px;
-        line-height: 1.6;
-        opacity: 0.9;
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.5;
     }
 
     .ctaButton {
         display: inline-block;
-        background: white;
-        color: #4CAF50;
+        background: #1a1a1a;
+        color: white;
         padding: 16px 32px;
         border-radius: 12px;
         text-decoration: none;
         font-weight: 600;
         font-size: 16px;
         transition: all 0.3s ease;
-        border: 2px solid white;
+        border: 2px solid #1a1a1a;
 
         &:hover {
             background: transparent;
-            color: white;
+            color: #1a1a1a;
             transform: translateY(-2px);
         }
     }
@@ -462,8 +533,11 @@
         padding: 40px 30px;
         border-radius: 16px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        text-align: center;
+        text-align: left;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
 
         &:hover {
             transform: translateY(-5px);
@@ -484,21 +558,28 @@
     }
 
     .contactIcon {
-        font-size: 48px;
         margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .contactTitle {
-        font-size: 24px;
+        font-size: 20px;
         font-weight: 600;
         color: #1a1a1a;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 
     .contactDescription {
-        font-size: 16px;
+        font-size: 14px;
         color: #666;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         line-height: 1.5;
     }
 
@@ -516,14 +597,18 @@
 
     .socialLinks {
         display: flex;
-        justify-content: center;
         gap: 15px;
+        align-items: center;
     }
 
     .socialLink {
-        background: #4CAF50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: #1a1a1a;
         color: white;
-        padding: 8px 16px;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 600;
@@ -531,23 +616,21 @@
         transition: all 0.3s ease;
 
         &:hover {
-            background: #2E7D32;
+            background: #333;
             transform: translateY(-2px);
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
         }
     }
 }
 
 // Responsive Design
 @media screen and (max-width: 1024px) {
-    .heroSection {
-        .container {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .heroContent {
-            max-width: 100%;
-        }
+    .hero {
+        padding: 158px 10px;
     }
 
     .serviceSection {
@@ -562,20 +645,25 @@
             grid-template-columns: 1fr;
             gap: 40px;
         }
+
+        .pricingRightColumn {
+            gap: 20px;
+        }
     }
 }
 
 @media screen and (max-width: 768px) {
-    .heroSection {
-        padding: 60px 0;
+    .hero {
+        padding: 250px 10px 20px;
+        margin: 0;
+    }
 
-        .heroTitle {
-            font-size: 36px;
-        }
+    .heroTitle {
+        font-size: 36px;
+    }
 
-        .heroSubtitle {
-            font-size: 18px;
-        }
+    .heroSubtitle {
+        font-size: 18px;
     }
 
     .sectionTitle {
@@ -607,5 +695,15 @@
         .priceLabel {
             font-size: 16px;
         }
+    }
+
+    .pricingMetrics {
+        gap: 15px;
+    }
+
+    .metricNumber {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 16px !important;
     }
 } 
