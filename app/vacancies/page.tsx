@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./page.module.scss";
 import classNames from "classnames";
 import Button from "../_components/ui/Button/Button";
@@ -9,40 +9,7 @@ import VacancyFilters from "./VacancyFilters";
 import VacancySort from "./VacancySort";
 import React from "react";
 import { useRouter } from "next/navigation";
-import mockVacancyDetails from "./mockVacancyDetails";
-
-// Моковые данные вакансий
-const mockVacancies = [
-    {
-        id: "1",
-        title: "Верстальщик сайтов",
-        company: "IT компания",
-        location: "Москва",
-        salary: "20 000 - 50 000 руб.",
-        postedDate: "2 мая 2024",
-        tags: [
-            "Полная занятость",
-            "Джуниор",
-            "Без опыта",
-            "Удалённо"
-        ]
-    },
-    {
-        id: "2",
-        title: "Backend Developer (Python)",
-        company: "DataSoft",
-        location: "Санкт-Петербург",
-        salary: "150,000 - 220,000 ₽",
-        postedDate: "1 день назад",
-        tags: [
-            "Полная занятость",
-            "Джуниор",
-            "Без опыта",
-            "Удалённо"
-        ]
-    }
-];
-
+import { getVacancies, IVacancy } from "../_http/API/vacancyApi";
 
 type FilterState = {
     categories: string[];
@@ -73,7 +40,33 @@ export default function VacanciesPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filters, setFilters] = useState<FilterState>(initialFilterState);
     const [sort, setSort] = useState("recommend");
-    const [filteredVacancies, setFilteredVacancies] = useState(mockVacancies);
+    const [vacancies, setVacancies] = useState<IVacancy[]>([]);
+    const [filteredVacancies, setFilteredVacancies] = useState<IVacancy[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Загрузка вакансий из API
+    useEffect(() => {
+        const loadVacancies = async () => {
+            try {
+                setLoading(true);
+                const response = await getVacancies();
+                
+                if (response.status === 200 && response.data) {
+                    setVacancies(response.data);
+                } else {
+                    setError(response.message || "Ошибка загрузки вакансий");
+                }
+            } catch (err) {
+                setError("Ошибка подключения к серверу");
+                console.error("Error loading vacancies:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadVacancies();
+    }, []);
 
     const handleSearch = (query: string) => {
         setSearchQuery(query);
@@ -99,80 +92,128 @@ export default function VacanciesPage() {
         setFilters(initialFilterState);
     };
 
-    // Фильтрация и сортировка по моковым данным
+    // Фильтрация и сортировка вакансий
     React.useEffect(() => {
-        let filtered = mockVacancies.filter((vacancy) => {
+        let filtered = vacancies.filter((vacancy) => {
             // Поиск
             const matchesSearch =
                 !searchQuery ||
                 vacancy.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                vacancy.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                vacancy.tags?.some((tag) =>
-                    tag.toLowerCase().includes(searchQuery.toLowerCase())
-                );
+                vacancy.companyProfile?.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                vacancy.location.toLowerCase().includes(searchQuery.toLowerCase());
+
             // Фильтры
-            const matchesDirection =
-                filters.directions.length === 0 ||
-                filters.directions.some((dir) => {
-                    // Примитивное сопоставление по ключевым словам
-                    if (dir === "design") return vacancy.title.toLowerCase().includes("design") || vacancy.tags?.some(t => t.toLowerCase().includes("figma"));
-                    if (dir === "layout") return vacancy.title.toLowerCase().includes("верстк") || vacancy.tags?.some(t => t.toLowerCase().includes("html"));
-                    if (dir === "programming") return vacancy.tags?.some(t => ["react","python","django","typescript","redux","docker"].includes(t.toLowerCase()));
-                    if (dir === "databases") return vacancy.tags?.some(t => ["postgresql","mysql","mongodb"].includes(t.toLowerCase()));
-                    if (dir === "research") return vacancy.title.toLowerCase().includes("research");
-                    return false;
-                });
-            const matchesLevel =
-                filters.levels.length === 0 ||
-                filters.levels.some((level) =>
-                    vacancy.title.toLowerCase().includes(level)
-                );
+            const matchesCategory =
+                filters.categories.length === 0 ||
+                filters.categories.includes(vacancy.category?.id || "");
+
             const matchesEmployment =
                 filters.employments.length === 0 ||
-                filters.employments.some((emp) =>
-                    vacancy.tags?.some(t => t.toLowerCase().includes(emp))
+                filters.employments.some((emp) => {
+                    if (emp === "remote") return vacancy.remote_work;
+                    if (emp === "hybrid") return vacancy.hybrid_work;
+                    return vacancy.employment_type === emp;
+                });
+
+            const matchesExperience =
+                filters.levels.length === 0 ||
+                filters.levels.some((level) => 
+                    vacancy.experience_required === level
                 );
+
             const matchesSchedule =
                 filters.schedules.length === 0 ||
-                filters.schedules.some((sch) =>
-                    sch === "remote"
-                        ? vacancy.tags?.some(t => t.toLowerCase().includes("удален"))
-                        : vacancy.tags?.some(t => t.toLowerCase().includes(sch))
+                filters.schedules.some((schedule) => 
+                    vacancy.work_schedule === schedule
                 );
+
             return (
                 matchesSearch &&
-                matchesDirection &&
-                matchesLevel &&
+                matchesCategory &&
                 matchesEmployment &&
+                matchesExperience &&
                 matchesSchedule
             );
         });
+
         // Сортировка
         if (sort === "new") {
-            filtered = filtered.sort((a, b) => b.postedDate.localeCompare(a.postedDate));
+            filtered = filtered.sort((a, b) => 
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
         } else if (sort === "old") {
-            filtered = filtered.sort((a, b) => a.postedDate.localeCompare(b.postedDate));
+            filtered = filtered.sort((a, b) => 
+                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
         } else if (sort === "salary_desc") {
-            filtered = filtered.sort((a, b) => {
-                const aSalary = parseInt(a.salary.replace(/\D/g, ""));
-                const bSalary = parseInt(b.salary.replace(/\D/g, ""));
-                return bSalary - aSalary;
-            });
+            filtered = filtered.sort((a, b) => b.salary_max - a.salary_max);
         } else if (sort === "salary_asc") {
-            filtered = filtered.sort((a, b) => {
-                const aSalary = parseInt(a.salary.replace(/\D/g, ""));
-                const bSalary = parseInt(b.salary.replace(/\D/g, ""));
-                return aSalary - bSalary;
-            });
+            filtered = filtered.sort((a, b) => a.salary_min - b.salary_min);
         }
+
         setFilteredVacancies(filtered);
-    }, [searchQuery, filters, sort]);
+    }, [vacancies, searchQuery, filters, sort]);
+
+    const formatSalary = (vacancy: IVacancy) => {
+        if (vacancy.salary_negotiable) {
+            return "По договоренности";
+        }
+        if (vacancy.salary_min === vacancy.salary_max) {
+            return `${vacancy.salary_min.toLocaleString()} ${vacancy.salary_currency}`;
+        }
+        return `${vacancy.salary_min.toLocaleString()} - ${vacancy.salary_max.toLocaleString()} ${vacancy.salary_currency}`;
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now.getTime() - date.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) return "Сегодня";
+        if (diffDays === 2) return "Вчера";
+        if (diffDays <= 7) return `${diffDays - 1} дней назад`;
+        
+        return date.toLocaleDateString('ru-RU', { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+    };
+
+    if (loading) {
+        return (
+            <div className={classNames("container", styles.container)}>
+                <div className={styles.loading}>
+                    <div className={styles.loadingSpinner}></div>
+                    <p>Загрузка вакансий...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className={classNames("container", styles.container)}>
+                <div className={styles.error}>
+                    <h3>Ошибка загрузки</h3>
+                    <p>{error}</p>
+                    <Button 
+                        type="primary" 
+                        onClick={() => window.location.reload()}
+                    >
+                        Попробовать снова
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={classNames("container", styles.container)}>
-                <div className={styles.vacancyCount}>
-                    Вакансии <span className={styles.count}>{filteredVacancies.length}</span>
-                </div>
+            <div className={styles.vacancyCount}>
+                Вакансии <span className={styles.count}>{filteredVacancies.length}</span>
+            </div>
             <div className={styles.topPanel}>
                 <div className={styles.sorting}>
                     <div className={styles.sort}>
@@ -194,20 +235,35 @@ export default function VacanciesPage() {
                                 style={{ cursor: "pointer" }}
                             >
                                 <div className={styles.vacancyTopRow}>
-                                    <span className={styles.vacancyDate}>{vacancy.postedDate}</span>
+                                    <span className={styles.vacancyDate}>
+                                        {formatDate(vacancy.createdAt)}
+                                    </span>
                                 </div>
                                 <div className={styles.vacancyCompanyRow}>
-                                    <span className={styles.vacancyCompany}>{vacancy.company}, {vacancy.location}</span>
+                                    <span className={styles.vacancyCompany}>
+                                        {vacancy.companyProfile?.companyName || "Компания"}, {vacancy.location}
+                                    </span>
                                 </div>
                                 <div className={styles.vacancyTitleRow}>
                                     <span className={styles.vacancyTitle}>{vacancy.title}</span>
                                 </div>
                                 <div className={styles.vacancyTagsRow}>
-                                    {vacancy.tags?.map((tag, idx) => (
-                                        <span key={idx} className={styles.vacancyTag}>{tag}</span>
-                                    ))}
+                                    {vacancy.employment_type && (
+                                        <span className={styles.vacancyTag}>{vacancy.employment_type}</span>
+                                    )}
+                                    {vacancy.experience_required && (
+                                        <span className={styles.vacancyTag}>{vacancy.experience_required}</span>
+                                    )}
+                                    {vacancy.remote_work && (
+                                        <span className={styles.vacancyTag}>Удалённо</span>
+                                    )}
+                                    {vacancy.hybrid_work && (
+                                        <span className={styles.vacancyTag}>Гибрид</span>
+                                    )}
                                 </div>
-                                <div className={styles.vacancySalaryRow}>{vacancy.salary}</div>
+                                <div className={styles.vacancySalaryRow}>
+                                    {formatSalary(vacancy)}
+                                </div>
                                 <Button type="primary" className={styles.applyButton}>
                                     Откликнуться
                                 </Button>

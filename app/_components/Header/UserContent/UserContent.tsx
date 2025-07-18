@@ -225,6 +225,16 @@ const UserContent: FC<UserContentProps> = ({
                         Вакансии
                     </Link>
                 </div>
+                <div className={styles.linkContainer}>
+                    <Link
+                        className={classNames(styles.link, "text fz24 fw500", {
+                            [styles.active]: pathname === "/employer-vacancies",
+                        })}
+                        href="/employer-vacancies"
+                    >
+                        Для работодателей
+                    </Link>
+                </div>
             </div>
             {isMobile ? (
                 <>

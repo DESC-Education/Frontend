@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 import styles from "../page.module.scss";
 import Button from "../../_components/ui/Button/Button";
 import classNames from "classnames";
-import mockVacancyDetails from "../mockVacancyDetails";
 import { useTypesSelector } from "../../_hooks/useTypesSelector";
-import { applyToVacancy } from "../../_http/API/vacancyApi";
+import { applyToVacancy, getVacancyById, IVacancy } from "../../_http/API/vacancyApi";
 
 export default function VacancyDetailPage() {
     const { id } = useParams();
     const router = useRouter();
     const { user, isAuth } = useTypesSelector((state) => state.userReducer);
+    const [vacancy, setVacancy] = useState<IVacancy | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [showApplicationForm, setShowApplicationForm] = useState(false);
     const [applicationData, setApplicationData] = useState({
@@ -19,8 +21,31 @@ export default function VacancyDetailPage() {
         expected_salary: "",
         available_from: ""
     });
-    
-    const vacancy = mockVacancyDetails; // Здесь всегда один мок, но можно подставить по id
+
+    // Загрузка данных вакансии
+    useEffect(() => {
+        const loadVacancy = async () => {
+            if (!id) return;
+            
+            try {
+                setLoading(true);
+                const response = await getVacancyById(id as string);
+                
+                if (response.status === 200 && response.data) {
+                    setVacancy(response.data);
+                } else {
+                    setError(response.message || "Вакансия не найдена");
+                }
+            } catch (err) {
+                setError("Ошибка загрузки вакансии");
+                console.error("Error loading vacancy:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadVacancy();
+    }, [id]);
 
     const handleApply = async () => {
         if (user.role !== "student") {
@@ -69,6 +94,53 @@ export default function VacancyDetailPage() {
             [name]: value
         }));
     };
+
+    const formatSalary = (vacancy: IVacancy) => {
+        if (vacancy.salary_negotiable) {
+            return "По договоренности";
+        }
+        if (vacancy.salary_min === vacancy.salary_max) {
+            return `${vacancy.salary_min.toLocaleString()} ${vacancy.salary_currency}`;
+        }
+        return `${vacancy.salary_min.toLocaleString()} - ${vacancy.salary_max.toLocaleString()} ${vacancy.salary_currency}`;
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU', { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+    };
+
+    if (loading) {
+        return (
+            <div className={classNames("container", styles.container)}>
+                <div className={styles.loading}>
+                    <div className={styles.loadingSpinner}></div>
+                    <p>Загрузка вакансии...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !vacancy) {
+        return (
+            <div className={classNames("container", styles.container)}>
+                <div className={styles.error}>
+                    <h3>Ошибка загрузки</h3>
+                    <p>{error || "Вакансия не найдена"}</p>
+                    <Button 
+                        type="primary" 
+                        onClick={() => router.push("/vacancies")}
+                    >
+                        Вернуться к списку
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={classNames("container", styles.container)}>
@@ -141,73 +213,69 @@ export default function VacancyDetailPage() {
                     <div className={styles.vacancyDetailMain}>
                         <div className={styles.vacancyDetailHeaderImg} />
                         <h1 className={styles.vacancyDetailTitle}>{vacancy.title}</h1>
-                        <div className={styles.vacancyDetailCompany}>{vacancy.company}</div>
+                        <div className={styles.vacancyDetailCompany}>
+                            {vacancy.companyProfile?.companyName || "Компания"}
+                        </div>
                         <div className={styles.vacancyDetailLocation}>{vacancy.location}</div>
                         <div className={styles.vacancyDetailSection}>
-                            <h3>О компании</h3>
+                            <h3>Описание</h3>
                             <p>{vacancy.description}</p>
                         </div>
                         <div className={styles.vacancyDetailSection}>
                             <h3>Обязанности</h3>
+                            <div dangerouslySetInnerHTML={{ __html: vacancy.responsibilities }} />
+                        </div>
+                        <div className={styles.vacancyDetailSection}>
+                            <h3>Требования</h3>
+                            <div dangerouslySetInnerHTML={{ __html: vacancy.requirements }} />
+                        </div>
+                        <div className={styles.vacancyDetailSection}>
+                            <h3>Условия работы</h3>
                             <ul>
-                                {vacancy.requirements.map((req, i) => <li key={i}>{req}</li>)}
+                                <li>Тип занятости: {vacancy.employment_type}</li>
+                                <li>График работы: {vacancy.work_schedule}</li>
+                                {vacancy.remote_work && <li>Удаленная работа</li>}
+                                {vacancy.hybrid_work && <li>Гибридная работа</li>}
+                                {vacancy.experience_required && (
+                                    <li>Требуемый опыт: {vacancy.experience_required}</li>
+                                )}
+                                {vacancy.education_required && (
+                                    <li>Образование: {vacancy.education_required}</li>
+                                )}
                             </ul>
-                        </div>
-                        <div className={styles.vacancyDetailSection}>
-                            <h3>Условия</h3>
-                            <ul>
-                                {vacancy.conditions.map((cond, i) => <li key={i}>{cond}</li>)}
-                            </ul>
-                        </div>
-                        <div className={styles.vacancyDetailSection}>
-                            <h3>Навыки</h3>
-                            <div className={styles.vacancyDetailSkills}>
-                                {vacancy.skills.map((skill, i) => (
-                                    <span key={i} className={styles.vacancyTag}>{skill}</span>
-                                ))}
-                            </div>
-                        </div>
-                        <div className={styles.vacancyDetailSection}>
-                            <h3>Вас могут заинтересовать эти вакансии</h3>
-                            <div className={styles.vacancyDetailSimilar}>
-                                <div className={styles.vacancyDetailSimilarItem}>
-                                    <div>Fullstack разработчик</div>
-                                    <div>Санкт-Петербург · Частичная занятость</div>
-                                    <div className={styles.vacancyDetailSimilarSalary}>130 000 руб.</div>
-                                </div>
-                                <div className={styles.vacancyDetailSimilarItem}>
-                                    <div>Fullstack разработчик</div>
-                                    <div>Санкт-Петербург · Частичная занятость</div>
-                                    <div className={styles.vacancyDetailSimilarSalary}>130 000 руб.</div>
-                                </div>
-                                <div className={styles.vacancyDetailSimilarItem}>
-                                    <div>Fullstack разработчик</div>
-                                    <div>Санкт-Петербург · Частичная занятость</div>
-                                    <div className={styles.vacancyDetailSimilarSalary}>130 000 руб.</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     {/* Правая часть */}
                     <div className={styles.vacancyDetailSidebar}>
                         <div className={styles.vacancyDetailSidebarCard}>
                             <div className={styles.vacancyDetailSidebarLocation}>{vacancy.location}</div>
-                            <div className={styles.vacancyDetailSidebarSalary}>{vacancy.salary}</div>
+                            <div className={styles.vacancyDetailSidebarSalary}>
+                                {formatSalary(vacancy)}
+                            </div>
                             <div className={styles.vacancyDetailSidebarPer}>на руки</div>
                             <div className={styles.vacancyDetailSidebarTags}>
-                                {vacancy.tags.map((tag, i) => (
-                                    <span key={i} className={styles.vacancyTag}>{tag}</span>
-                                ))}
+                                {vacancy.employment_type && (
+                                    <span className={styles.vacancyTag}>{vacancy.employment_type}</span>
+                                )}
+                                {vacancy.experience_required && (
+                                    <span className={styles.vacancyTag}>{vacancy.experience_required}</span>
+                                )}
+                                {vacancy.remote_work && (
+                                    <span className={styles.vacancyTag}>Удалённо</span>
+                                )}
+                                {vacancy.hybrid_work && (
+                                    <span className={styles.vacancyTag}>Гибрид</span>
+                                )}
                             </div>
                             <div className={styles.vacancyDetailSidebarInfo}>
-                                <div>Полная занятость</div>
-                                <div>{vacancy.postedDate}</div>
+                                <div>{vacancy.employment_type}</div>
+                                <div>{formatDate(vacancy.createdAt)}</div>
                             </div>
                             {user.role === "student" && isAuth ? (
                                 <Button type="primary" className={styles.applyButton} onClick={handleApply}>
                                     Откликнуться
                                 </Button>
-                            ) : user.role === "company" ? (
+                            ) : user.role === "company" && vacancy.companyProfile?.id === user.id ? (
                                 <div className={styles.companyInfo}>
                                     <p>Вы не можете подать заявку на свою вакансию</p>
                                 </div>
@@ -218,11 +286,15 @@ export default function VacancyDetailPage() {
                             )}
                         </div>
                         <div className={styles.vacancyDetailSidebarCompanyCard}>
-                            <div className={styles.vacancyDetailSidebarCompanyTitle}>Название компании</div>
-                            <div className={styles.vacancyDetailSidebarCompanyDesc}>
-                                Краткое описание компании, её миссия, ценности и преимущества для сотрудников. Укажите, почему стоит работать именно у вас.
+                            <div className={styles.vacancyDetailSidebarCompanyTitle}>
+                                {vacancy.companyProfile?.companyName || "Компания"}
                             </div>
-                            <a className={styles.vacancyDetailSidebarCompanyMore} href="#">Узнать больше</a>
+                            <div className={styles.vacancyDetailSidebarCompanyDesc}>
+                                Информация о компании будет добавлена позже.
+                            </div>
+                            <a className={styles.vacancyDetailSidebarCompanyMore} href="#">
+                                Узнать больше
+                            </a>
                         </div>
                     </div>
                 </div>

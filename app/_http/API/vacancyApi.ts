@@ -74,7 +74,7 @@ export const getVacancies = async (params?: {
             });
         }
 
-        const { data } = await $host.get<IVacancy[]>(`/api/v1/vacancies/vacancies?${queryParams}`);
+        const { data } = await $host.get<IVacancy[]>(`/api/v1/vacancies/?${queryParams}`);
         return {
             status: 200,
             data,
@@ -113,7 +113,7 @@ export const createVacancy = async (vacancyData: {
     work_schedule?: string;
 }) => {
     try {
-        const { data } = await $authHost.post<IVacancy>("/api/v1/vacancies/vacancy", vacancyData);
+        const { data } = await $authHost.post<IVacancy>("/api/v1/vacancies/", vacancyData);
         return {
             status: 200,
             data,
@@ -136,7 +136,7 @@ export const createVacancy = async (vacancyData: {
 // Получение деталей вакансии
 export const getVacancyById = async (id: string) => {
     try {
-        const { data } = await $host.get<IVacancy>(`/api/v1/vacancies/vacancy/${id}`);
+        const { data } = await $host.get<IVacancy>(`/api/v1/vacancies/vacancy/${id}/`);
         return {
             status: 200,
             data,
@@ -175,7 +175,7 @@ export const updateVacancy = async (id: string, vacancyData: Partial<{
     work_schedule: string;
 }>) => {
     try {
-        const { data } = await $authHost.patch<IVacancy>(`/api/v1/vacancies/vacancy/${id}`, vacancyData);
+        const { data } = await $authHost.patch<IVacancy>(`/api/v1/vacancies/vacancy/${id}/`, vacancyData);
         return {
             status: 200,
             data,
@@ -195,10 +195,33 @@ export const updateVacancy = async (id: string, vacancyData: Partial<{
     }
 };
 
+// Удаление вакансии
+export const deleteVacancy = async (id: string) => {
+    try {
+        await $authHost.delete(`/api/v1/vacancies/vacancy/${id}/`);
+        return {
+            status: 204,
+            message: "Вакансия успешно удалена",
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                status: error.response!.status,
+                message: error.response!.data.message,
+            };
+        } else {
+            return {
+                status: 500,
+                message: "Ошибка сервера",
+            };
+        }
+    }
+};
+
 // Получение вакансий компании
 export const getCompanyVacancies = async () => {
     try {
-        const { data } = await $authHost.get<IVacancy[]>("/api/v1/vacancies/my/company/vacancies");
+        const { data } = await $authHost.get<IVacancy[]>("/api/v1/vacancies/my/company/vacancies/");
         return {
             status: 200,
             data,
@@ -226,7 +249,7 @@ export const applyToVacancy = async (applicationData: {
     available_from: string;
 }) => {
     try {
-        const { data } = await $authHost.post<IVacancyApplication>("/api/v1/vacancies/application", applicationData);
+        const { data } = await $authHost.post<IVacancyApplication>("/api/v1/vacancies/application/", applicationData);
         return {
             status: 200,
             data,
@@ -249,7 +272,7 @@ export const applyToVacancy = async (applicationData: {
 // Получение заявок на вакансию (для компании)
 export const getVacancyApplications = async (vacancyId: string) => {
     try {
-        const { data } = await $authHost.get<IVacancyApplication[]>(`/api/v1/vacancies/application-list/${vacancyId}`);
+        const { data } = await $authHost.get<IVacancyApplication[]>(`/api/v1/vacancies/application-list/${vacancyId}/`);
         return {
             status: 200,
             data,
@@ -272,7 +295,7 @@ export const getVacancyApplications = async (vacancyId: string) => {
 // Получение деталей заявки
 export const getApplicationById = async (id: string) => {
     try {
-        const { data } = await $authHost.get<IVacancyApplication>(`/api/v1/vacancies/application/${id}`);
+        const { data } = await $authHost.get<IVacancyApplication>(`/api/v1/vacancies/application/${id}/`);
         return {
             status: 200,
             data,
@@ -292,13 +315,13 @@ export const getApplicationById = async (id: string) => {
     }
 };
 
-// Оценка заявки (принять/отклонить)
+// Оценка заявки (принятие/отклонение)
 export const evaluateApplication = async (id: string, evaluation: {
     status: "accepted" | "rejected";
     comment?: string;
 }) => {
     try {
-        const { data } = await $authHost.post<IVacancyApplication>(`/api/v1/vacancies/application/evaluate/${id}`, evaluation);
+        const { data } = await $authHost.post<IVacancyApplication>(`/api/v1/vacancies/application/evaluate/${id}/`, evaluation);
         return {
             status: 200,
             data,
@@ -321,7 +344,7 @@ export const evaluateApplication = async (id: string, evaluation: {
 // Получение заявок студента
 export const getStudentApplications = async () => {
     try {
-        const { data } = await $authHost.get<IVacancyApplication[]>("/api/v1/vacancies/my/student/applications");
+        const { data } = await $authHost.get<IVacancyApplication[]>("/api/v1/vacancies/my/student/applications/");
         return {
             status: 200,
             data,

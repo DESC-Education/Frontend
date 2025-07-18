@@ -1,0 +1,532 @@
+.container {
+    min-height: 100vh;
+    background: #ffffff;
+}
+
+// Hero Section
+.heroSection {
+    background: linear-gradient(135deg, #e8f5e8 0%, #e8f4f8 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 60px;
+    }
+
+    .heroContent {
+        flex: 1;
+        max-width: 600px;
+    }
+
+    .heroTitle {
+        font-size: 48px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .heroSubtitle {
+        font-size: 20px;
+        color: #666;
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .heroButton {
+        display: inline-block;
+        background: #1a1a1a;
+        color: white;
+        padding: 16px 32px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        border: 2px solid #1a1a1a;
+
+        &:hover {
+            background: transparent;
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+    }
+
+    .heroImage {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .hummingbird {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(45deg, #4CAF50, #81C784);
+        border-radius: 50%;
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            width: 40px;
+            height: 60px;
+            background: #4CAF50;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(45deg);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 30px;
+            background: #4CAF50;
+            border-radius: 0 0 50% 50%;
+        }
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+// Section Titles
+.sectionTitle {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+// Advantages Section
+.advantagesSection {
+    padding: 100px 0;
+    background: #fafafa;
+
+    .advantagesGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 60px;
+    }
+
+    .advantageCard {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        &.card1 {
+            border-left: 4px solid #4CAF50;
+        }
+
+        &.card2 {
+            border-left: 4px solid #2196F3;
+        }
+
+        &.card3 {
+            border-left: 4px solid #4CAF50;
+        }
+    }
+
+    .cardNumber {
+        width: 40px;
+        height: 40px;
+        background: #4CAF50;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .cardTitle {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 15px;
+    }
+
+    .cardDescription {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
+    }
+}
+
+// Service Section
+.serviceSection {
+    padding: 100px 0;
+    background: white;
+
+    .serviceContent {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: start;
+    }
+
+    .serviceText {
+        font-size: 18px;
+        color: #666;
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    .serviceSubtitle {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+    }
+
+    .serviceList {
+        list-style: none;
+        padding: 0;
+
+        li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+
+            &::before {
+                content: '✓';
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: #4CAF50;
+                font-weight: bold;
+                font-size: 18px;
+            }
+        }
+    }
+
+    .propertiesTitle {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 30px;
+    }
+
+    .propertiesList {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .propertyItem {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 4px solid #2196F3;
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin: 0;
+        }
+    }
+}
+
+// Pricing Section
+.pricingSection {
+    padding: 100px 0;
+    background: #fafafa;
+
+    .pricingContent {
+        display: flex;
+        align-items: center;
+        gap: 80px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .priceCard {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        min-width: 200px;
+    }
+
+    .priceAmount {
+        font-size: 48px;
+        font-weight: 700;
+        color: #4CAF50;
+        margin-bottom: 10px;
+    }
+
+    .priceLabel {
+        font-size: 16px;
+        color: #666;
+        font-weight: 500;
+    }
+
+    .pricingInfo {
+        flex: 1;
+    }
+
+    .pricingItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+
+        &:last-of-type {
+            border-bottom: none;
+        }
+    }
+
+    .pricingLabel {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .pricingValue {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    .pricingExample {
+        margin-top: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        border-left: 4px solid #4CAF50;
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+            margin: 0;
+        }
+    }
+}
+
+// CTA Section
+.ctaSection {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+    color: white;
+    text-align: center;
+
+    .ctaTitle {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .ctaText {
+        font-size: 20px;
+        margin-bottom: 40px;
+        opacity: 0.9;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ctaButton {
+        display: inline-block;
+        background: white;
+        color: #4CAF50;
+        padding: 18px 40px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        border: 2px solid white;
+
+        &:hover {
+            background: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+// Contacts Section
+.contactsSection {
+    padding: 100px 0;
+    background: white;
+
+    .contactsGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 60px;
+    }
+
+    .contactCard {
+        padding: 40px 30px;
+        border-radius: 16px;
+        text-align: center;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px);
+        }
+
+        &.emailCard {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+
+        &.phoneCard {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+
+        &.socialCard {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+    }
+
+    .contactIcon {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+
+    .contactTitle {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 10px;
+    }
+
+    .contactDescription {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .contactLink {
+        color: #4CAF50;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: #2E7D32;
+        }
+    }
+
+    .socialLinks {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .socialLink {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background: #2E7D32;
+        }
+    }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+    .heroSection {
+        .container {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .heroTitle {
+            font-size: 36px;
+        }
+    }
+
+    .serviceContent {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .pricingContent {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .heroSection {
+        padding: 60px 0;
+
+        .heroTitle {
+            font-size: 28px;
+        }
+
+        .heroSubtitle {
+            font-size: 18px;
+        }
+    }
+
+    .sectionTitle {
+        font-size: 28px;
+    }
+
+    .advantagesGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .contactsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .pricingItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+} 
